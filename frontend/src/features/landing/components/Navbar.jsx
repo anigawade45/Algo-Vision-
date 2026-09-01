@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon, Menu, X } from 'lucide-react';
 
-export function Navbar({ theme, toggleTheme }) {
+export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -18,12 +18,21 @@ export function Navbar({ theme, toggleTheme }) {
   }, []);
 
   const navLinks = [
-    { name: 'Features', href: '#features' },
+    { name: 'Features', href: '#problem' },
     { name: 'Modules', href: '#modules' },
-    { name: 'How It Works', href: '#how-it-works' },
-    { name: 'Visualizations', href: '#flagship-visualizer' },
-    { name: 'About', href: '#about' },
+    { name: 'Approach', href: '#solution' },
+    { name: 'AI Tutor', href: '#ai' },
+    { name: 'FAQ', href: '#faq' },
   ];
+
+  const handleStartLearning = (e) => {
+    e.preventDefault();
+    if (onNavigateToDsa) {
+      onNavigateToDsa();
+    } else {
+      window.location.href = '/dsa';
+    }
+  };
 
   return (
     <header
@@ -78,19 +87,19 @@ export function Navbar({ theme, toggleTheme }) {
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
             </button>
 
-            <a
-              href="#dashboard"
+            <button
+              onClick={handleStartLearning}
               className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors"
             >
-              Log In
-            </a>
+              DSA Platform
+            </button>
 
-            <a
-              href="#flagship-visualizer"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors"
+            <button
+              onClick={handleStartLearning}
+              className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors cursor-pointer"
             >
               <span>Start Learning</span>
-            </a>
+            </button>
           </div>
 
           {/* Mobile Menu Icon */}
@@ -128,20 +137,24 @@ export function Navbar({ theme, toggleTheme }) {
             ))}
           </nav>
           <div className="pt-2 flex flex-col gap-2.5">
-            <a
-              href="#dashboard"
-              onClick={() => setMobileMenuOpen(false)}
+            <button
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                handleStartLearning(e);
+              }}
               className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-sm font-medium"
             >
-              Log In
-            </a>
-            <a
-              href="#flagship-visualizer"
-              onClick={() => setMobileMenuOpen(false)}
+              DSA Platform
+            </button>
+            <button
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                handleStartLearning(e);
+              }}
               className="w-full text-center py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm shadow-sm"
             >
               <span>Start Learning Free</span>
-            </a>
+            </button>
           </div>
         </div>
       )}
