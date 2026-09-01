@@ -1,0 +1,1 @@
+// Pattern component exports
