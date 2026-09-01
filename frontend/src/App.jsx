@@ -10,12 +10,43 @@ import { DifferentiatorSection } from '@/features/landing/components/Differentia
 import { FaqSection } from '@/features/landing/components/FaqSection';
 import { Footer } from '@/features/landing/components/Footer';
 
+import DsaHome from '@/features/dsa/pages/DsaHome';
+import ProblemWorkspace from '@/features/dsa/pages/ProblemWorkspace';
+
 export default function App() {
   const [theme, setTheme] = useState('light');
+  const [currentRoute, setCurrentRoute] = useState(() => {
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    if (path.includes('/dsa/workspace') || hash === '#workspace') return 'dsa-workspace';
+    if (path.includes('/dsa') || hash === '#dsa') return 'dsa-home';
+    return 'landing';
+  });
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+      if (path.includes('/dsa/workspace') || hash === '#workspace') {
+        setCurrentRoute('dsa-workspace');
+      } else if (path.includes('/dsa') || hash === '#dsa') {
+        setCurrentRoute('dsa-home');
+      } else {
+        setCurrentRoute('landing');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     if (theme === 'light') {
@@ -27,16 +58,48 @@ export default function App() {
     }
   }, [theme]);
 
+  const navigateTo = (route) => {
+    setCurrentRoute(route);
+    if (route === 'dsa-home') {
+      window.history.pushState(null, '', '/dsa');
+    } else if (route === 'dsa-workspace') {
+      window.history.pushState(null, '', '/dsa/workspace');
+    } else {
+      window.history.pushState(null, '', '/');
+    }
+  };
+
+  if (currentRoute === 'dsa-home') {
+    return (
+      <DsaHome
+        theme={theme}
+        toggleTheme={toggleTheme}
+        onNavigateToLanding={() => navigateTo('landing')}
+        onNavigateToWorkspace={() => navigateTo('dsa-workspace')}
+      />
+    );
+  }
+
+  if (currentRoute === 'dsa-workspace') {
+    return (
+      <ProblemWorkspace
+        theme={theme}
+        toggleTheme={toggleTheme}
+        onNavigateToHome={() => navigateTo('dsa-home')}
+      />
+    );
+  }
+
   return (
     <div className={`min-h-screen w-full transition-colors duration-200 ${theme === 'light' ? 'light bg-slate-50 text-slate-900' : 'dark bg-[#05070E] text-slate-100'}`}>
-      <Navbar theme={theme} toggleTheme={toggleTheme} />
+      <Navbar theme={theme} toggleTheme={toggleTheme} onNavigateToDsa={() => navigateTo('dsa-home')} />
       
       <main className="w-full overflow-hidden">
-        <HeroSection />
+        <HeroSection onNavigateToDsa={() => navigateTo('dsa-home')} />
         <TrustStrip />
         <ProblemSection />
         <SolutionSection />
-        <ModulesSection />
+        <ModulesSection onNavigateToDsa={() => navigateTo('dsa-home')} />
         <AiSection />
         <DifferentiatorSection />
         <FaqSection />
