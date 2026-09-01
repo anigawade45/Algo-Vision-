@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cpu, Wifi, Server, Binary, ArrowRight, Play, CheckCircle2, Layers, ShieldCheck, Zap } from 'lucide-react';
 
@@ -326,15 +327,19 @@ export function ModulesSection() {
 
                 {/* Bottom Action CTA */}
                 <div className="pt-2">
-                  <motion.a
+                  <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    href="#dashboard"
-                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+                    className="w-full"
                   >
-                    <span>{currentModule.btnText}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </motion.a>
+                    <Link
+                      to={currentModule.id === 'os' ? "/os/cpu-scheduling" : "#"}
+                      className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all text-center"
+                    >
+                      <span>{currentModule.btnText}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </motion.div>
                 </div>
 
               </motion.div>
