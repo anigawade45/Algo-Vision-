@@ -11,14 +11,17 @@ import { FaqSection } from '@/features/landing/components/FaqSection';
 import { Footer } from '@/features/landing/components/Footer';
 
 import DsaHome from '@/features/dsa/pages/DsaHome';
+import ProblemSubmit from '@/features/dsa/pages/ProblemSubmit';
 import ProblemWorkspace from '@/features/dsa/pages/ProblemWorkspace';
 
 export default function App() {
   const [theme, setTheme] = useState('light');
+  const [activeProblem, setActiveProblem] = useState(null);
   const [currentRoute, setCurrentRoute] = useState(() => {
     const path = window.location.pathname;
     const hash = window.location.hash;
     if (path.includes('/dsa/workspace') || hash === '#workspace') return 'dsa-workspace';
+    if (path.includes('/dsa/submit') || hash === '#submit') return 'dsa-submit';
     if (path.includes('/dsa') || hash === '#dsa') return 'dsa-home';
     return 'landing';
   });
@@ -33,6 +36,8 @@ export default function App() {
       const hash = window.location.hash;
       if (path.includes('/dsa/workspace') || hash === '#workspace') {
         setCurrentRoute('dsa-workspace');
+      } else if (path.includes('/dsa/submit') || hash === '#submit') {
+        setCurrentRoute('dsa-submit');
       } else if (path.includes('/dsa') || hash === '#dsa') {
         setCurrentRoute('dsa-home');
       } else {
@@ -58,10 +63,15 @@ export default function App() {
     }
   }, [theme]);
 
-  const navigateTo = (route) => {
+  const navigateTo = (route, problemData = null) => {
+    if (problemData) {
+      setActiveProblem(problemData);
+    }
     setCurrentRoute(route);
     if (route === 'dsa-home') {
       window.history.pushState(null, '', '/dsa');
+    } else if (route === 'dsa-submit') {
+      window.history.pushState(null, '', '/dsa/submit');
     } else if (route === 'dsa-workspace') {
       window.history.pushState(null, '', '/dsa/workspace');
     } else {
@@ -75,7 +85,20 @@ export default function App() {
         theme={theme}
         toggleTheme={toggleTheme}
         onNavigateToLanding={() => navigateTo('landing')}
-        onNavigateToWorkspace={() => navigateTo('dsa-workspace')}
+        onNavigateToSubmit={() => navigateTo('dsa-submit')}
+        onNavigateToWorkspace={(problem) => navigateTo('dsa-workspace', problem)}
+      />
+    );
+  }
+
+  if (currentRoute === 'dsa-submit') {
+    return (
+      <ProblemSubmit
+        theme={theme}
+        toggleTheme={toggleTheme}
+        onNavigateToLanding={() => navigateTo('landing')}
+        onNavigateToHome={() => navigateTo('dsa-home')}
+        onNavigateToWorkspace={(problem) => navigateTo('dsa-workspace', problem)}
       />
     );
   }
@@ -85,7 +108,9 @@ export default function App() {
       <ProblemWorkspace
         theme={theme}
         toggleTheme={toggleTheme}
+        problemData={activeProblem}
         onNavigateToHome={() => navigateTo('dsa-home')}
+        onNavigateToSubmit={() => navigateTo('dsa-submit')}
       />
     );
   }

@@ -1,1 +1,1 @@
-// Problem component exports
+export { default as ProblemSubmitForm } from './ProblemSubmitForm';
