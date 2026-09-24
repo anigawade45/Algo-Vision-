@@ -1,12 +1,12 @@
 import React from 'react';
-import { Bell, User, ChevronRight, Terminal, Sun, Moon } from 'lucide-react';
+import { Bell, User, ChevronRight, Terminal, Sun, Moon, PlusCircle } from 'lucide-react';
 
-export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding }) {
+export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateToHome, onNavigateToSubmit }) {
   return (
     <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-20 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         
-        {/* Left: Brand & Breadcrumb (3. Navbar: Dashboard / DSA) */}
+        {/* Left: Brand & Breadcrumbs */}
         <div className="flex items-center gap-3">
           <div
             onClick={onNavigateToLanding}
@@ -22,7 +22,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding }) {
 
           <div className="h-4 w-[1px] bg-slate-300 dark:bg-slate-700 mx-1"></div>
 
-          {/* DSA-specific Breadcrumb: Dashboard / DSA */}
+          {/* DSA-specific Breadcrumbs */}
           <nav className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 font-mono">
             <span
               onClick={onNavigateToLanding}
@@ -31,12 +31,35 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding }) {
               Dashboard
             </span>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-            <span className="text-blue-600 dark:text-blue-400 font-semibold">DSA</span>
+            <span
+              onClick={onNavigateToHome || onNavigateToLanding}
+              className={`hover:text-slate-900 dark:hover:text-slate-200 cursor-pointer ${
+                !onNavigateToSubmit ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''
+              }`}
+            >
+              DSA
+            </span>
+            {onNavigateToSubmit && (
+              <>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-blue-600 dark:text-blue-400 font-semibold">Analyze Problem</span>
+              </>
+            )}
           </nav>
         </div>
 
-        {/* Right: Actions (Theme Toggle, Notifications 🔔, Profile Avatar) */}
+        {/* Right: Actions */}
         <div className="flex items-center gap-3">
+          {onNavigateToSubmit && (
+            <button
+              onClick={onNavigateToSubmit}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>New Problem</span>
+            </button>
+          )}
+
           {toggleTheme && (
             <button
               onClick={toggleTheme}
