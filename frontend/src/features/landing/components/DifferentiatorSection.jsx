@@ -135,13 +135,13 @@ export function DifferentiatorSection() {
       aria-label="Why AlgoVision"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* ASYMMETRIC TOP COMPOSITION */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-16">
-          
+
           {/* LEFT COLUMN: Why AlgoVision Narrative */}
           <div className="lg:col-span-5 space-y-6">
-            
+
             <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-[#0E172A] border border-blue-200 dark:border-[#1E2E4A] text-blue-600 dark:text-[#3B82F6] text-[11px] font-semibold uppercase tracking-wider font-mono">
               <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               <span>WHY ALGOVISION</span>
@@ -182,7 +182,7 @@ export function DifferentiatorSection() {
 
           {/* RIGHT COLUMN: Interactive CS Knowledge Map Visualization */}
           <div className="lg:col-span-7 bg-slate-50/80 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden transition-colors">
-            
+
             {/* Header / Subtitle */}
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4 mb-6">
               <div>
@@ -222,11 +222,10 @@ export function DifferentiatorSection() {
                     `}
                     aria-label={`Inspect ${domain.name}`}
                   >
-                    <div className={`w-8 h-8 rounded-xl border flex items-center justify-center shrink-0 ${
-                      isSelected
+                    <div className={`w-8 h-8 rounded-xl border flex items-center justify-center shrink-0 ${isSelected
                         ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
                         : 'bg-slate-100 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
-                    }`}>
+                      }`}>
                       <DomainIcon className="w-4 h-4" aria-hidden="true" />
                     </div>
 
