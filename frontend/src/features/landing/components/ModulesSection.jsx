@@ -1,8 +1,159 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cpu, Wifi, Server, Binary, ArrowRight, Play, CheckCircle2, Layers, ShieldCheck, Zap } from 'lucide-react';
+import { Cpu, Wifi, Server, Binary, ArrowRight, CheckCircle2, Layers } from 'lucide-react';
 
-export function ModulesSection() {
+const DsaPreview = memo(function DsaPreview() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
+        <span className="text-slate-500 dark:text-slate-400">Visualization Demo: Binary Search</span>
+        <span className="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" aria-hidden="true" /> Target Found: 42
+        </span>
+      </div>
+
+      <div className="flex items-center justify-center gap-2 py-6">
+        {[10, 23, 35, 42, 56, 78, 90].map((val, i) => (
+          <motion.div
+            key={i}
+            layout
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className={`w-11 h-13 rounded-xl border flex flex-col items-center justify-center font-mono font-bold text-sm transition-colors duration-300 ${
+              i === 3
+                ? 'bg-blue-600 text-white border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.6)] scale-110'
+                : i >= 0 && i <= 3
+                ? 'bg-slate-100 dark:bg-[#0E172A] text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700'
+                : 'bg-slate-50 dark:bg-[#070A12] text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-40'
+            }`}
+          >
+            <span>{val}</span>
+            <span className="text-[9px] font-normal text-slate-400 dark:text-slate-500 mt-1">[{i}]</span>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
+        <span>Step 3 of 4: <strong className="text-blue-600 dark:text-blue-400">MID = arr[3]</strong> (Target matched!)</span>
+        <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">O(log N)</span>
+      </div>
+    </div>
+  );
+});
+
+const OsPreview = memo(function OsPreview() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
+        <span className="text-slate-500 dark:text-slate-400">Simulation: Round Robin Scheduling (Quantum = 2ms)</span>
+        <span className="text-cyan-600 dark:text-cyan-400 font-semibold">Active Process: P2</span>
+      </div>
+
+      <div className="space-y-2 py-2">
+        <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400">Gantt Chart Timeline</div>
+        <div className="grid grid-cols-6 gap-1 font-mono text-xs font-bold text-center">
+          <div className="bg-blue-500/20 border border-blue-500/40 text-blue-600 dark:text-blue-400 rounded p-2">P1 (0-2)</div>
+          <div className="bg-cyan-500 text-white rounded p-2 shadow-md animate-pulse">P2 (2-4)</div>
+          <div className="bg-purple-500/20 border border-purple-500/40 text-purple-600 dark:text-purple-400 rounded p-2">P3 (4-6)</div>
+          <div className="bg-blue-500/20 border border-blue-500/40 text-blue-600 dark:text-blue-400 rounded p-2">P1 (6-8)</div>
+          <div className="bg-slate-200 dark:bg-slate-800 text-slate-400 rounded p-2 opacity-50">P2 (8-10)</div>
+          <div className="bg-slate-200 dark:bg-slate-800 text-slate-400 rounded p-2 opacity-50">P3 (10-12)</div>
+        </div>
+      </div>
+
+      <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
+        <span>Context Switch: Preempting P1 &rarr; Dispatching P2</span>
+        <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-[10px] font-bold">Ready Queue: [P3, P1]</span>
+      </div>
+    </div>
+  );
+});
+
+const NetworksPreview = memo(function NetworksPreview() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
+        <span className="text-slate-500 dark:text-slate-400">Flow: TCP 3-Way Handshake</span>
+        <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" aria-hidden="true" /> Connection Established
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between py-4 px-6 relative">
+        <div className="text-center space-y-1">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs">
+            Client
+          </div>
+          <div className="text-[10px] font-mono text-slate-500">192.168.1.10</div>
+        </div>
+
+        {/* Packet Travel Lines */}
+        <div className="flex-1 mx-6 space-y-2" aria-hidden="true">
+          <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
+            <span className="flex-1 h-[1.5px] bg-emerald-500/40 relative">
+              <span className="absolute -top-1 left-1/3 w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            </span>
+            <span>SYN (Seq=100) &rarr;</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] font-mono text-blue-600 dark:text-blue-400 flex-row-reverse">
+            <span className="flex-1 h-[1.5px] bg-blue-500/40 relative">
+              <span className="absolute -top-1 right-1/3 w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+            </span>
+            <span>&leftarrow; SYN-ACK (Ack=101)</span>
+          </div>
+          <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
+            <span className="flex-1 h-[1.5px] bg-emerald-500/40" />
+            <span>ACK (Seq=101) &rarr;</span>
+          </div>
+        </div>
+
+        <div className="text-center space-y-1">
+          <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-mono font-bold text-xs">
+            Server
+          </div>
+          <div className="text-[10px] font-mono text-slate-500">93.184.216.34</div>
+        </div>
+      </div>
+
+      <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
+        <span>State: <strong className="text-emerald-600 dark:text-emerald-400">ESTABLISHED</strong> (RTT = 18ms)</span>
+        <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">Port 443</span>
+      </div>
+    </div>
+  );
+});
+
+const SystemDesignPreview = memo(function SystemDesignPreview() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
+        <span className="text-slate-500 dark:text-slate-400">Architecture: High-Availability Cluster</span>
+        <span className="text-purple-600 dark:text-purple-400 font-semibold">Cache Hit Ratio: 94.2%</span>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 py-2 text-center font-mono text-xs">
+        <div className="bg-slate-100 dark:bg-[#070A12] border border-purple-500/30 p-3 rounded-xl space-y-1">
+          <span className="text-purple-600 dark:text-purple-400 font-bold block text-xs">Load Balancer</span>
+          <span className="text-[10px] text-slate-500">Nginx Round-Robin</span>
+        </div>
+        <div className="bg-purple-500 text-white p-3 rounded-xl space-y-1 shadow-md animate-pulse">
+          <span className="font-bold block text-xs">Redis Cache</span>
+          <span className="text-[10px] opacity-80">In-Memory (0.8ms)</span>
+        </div>
+        <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-300 dark:border-slate-700 p-3 rounded-xl space-y-1">
+          <span className="text-slate-700 dark:text-slate-300 font-bold block text-xs">Primary DB</span>
+          <span className="text-[10px] text-slate-500">PostgreSQL (Replica)</span>
+        </div>
+      </div>
+
+      <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
+        <span>Query Result: Served directly from Redis Cache</span>
+        <span className="px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[10px] font-bold">10k req/sec</span>
+      </div>
+    </div>
+  );
+});
+
+export function ModulesSection({ onNavigateToDsa }) {
   const [activeTab, setActiveTab] = useState('dsa');
 
   const modules = [
@@ -15,41 +166,7 @@ export function ModulesSection() {
       progress: 65,
       btnText: 'Explore DSA Modules',
       badgeColor: 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/30',
-      renderPreview: () => (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
-            <span className="text-slate-500 dark:text-slate-400">Visualization Demo: Binary Search</span>
-            <span className="text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" /> Target Found: 42
-            </span>
-          </div>
-
-          <div className="flex items-center justify-center gap-2 py-6">
-            {[10, 23, 35, 42, 56, 78, 90].map((val, i) => (
-              <motion.div
-                key={i}
-                layout
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className={`w-11 h-13 rounded-xl border flex flex-col items-center justify-center font-mono font-bold text-sm transition-colors duration-300 ${
-                  i === 3
-                    ? 'bg-blue-600 text-white border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.6)] scale-110'
-                    : i >= 0 && i <= 3
-                    ? 'bg-slate-100 dark:bg-[#0E172A] text-slate-800 dark:text-slate-200 border-slate-300 dark:border-slate-700'
-                    : 'bg-slate-50 dark:bg-[#070A12] text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-40'
-                }`}
-              >
-                <span>{val}</span>
-                <span className="text-[9px] font-normal text-slate-400 dark:text-slate-500 mt-1">[{i}]</span>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
-            <span>Step 3 of 4: <strong className="text-blue-600 dark:text-blue-400">MID = arr[3]</strong> (Target matched!)</span>
-            <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">O(log N)</span>
-          </div>
-        </div>
-      )
+      PreviewComponent: DsaPreview,
     },
     {
       id: 'os',
@@ -60,31 +177,7 @@ export function ModulesSection() {
       progress: 42,
       btnText: 'Explore OS Modules',
       badgeColor: 'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 border-cyan-200 dark:border-cyan-500/30',
-      renderPreview: () => (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
-            <span className="text-slate-500 dark:text-slate-400">Simulation: Round Robin Scheduling (Quantum = 2ms)</span>
-            <span className="text-cyan-600 dark:text-cyan-400 font-semibold">Active Process: P2</span>
-          </div>
-
-          <div className="space-y-2 py-2">
-            <div className="text-[11px] font-mono text-slate-500 dark:text-slate-400">Gantt Chart Timeline</div>
-            <div className="grid grid-cols-6 gap-1 font-mono text-xs font-bold text-center">
-              <div className="bg-blue-500/20 border border-blue-500/40 text-blue-600 dark:text-blue-400 rounded p-2">P1 (0-2)</div>
-              <div className="bg-cyan-500 text-white rounded p-2 shadow-md animate-pulse">P2 (2-4)</div>
-              <div className="bg-purple-500/20 border border-purple-500/40 text-purple-600 dark:text-purple-400 rounded p-2">P3 (4-6)</div>
-              <div className="bg-blue-500/20 border border-blue-500/40 text-blue-600 dark:text-blue-400 rounded p-2">P1 (6-8)</div>
-              <div className="bg-slate-200 dark:bg-slate-800 text-slate-400 rounded p-2 opacity-50">P2 (8-10)</div>
-              <div className="bg-slate-200 dark:bg-slate-800 text-slate-400 rounded p-2 opacity-50">P3 (10-12)</div>
-            </div>
-          </div>
-
-          <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
-            <span>Context Switch: Preempting P1 &rarr; Dispatching P2</span>
-            <span className="px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-[10px] font-bold">Ready Queue: [P3, P1]</span>
-          </div>
-        </div>
-      )
+      PreviewComponent: OsPreview,
     },
     {
       id: 'networks',
@@ -95,57 +188,7 @@ export function ModulesSection() {
       progress: 35,
       btnText: 'Explore Network Modules',
       badgeColor: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30',
-      renderPreview: () => (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
-            <span className="text-slate-500 dark:text-slate-400">Flow: TCP 3-Way Handshake</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" /> Connection Established
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between py-4 px-6 relative">
-            <div className="text-center space-y-1">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-mono font-bold text-xs">
-                Client
-              </div>
-              <div className="text-[10px] font-mono text-slate-500">192.168.1.10</div>
-            </div>
-
-            {/* Packet Travel Lines */}
-            <div className="flex-1 mx-6 space-y-2">
-              <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
-                <span className="flex-1 h-[1.5px] bg-emerald-500/40 relative">
-                  <span className="absolute -top-1 left-1/3 w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                </span>
-                <span>SYN (Seq=100) &rarr;</span>
-              </div>
-              <div className="flex items-center gap-2 text-[10px] font-mono text-blue-600 dark:text-blue-400 flex-row-reverse">
-                <span className="flex-1 h-[1.5px] bg-blue-500/40 relative">
-                  <span className="absolute -top-1 right-1/3 w-2 h-2 rounded-full bg-blue-500 animate-ping" />
-                </span>
-                <span>&leftarrow; SYN-ACK (Ack=101)</span>
-              </div>
-              <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
-                <span className="flex-1 h-[1.5px] bg-emerald-500/40" />
-                <span>ACK (Seq=101) &rarr;</span>
-              </div>
-            </div>
-
-            <div className="text-center space-y-1">
-              <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 font-mono font-bold text-xs">
-                Server
-              </div>
-              <div className="text-[10px] font-mono text-slate-500">93.184.216.34</div>
-            </div>
-          </div>
-
-          <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
-            <span>State: <strong className="text-emerald-600 dark:text-emerald-400">ESTABLISHED</strong> (RTT = 18ms)</span>
-            <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">Port 443</span>
-          </div>
-        </div>
-      )
+      PreviewComponent: NetworksPreview,
     },
     {
       id: 'sysdesign',
@@ -156,39 +199,32 @@ export function ModulesSection() {
       progress: 28,
       btnText: 'Explore System Design',
       badgeColor: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/30',
-      renderPreview: () => (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs font-mono border-b border-slate-200 dark:border-slate-800 pb-3">
-            <span className="text-slate-500 dark:text-slate-400">Architecture: High-Availability Cluster</span>
-            <span className="text-purple-600 dark:text-purple-400 font-semibold">Cache Hit Ratio: 94.2%</span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-3 py-2 text-center font-mono text-xs">
-            <div className="bg-slate-100 dark:bg-[#070A12] border border-purple-500/30 p-3 rounded-xl space-y-1">
-              <span className="text-purple-600 dark:text-purple-400 font-bold block text-xs">Load Balancer</span>
-              <span className="text-[10px] text-slate-500">Nginx Round-Robin</span>
-            </div>
-            <div className="bg-purple-500 text-white p-3 rounded-xl space-y-1 shadow-md animate-pulse">
-              <span className="font-bold block text-xs">Redis Cache</span>
-              <span className="text-[10px] opacity-80">In-Memory (0.8ms)</span>
-            </div>
-            <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-300 dark:border-slate-700 p-3 rounded-xl space-y-1">
-              <span className="text-slate-700 dark:text-slate-300 font-bold block text-xs">Primary DB</span>
-              <span className="text-[10px] text-slate-500">PostgreSQL (Replica)</span>
-            </div>
-          </div>
-
-          <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-3 text-xs font-mono flex items-center justify-between text-slate-600 dark:text-slate-300">
-            <span>Query Result: Served directly from Redis Cache</span>
-            <span className="px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[10px] font-bold">10k req/sec</span>
-          </div>
-        </div>
-      )
+      PreviewComponent: SystemDesignPreview,
     }
   ];
 
   const currentModule = modules.find((m) => m.id === activeTab) || modules[0];
   const IconComponent = currentModule.icon;
+  const PreviewComp = currentModule.PreviewComponent;
+
+  const handleStartLearning = (e) => {
+    e.preventDefault();
+    if (onNavigateToDsa) {
+      onNavigateToDsa();
+    } else {
+      window.location.hash = '#dsa';
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'ArrowDown') {
+      const nextIndex = (index + 1) % modules.length;
+      setActiveTab(modules[nextIndex].id);
+    } else if (e.key === 'ArrowUp') {
+      const prevIndex = (index - 1 + modules.length) % modules.length;
+      setActiveTab(modules[prevIndex].id);
+    }
+  };
 
   return (
     <section id="modules" className="py-20 bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-white relative font-sans overflow-hidden border-t border-slate-200/80 dark:border-[#1C2638] transition-colors duration-200">
@@ -203,7 +239,7 @@ export function ModulesSection() {
           className="text-center max-w-3xl mx-auto mb-14 space-y-3"
         >
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-[#0E172A] border border-blue-200 dark:border-[#1E2E4A] text-blue-600 dark:text-[#3B82F6] text-[11px] font-semibold uppercase tracking-wider font-mono">
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-3.5 h-3.5" aria-hidden="true" />
             <span>INTERACTIVE CURRICULUM</span>
           </div>
 
@@ -220,15 +256,25 @@ export function ModulesSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-6xl mx-auto">
           
           {/* LEFT PANEL: Module Tabs */}
-          <div className="lg:col-span-5 space-y-3 flex flex-col justify-center">
-            {modules.map((mod) => {
+          <div
+            role="tablist"
+            aria-label="Computer Science Curriculum Modules"
+            className="lg:col-span-5 space-y-3 flex flex-col justify-center"
+          >
+            {modules.map((mod, idx) => {
               const TabIcon = mod.icon;
               const isActive = activeTab === mod.id;
               return (
                 <button
                   key={mod.id}
+                  role="tab"
+                  id={`module-tab-${mod.id}`}
+                  aria-selected={isActive}
+                  aria-controls={`module-panel-${mod.id}`}
+                  tabIndex={isActive ? 0 : -1}
                   onClick={() => setActiveTab(mod.id)}
-                  className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-start gap-4 relative overflow-hidden ${
+                  onKeyDown={(e) => handleKeyDown(e, idx)}
+                  className={`w-full text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 flex items-start gap-4 relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                     isActive
                       ? 'bg-white dark:bg-[#0B101D] border-blue-500/60 shadow-lg dark:shadow-[0_4px_25px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/20'
                       : 'bg-white/60 dark:bg-[#0B101D]/50 border-slate-200/80 dark:border-[#1E2638] hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400'
@@ -246,7 +292,7 @@ export function ModulesSection() {
                       ? 'bg-blue-600 text-white border-blue-500 shadow-md'
                       : 'bg-slate-100 dark:bg-[#070A12] border-slate-200 dark:border-[#1C2638] text-slate-600 dark:text-slate-400'
                   }`}>
-                    <TabIcon className="w-5 h-5" />
+                    <TabIcon className="w-5 h-5" aria-hidden="true" />
                   </div>
 
                   <div className="flex-1 space-y-1 relative z-10">
@@ -268,8 +314,13 @@ export function ModulesSection() {
             })}
           </div>
 
-          {/* RIGHT PANEL: Live Interactive Simulation Playground Canvas with Framer Motion AnimatePresence */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-6 sm:p-7 shadow-xl flex flex-col justify-between space-y-6 relative overflow-hidden transition-colors">
+          {/* RIGHT PANEL: Live Interactive Simulation Playground Canvas */}
+          <div
+            role="tabpanel"
+            id={`module-panel-${currentModule.id}`}
+            aria-labelledby={`module-tab-${currentModule.id}`}
+            className="lg:col-span-7 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-6 sm:p-7 shadow-xl flex flex-col justify-between space-y-6 relative overflow-hidden transition-colors"
+          >
             
             <AnimatePresence mode="wait">
               <motion.div
@@ -284,7 +335,7 @@ export function ModulesSection() {
                 <div className="flex items-center justify-between border-b border-slate-200 dark:border-[#1E2638] pb-4">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md">
-                      <IconComponent className="w-5 h-5" />
+                      <IconComponent className="w-5 h-5" aria-hidden="true" />
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-none">
@@ -303,7 +354,7 @@ export function ModulesSection() {
 
                 {/* Live Interactive Visualization Preview Widget */}
                 <div className="py-2">
-                  {currentModule.renderPreview()}
+                  <PreviewComp />
                 </div>
 
                 {/* Topics Checkmark Pills */}
@@ -312,12 +363,12 @@ export function ModulesSection() {
                     Curriculum Breakdown:
                   </span>
                   <div className="flex flex-wrap gap-2">
-                    {currentModule.topics.map((t, i) => (
+                    {currentModule.topics.map((t) => (
                       <span
-                        key={i}
+                        key={t}
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] text-slate-700 dark:text-slate-300 text-xs font-medium"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" aria-hidden="true" />
                         <span>{t}</span>
                       </span>
                     ))}
@@ -326,15 +377,13 @@ export function ModulesSection() {
 
                 {/* Bottom Action CTA */}
                 <div className="pt-2">
-                  <motion.a
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    href="#dashboard"
-                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+                  <button
+                    onClick={handleStartLearning}
+                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                   >
                     <span>{currentModule.btnText}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </motion.a>
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </button>
                 </div>
 
               </motion.div>
@@ -348,3 +397,4 @@ export function ModulesSection() {
     </section>
   );
 }
+

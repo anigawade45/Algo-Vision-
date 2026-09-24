@@ -70,6 +70,11 @@ export function AiSection() {
     }, 1200);
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleSend();
+  };
+
   const handleVisualRequest = () => {
     setShowVisualPreview(true);
     setMessages((prev) => [
@@ -97,7 +102,7 @@ export function AiSection() {
           className="text-center max-w-3xl mx-auto mb-14 space-y-3"
         >
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-[#0E172A] border border-blue-200 dark:border-[#1E2E4A] text-blue-600 dark:text-[#3B82F6] text-[11px] font-semibold uppercase tracking-wider font-mono">
-            <BrainCircuit className="w-3.5 h-3.5" />
+            <BrainCircuit className="w-3.5 h-3.5" aria-hidden="true" />
             <span>INTELLIGENT CS TUTOR</span>
           </div>
 
@@ -124,27 +129,32 @@ export function AiSection() {
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 p-[1px] shadow-sm">
                 <div className="w-full h-full bg-[#080B14] rounded-[11px] flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-blue-400" />
+                  <Bot className="w-4 h-4 text-blue-400" aria-hidden="true" />
                 </div>
               </div>
               <div>
                 <span className="text-sm font-bold text-slate-900 dark:text-white block leading-none">AlgoVision AI Tutor</span>
                 <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 mt-1 font-semibold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" aria-hidden="true" />
                   Online &amp; Active
                 </span>
               </div>
             </div>
 
             {/* Live Neural Waveform Indicator */}
-            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-200/60 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700/60 text-[10px] font-mono text-slate-600 dark:text-slate-300">
+            <div className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-200/60 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700/60 text-[10px] font-mono text-slate-600 dark:text-slate-300" aria-hidden="true">
               <Activity className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
               <span className="font-semibold ml-1">Neural Engine Active</span>
             </div>
           </div>
 
           {/* Animated Messages Scroll Container */}
-          <div className="p-6 space-y-4 min-h-[320px] max-h-[420px] overflow-y-auto bg-slate-50/50 dark:bg-[#070A12] transition-colors">
+          <div
+            role="log"
+            aria-live="polite"
+            aria-label="AI Chat Conversation"
+            className="p-6 space-y-4 min-h-[320px] max-h-[420px] overflow-y-auto bg-slate-50/50 dark:bg-[#070A12] transition-colors"
+          >
             <AnimatePresence initial={false}>
               {messages.map((msg) => (
                 <motion.div
@@ -156,7 +166,7 @@ export function AiSection() {
                 >
                   {msg.sender === 'ai' && (
                     <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shrink-0">
-                      <Bot className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      <Bot className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                     </div>
                   )}
 
@@ -174,9 +184,9 @@ export function AiSection() {
                     {msg.hasVisualOption && !showVisualPreview && (
                       <button
                         onClick={handleVisualRequest}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-xs font-mono font-medium transition-all"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-xs font-mono font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
                       >
-                        <Eye className="w-3.5 h-3.5" />
+                        <Eye className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>Show me visually</span>
                       </button>
                     )}
@@ -190,14 +200,15 @@ export function AiSection() {
                         <span className="text-[10px] font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider block font-bold">
                           Live Interactive Array Visualizer
                         </span>
-                        <div className="flex gap-2 justify-center py-2">
+                        <div className="flex gap-2 justify-center py-2" aria-hidden="true">
                           <div className="w-8 h-8 rounded bg-white dark:bg-[#080B14] border border-slate-300 dark:border-[#263247] flex items-center justify-center text-xs font-mono font-bold text-slate-500">3</div>
                           <div className="w-8 h-8 rounded bg-white dark:bg-[#080B14] border border-slate-300 dark:border-[#263247] flex items-center justify-center text-xs font-mono font-bold text-slate-500">8</div>
                           <div className="w-8 h-8 rounded bg-blue-500/20 border border-blue-400 flex items-center justify-center text-xs font-mono font-bold text-blue-600 dark:text-blue-300 scale-110 shadow-sm">17</div>
                           <div className="w-8 h-8 rounded bg-indigo-500/20 border border-indigo-400 flex items-center justify-center text-xs font-mono font-bold text-indigo-600 dark:text-indigo-300">31</div>
                         </div>
-                        <a href="#modules" className="text-xs font-mono text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 justify-center font-semibold">
-                          Open Full Interactive Playground <ArrowRight className="w-3 h-3" />
+                        <a href="#modules" className="text-xs font-mono text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 justify-center font-semibold rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+                          <span>Open Full Interactive Playground</span>
+                          <ArrowRight className="w-3 h-3" aria-hidden="true" />
                         </a>
                       </motion.div>
                     )}
@@ -214,11 +225,11 @@ export function AiSection() {
                 className="flex gap-3 justify-start items-center"
               >
                 <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin" />
+                  <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 animate-spin" aria-hidden="true" />
                 </div>
                 <div className="bg-white dark:bg-[#0E172A] border border-slate-200 dark:border-[#1E2E4A] rounded-2xl rounded-tl-none px-4 py-3 text-xs font-mono text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                   <span>AlgoVision AI is processing</span>
-                  <span className="flex gap-1 items-center">
+                  <span className="flex gap-1 items-center" aria-hidden="true">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce duration-300" />
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce duration-500" />
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-bounce duration-700" />
@@ -232,38 +243,40 @@ export function AiSection() {
           {/* Quick Prompts Bar */}
           <div className="px-6 py-3 bg-slate-100/70 dark:bg-[#090E1A] border-t border-slate-200 dark:border-[#1E2638] flex flex-wrap items-center gap-2">
             <span className="text-xs font-mono text-slate-500 dark:text-slate-400 font-semibold mr-1 flex items-center gap-1">
-              <Wand2 className="w-3 h-3 text-blue-500" /> Quick Prompts:
+              <Wand2 className="w-3 h-3 text-blue-500" aria-hidden="true" /> Quick Prompts:
             </span>
             {promptChips.map((chip, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => handleSend(chip.query)}
-                className="px-3 py-1 rounded-full bg-white dark:bg-[#151C2C] hover:bg-blue-50 dark:hover:bg-blue-600/30 border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-300 text-xs font-medium transition-colors shadow-sm"
+                className="px-3 py-1 rounded-full bg-white dark:bg-[#151C2C] hover:bg-blue-50 dark:hover:bg-blue-600/30 border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-300 text-xs font-medium transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
               >
                 {chip.label}
               </button>
             ))}
           </div>
 
-          {/* Input Footer */}
-          <div className="p-4 bg-white dark:bg-[#0B101D] border-t border-slate-200 dark:border-[#1E2638] flex items-center gap-3">
+          {/* Input Form Footer */}
+          <form onSubmit={handleFormSubmit} className="p-4 bg-white dark:bg-[#0B101D] border-t border-slate-200 dark:border-[#1E2638] flex items-center gap-3">
             <input
               type="text"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Ask AlgoVision any algorithm or CS question..."
-              className="flex-1 bg-slate-50 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] focus:border-blue-500 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-sm rounded-xl px-4 py-3 outline-none transition-colors"
+              aria-label="Algorithm or Computer Science Question"
+              className="flex-1 bg-slate-50 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-900 dark:text-slate-100 placeholder-slate-400 text-sm rounded-xl px-4 py-3 outline-none transition-colors"
             />
             <button
-              onClick={() => handleSend()}
-              disabled={isTyping}
-              className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all"
+              type="submit"
+              disabled={isTyping || !inputVal.trim()}
+              className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label="Ask AlgoVision AI"
             >
               <span>Ask AlgoVision</span>
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4" aria-hidden="true" />
             </button>
-          </div>
+          </form>
 
         </motion.div>
 
@@ -271,3 +284,4 @@ export function AiSection() {
     </section>
   );
 }
+

@@ -18,22 +18,23 @@ export function TrustStrip() {
             Built to make Computer Science easier to understand.
           </p>
 
-          <div className="flex items-center justify-center lg:justify-end gap-3 sm:gap-5 lg:gap-6 overflow-x-auto w-full lg:w-auto scrollbar-none py-0.5">
-            {items.map((item, idx) => {
+          <ul className="flex items-center justify-center lg:justify-end gap-3 sm:gap-5 lg:gap-6 overflow-x-auto w-full lg:w-auto scrollbar-none py-0.5" role="list">
+            {items.map((item) => {
               const Icon = item.icon;
               return (
-                <div
-                  key={idx}
+                <li
+                  key={item.label}
                   className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors group shrink-0"
                 >
-                  <Icon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0 group-hover:scale-110 transition-transform" />
+                  <Icon className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0 group-hover:scale-110 transition-transform" aria-hidden="true" />
                   <span className="text-xs font-medium whitespace-nowrap">{item.label}</span>
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
       </div>
     </section>
   );
 }
+

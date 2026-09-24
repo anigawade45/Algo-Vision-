@@ -7,20 +7,16 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 15) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 15);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
+    { name: 'Domains', href: '#domains-overview' },
     { name: 'Features', href: '#problem' },
     { name: 'Modules', href: '#modules' },
-    { name: 'Approach', href: '#solution' },
     { name: 'AI Tutor', href: '#ai' },
     { name: 'FAQ', href: '#faq' },
   ];
@@ -45,10 +41,14 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between">
           
-          {/* LEFT: Logo + Subtle B.Tech Tag (Inter font throughout) */}
-          <a href="#" className="flex items-center gap-3 group">
+          {/* LEFT: Logo */}
+          <a
+            href="#"
+            className="flex items-center gap-3 group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            aria-label="AlgoVision Homepage"
+          >
             <div className="w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] shadow-2xs flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:border-blue-300 dark:group-hover:border-blue-700 transition-colors">
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="2" y="3" width="7" height="7" rx="1.5" />
                 <rect x="15" y="3" width="7" height="7" rx="1.5" />
                 <rect x="8.5" y="14" width="7" height="7" rx="1.5" />
@@ -57,46 +57,45 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
               </svg>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="text-lg sm:text-[19px] font-semibold tracking-tight text-slate-900 dark:text-white font-sans">
-                AlgoVision
-              </span>
-            </div>
+            <span className="text-lg sm:text-[19px] font-semibold tracking-tight text-slate-900 dark:text-white font-sans">
+              AlgoVision
+            </span>
           </a>
 
-          {/* CENTER: Clean Text Navigation (Inter 14px 500) */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* CENTER: Navigation Links */}
+          <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-sans"
+                className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-sans rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 px-1 py-0.5"
               >
                 {link.name}
               </a>
             ))}
           </nav>
 
-          {/* RIGHT: Actions (Inter 14-15px 600) */}
+          {/* RIGHT: Actions */}
           <div className="hidden md:flex items-center gap-4 font-sans">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors shadow-2xs"
-              title="Toggle Theme"
+              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+              {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" aria-hidden="true" /> : <Moon className="w-4 h-4 text-slate-600" aria-hidden="true" />}
             </button>
 
             <button
               onClick={handleStartLearning}
-              className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors"
+              className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
             >
               DSA Platform
             </button>
 
             <button
               onClick={handleStartLearning}
-              className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
             >
               <span>Start Learning</span>
             </button>
@@ -106,15 +105,18 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-600 dark:text-slate-300"
+              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-600 dark:text-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+              {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" aria-hidden="true" /> : <Moon className="w-4 h-4 text-slate-600" aria-hidden="true" />}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200"
+              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111827] text-slate-700 dark:text-slate-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" aria-hidden="true" /> : <Menu className="w-5 h-5" aria-hidden="true" />}
             </button>
           </div>
 
@@ -124,13 +126,13 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed top-16 left-0 right-0 bg-white dark:bg-[#0B0F19] border-b border-slate-200 dark:border-slate-800 px-6 py-5 space-y-4 shadow-lg font-sans">
-          <nav className="flex flex-col space-y-3">
+          <nav className="flex flex-col space-y-3" aria-label="Mobile Navigation">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-[15px] font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 py-1.5"
+                className="text-[15px] font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
                 {link.name}
               </a>
@@ -142,7 +144,7 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
                 setMobileMenuOpen(false);
                 handleStartLearning(e);
               }}
-              className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-sm font-medium"
+              className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
             >
               DSA Platform
             </button>
@@ -151,7 +153,7 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
                 setMobileMenuOpen(false);
                 handleStartLearning(e);
               }}
-              className="w-full text-center py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm shadow-sm"
+              className="w-full text-center py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
             >
               <span>Start Learning Free</span>
             </button>
@@ -161,3 +163,4 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
     </header>
   );
 }
+

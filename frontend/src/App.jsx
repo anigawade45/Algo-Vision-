@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { MotionConfig } from 'framer-motion';
 import { Navbar } from '@/features/landing/components/Navbar';
 import { HeroSection } from '@/features/landing/components/HeroSection';
+import { CoreDomainsSection } from '@/features/landing/components/CoreDomainsSection';
 import { TrustStrip } from '@/features/landing/components/TrustStrip';
 import { ProblemSection } from '@/features/landing/components/ProblemSection';
-import { SolutionSection } from '@/features/landing/components/SolutionSection';
 import { ModulesSection } from '@/features/landing/components/ModulesSection';
 import { AiSection } from '@/features/landing/components/AiSection';
 import { DifferentiatorSection } from '@/features/landing/components/DifferentiatorSection';
@@ -71,41 +72,48 @@ export default function App() {
 
   if (currentRoute === 'dsa-home') {
     return (
-      <DsaHome
-        theme={theme}
-        toggleTheme={toggleTheme}
-        onNavigateToLanding={() => navigateTo('landing')}
-        onNavigateToWorkspace={() => navigateTo('dsa-workspace')}
-      />
+      <MotionConfig reducedMotion="user">
+        <DsaHome
+          theme={theme}
+          toggleTheme={toggleTheme}
+          onNavigateToLanding={() => navigateTo('landing')}
+          onNavigateToWorkspace={() => navigateTo('dsa-workspace')}
+        />
+      </MotionConfig>
     );
   }
 
   if (currentRoute === 'dsa-workspace') {
     return (
-      <ProblemWorkspace
-        theme={theme}
-        toggleTheme={toggleTheme}
-        onNavigateToHome={() => navigateTo('dsa-home')}
-      />
+      <MotionConfig reducedMotion="user">
+        <ProblemWorkspace
+          theme={theme}
+          toggleTheme={toggleTheme}
+          onNavigateToHome={() => navigateTo('dsa-home')}
+        />
+      </MotionConfig>
     );
   }
 
   return (
-    <div className={`min-h-screen w-full transition-colors duration-200 ${theme === 'light' ? 'light bg-slate-50 text-slate-900' : 'dark bg-[#05070E] text-slate-100'}`}>
-      <Navbar theme={theme} toggleTheme={toggleTheme} onNavigateToDsa={() => navigateTo('dsa-home')} />
-      
-      <main className="w-full overflow-hidden">
-        <HeroSection onNavigateToDsa={() => navigateTo('dsa-home')} />
-        <TrustStrip />
-        <ProblemSection />
-        <SolutionSection />
-        <ModulesSection onNavigateToDsa={() => navigateTo('dsa-home')} />
-        <AiSection />
-        <DifferentiatorSection />
-        <FaqSection />
-      </main>
+    <MotionConfig reducedMotion="user">
+      <div className={`min-h-screen w-full transition-colors duration-200 ${theme === 'light' ? 'light bg-slate-50 text-slate-900' : 'dark bg-[#05070E] text-slate-100'}`}>
+        <Navbar theme={theme} toggleTheme={toggleTheme} onNavigateToDsa={() => navigateTo('dsa-home')} />
+        
+        <main className="w-full overflow-hidden">
+          <HeroSection theme={theme} onNavigateToDsa={() => navigateTo('dsa-home')} />
+          <CoreDomainsSection onNavigateToDsa={() => navigateTo('dsa-home')} />
+          <TrustStrip />
+          <ProblemSection />
+          <ModulesSection onNavigateToDsa={() => navigateTo('dsa-home')} />
+          <AiSection />
+          <DifferentiatorSection />
+          <FaqSection />
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 }
+

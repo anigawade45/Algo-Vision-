@@ -1,183 +1,211 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Lightbulb, Workflow, Terminal, Laptop, Crown, ArrowRight } from 'lucide-react';
+import {
+  GitBranch,
+  Cpu,
+  Database,
+  Network,
+  Boxes,
+  Layers,
+  Sparkles,
+  ArrowUpRight
+} from 'lucide-react';
 
 export function SolutionSection() {
-  const steps = [
+  const [hoveredNode, setHoveredNode] = useState(null);
+
+  const csNodes = [
     {
-      num: '01',
-      title: 'Learn',
-      description: 'Understand with AI explanations.',
-      icon: Lightbulb,
-      iconBg: 'bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400',
-      numColor: 'text-amber-600 dark:text-amber-400',
-      renderMockup: () => (
-        <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-2.5 h-[90px] flex flex-col justify-between overflow-hidden text-left font-sans text-xs">
-          <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-[10px] font-medium w-fit">
-            <span className="font-bold font-mono">AI</span> What is a stack?
-          </div>
-          <p className="text-slate-600 dark:text-slate-400 text-[10px] leading-snug line-clamp-2">
-            A linear data structure following LIFO principle...
-          </p>
-        </div>
-      )
+      id: 'dsa',
+      title: 'Data Structures & Algorithms',
+      short: 'DSA',
+      icon: GitBranch,
+      description: 'Foundational memory structures, logic trees & complexity analysis.',
+      connections: ['os', 'dbms', 'oop'],
+      badge: 'Core Logic',
     },
     {
-      num: '02',
-      title: 'Visualize',
-      description: 'See structures change in real time.',
-      icon: Workflow,
-      iconBg: 'bg-cyan-50 dark:bg-cyan-500/10 border-cyan-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400',
-      numColor: 'text-cyan-600 dark:text-cyan-400',
-      renderMockup: () => (
-        <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-2.5 h-[90px] flex items-center justify-center gap-2 overflow-hidden text-xs">
-          <div className="flex flex-col gap-1 w-12 text-center font-mono text-[10px] font-bold">
-            <div className="py-0.5 bg-blue-600 text-white rounded border border-blue-400/50 shadow-sm animate-bounce">30</div>
-            <div className="py-0.5 bg-slate-200 dark:bg-[#111827] text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-700">20</div>
-            <div className="py-0.5 bg-slate-200 dark:bg-[#111827] text-slate-800 dark:text-slate-200 rounded border border-slate-300 dark:border-slate-700">10</div>
-          </div>
-          <div className="text-[9px] font-mono font-semibold text-blue-600 dark:text-blue-400">
-            TOP &rarr;
-          </div>
-        </div>
-      )
+      id: 'os',
+      title: 'Operating Systems',
+      short: 'OS',
+      icon: Cpu,
+      description: 'Concurrency, process management, memory paging & kernel behavior.',
+      connections: ['dsa', 'networks', 'system'],
+      badge: 'System Execution',
     },
     {
-      num: '03',
-      title: 'Execute',
-      description: 'Follow operations step-by-step.',
-      icon: Terminal,
-      iconBg: 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400',
-      numColor: 'text-emerald-600 dark:text-emerald-400',
-      renderMockup: () => (
-        <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-2.5 h-[90px] flex flex-col justify-between overflow-hidden">
-          <div className="flex items-center justify-center gap-1 py-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-            <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold shadow-sm animate-pulse">3</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-          </div>
-          <div className="bg-white dark:bg-[#0E172A] border border-slate-200 dark:border-[#1E2E4A] rounded p-1.5 flex items-center justify-between text-[10px] font-mono text-slate-700 dark:text-slate-300">
-            <span>Pushing 40</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-          </div>
-        </div>
-      )
+      id: 'dbms',
+      title: 'Database Management',
+      short: 'DBMS',
+      icon: Database,
+      description: 'B-Trees, indexing engines, transaction isolation & query optimization.',
+      connections: ['dsa', 'system'],
+      badge: 'Data Persistence',
     },
     {
-      num: '04',
-      title: 'Practice',
-      description: 'Write code & test intuition.',
-      icon: Laptop,
-      iconBg: 'bg-blue-50 dark:bg-blue-500/10 border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400',
-      numColor: 'text-blue-600 dark:text-blue-400',
-      renderMockup: () => (
-        <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-2 h-[90px] flex flex-col justify-between overflow-hidden font-mono text-[9px]">
-          <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-0.5 text-slate-500">
-            <span>Java &or;</span>
-          </div>
-          <div className="space-y-0.5 text-blue-600 dark:text-blue-300/90 leading-tight">
-            <div>Stack&lt;Integer&gt; s = new Stack&lt;&gt;();</div>
-            <div className="bg-blue-500/10 px-1 rounded animate-pulse">s.push(40);</div>
-          </div>
-        </div>
-      )
+      id: 'networks',
+      title: 'Computer Networks',
+      short: 'Networks',
+      icon: Network,
+      description: 'Protocol stacks, packet flow, socket states & distributed routing.',
+      connections: ['os', 'system'],
+      badge: 'Communication Layer',
     },
     {
-      num: '05',
-      title: 'Master',
-      description: 'Strengthen weak technical areas.',
-      icon: Crown,
-      iconBg: 'bg-purple-50 dark:bg-purple-500/10 border-purple-200 dark:border-purple-500/30 text-purple-600 dark:text-purple-400',
-      numColor: 'text-purple-600 dark:text-purple-400',
-      renderMockup: () => (
-        <div className="bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1C2638] rounded-xl p-2.5 h-[90px] flex flex-col justify-between overflow-hidden text-xs">
-          <div>
-            <div className="flex justify-between text-[10px] font-semibold text-slate-700 dark:text-slate-300 mb-1">
-              <span>Overall</span>
-              <span className="text-purple-600 dark:text-purple-400 font-mono">68%</span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-blue-500 to-purple-600 w-[68%] animate-pulse" />
-            </div>
-          </div>
-          <div className="bg-white dark:bg-[#0E172A] border border-slate-200 dark:border-[#1E2E4A] rounded p-1.5 flex items-center justify-between text-[10px] text-slate-700 dark:text-slate-300">
-            <span>Streak</span>
-            <span className="font-mono font-bold text-amber-500 flex items-center gap-1">&fire; 12d</span>
-          </div>
-        </div>
-      )
+      id: 'oop',
+      title: 'Object Oriented Programming',
+      short: 'OOP',
+      icon: Boxes,
+      description: 'Encapsulation, inheritance paradigms, abstraction & modular design.',
+      connections: ['dsa', 'system'],
+      badge: 'Software Architecture',
+    },
+    {
+      id: 'system',
+      title: 'System Design',
+      short: 'System Design',
+      icon: Layers,
+      description: 'Scalable clusters, load distribution, caching topologies & microservices.',
+      connections: ['os', 'dbms', 'networks', 'oop'],
+      badge: 'Distributed Systems',
     }
   ];
 
   return (
-    <section className="py-16 bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-white relative font-sans overflow-hidden border-t border-slate-200/80 dark:border-[#1C2638] transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="solution" className="py-24 sm:py-32 bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 relative font-sans overflow-hidden border-t border-slate-200 dark:border-slate-800/60 transition-colors duration-200">
+      
+      {/* Background Ambient Glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 dark:bg-blue-600/[0.03] rounded-full blur-[120px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Section Header */}
+        {/* Header Copy */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-3xl mx-auto mb-10 space-y-2.5"
+          transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-20 space-y-4"
         >
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-[#0E172A] border border-blue-200 dark:border-[#1E2E4A] text-blue-600 dark:text-[#3B82F6] text-[11px] font-semibold uppercase tracking-wider font-mono">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>THE ALGO VISION APPROACH</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/40 text-blue-600 dark:text-blue-400 text-xs font-mono font-medium uppercase tracking-widest">
+            <Sparkles className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
+            <span>CONNECTED KNOWLEDGE ARCHITECTURE</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-[40px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-            Learn the concept.{' '}
-            <span className="text-blue-600 dark:text-[#3B82F6]">Watch it execute.</span>{' '}
-            Understand why.
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Computer Science is connected. <br />
+            <span className="text-blue-600 dark:text-blue-500">See the connections.</span>
           </h2>
 
-          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-            Our interactive approach turns abstract ideas into clear, visual understanding.
+          <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-normal">
+            AlgoVision helps you understand complex technical concepts by making relationships, systems, and behavior visible.
           </p>
         </motion.div>
 
-        {/* 5-Step Process Timeline Cards with Framer Motion Stagger */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 relative">
-          {steps.map((step, idx) => {
-            const Icon = step.icon;
-            return (
-              <motion.div
-                key={step.num}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.1 }}
-                whileHover={{ y: -6, scale: 1.02 }}
-                className="bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] rounded-2xl p-4 flex flex-col justify-between space-y-3 shadow-sm hover:shadow-lg dark:hover:shadow-[0_8px_25px_rgba(59,130,246,0.12)] transition-colors group relative overflow-hidden"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className={`w-9 h-9 rounded-xl border ${step.iconBg} flex items-center justify-center group-hover:scale-105 transition-transform`}>
-                      <Icon className="w-4 h-4" />
+        {/* CONNECTED KNOWLEDGE ARCHITECTURE GRAPH */}
+        <div className="relative max-w-5xl mx-auto">
+          
+          {/* Conceptual Node Graph Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10">
+            {csNodes.map((node) => {
+              const Icon = node.icon;
+              const isHovered = hoveredNode === node.id;
+              const isConnectedToHovered = hoveredNode && node.connections.includes(hoveredNode);
+
+              return (
+                <motion.div
+                  key={node.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  onMouseEnter={() => setHoveredNode(node.id)}
+                  onMouseLeave={() => setHoveredNode(null)}
+                  whileHover={{ y: -4 }}
+                  className={`p-6 sm:p-7 rounded-2xl border transition-all duration-300 relative overflow-hidden backdrop-blur-md cursor-pointer ${
+                    isHovered
+                      ? 'bg-white dark:bg-[#0B101D] border-blue-500 dark:border-blue-500/80 shadow-lg dark:shadow-[0_0_30px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/30'
+                      : isConnectedToHovered
+                      ? 'bg-white/80 dark:bg-[#0B101D]/80 border-blue-300 dark:border-blue-500/40 text-slate-900 dark:text-slate-200'
+                      : 'bg-white dark:bg-[#0B101D]/40 border-slate-200 dark:border-slate-800/80 text-slate-800 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  {/* Subtle Node Accent Glow */}
+                  {isHovered && (
+                    <motion.div
+                      layoutId="nodeGlow"
+                      className="absolute inset-0 bg-gradient-to-br from-blue-500/5 dark:from-blue-500/10 via-transparent to-transparent pointer-events-none"
+                    />
+                  )}
+
+                  <div className="flex items-start justify-between mb-5">
+                    <div className={`w-11 h-11 rounded-xl border flex items-center justify-center transition-colors ${
+                      isHovered
+                        ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-500/20'
+                        : 'bg-slate-100 dark:bg-[#070A12] border-slate-200 dark:border-slate-800 text-blue-600 dark:text-blue-400'
+                    }`}>
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <span className={`text-sm font-mono font-bold ${step.numColor}`}>{step.num}</span>
+
+                    <span className="text-[10px] font-mono uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400">
+                      {node.badge}
+                    </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-0.5">{step.title}</h3>
-                  <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-snug mb-3">{step.description}</p>
-                </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 tracking-tight flex items-center justify-between">
+                    <span>{node.title}</span>
+                  </h3>
 
-                {step.renderMockup()}
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-normal mb-6">
+                    {node.description}
+                  </p>
 
-                {/* Animated Connecting Arrow for Desktop */}
-                {idx < steps.length - 1 && (
-                  <div className="hidden lg:flex absolute -right-3 top-1/3 -translate-y-1/2 z-20 text-blue-500 dark:text-blue-400 pointer-events-none">
-                    <ArrowRight className="w-4 h-4 animate-pulse" />
+                  {/* Relationship Link Pill Footer */}
+                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-500">
+                    <span className="flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${isHovered ? 'bg-blue-500 animate-ping' : 'bg-slate-400 dark:bg-slate-700'}`} />
+                      <span>{node.connections.length} System Interlinks</span>
+                    </span>
+
+                    <span className={`transition-colors ${isHovered ? 'text-blue-600 dark:text-blue-400 font-semibold' : 'text-slate-500 dark:text-slate-600'}`}>
+                      View Node &rarr;
+                    </span>
                   </div>
-                )}
-              </motion.div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Central Architecture Summary Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-12 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 bg-white/90 dark:bg-[#070A12]/90 backdrop-blur flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-600 dark:text-slate-400 text-center sm:text-left shadow-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shrink-0" />
+              <span>
+                Full-Stack Computer Science Knowledge Architecture &bull; All 6 Core Domains Synchronized
+              </span>
+            </div>
+
+            <a
+              href="#modules"
+              className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-semibold transition-colors shrink-0"
+            >
+              <span>Explore Ecosystem</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </a>
+          </motion.div>
+
         </div>
 
       </div>
     </section>
   );
 }
+
+
