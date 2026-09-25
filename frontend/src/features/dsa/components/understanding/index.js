@@ -1,1 +1,1 @@
-// Understanding component exports
+export { UnderstandingStage } from './UnderstandingStage';

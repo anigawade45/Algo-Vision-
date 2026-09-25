@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { Navbar } from '@/features/landing/components/Navbar';
 import { HeroSection } from '@/features/landing/components/HeroSection';
-import { CoreDomainsSection } from '@/features/landing/components/CoreDomainsSection';
 import { TrustStrip } from '@/features/landing/components/TrustStrip';
 import { ProblemSection } from '@/features/landing/components/ProblemSection';
 import { ModulesSection } from '@/features/landing/components/ModulesSection';
 import { AiSection } from '@/features/landing/components/AiSection';
-import { DifferentiatorSection } from '@/features/landing/components/DifferentiatorSection';
 import { FaqSection } from '@/features/landing/components/FaqSection';
 import { Footer } from '@/features/landing/components/Footer';
 
@@ -129,12 +127,10 @@ export default function App() {
         
         <main className="w-full overflow-hidden">
           <HeroSection theme={theme} onNavigateToDsa={() => navigateTo('dsa-home')} />
-          <CoreDomainsSection onNavigateToDsa={() => navigateTo('dsa-home')} />
           <TrustStrip />
           <ProblemSection />
           <ModulesSection onNavigateToDsa={() => navigateTo('dsa-home')} />
           <AiSection />
-          <DifferentiatorSection />
           <FaqSection />
         </main>
 
