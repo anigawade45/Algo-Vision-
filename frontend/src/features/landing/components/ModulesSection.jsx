@@ -1,4 +1,5 @@
 import React, { useState, memo } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Cpu, Wifi, Server, Binary, ArrowRight, CheckCircle2, Layers } from 'lucide-react';
 
@@ -377,13 +378,30 @@ export function ModulesSection({ onNavigateToDsa }) {
 
                 {/* Bottom Action CTA */}
                 <div className="pt-2">
-                  <button
-                    onClick={handleStartLearning}
-                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                  >
-                    <span>{currentModule.btnText}</span>
-                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                  </button>
+                  {currentModule.id === 'os' ? (
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full"
+                    >
+                      <Link
+                        to="/os/cpu-scheduling"
+                        className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                      >
+                        <span>{currentModule.btnText}</span>
+                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                      </Link>
+                    </motion.div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleStartLearning}
+                      className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                    >
+                      <span>{currentModule.btnText}</span>
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                    </button>
+                  )}
                 </div>
 
               </motion.div>

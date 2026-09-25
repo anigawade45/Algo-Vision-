@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
+
 import { Navbar } from '@/features/landing/components/Navbar';
 import { HeroSection } from '@/features/landing/components/HeroSection';
 import { TrustStrip } from '@/features/landing/components/TrustStrip';
@@ -9,9 +11,29 @@ import { AiSection } from '@/features/landing/components/AiSection';
 import { FaqSection } from '@/features/landing/components/FaqSection';
 import { Footer } from '@/features/landing/components/Footer';
 
+import CpuScheduling from './features/os/pages/CpuScheduling';
 import DsaHome from '@/features/dsa/pages/DsaHome';
 import ProblemSubmit from '@/features/dsa/pages/ProblemSubmit';
 import ProblemWorkspace from '@/features/dsa/pages/ProblemWorkspace';
+
+function LandingPage({ theme, toggleTheme, navigateTo }) {
+  return (
+    <div className={`min-h-screen w-full transition-colors duration-200 ${theme === 'light' ? 'light bg-slate-50 text-slate-900' : 'dark bg-[#05070E] text-slate-100'}`}>
+      <Navbar theme={theme} toggleTheme={toggleTheme} onNavigateToDsa={() => navigateTo('dsa-home')} />
+      
+      <main className="w-full overflow-hidden">
+        <HeroSection theme={theme} onNavigateToDsa={() => navigateTo('dsa-home')} />
+        <TrustStrip />
+        <ProblemSection />
+        <ModulesSection onNavigateToDsa={() => navigateTo('dsa-home')} />
+        <AiSection />
+        <FaqSection />
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
 
 export default function App() {
   const [theme, setTheme] = useState('light');
@@ -122,21 +144,12 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className={`min-h-screen w-full transition-colors duration-200 ${theme === 'light' ? 'light bg-slate-50 text-slate-900' : 'dark bg-[#05070E] text-slate-100'}`}>
-        <Navbar theme={theme} toggleTheme={toggleTheme} onNavigateToDsa={() => navigateTo('dsa-home')} />
-        
-        <main className="w-full overflow-hidden">
-          <HeroSection theme={theme} onNavigateToDsa={() => navigateTo('dsa-home')} />
-          <TrustStrip />
-          <ProblemSection />
-          <ModulesSection onNavigateToDsa={() => navigateTo('dsa-home')} />
-          <AiSection />
-          <FaqSection />
-        </main>
-
-        <Footer />
-      </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage theme={theme} toggleTheme={toggleTheme} navigateTo={navigateTo} />} />
+          <Route path="/os/cpu-scheduling" element={<CpuScheduling theme={theme} />} />
+        </Routes>
+      </Router>
     </MotionConfig>
   );
 }
-
