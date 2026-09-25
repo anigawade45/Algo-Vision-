@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Sun, Moon, Menu, X } from 'lucide-react';
 
 export function Navbar({ theme, toggleTheme }) {
@@ -78,19 +79,19 @@ export function Navbar({ theme, toggleTheme }) {
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
             </button>
 
-            <a
-              href="#dashboard"
+            <Link
+              to="/dashboard"
               className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors"
             >
               Log In
-            </a>
+            </Link>
 
-            <a
-              href="#flagship-visualizer"
+            <Link
+              to="/dashboard"
               className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors"
             >
-              <span>Start Learning</span>
-            </a>
+              <span>Student Dashboard</span>
+            </Link>
           </div>
 
           {/* Mobile Menu Icon */}
@@ -128,20 +129,20 @@ export function Navbar({ theme, toggleTheme }) {
             ))}
           </nav>
           <div className="pt-2 flex flex-col gap-2.5">
-            <a
-              href="#dashboard"
+            <Link
+              to="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-sm font-medium"
             >
               Log In
-            </a>
-            <a
-              href="#flagship-visualizer"
+            </Link>
+            <Link
+              to="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center py-2.5 rounded-xl bg-blue-600 text-white font-semibold text-sm shadow-sm"
             >
-              <span>Start Learning Free</span>
-            </a>
+              <span>Student Dashboard</span>
+            </Link>
           </div>
         </div>
       )}
