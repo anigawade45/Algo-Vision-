@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Bell, User, ChevronRight, Terminal, Sun, Moon, PlusCircle, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Bell, User, ChevronRight, Terminal, Sun, Moon, PlusCircle, Menu, X, LayoutDashboard } from 'lucide-react';
 
 export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateToHome, onNavigateToSubmit }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,6 +53,14 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
 
         {/* Right Desktop Actions */}
         <div className="hidden sm:flex items-center gap-2 sm:gap-3">
+          <Link
+            to="/dashboard"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-h-[40px]"
+          >
+            <LayoutDashboard className="w-3.5 h-3.5 text-blue-500" aria-hidden="true" />
+            <span>Dashboard</span>
+          </Link>
+
           {onNavigateToSubmit && (
             <button
               type="button"
@@ -127,6 +136,15 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
       {mobileMenuOpen && (
         <div className="sm:hidden border-t border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] px-4 py-4 space-y-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
           
+          <Link
+            to="/dashboard"
+            onClick={() => setMobileMenuOpen(false)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-200 text-sm font-semibold cursor-pointer min-h-[44px]"
+          >
+            <LayoutDashboard className="w-4 h-4 text-blue-500" aria-hidden="true" />
+            <span>Student Dashboard</span>
+          </Link>
+
           {onNavigateToSubmit && (
             <button
               type="button"

@@ -378,30 +378,19 @@ export function ModulesSection({ onNavigateToDsa }) {
 
                 {/* Bottom Action CTA */}
                 <div className="pt-2">
-                  {currentModule.id === 'os' ? (
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full"
-                    >
-                      <Link
-                        to="/os/cpu-scheduling"
-                        className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                      >
-                        <span>{currentModule.btnText}</span>
-                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                      </Link>
-                    </motion.div>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleStartLearning}
-                      className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                    >
-                      <span>{currentModule.btnText}</span>
-                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                    </button>
-                  )}
+                  <Link
+                    to={
+                      currentModule.id === 'os'
+                        ? '/os/cpu-scheduling'
+                        : currentModule.id === 'dsa'
+                        ? '/dsa'
+                        : `/modules/${currentModule.id}`
+                    }
+                    className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 transition-all text-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  >
+                    <span>{currentModule.btnText}</span>
+                    <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                  </Link>
                 </div>
 
               </motion.div>

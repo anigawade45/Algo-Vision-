@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 import DsaHome from './pages/DsaHome';
 import ProblemSubmit from './pages/ProblemSubmit';
 import ProblemWorkspace from './pages/ProblemWorkspace';
@@ -12,14 +13,24 @@ export const dsaRoutes = [
     title: 'DSA Home',
   },
   {
-    path: '/dsa/submit',
+    path: '/dsa/problem/new',
     element: <ProblemSubmit />,
-    title: 'Submit Problem',
+    title: 'New Problem',
+  },
+  {
+    path: '/dsa/submit',
+    element: <Navigate to="/dsa/problem/new" replace />,
+    title: 'Submit Problem Redirect',
+  },
+  {
+    path: '/dsa/workspace/:id',
+    element: <ProblemWorkspace />,
+    title: 'Problem Workspace',
   },
   {
     path: '/dsa/workspace',
-    element: <ProblemWorkspace />,
-    title: 'Problem Workspace',
+    element: <Navigate to="/dsa/workspace/two-sum" replace />,
+    title: 'Problem Workspace Redirect',
   },
   {
     path: '/dsa/history',

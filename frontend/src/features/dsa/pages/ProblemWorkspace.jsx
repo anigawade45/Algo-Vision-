@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   Brain,
@@ -48,6 +49,7 @@ export default function ProblemWorkspace({
   onNavigateToHome,
   onNavigateToSubmit,
 }) {
+  const { id } = useParams();
   const [currentStageId, setCurrentStageId] = useState('understand');
   const [completedStages, setCompletedStages] = useState({ problem: true });
   const [showSpecDrawer, setShowSpecDrawer] = useState(false);
@@ -65,9 +67,11 @@ export default function ProblemWorkspace({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSpecDrawer]);
 
+  const activeProblemId = id || selectedProblemId;
+
   const problem = problemData && problemData.title
     ? problemData
-    : getProblemById(selectedProblemId);
+    : getProblemById(activeProblemId);
 
   const activeStage = WORKSPACE_STAGES.find((s) => s.id === currentStageId) || WORKSPACE_STAGES[1];
   const activeStageIdx = WORKSPACE_STAGES.findIndex((s) => s.id === currentStageId);

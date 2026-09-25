@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Sun, Moon, Menu, X } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
+  const { isAuthenticated } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -26,7 +29,7 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
     if (onNavigateToDsa) {
       onNavigateToDsa();
     } else {
-      window.location.href = '/dsa';
+      window.location.href = isAuthenticated ? '/dashboard' : '/login';
     }
   };
 
@@ -42,8 +45,8 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
         <div className="flex items-center justify-between">
           
           {/* LEFT: Logo */}
-          <a
-            href="#"
+          <Link
+            to="/"
             className="flex items-center gap-3 group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             aria-label="AlgoVision Homepage"
           >
@@ -60,7 +63,7 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
             <span className="text-lg sm:text-[19px] font-semibold tracking-tight text-slate-900 dark:text-white font-sans">
               AlgoVision
             </span>
-          </a>
+          </Link>
 
           {/* CENTER: Navigation Links */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
@@ -86,19 +89,37 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" aria-hidden="true" /> : <Moon className="w-4 h-4 text-slate-600" aria-hidden="true" />}
             </button>
 
-            <button
-              onClick={handleStartLearning}
-              className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
-            >
-              DSA Platform
-            </button>
-
-            <button
-              onClick={handleStartLearning}
-              className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
-            >
-              <span>Start Learning</span>
-            </button>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/dsa"
+                  className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors rounded-md"
+                >
+                  DSA Platform
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors"
+                >
+                  Dashboard
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="text-[14px] font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white px-2 py-1 transition-colors rounded-md"
+                >
+                  Log In
+                </Link>
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-xs transition-colors"
+                >
+                  <span>Start Learning</span>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Icon */}
@@ -148,6 +169,13 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
             >
               DSA Platform
             </button>
+            <Link
+              to="/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-sm font-medium"
+            >
+              Student Dashboard
+            </Link>
             <button
               onClick={(e) => {
                 setMobileMenuOpen(false);
@@ -163,4 +191,3 @@ export function Navbar({ theme, toggleTheme, onNavigateToDsa }) {
     </header>
   );
 }
-

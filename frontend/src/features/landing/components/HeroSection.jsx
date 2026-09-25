@@ -1,18 +1,13 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, Check, ArrowUpRight } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import RippleGrid from '@/components/RippleGrid';
 
 export function HeroSection({ onNavigateToDsa, theme }) {
   const isLight = theme === 'light';
-
-  const handleStartLearning = () => {
-    if (onNavigateToDsa) {
-      onNavigateToDsa();
-    } else {
-      window.location.hash = '#dsa';
-    }
-  };
+  const { isAuthenticated } = useAuth();
 
   return (
     <section className="relative overflow-hidden bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-white font-sans transition-colors duration-200">
@@ -75,15 +70,13 @@ export function HeroSection({ onNavigateToDsa, theme }) {
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-3">
-            <motion.button
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleStartLearning}
+            <Link
+              to={isAuthenticated ? '/dashboard' : '/register'}
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
             >
-              <span>Start Learning Free</span>
+              <span>{isAuthenticated ? 'Go to Student Dashboard' : 'Start Learning Free'}</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </motion.button>
+            </Link>
 
             <motion.a
               whileHover={{ y: -2 }}

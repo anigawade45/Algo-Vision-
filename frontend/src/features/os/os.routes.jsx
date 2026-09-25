@@ -1,10 +1,11 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
+import OsHome from './pages/OsHome';
 import CpuScheduling from './pages/CpuScheduling';
 
-// Export route elements for the OS features
 export const osRoutes = (
   <>
+    <Route path="/os" element={<OsHome />} />
     <Route path="/os/cpu-scheduling" element={<CpuScheduling />} />
   </>
 );
