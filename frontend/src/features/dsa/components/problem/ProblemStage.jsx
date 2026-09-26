@@ -20,22 +20,22 @@ export function ProblemStage({ problemData, onNextStage, onOpenSpec }) {
   const testCases = problem.testCases && problem.testCases.length > 0
     ? problem.testCases
     : [
-        {
-          id: 1,
-          inputRaw: problem.input || 'Sample Input',
-          outputRaw: problem.output || 'Sample Output',
-        },
-      ];
+      {
+        id: 1,
+        inputRaw: problem.input || 'Sample Input',
+        outputRaw: problem.output || 'Sample Output',
+      },
+    ];
 
   const constraintsList = Array.isArray(problem.constraints)
     ? problem.constraints
     : typeof problem.constraints === 'string'
-    ? problem.constraints.split('\n').filter(Boolean)
-    : [];
+      ? problem.constraints.split('\n').filter(Boolean)
+      : [];
 
   return (
     <div className="space-y-7 font-sans w-full pb-12">
-      
+
       {/* TOP SECTION / INTRODUCTION */}
       <div className="border-b border-slate-200/80 dark:border-slate-800/80 pb-6 sm:pb-7">
         <div className="flex flex-wrap items-center justify-between gap-3">

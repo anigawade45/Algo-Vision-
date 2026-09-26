@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ArrowRight,
   CheckCircle2,
   RotateCcw,
   Eye,
@@ -14,7 +13,7 @@ import { OutputDataRenderer } from './OutputDataRenderer';
  * Generic Example Explorer Component.
  * Delegates output rendering to OutputDataRenderer and provides clean
  * data-driven example exploration & reasoning across all 10 DSA problem types.
- * Isolate Two Sum interaction cleanly behind `interaction.type === "pair_sum"`.
+ * Isolates Two Sum interaction cleanly behind `interaction.type === "pair_sum"`.
  */
 export function GenericExampleExplorer({ testCases = [] }) {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -63,14 +62,14 @@ export function GenericExampleExplorer({ testCases = [] }) {
   const isCorrectPair = hasTwoSelected && currentSum === target;
 
   return (
-    <div className="space-y-5 font-sans">
+    <section className="space-y-5 font-sans" aria-labelledby="example-explorer-heading">
       {/* Header & Example Tabs */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <span className="text-[11px] font-mono font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase block">
             INTERACTIVE EXPLORER
           </span>
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+          <h2 id="example-explorer-heading" className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
             Sample Case Analysis
           </h2>
         </div>
@@ -84,7 +83,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
                 role="tab"
                 aria-selected={activeIdx === idx}
                 onClick={() => handleExampleChange(idx)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer min-h-[36px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer min-h-9 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   activeIdx === idx
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'bg-slate-100 dark:bg-[#161F33] text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#1E2638]'
@@ -98,7 +97,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
       </div>
 
       {/* Main Surface */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] space-y-6 shadow-xs">
+      <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] space-y-6 shadow-xs transition-colors">
         
         {/* OPTION 1: Interactive Two Sum Pair Selection */}
         {isPairSumInteraction ? (
@@ -109,7 +108,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
 
             {/* Capsules */}
             <div className="space-y-2">
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                 Array Elements & Indices
               </div>
 
@@ -125,7 +124,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
                       aria-pressed={isSelected}
                       aria-label={`Select array element ${val} at index ${idx}`}
                       onClick={() => handleSelectElement(idx)}
-                      className={`relative group flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border font-mono transition-all duration-150 cursor-pointer min-w-[64px] min-h-[64px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                      className={`relative group flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl border font-mono transition-all duration-150 motion-reduce:transition-none cursor-pointer min-w-16 min-h-[64px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                         isSelected
                           ? 'bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400 ring-2 ring-blue-500/20 shadow-xs'
                           : 'bg-slate-50 dark:bg-[#070A13] border-slate-200 dark:border-[#1E2638] text-slate-800 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'
@@ -145,7 +144,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
             </div>
 
             {/* Interactive Feedback */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200/80 dark:border-[#162032] space-y-3">
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200/80 dark:border-[#162032] space-y-3 transition-colors" aria-live="polite">
               <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 dark:border-[#162032] pb-2 text-xs font-mono">
                 <span className="text-slate-400 uppercase font-bold tracking-wider text-[10px]">
                   Target: <span className="text-indigo-600 dark:text-indigo-400 font-bold">{target}</span>
@@ -157,7 +156,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
                     onClick={() => setSelectedIndices([])}
                     className="text-[11px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 rounded px-1"
                   >
-                    <RotateCcw className="w-3 h-3" aria-hidden="true" /> Reset
+                    <RotateCcw className="w-3 h-3 shrink-0" aria-hidden="true" /> Reset
                   </button>
                 )}
               </div>
@@ -191,15 +190,15 @@ export function GenericExampleExplorer({ testCases = [] }) {
                   </div>
 
                   {isCorrectPair ? (
-                    <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-xs font-mono text-emerald-700 dark:text-emerald-300 space-y-1">
+                    <div className="p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/80 dark:border-emerald-800 text-xs font-mono text-emerald-700 dark:text-emerald-300 space-y-1">
                       <div className="font-bold flex items-center gap-1.5">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" aria-hidden="true" />
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
                         Target Sum Achieved ({val1} + {val2} = {target})!
                       </div>
                       <div>Revealed Expected Output: <span className="font-bold text-emerald-800 dark:text-emerald-200">[{selectedIndices.join(', ')}]</span></div>
                     </div>
                   ) : (
-                    <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/40 text-xs font-mono text-amber-700 dark:text-amber-300">
+                    <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/40 text-xs font-mono text-amber-700 dark:text-amber-300">
                       These two values do not produce the target sum ({currentSum} ≠ {target}). Try another pair!
                     </div>
                   )}
@@ -214,20 +213,14 @@ export function GenericExampleExplorer({ testCases = [] }) {
               <InputDataRenderer inputData={inputStructured} label="GIVEN INPUT" />
             ) : (
               <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                   Given Input:
                 </span>
-                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-[#1E2638] font-mono text-xs text-slate-900 dark:text-white font-semibold">
+                <div className="font-mono text-xs sm:text-sm text-slate-900 dark:text-white font-bold py-1">
                   {inputRaw}
                 </div>
               </div>
             )}
-
-            <div className="flex items-center justify-center py-1" aria-hidden="true">
-              <div className="p-2 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-500 border border-blue-200 dark:border-blue-900/60">
-                <ArrowRight className="w-4 h-4 rotate-90 sm:rotate-0" />
-              </div>
-            </div>
 
             {/* Delegate output rendering cleanly to OutputDataRenderer */}
             <OutputDataRenderer outputData={outputStructured} rawOutput={outputRaw} label="EXPECTED OUTPUT" />
@@ -236,28 +229,28 @@ export function GenericExampleExplorer({ testCases = [] }) {
 
         {/* Reasoning Dropdown */}
         {reasoning && reasoning.length > 0 && (
-          <div className="pt-2 border-t border-slate-100 dark:border-[#162032]">
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
             <button
               type="button"
               aria-expanded={showReasoning}
               aria-controls="reasoning-explanation-panel"
               onClick={() => setShowReasoning(!showReasoning)}
-              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 rounded"
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
             >
-              <Eye className="w-3.5 h-3.5" aria-hidden="true" />
+              <Eye className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span>{showReasoning ? 'Hide expected output explanation' : 'Why is this the expected output?'}</span>
-              {showReasoning ? <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" /> : <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />}
+              {showReasoning ? <ChevronUp className="w-3.5 h-3.5 shrink-0" aria-hidden="true" /> : <ChevronDown className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
             </button>
 
             {showReasoning && (
               <div
                 id="reasoning-explanation-panel"
-                className="mt-3 p-4 rounded-xl bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono space-y-2 text-slate-700 dark:text-slate-300 transition-all duration-200"
+                className="mt-3 border-l-2 border-blue-500 pl-4 py-1 text-xs font-mono space-y-1 text-slate-700 dark:text-slate-300 transition-all duration-200 motion-reduce:transition-none"
               >
                 <div className="font-bold text-slate-900 dark:text-white mb-1">
                   Example Explanation:
                 </div>
-                <ul className="space-y-1.5 pl-3 border-l-2 border-blue-500/40">
+                <ul className="space-y-1.5">
                   {reasoning.map((item, idx) => (
                     <li key={idx} className="text-slate-600 dark:text-slate-400">
                       • {typeof item === 'object' ? `${item.label}: ${item.value}` : String(item)}
@@ -270,6 +263,8 @@ export function GenericExampleExplorer({ testCases = [] }) {
         )}
 
       </div>
-    </div>
+    </section>
   );
 }
+
+export default GenericExampleExplorer;

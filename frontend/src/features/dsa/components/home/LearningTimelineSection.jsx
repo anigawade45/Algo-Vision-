@@ -74,7 +74,7 @@ export function LearningTimelineSection({ onSelectProblem, onNavigateToSaved, on
               
               {/* Timeline Period Dot & Label */}
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-blue-600 border-2 border-white dark:border-[#05070E] -left-[23px] sm:-left-[31px] absolute" aria-hidden="true" />
+                <span className="w-3 h-3 rounded-full bg-blue-600 border-2 border-white dark:border-[#05070E] -left-5.75 sm:-left-7.75 absolute" aria-hidden="true" />
                 <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                   {group.period}
                 </span>

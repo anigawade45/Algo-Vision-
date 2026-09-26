@@ -173,7 +173,7 @@ export function DsaWorkspaceTop({ onAnalyze }) {
                   onBlur={() => setIsFocused(false)}
                   onKeyDown={handleKeyDown}
                   placeholder="Paste a problem statement or text here..."
-                  className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200 dark:border-[#1C2638] text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none transition-colors resize-y min-h-[110px]"
+                  className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200 dark:border-[#1C2638] text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none transition-colors resize-y min-h-27.5"
                 />
               )}
             </div>
@@ -263,7 +263,7 @@ export function DsaWorkspaceTop({ onAnalyze }) {
                   <span>{tool.name}</span>
                 </div>
 
-                <span className="text-[10px] text-slate-400 font-normal truncate max-w-[160px] text-right">
+                <span className="text-[10px] text-slate-400 font-normal truncate max-w-40 text-right">
                   {tool.desc}
                 </span>
               </div>

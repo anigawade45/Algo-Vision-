@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Brain,
@@ -25,6 +25,10 @@ import {
 import { DsaNavbar } from '../components/home/DsaNavbar';
 import { ProblemStage } from '../components/problem/ProblemStage';
 import { UnderstandingStage } from '../components/understanding/UnderstandingStage';
+import { PatternStage } from '../components/pattern';
+import { PseudocodeStage } from '../components/pseudocode';
+import { DryRunStage } from '../components/dryrun';
+import { PracticeStage } from '../components/practice';
 
 import { MOCK_PROBLEMS, getProblemById } from '../data/mockProblems';
 
@@ -32,14 +36,14 @@ const WORKSPACE_STAGES = [
   { id: 'problem', stepNo: '01', name: 'Your Problem', icon: Target, isBuilt: true },
   { id: 'understand', stepNo: '02', name: 'Understand', icon: Brain, isBuilt: true },
   { id: 'analogy', stepNo: '03', name: 'Analogy', icon: Sparkles, isBuilt: false },
-  { id: 'pattern', stepNo: '04', name: 'Pattern', icon: Grid, isBuilt: false },
+  { id: 'pattern', stepNo: '04', name: 'Pattern', icon: Grid, isBuilt: true },
   { id: 'algorithm', stepNo: '05', name: 'Algorithm', icon: Workflow, isBuilt: false },
-  { id: 'pseudocode', stepNo: '06', name: 'Pseudocode', icon: FileCode2, isBuilt: false },
+  { id: 'pseudocode', stepNo: '06', name: 'Pseudocode', icon: FileCode2, isBuilt: true },
   { id: 'code', stepNo: '07', name: 'Code', icon: Code2, isBuilt: false },
-  { id: 'dryrun', stepNo: '08', name: 'Dry Run', icon: PlayCircle, isBuilt: false },
+  { id: 'dryrun', stepNo: '08', name: 'Dry Run', icon: PlayCircle, isBuilt: true },
   { id: 'visualize', stepNo: '09', name: 'Visualize', icon: Eye, isBuilt: false },
   { id: 'complexity', stepNo: '10', name: 'Complexity', icon: Gauge, isBuilt: false },
-  { id: 'practice', stepNo: '11', name: 'Practice', icon: CheckCircle2, isBuilt: false },
+  { id: 'practice', stepNo: '11', name: 'Practice', icon: CheckCircle2, isBuilt: true },
 ];
 
 export default function ProblemWorkspace({
@@ -50,11 +54,27 @@ export default function ProblemWorkspace({
   onNavigateToSubmit,
 }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [currentStageId, setCurrentStageId] = useState('understand');
   const [completedStages, setCompletedStages] = useState({ problem: true });
   const [showSpecDrawer, setShowSpecDrawer] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
-  const [selectedProblemId, setSelectedProblemId] = useState('two-sum');
+  const [selectedProblemId, setSelectedProblemId] = useState(id || 'two-sum');
+  const [selectedApproachId, setSelectedApproachId] = useState('minHeap');
+
+  // Keep selectedProblemId synced when URL param id changes
+  useEffect(() => {
+    if (id) {
+      setSelectedProblemId(id);
+    }
+  }, [id]);
+
+  const handleProblemChange = (newId) => {
+    setSelectedProblemId(newId);
+    if (id) {
+      navigate(`/dsa/workspace/${newId}`);
+    }
+  };
 
   // Handle ESC key to close problem spec modal
   useEffect(() => {
@@ -67,9 +87,9 @@ export default function ProblemWorkspace({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSpecDrawer]);
 
-  const activeProblemId = id || selectedProblemId;
+  const activeProblemId = selectedProblemId || id || 'two-sum';
 
-  const problem = problemData && problemData.title
+  const problem = problemData && problemData.title && (problemData.id === activeProblemId || !id)
     ? problemData
     : getProblemById(activeProblemId);
 
@@ -169,13 +189,13 @@ export default function ProblemWorkspace({
           {isSidebarExpanded && (
             <div className="p-4 border-b border-slate-100 dark:border-[#162032] space-y-2.5">
               <label htmlFor="problem-selector-dropdown" className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-semibold block">
-                SELECT TEST PROBLEM (10 DATA TYPES)
+                SELECT TEST PROBLEM ({MOCK_PROBLEMS.length} DATA TYPES)
               </label>
 
               <select
                 id="problem-selector-dropdown"
                 value={selectedProblemId}
-                onChange={(e) => setSelectedProblemId(e.target.value)}
+                onChange={(e) => handleProblemChange(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-lg p-2 text-slate-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 {MOCK_PROBLEMS.map((p) => (
@@ -309,7 +329,7 @@ export default function ProblemWorkspace({
                 id="mobile-problem-selector"
                 aria-label="Select test problem"
                 value={selectedProblemId}
-                onChange={(e) => setSelectedProblemId(e.target.value)}
+                onChange={(e) => handleProblemChange(e.target.value)}
                 className="bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-lg px-2 py-1 text-slate-900 dark:text-white cursor-pointer max-w-[160px] truncate focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 {MOCK_PROBLEMS.map((p) => (
@@ -369,6 +389,44 @@ export default function ProblemWorkspace({
                 problemData={problem}
                 onCompleteStage={handleStageComplete}
                 onNextStage={() => setCurrentStageId('analogy')}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'pattern' && (
+              <PatternStage
+                problem={problem}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'pseudocode' && (
+              <PseudocodeStage
+                problem={problem}
+                selectedApproachId={selectedApproachId}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'dryrun' && (
+              <DryRunStage
+                problem={problem}
+                selectedApproachId={selectedApproachId}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'practice' && (
+              <PracticeStage
+                problem={problem}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
               />
             )}

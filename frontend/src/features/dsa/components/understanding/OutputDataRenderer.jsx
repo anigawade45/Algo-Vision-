@@ -28,117 +28,81 @@ export const OutputDataRenderer = React.memo(function OutputDataRenderer({ outpu
   const finalValue = value !== undefined ? value : rawOutput;
 
   return (
-    <div className="space-y-1 font-mono text-xs">
-      <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+    <div className="font-mono text-xs flex flex-wrap items-center gap-2 py-1">
+      <span className="text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
         {label}:
       </span>
 
-      <div className="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-300/80 dark:border-emerald-900/60 text-emerald-800 dark:text-emerald-300 font-bold transition-all duration-150">
+      <span className="font-mono text-sm font-extrabold text-emerald-600 dark:text-emerald-400">
         {/* TYPE 1: Indices */}
-        {type === 'indices' && Array.isArray(finalValue) && (
-          <div className="flex items-center gap-2">
-            <span>Indices:</span>
-            <span className="px-2.5 py-1 rounded bg-white dark:bg-[#0F172A] border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-extrabold text-sm shadow-xs">
-              [{finalValue.join(', ')}]
-            </span>
-          </div>
-        )}
+        {type === 'indices' && Array.isArray(finalValue) && `[${finalValue.join(', ')}]`}
 
         {/* TYPE 2: Boolean */}
         {type === 'boolean' && (
-          <div className="flex items-center gap-2 text-sm font-extrabold tracking-wider">
+          <span className="inline-flex items-center gap-1.5 font-extrabold tracking-wider">
             {finalValue === true ? (
-              <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
                 <span>TRUE (Valid)</span>
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
-                <XCircle className="w-4 h-4 text-rose-500" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400">
+                <XCircle className="w-4 h-4 text-rose-500 shrink-0" aria-hidden="true" />
                 <span>FALSE (Invalid)</span>
               </span>
             )}
-          </div>
+          </span>
         )}
 
         {/* TYPE 3: Linked List */}
         {type === 'linked_list' && (Array.isArray(finalValue) || Array.isArray(outputData?.nodes)) && (
-          <div className="flex items-center gap-2 overflow-x-auto py-1" aria-label="Output linked list structure">
-            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase mr-1 shrink-0">
-              HEAD ➔
+          <span className="inline-flex flex-wrap items-center gap-1.5">
+            <span className="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-bold uppercase tracking-wider shrink-0">
+              HEAD
             </span>
+            <ArrowRight className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
             {(Array.isArray(finalValue) ? finalValue : outputData?.nodes || []).map((val, idx) => (
               <React.Fragment key={idx}>
-                <span className="px-2.5 py-1 rounded bg-white dark:bg-[#0F172A] border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-bold shadow-xs">
-                  {val}
+                <span className="inline-flex items-stretch rounded border border-emerald-300 dark:border-emerald-800 bg-white dark:bg-[#0D1322] overflow-hidden divide-x divide-emerald-200 dark:divide-emerald-900/60">
+                  <span className="px-2 py-0.5 font-mono text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                    {val}
+                  </span>
+                  <span className="px-1 py-0.5 bg-emerald-50/50 dark:bg-[#070A13] text-emerald-600/70 dark:text-emerald-400/70 font-mono text-[9px] font-bold uppercase">
+                    next
+                  </span>
                 </span>
                 <ArrowRight className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
               </React.Fragment>
             ))}
-            <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
-              null
+            <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">
+              Null
             </span>
-          </div>
+          </span>
         )}
 
         {/* TYPE 4: Intervals */}
         {type === 'intervals' && (Array.isArray(finalValue) || Array.isArray(outputData?.ranges)) && (
-          <div className="flex flex-wrap items-center gap-2">
-            {(Array.isArray(finalValue) ? finalValue : outputData?.ranges || []).map((range, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 rounded bg-white dark:bg-[#0F172A] border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-bold text-xs shadow-xs"
-              >
-                [{Array.isArray(range) ? range.join(', ') : range}]
-              </span>
-            ))}
-          </div>
+          `[${(Array.isArray(finalValue) ? finalValue : outputData?.ranges || []).map((r) => `[${Array.isArray(r) ? r.join(', ') : r}]`).join(', ')}]`
         )}
 
         {/* TYPE 5: Number / Integer */}
-        {type === 'number' && (
-          <div className="flex items-center gap-2">
-            <span>Result Value:</span>
-            <span className="px-3 py-1 rounded bg-white dark:bg-[#0F172A] border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-extrabold text-sm shadow-xs">
-              {String(finalValue)}
-            </span>
-          </div>
-        )}
+        {(type === 'number' || type === 'integer') && String(finalValue)}
 
         {/* TYPE 6: String */}
-        {type === 'string' && (
-          <div className="flex items-center gap-2">
-            <span>Result Substring:</span>
-            <span className="px-3 py-1 rounded bg-white dark:bg-[#0F172A] border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-extrabold text-sm shadow-xs">
-              "{String(finalValue)}"
-            </span>
-          </div>
-        )}
+        {type === 'string' && `"${String(finalValue)}"`}
 
         {/* TYPE 7: Array */}
         {type === 'array' && Array.isArray(finalValue) && (
-          <div className="flex flex-wrap items-center gap-1.5 font-mono text-sm font-bold">
-            <span className="text-emerald-600 dark:text-emerald-400">[</span>
-            {finalValue.map((val, idx) => (
-              <span
-                key={idx}
-                className="px-2 py-0.5 rounded bg-white dark:bg-[#0F172A] border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 shadow-xs"
-              >
-                {val}
-                {idx < finalValue.length - 1 ? ',' : ''}
-              </span>
-            ))}
-            <span className="text-emerald-600 dark:text-emerald-400">]</span>
-          </div>
+          Array.isArray(finalValue[0])
+            ? `[${finalValue.map(sub => `[${sub.join(', ')}]`).join(', ')}]`
+            : `[${finalValue.join(', ')}]`
         )}
 
         {/* DEFAULT FALLBACK */}
-        {!['indices', 'boolean', 'linked_list', 'intervals', 'number', 'string', 'array'].includes(type) && (
-          <div>
-            {typeof finalValue === 'object' ? JSON.stringify(finalValue) : String(finalValue ?? rawOutput)}
-          </div>
+        {!['indices', 'boolean', 'linked_list', 'intervals', 'number', 'integer', 'string', 'array'].includes(type) && (
+          typeof finalValue === 'object' ? JSON.stringify(finalValue) : String(finalValue ?? rawOutput)
         )}
-      </div>
+      </span>
     </div>
   );
 });

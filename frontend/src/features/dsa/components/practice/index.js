@@ -1,1 +1,1 @@
-// Practice component exports
+export * from './PracticeStage';

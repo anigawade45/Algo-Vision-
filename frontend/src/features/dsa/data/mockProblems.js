@@ -1,3 +1,6 @@
+import { getUnderstandingByProblemId } from './understanding/index.js';
+
+
 /**
  * Mock Problems Database for AlgoVision DSA Workspace
  * Contains 10 structurally diverse DSA problems with standardized Stage 01 & Stage 02 schemas:
@@ -13,11 +16,11 @@
  * 10. Shortest Path in Unweighted Graph (Graph Adjacency Map -> Distance Integer)
  */
 
-export const MOCK_PROBLEMS = [
+const INITIAL_MOCK_PROBLEMS = [
   {
     id: 'two-sum',
     title: 'Two Sum',
-    category: 'Array / Hash Table',
+    category: 'Array',
     difficulty: 'Easy',
     objective: 'Find two numbers in the array whose sum equals the target.',
     description:
@@ -118,7 +121,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'valid-parentheses',
     title: 'Valid Parentheses',
-    category: 'String / Stack',
+    category: 'String',
     difficulty: 'Easy',
     objective: 'Determine whether the bracket sequence is valid.',
     description:
@@ -278,7 +281,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'binary-tree-inorder',
     title: 'Binary Tree Inorder Traversal',
-    category: 'Tree / DFS',
+    category: 'Trees',
     difficulty: 'Easy',
     objective: 'Return the values of the tree in inorder sequence.',
     description:
@@ -330,6 +333,30 @@ export const MOCK_PROBLEMS = [
           'Inorder Sequence: [1, 3, 2].',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 'root = [1, 2, 3]',
+        outputRaw: '[2, 1, 3]',
+        inputStructured: {
+          type: 'binary_tree',
+          arrayForm: [1, 2, 3],
+          treeNodes: [
+            { id: 1, val: 1, left: 2, right: 3 },
+            { id: 2, val: 2, left: null, right: null },
+            { id: 3, val: 3, left: null, right: null },
+          ],
+        },
+        outputStructured: {
+          type: 'array',
+          value: [2, 1, 3],
+        },
+        reasoning: [
+          'Traverse Left subtree of Node 1: Node 2 → Record [2].',
+          'Record Root Node 1 value → [2, 1].',
+          'Traverse Right subtree of Node 1: Node 3 → Record [2, 1, 3].',
+          'Inorder Sequence: [2, 1, 3].',
+        ],
+      },
     ],
     observations: [
       {
@@ -353,7 +380,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'number-of-islands',
     title: 'Number of Islands',
-    category: 'Matrix / BFS / DFS',
+    category: '2D Matrix',
     difficulty: 'Medium',
     objective: 'Count the number of connected islands in the grid.',
     description:
@@ -405,6 +432,31 @@ export const MOCK_PROBLEMS = [
           'Total distinct connected land regions = 2.',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 'grid = [["1","1","0","0"],["1","1","0","0"],["0","0","1","0"],["0","0","0","1"]]',
+        outputRaw: '3',
+        inputStructured: {
+          type: 'matrix',
+          grid: [
+            ['1', '1', '0', '0'],
+            ['1', '1', '0', '0'],
+            ['0', '0', '1', '0'],
+            ['0', '0', '0', '1'],
+          ],
+          legend: { '1': 'Land', '0': 'Water' },
+        },
+        outputStructured: {
+          type: 'number',
+          value: 3,
+        },
+        reasoning: [
+          'Region 1: Land cells at (0,0), (0,1), (1,0), (1,1) form a 2x2 connected block → 1 island.',
+          'Region 2: Isolated land cell at (2,2) → 1 island.',
+          'Region 3: Isolated land cell at (3,3) → 1 island.',
+          'Total distinct connected land regions = 3.',
+        ],
+      },
     ],
     observations: [
       {
@@ -428,7 +480,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'kth-largest-element',
     title: 'Kth Largest Element in an Array',
-    category: 'Array / Heap / Quickselect',
+    category: 'Array',
     difficulty: 'Medium',
     objective: 'Find the kth largest value in the array.',
     description:
@@ -470,6 +522,25 @@ export const MOCK_PROBLEMS = [
           'For k = 2, the 2nd largest value is 5.',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 'nums = [3, 2, 3, 1, 2, 4, 5, 5, 6], k = 4',
+        outputRaw: '4',
+        inputStructured: {
+          type: 'array_with_k',
+          array: [3, 2, 3, 1, 2, 4, 5, 5, 6],
+          k: 4,
+        },
+        outputStructured: {
+          type: 'number',
+          value: 4,
+        },
+        reasoning: [
+          'Sorted in descending order: [6, 5, 5, 4, 3, 3, 2, 2, 1].',
+          '1st largest: 6, 2nd largest: 5, 3rd largest: 5, 4th largest: 4.',
+          'For k = 4, the 4th largest value is 4.',
+        ],
+      },
     ],
     observations: [
       {
@@ -493,7 +564,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'sliding-window-maximum',
     title: 'Sliding Window Maximum',
-    category: 'Array / Sliding Window',
+    category: 'Array',
     difficulty: 'Hard',
     objective: 'Find the maximum value in every window of size k.',
     description:
@@ -539,6 +610,27 @@ export const MOCK_PROBLEMS = [
           'Result array: [3, 3, 5, 5, 6, 7]',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 'nums = [9, 11, 8, 5, 7, 10], k = 3',
+        outputRaw: '[11, 11, 8, 10]',
+        inputStructured: {
+          type: 'array_with_window',
+          array: [9, 11, 8, 5, 7, 10],
+          k: 3,
+        },
+        outputStructured: {
+          type: 'array',
+          value: [11, 11, 8, 10],
+        },
+        reasoning: [
+          'Window 1: [9, 11, 8] → Max is 11',
+          'Window 2: [11, 8, 5] → Max is 11',
+          'Window 3: [8, 5, 7] → Max is 8',
+          'Window 4: [5, 7, 10] → Max is 10',
+          'Result array: [11, 11, 8, 10]',
+        ],
+      },
     ],
     observations: [
       {
@@ -562,7 +654,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'merge-intervals',
     title: 'Merge Intervals',
-    category: 'Array / Intervals',
+    category: 'Intervals',
     difficulty: 'Medium',
     objective: 'Merge all overlapping intervals.',
     description:
@@ -617,6 +709,29 @@ export const MOCK_PROBLEMS = [
           'Merged Result: [[1, 6], [8, 10], [15, 18]].',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 'intervals = [[1,4],[4,5]]',
+        outputRaw: '[[1,5]]',
+        inputStructured: {
+          type: 'intervals',
+          ranges: [
+            [1, 4],
+            [4, 5],
+          ],
+        },
+        outputStructured: {
+          type: 'intervals',
+          ranges: [
+            [1, 5],
+          ],
+        },
+        reasoning: [
+          'Intervals [1, 4] and [4, 5] overlap at boundary point (start 4 ≤ end 4).',
+          'Combined range spans from min(1, 4) = 1 to max(4, 5) = 5 → [1, 5].',
+          'Merged Result: [[1, 5]].',
+        ],
+      },
     ],
     observations: [
       {
@@ -640,7 +755,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'longest-substring-no-repeat',
     title: 'Longest Substring Without Repeating Characters',
-    category: 'String / Sliding Window',
+    category: 'String',
     difficulty: 'Medium',
     objective: 'Find the length of the longest substring without repeating characters.',
     description:
@@ -679,6 +794,24 @@ export const MOCK_PROBLEMS = [
           'Therefore output is 3.',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 's = "bbbbb"',
+        outputRaw: '1',
+        inputStructured: {
+          type: 'string',
+          value: 'bbbbb',
+        },
+        outputStructured: {
+          type: 'number',
+          value: 1,
+        },
+        reasoning: [
+          'All characters in the string are identical ("b").',
+          'The longest substring with all unique characters is single character "b".',
+          'Therefore max length is 1.',
+        ],
+      },
     ],
     observations: [
       {
@@ -702,7 +835,7 @@ export const MOCK_PROBLEMS = [
   {
     id: 'shortest-path-graph',
     title: 'Shortest Path in Unweighted Graph',
-    category: 'Graph / BFS',
+    category: 'Graph',
     difficulty: 'Medium',
     objective: 'Find the minimum number of edge hops from start to destination.',
     description:
@@ -756,6 +889,31 @@ export const MOCK_PROBLEMS = [
           'Shortest distance from Node 0 to Node 3 is 2 edges.',
         ],
       },
+      {
+        id: 2,
+        inputRaw: 'graph = {0:[1], 1:[2], 2:[3], 3:[]}, start = 0, destination = 3',
+        outputRaw: '3',
+        inputStructured: {
+          type: 'graph',
+          adjacency: {
+            0: [1],
+            1: [2],
+            2: [3],
+            3: [],
+          },
+          start: 0,
+          destination: 3,
+        },
+        outputStructured: {
+          type: 'number',
+          value: 3,
+        },
+        reasoning: [
+          'Only one simple path exists: 0 → 1 → 2 → 3.',
+          'Path length: 3 edges.',
+          'Shortest distance from Node 0 to Node 3 is 3 edges.',
+        ],
+      },
     ],
     observations: [
       {
@@ -775,7 +933,470 @@ export const MOCK_PROBLEMS = [
       },
     ],
   },
+
+  {
+    id: 'climbing-stairs',
+    problemId: 'climbing-stairs',
+    title: 'Climbing Stairs',
+    category: 'Dynamic Programming',
+    difficulty: 'Easy',
+    objective: 'Calculate the total number of distinct ways to reach the top of an n-step staircase taking 1 or 2 steps at a time.',
+    description: 'Given an integer n representing an n-step staircase, return the total number of distinct ways to reach the top taking 1 or 2 steps at a time.',
+    constraints: ['1 ≤ n ≤ 45', 'Memory and execution time must be O(N).'],
+    inputData: {
+      type: 'single_value',
+      label: 'STAIRCASE STEPS',
+      value: { n: 5, allowedSteps: [1, 2] },
+    },
+    outputData: {
+      type: 'integer',
+      label: 'REQUIRED OUTPUT',
+      description: 'The count of distinct paths to reach the top step.',
+      expectedRepresentation: 'INTEGER PATH COUNT',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'n = 5',
+        outputRaw: '8',
+        inputStructured: { type: 'single_value', value: { n: 5, allowedSteps: [1, 2] } },
+        outputStructured: { type: 'integer', value: 8 },
+        reasoning: [
+          'Each stride can be 1 step or 2 steps.',
+          'To reach step 5, jump from step 4 (+1 step) or step 3 (+2 steps).',
+          'dp[5] = dp[4] + dp[3] = 5 + 3 = 8 total ways.',
+        ],
+      },
+      {
+        id: 2,
+        inputRaw: 'n = 3',
+        outputRaw: '3',
+        inputStructured: { type: 'single_value', value: { n: 3, allowedSteps: [1, 2] } },
+        outputStructured: { type: 'integer', value: 3 },
+        reasoning: ['Paths to step 3 are: (1+1+1), (1+2), and (2+1). Total = 3 unique ways.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'OPTIMAL SUBSTRUCTURE', detail: 'Reaching step i depends directly on solutions for steps i-1 and i-2.' },
+      { stepNo: '02', title: 'OVERLAPPING SUBPROBLEMS', detail: 'Ways to reach step 3 is reused when computing step 4 and step 5.' },
+    ],
+  },
+
+  {
+    id: 'house-robber',
+    problemId: 'house-robber',
+    title: 'House Robber',
+    category: 'Dynamic Programming',
+    difficulty: 'Medium',
+    objective: 'Determine the maximum amount of money you can rob tonight without alerting the police.',
+    description: 'You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. Adjacent houses have security systems connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.',
+    constraints: ['1 ≤ nums.length ≤ 100', '0 ≤ nums[i] ≤ 400'],
+    inputData: {
+      type: 'array',
+      label: 'HOUSE LOOT VALUES',
+      value: [2, 7, 9, 3, 1],
+    },
+    outputData: {
+      type: 'integer',
+      label: 'REQUIRED OUTPUT',
+      description: 'Maximum amount of money that can be stolen without robbing adjacent houses.',
+      expectedRepresentation: 'MAXIMUM TOTAL LOOT',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'nums = [2, 7, 9, 3, 1]',
+        outputRaw: '12',
+        inputStructured: { type: 'array', value: [2, 7, 9, 3, 1] },
+        outputStructured: { type: 'integer', value: 12 },
+        reasoning: [
+          'Rob house 1 (money = 2), rob house 3 (money = 9), rob house 5 (money = 1).',
+          'Total loot = 2 + 9 + 1 = 12.',
+        ],
+      },
+      {
+        id: 2,
+        inputRaw: 'nums = [1, 2, 3, 1]',
+        outputRaw: '4',
+        inputStructured: { type: 'array', value: [1, 2, 3, 1] },
+        outputStructured: { type: 'integer', value: 4 },
+        reasoning: ['Rob house 1 (money = 1) and rob house 3 (money = 3). Total = 4.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'NON-ADJACENT CHOICE', detail: 'At each house i, rob (nums[i] + dp[i-2]) or skip (dp[i-1]).' },
+      { stepNo: '02', title: '1D STATE DEPENDENCY', detail: 'Only previous two max values are needed for state transitions.' },
+    ],
+  },
+
+  {
+    id: 'subsets',
+    problemId: 'subsets',
+    title: 'Subsets',
+    category: 'Backtracking',
+    difficulty: 'Medium',
+    objective: 'Generate all possible unique subsets (the power set) of a unique integer array.',
+    description: 'Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order.',
+    constraints: ['1 ≤ nums.length ≤ 10', '-10 ≤ nums[i] ≤ 10', 'All elements of nums are unique.'],
+    inputData: {
+      type: 'array',
+      label: 'INPUT ARRAY (nums)',
+      value: [1, 2, 3],
+    },
+    outputData: {
+      type: 'array_of_arrays',
+      label: 'REQUIRED OUTPUT',
+      description: 'List of all 2^N unique subsets.',
+      expectedRepresentation: 'POWER SET ARRAY',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'nums = [1, 2, 3]',
+        outputRaw: '[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]',
+        inputStructured: { type: 'array', value: [1, 2, 3] },
+        outputStructured: { type: 'array_of_arrays', value: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]] },
+        reasoning: ['Array length N=3 produces 2^3 = 8 subsets.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'EXPONENTIAL POWER SET', detail: 'Every element has 2 choices (include/exclude), producing 2^N subsets.' },
+      { stepNo: '02', title: 'RECURSIVE BACKTRACKING', detail: 'Include element, recurse, backtrack by popping element.' },
+    ],
+  },
+
+  {
+    id: 'course-schedule',
+    problemId: 'course-schedule',
+    title: 'Course Schedule',
+    category: 'Graph',
+    difficulty: 'Medium',
+    objective: 'Determine if it is possible to finish all courses given prerequisite dependencies.',
+    description: 'There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [a, b] indicates that you must take course b first if you want to take course a. Return true if you can finish all courses, otherwise return false.',
+    constraints: ['1 ≤ numCourses ≤ 2000', '0 ≤ prerequisites.length ≤ 5000', 'prerequisites[i].length == 2'],
+    inputData: {
+      type: 'graph_prerequisites',
+      label: 'COURSES & PREREQUISITES',
+      value: { numCourses: 4, prerequisites: [[1, 0], [2, 0], [3, 1], [3, 2]] },
+    },
+    outputData: {
+      type: 'boolean',
+      label: 'REQUIRED OUTPUT',
+      description: 'Boolean true if a valid course order exists with no directed cycles.',
+      expectedRepresentation: 'FEASIBILITY BOOLEAN',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]',
+        outputRaw: 'true',
+        inputStructured: { type: 'graph_prerequisites', value: { numCourses: 4, prerequisites: [[1, 0], [2, 0], [3, 1], [3, 2]] } },
+        outputStructured: { type: 'boolean', value: true },
+        reasoning: ['Prerequisite DAG has topological order [0, 1, 2, 3]. Return true.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'DIRECTED CYCLE DETECTION', detail: 'A directed cycle in prerequisites makes taking all courses impossible.' },
+      { stepNo: '02', title: 'KAHN BFS TOPOLOGICAL SORT', detail: 'Process nodes with in-degree 0 iteratively.' },
+    ],
+  },
+
+  {
+    id: 'connected-components',
+    problemId: 'connected-components',
+    title: 'Number of Connected Components in an Undirected Graph',
+    category: 'Graph',
+    difficulty: 'Medium',
+    objective: 'Find the total number of connected components in an undirected graph.',
+    description: 'Given n nodes labeled from 0 to n - 1 and a list of undirected edges, write a function to find the number of connected components in an undirected graph.',
+    constraints: ['1 ≤ n ≤ 2000', '0 ≤ edges.length ≤ 5000'],
+    inputData: {
+      type: 'graph_edges',
+      label: 'GRAPH NODES & EDGES',
+      value: { n: 5, edges: [[0, 1], [1, 2], [3, 4]] },
+    },
+    outputData: {
+      type: 'integer',
+      label: 'REQUIRED OUTPUT',
+      description: 'The number of disconnected subgraphs.',
+      expectedRepresentation: 'COMPONENT COUNT',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'n = 5, edges = [[0,1],[1,2],[3,4]]',
+        outputRaw: '2',
+        inputStructured: { type: 'graph_edges', value: { n: 5, edges: [[0, 1], [1, 2], [3, 4]] } },
+        outputStructured: { type: 'integer', value: 2 },
+        reasoning: ['Subgraphs {0,1,2} and {3,4} form 2 connected components.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'DISJOINT SET UNION', detail: 'Union-Find merges nodes connected by edges, decrementing component count.' },
+    ],
+  },
+
+  {
+    id: 'kth-smallest-bst',
+    problemId: 'kth-smallest-bst',
+    title: 'Kth Smallest Element in a BST',
+    category: 'Tree',
+    difficulty: 'Medium',
+    objective: 'Find the K-th smallest value in a Binary Search Tree.',
+    description: 'Given the root of a binary search tree and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.',
+    constraints: ['1 ≤ k ≤ n ≤ 10⁴', '0 ≤ Node.val ≤ 10⁴'],
+    inputData: {
+      type: 'binary_tree',
+      label: 'BST ROOT & K',
+      value: { arrayForm: [5, 3, 6, 2, 4, null, null, 1], k: 3 },
+    },
+    outputData: {
+      type: 'integer',
+      label: 'REQUIRED OUTPUT',
+      description: 'The K-th smallest node value.',
+      expectedRepresentation: 'K-TH VALUE',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'root = [5,3,6,2,4,null,null,1], k = 3',
+        outputRaw: '3',
+        inputStructured: { type: 'binary_tree', value: { arrayForm: [5, 3, 6, 2, 4, null, null, 1], k: 3 } },
+        outputStructured: { type: 'integer', value: 3 },
+        reasoning: ['Inorder traversal [1, 2, 3, 4, 5, 6]. 3rd element is 3.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'IN-ORDER TRAVERSAL SORTED PROPERTY', detail: 'Inorder BST traversal yields values in ascending order.' },
+    ],
+  },
+
+  {
+    id: 'top-k-frequent',
+    problemId: 'top-k-frequent',
+    title: 'Top K Frequent Elements',
+    category: 'Heap / Bucket Sort',
+    difficulty: 'Medium',
+    objective: 'Return the k most frequent elements from an integer array.',
+    description: 'Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.',
+    constraints: ['1 ≤ nums.length ≤ 10⁵', 'k is in range [1, number of unique elements]'],
+    inputData: {
+      type: 'array_with_k',
+      label: 'INPUT ARRAY & K',
+      value: { array: [1, 1, 1, 2, 2, 3], k: 2 },
+    },
+    outputData: {
+      type: 'array',
+      label: 'REQUIRED OUTPUT',
+      description: 'Array of top k frequent elements.',
+      expectedRepresentation: 'TOP K FREQUENT ARRAY',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'nums = [1,1,1,2,2,3], k = 2',
+        outputRaw: '[1, 2]',
+        inputStructured: { type: 'array_with_k', value: { array: [1, 1, 1, 2, 2, 3], k: 2 } },
+        outputStructured: { type: 'array', value: [1, 2] },
+        reasoning: ['1 appears 3 times, 2 appears 2 times, 3 appears 1 time. Top 2 frequent: [1, 2].'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'BUCKET SORT FREQUENCY RANKING', detail: 'Group numbers by frequency in 1..N buckets for O(N) execution.' },
+    ],
+  },
+
+  {
+    id: 'product-except-self',
+    problemId: 'product-except-self',
+    title: 'Product of Array Except Self',
+    category: 'Array / Prefix Sum',
+    difficulty: 'Medium',
+    objective: 'Calculate product array without division.',
+    description: 'Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i]. The algorithm must run in O(N) time and without using division.',
+    constraints: ['2 ≤ nums.length ≤ 10⁵', '-30 ≤ nums[i] ≤ 30'],
+    inputData: {
+      type: 'array',
+      label: 'INPUT ARRAY',
+      value: [1, 2, 3, 4],
+    },
+    outputData: {
+      type: 'array',
+      label: 'REQUIRED OUTPUT',
+      description: 'Array of products except self.',
+      expectedRepresentation: 'PRODUCTS ARRAY',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'nums = [1,2,3,4]',
+        outputRaw: '[24,12,8,6]',
+        inputStructured: { type: 'array', value: [1, 2, 3, 4] },
+        outputStructured: { type: 'array', value: [24, 12, 8, 6] },
+        reasoning: ['res[0] = 2*3*4=24, res[1] = 1*3*4=12, res[2] = 1*2*4=8, res[3] = 1*2*3=6.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'PREFIX & SUFFIX PRODUCTS', detail: 'Result at i = (prefix product of 0..i-1) * (suffix product of i+1..N-1).' },
+    ],
+  },
+
+  {
+    id: 'single-number',
+    problemId: 'single-number',
+    title: 'Single Number',
+    category: 'Bit Manipulation',
+    difficulty: 'Easy',
+    objective: 'Find the single non-repeating element in O(N) time and O(1) space.',
+    description: 'Given a non-empty array of integers nums, every element appears twice except for one. Find that single one. You must implement a solution with a linear runtime complexity and use only constant extra space.',
+    constraints: ['1 ≤ nums.length ≤ 3 * 10⁴', '-3 * 10⁴ ≤ nums[i] ≤ 3 * 10⁴'],
+    inputData: {
+      type: 'array',
+      label: 'INPUT ARRAY',
+      value: [4, 1, 2, 1, 2],
+    },
+    outputData: {
+      type: 'integer',
+      label: 'REQUIRED OUTPUT',
+      description: 'The single element that appears only once.',
+      expectedRepresentation: 'SINGLE INTEGER',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'nums = [4,1,2,1,2]',
+        outputRaw: '4',
+        inputStructured: { type: 'array', value: [4, 1, 2, 1, 2] },
+        outputStructured: { type: 'integer', value: 4 },
+        reasoning: ['4 ^ 1 ^ 2 ^ 1 ^ 2 = 4 ^ (1^1) ^ (2^2) = 4 ^ 0 ^ 0 = 4.'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: 'XOR ALGEBRAIC PROPERTY', detail: 'A ^ A = 0 and A ^ 0 = A cancels out all paired numbers in O(1) space.' },
+    ],
+  },
+
+  {
+    id: 'word-search',
+    problemId: 'word-search',
+    title: 'Word Search',
+    category: 'Backtracking',
+    difficulty: 'Medium',
+    objective: 'Determine if a target word exists in a 2D grid of characters.',
+    description: 'Given an m x n grid of characters board and a string word, return true if word exists in the grid. The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring.',
+    constraints: ['1 ≤ m, n ≤ 6', '1 ≤ word.length ≤ 15'],
+    inputData: {
+      type: 'matrix',
+      label: 'BOARD GRID & TARGET WORD',
+      value: {
+        grid: [
+          ['A', 'B', 'C', 'E'],
+          ['S', 'F', 'C', 'S'],
+          ['A', 'D', 'E', 'E'],
+        ],
+        word: 'ABCCED',
+      },
+    },
+    outputData: {
+      type: 'boolean',
+      label: 'REQUIRED OUTPUT',
+      description: 'Boolean true if the target word exists in the grid.',
+      expectedRepresentation: 'EXISTS BOOLEAN',
+    },
+    testCases: [
+      {
+        id: 1,
+        inputRaw: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"',
+        outputRaw: 'true',
+        inputStructured: {
+          type: 'matrix',
+          value: {
+            grid: [
+              ['A', 'B', 'C', 'E'],
+              ['S', 'F', 'C', 'S'],
+              ['A', 'D', 'E', 'E'],
+            ],
+            word: 'ABCCED',
+          },
+        },
+        outputStructured: { type: 'boolean', value: true },
+        reasoning: ['Path (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2) -> (2,1) matches "ABCCED".'],
+      },
+    ],
+    observations: [
+      { stepNo: '01', title: '2D GRID BACKTRACKING DFS', detail: 'Mark cell visited in-place with "#" during recursion and restore afterwards.' },
+    ],
+  },
 ];
+
+/**
+ * Normalizes a problem object so that ALL 20 problems have 100% identical data fields,
+ * including both top-level properties (id, title, category, difficulty, objective, description, constraints, inputData, outputData, testCases, observations)
+ * AND a rich `understand` sub-object.
+ */
+export function normalizeProblemData(p) {
+  if (!p) return p;
+
+  const inputData = p.inputData || p.understand?.inputData;
+  const outputData = p.outputData || p.understand?.outputData || {
+    type: p.understand?.output?.type || 'value',
+    label: p.understand?.output?.label || 'REQUIRED OUTPUT',
+    description: p.understand?.output?.description || '',
+    expectedRepresentation: p.understand?.input?.expectedOutput || '',
+  };
+  const constraints = Array.isArray(p.constraints)
+    ? p.constraints
+    : Array.isArray(p.understand?.constraints)
+      ? p.understand.constraints
+      : [];
+  const testCases = Array.isArray(p.testCases)
+    ? p.testCases
+    : [
+        {
+          id: 1,
+          inputRaw: p.understand?.input?.inputVisual || '',
+          outputRaw: p.understand?.input?.expectedOutput || '',
+          inputStructured: inputData,
+          outputStructured: {
+            type: outputData.type,
+            value: p.understand?.input?.expectedOutput || '',
+          },
+          reasoning: p.understand?.known || [],
+        },
+      ];
+  const observations = Array.isArray(p.observations)
+    ? p.observations
+    : Array.isArray(p.understand?.observations)
+      ? p.understand.observations
+      : [];
+
+  const baseUnderstand = getUnderstandingByProblemId(p.id) || {};
+
+  const understandObj = {
+    ...baseUnderstand,
+    ...p.understand,
+    title: p.title,
+    objective: p.objective,
+    constraints,
+    inputData,
+    outputData,
+    testCases,
+    observations,
+  };
+
+  return {
+    ...p,
+    description: p.description || p.understand?.objective || p.objective,
+    constraints,
+    inputData,
+    outputData,
+    testCases,
+    observations,
+    understand: understandObj,
+  };
+}
+
+export const MOCK_PROBLEMS = INITIAL_MOCK_PROBLEMS.map(normalizeProblemData);
 
 /**
  * Development Schema Validator
@@ -798,5 +1419,10 @@ export function validateMockProblem(problem) {
  * Get problem by ID or fallback to Two Sum
  */
 export function getProblemById(id) {
-  return MOCK_PROBLEMS.find((p) => p.id === id) || MOCK_PROBLEMS[0];
+  const found = MOCK_PROBLEMS.find((p) => p.id === id);
+  if (found) return found;
+
+  return MOCK_PROBLEMS[0];
 }
+
+export default MOCK_PROBLEMS;
