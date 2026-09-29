@@ -1,98 +1,7 @@
 import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Sparkles,
-  GitBranch,
-  Cpu,
-  Database,
-  Network,
-  Boxes,
-  Layers,
-  Eye,
-  Brain,
-  Link,
-  Sliders,
-  Bot,
-  CheckCircle2
-} from 'lucide-react';
-
-const CS_DOMAINS = [
-  {
-    id: 'dsa',
-    short: 'DSA',
-    name: 'Data Structures & Algorithms',
-    icon: GitBranch,
-    concepts: ['Arrays', 'Trees', 'Graphs', 'Dynamic Programming']
-  },
-  {
-    id: 'os',
-    short: 'OS',
-    name: 'Operating Systems',
-    icon: Cpu,
-    concepts: ['Processes', 'Memory', 'Scheduling', 'File Systems']
-  },
-  {
-    id: 'dbms',
-    short: 'DBMS',
-    name: 'Database Management',
-    icon: Database,
-    concepts: ['Queries', 'Transactions', 'Indexing', 'Normalization']
-  },
-  {
-    id: 'networks',
-    short: 'NETWORKS',
-    name: 'Computer Networks',
-    icon: Network,
-    concepts: ['TCP/IP', 'HTTP', 'DNS', 'Routing']
-  },
-  {
-    id: 'oop',
-    short: 'OOP',
-    name: 'Object-Oriented Programming',
-    icon: Boxes,
-    concepts: ['Classes', 'Objects', 'Inheritance', 'Polymorphism']
-  },
-  {
-    id: 'system',
-    short: 'SYSTEM DESIGN',
-    name: 'System Design',
-    icon: Layers,
-    concepts: ['Caching', 'Load Balancing', 'Queues', 'Scalability']
-  }
-];
-
-const CAPABILITIES = [
-  {
-    id: 'viz',
-    title: 'Concept Visualization',
-    description: 'See complex concepts represented visually instead of relying only on static explanations.',
-    icon: Eye
-  },
-  {
-    id: 'behavior',
-    title: 'System Behavior',
-    description: 'Observe how processes, memory, databases, networks and components behave over time.',
-    icon: Brain
-  },
-  {
-    id: 'connections',
-    title: 'Concept Connections',
-    description: 'Understand how ideas across different CS domains connect to one another.',
-    icon: Link
-  },
-  {
-    id: 'interactive',
-    title: 'Interactive Exploration',
-    description: 'Change inputs, explore states, and investigate concepts instead of only reading about them.',
-    icon: Sliders
-  },
-  {
-    id: 'ai',
-    title: 'AI Explanation',
-    description: 'Ask questions and receive contextual explanations while exploring a concept.',
-    icon: Bot
-  }
-];
+import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { CS_DOMAINS_DATA, CAPABILITIES_DATA } from '../data/landingData';
 
 const CompactStripPills = memo(function CompactStripPills() {
   const items = [
@@ -126,7 +35,7 @@ const CompactStripPills = memo(function CompactStripPills() {
 export function DifferentiatorSection() {
   const [activeDomainId, setActiveDomainId] = useState('os');
 
-  const activeDomain = CS_DOMAINS.find((d) => d.id === activeDomainId) || CS_DOMAINS[0];
+  const activeDomain = CS_DOMAINS_DATA.find((d) => d.id === activeDomainId) || CS_DOMAINS_DATA[0];
 
   return (
     <section
@@ -158,7 +67,7 @@ export function DifferentiatorSection() {
 
             {/* 5 Core Capabilities List */}
             <div className="space-y-4 pt-2">
-              {CAPABILITIES.map((cap) => {
+              {CAPABILITIES_DATA.map((cap) => {
                 const CapIcon = cap.icon;
                 return (
                   <div key={cap.id} className="flex items-start gap-3.5 group">
@@ -202,7 +111,7 @@ export function DifferentiatorSection() {
 
             {/* 6 Equal CS Domain Badges Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
-              {CS_DOMAINS.map((domain) => {
+              {CS_DOMAINS_DATA.map((domain) => {
                 const DomainIcon = domain.icon;
                 const isSelected = activeDomainId === domain.id;
 
@@ -213,17 +122,17 @@ export function DifferentiatorSection() {
                     onMouseEnter={() => setActiveDomainId(domain.id)}
                     onFocus={() => setActiveDomainId(domain.id)}
                     className={`
-                      p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex items-center gap-3
+                      p-3.5 rounded-2xl border text-left transition-all cursor-pointer relative overflow-hidden flex items-center gap-3 min-h-[52px]
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
                       ${isSelected
                         ? 'bg-white dark:bg-[#111827] border-blue-500 dark:border-blue-500 shadow-md ring-1 ring-blue-500/30'
                         : 'bg-white/60 dark:bg-[#070A12]/60 border-slate-200 dark:border-[#1C2638] hover:border-blue-300 dark:hover:border-blue-800 text-slate-600 dark:text-slate-400'
                       }
                     `}
-                    aria-label={`Inspect ${domain.name}`}
+                    aria-label={`Inspect ${domain.label}`}
                   >
                     <div className={`w-8 h-8 rounded-xl border flex items-center justify-center shrink-0 ${isSelected
-                        ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                        ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
                         : 'bg-slate-100 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
                       }`}>
                       <DomainIcon className="w-4 h-4" aria-hidden="true" />
@@ -234,7 +143,7 @@ export function DifferentiatorSection() {
                         [{domain.short}]
                       </div>
                       <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                        {domain.name}
+                        {domain.label}
                       </div>
                     </div>
                   </button>
@@ -257,7 +166,7 @@ export function DifferentiatorSection() {
                     <div className="flex items-center gap-2.5">
                       <activeDomain.icon className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                       <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider font-mono">
-                        {activeDomain.name} System Concepts
+                        {activeDomain.label} System Concepts
                       </span>
                     </div>
 
@@ -307,3 +216,6 @@ export function DifferentiatorSection() {
     </section>
   );
 }
+
+export default DifferentiatorSection;
+

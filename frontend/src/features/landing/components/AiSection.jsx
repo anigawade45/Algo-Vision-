@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Sparkles, Send, Eye, ArrowRight, BrainCircuit, Activity, Wand2 } from 'lucide-react';
+import { PROMPT_CHIPS_DATA } from '../data/landingData';
 
 export function AiSection() {
   const [messages, setMessages] = useState([
@@ -21,14 +22,6 @@ export function AiSection() {
   const [isTyping, setIsTyping] = useState(false);
   const [showVisualPreview, setShowVisualPreview] = useState(false);
   const chatEndRef = useRef(null);
-
-  const promptChips = [
-    { label: 'Explain', query: 'Explain monotonic stack in simple terms' },
-    { label: 'Simplify', query: 'Simplify Dijkstra algorithm intuition' },
-    { label: 'Give Example', query: 'Give a real-world example of CPU scheduling' },
-    { label: 'Give Hint', query: 'Give a hint for Two Pointer technique' },
-    { label: 'Generate Quiz', query: 'Generate a quick 3-question quiz on B-Trees' },
-  ];
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -127,7 +120,7 @@ export function AiSection() {
           {/* Top Bar with Live Animated Status Indicator */}
           <div className="px-6 py-4 border-b border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#090E1A] flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 p-[1px] shadow-sm">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 p-[1px] shadow-xs">
                 <div className="w-full h-full bg-[#080B14] rounded-[11px] flex items-center justify-center">
                   <Bot className="w-4 h-4 text-blue-400" aria-hidden="true" />
                 </div>
@@ -174,8 +167,8 @@ export function AiSection() {
                     <div
                       className={`p-4 rounded-2xl text-sm leading-relaxed ${
                         msg.sender === 'user'
-                          ? 'bg-blue-600 text-white rounded-tr-none font-medium shadow-sm'
-                          : 'bg-white dark:bg-[#0E172A] border border-slate-200 dark:border-[#1E2E4A] text-slate-800 dark:text-slate-200 rounded-tl-none shadow-sm'
+                          ? 'bg-blue-600 text-white rounded-tr-none font-medium shadow-xs'
+                          : 'bg-white dark:bg-[#0E172A] border border-slate-200 dark:border-[#1E2E4A] text-slate-800 dark:text-slate-200 rounded-tl-none shadow-xs'
                       }`}
                     >
                       {msg.text}
@@ -184,7 +177,7 @@ export function AiSection() {
                     {msg.hasVisualOption && !showVisualPreview && (
                       <button
                         onClick={handleVisualRequest}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-xs font-mono font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 text-xs font-mono font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer min-h-[36px]"
                       >
                         <Eye className="w-3.5 h-3.5" aria-hidden="true" />
                         <span>Show me visually</span>
@@ -203,7 +196,7 @@ export function AiSection() {
                         <div className="flex gap-2 justify-center py-2" aria-hidden="true">
                           <div className="w-8 h-8 rounded bg-white dark:bg-[#080B14] border border-slate-300 dark:border-[#263247] flex items-center justify-center text-xs font-mono font-bold text-slate-500">3</div>
                           <div className="w-8 h-8 rounded bg-white dark:bg-[#080B14] border border-slate-300 dark:border-[#263247] flex items-center justify-center text-xs font-mono font-bold text-slate-500">8</div>
-                          <div className="w-8 h-8 rounded bg-blue-500/20 border border-blue-400 flex items-center justify-center text-xs font-mono font-bold text-blue-600 dark:text-blue-300 scale-110 shadow-sm">17</div>
+                          <div className="w-8 h-8 rounded bg-blue-500/20 border border-blue-400 flex items-center justify-center text-xs font-mono font-bold text-blue-600 dark:text-blue-300 scale-110 shadow-xs">17</div>
                           <div className="w-8 h-8 rounded bg-indigo-500/20 border border-indigo-400 flex items-center justify-center text-xs font-mono font-bold text-indigo-600 dark:text-indigo-300">31</div>
                         </div>
                         <a href="#modules" className="text-xs font-mono text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 justify-center font-semibold rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
@@ -245,12 +238,12 @@ export function AiSection() {
             <span className="text-xs font-mono text-slate-500 dark:text-slate-400 font-semibold mr-1 flex items-center gap-1">
               <Wand2 className="w-3 h-3 text-blue-500" aria-hidden="true" /> Quick Prompts:
             </span>
-            {promptChips.map((chip, idx) => (
+            {PROMPT_CHIPS_DATA.map((chip, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handleSend(chip.query)}
-                className="px-3 py-1 rounded-full bg-white dark:bg-[#151C2C] hover:bg-blue-50 dark:hover:bg-blue-600/30 border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-300 text-xs font-medium transition-colors shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+                className="px-3 py-1.5 rounded-full bg-white dark:bg-[#151C2C] hover:bg-blue-50 dark:hover:bg-blue-600/30 border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-300 text-xs font-medium transition-colors shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer min-h-[36px]"
               >
                 {chip.label}
               </button>
@@ -270,7 +263,7 @@ export function AiSection() {
             <button
               type="submit"
               disabled={isTyping || !inputVal.trim()}
-              className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-blue-500/20 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[44px]"
               aria-label="Ask AlgoVision AI"
             >
               <span>Ask AlgoVision</span>
@@ -284,4 +277,7 @@ export function AiSection() {
     </section>
   );
 }
+
+export default AiSection;
+
 
