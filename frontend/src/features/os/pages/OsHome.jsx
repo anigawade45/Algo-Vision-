@@ -16,6 +16,17 @@ export default function OsHome({ theme, toggleTheme }) {
       badgeColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
     },
     {
+      id: 'process-management',
+      title: 'Process Management & PCB',
+      description: 'Program vs Process, Process Control Block (PCB) inspector, interactive 5-state transition diagram, fork/exec trees, context switching, and OS queues.',
+      author: 'Parvej',
+      status: 'Live & Ready',
+      isLive: true,
+      path: '/os/process-management',
+      badge: 'Interactive Visualizer',
+      badgeColor: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+    },
+    {
       id: 'cpu-scheduling',
       title: 'CPU Scheduling Algorithms',
       description: 'Simulate FCFS, SJF, SRTF, Priority, and Round Robin process scheduling step-by-step with interactive Gantt charts.',
@@ -121,10 +132,10 @@ export default function OsHome({ theme, toggleTheme }) {
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-cyan-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-cyan-300" />
-                2 Active Modules
+                3 Active Modules
               </span>
               <span>•</span>
-              <span>5 Total Learning Tracks</span>
+              <span>6 Total Learning Tracks</span>
             </div>
           </div>
         </div>

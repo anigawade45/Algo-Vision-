@@ -3,11 +3,13 @@ import { Route } from 'react-router-dom';
 import OsHome from './pages/OsHome';
 import CpuScheduling from './pages/CpuScheduling';
 import OsFundamentals from './pages/OsFundamentals';
+import ProcessManagement from './pages/ProcessManagement';
 
 export const osRoutes = (
   <>
     <Route path="/os" element={<OsHome />} />
     <Route path="/os/fundamentals" element={<OsFundamentals />} />
+    <Route path="/os/process-management" element={<ProcessManagement />} />
     <Route path="/os/cpu-scheduling" element={<CpuScheduling />} />
   </>
 );

@@ -22,6 +22,7 @@ import SavedProblems from '@/features/dsa/pages/SavedProblems';
 import CpuScheduling from '@/features/os/pages/CpuScheduling';
 import OsHome from '@/features/os/pages/OsHome';
 import OsFundamentals from '@/features/os/pages/OsFundamentals';
+import ProcessManagement from '@/features/os/pages/ProcessManagement';
 
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
@@ -195,6 +196,15 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <OsFundamentals theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/process-management"
+              element={
+                <ProtectedRoute>
+                  <ProcessManagement theme={theme} toggleTheme={toggleTheme} />
                 </ProtectedRoute>
               }
             />
