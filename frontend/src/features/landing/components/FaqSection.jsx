@@ -1,47 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, ChevronDown, Sparkles, ArrowRight } from 'lucide-react';
+import { FAQ_DATA } from '../data/landingData';
 
 export function FaqSection() {
-  const faqs = [
-    {
-      category: 'General',
-      q: 'What is AlgoVision?',
-      a: 'AlgoVision is an interactive Computer Science learning platform built as a B.Tech final-year project. It transforms abstract technical concepts into visual simulations with synchronized step-by-step code execution and AI assistance.',
-    },
-    {
-      category: 'Curriculum',
-      q: 'Which Computer Science topics are supported?',
-      a: 'AlgoVision supports Data Structures & Algorithms (Arrays, Trees, Graphs, DP), Operating Systems (CPU Scheduling, Memory, Deadlocks), Computer Networks (OSI, TCP/IP, DNS), and System Design architectures.',
-    },
-    {
-      category: 'Visualizer',
-      q: 'Can I visualize algorithms step-by-step?',
-      a: 'Yes! You have full player controls (Play, Pause, Step Next, Step Previous, Reset, and Speed Slider) allowing you to inspect array indices, pointer movements, and call stack changes at your own pace.',
-    },
-    {
-      category: 'AI Tutor',
-      q: 'Does AlgoVision provide AI explanations?',
-      a: 'Absolutely. AlgoVision features an integrated AI tutor that provides simplified conceptual breakdowns, hints, real-world analogies, and instant answers tailored to your skill level.',
-    },
-    {
-      category: 'Practice',
-      q: 'Can I practice coding problems and test cases?',
-      a: 'Yes, AlgoVision includes an interactive code sandbox where you can write code in C++, Java, Python, or JavaScript and run it directly against test cases while viewing real-time visual solutions.',
-    },
-    {
-      category: 'General',
-      q: 'Is AlgoVision free for students?',
-      a: 'Yes, AlgoVision is completely free and built as an open educational project for Computer Science students and engineering learners.',
-    },
-  ];
-
   const [openIndex, setOpenIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState('All');
 
   const categories = ['All', 'General', 'Curriculum', 'Visualizer', 'AI Tutor'];
 
-  const filteredFaqs = activeCategory === 'All' ? faqs : faqs.filter(f => f.category === activeCategory);
+  const filteredFaqs = activeCategory === 'All' ? FAQ_DATA : FAQ_DATA.filter(f => f.category === activeCategory);
 
   return (
     <section id="faq" className="py-20 bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-white relative font-sans overflow-hidden border-t border-slate-200/80 dark:border-[#1C2638] transition-colors duration-200">
@@ -84,7 +52,7 @@ export function FaqSection() {
                 setActiveCategory(cat);
                 setOpenIndex(0);
               }}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold font-mono transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              className={`px-4 py-2 rounded-full text-xs font-semibold font-mono transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[44px] ${
                 activeCategory === cat
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
                   : 'bg-white dark:bg-[#0B101D] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-[#1E2638] hover:border-slate-300 dark:hover:border-slate-700'
@@ -108,7 +76,7 @@ export function FaqSection() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className={`bg-white dark:bg-[#0B101D] border rounded-2xl transition-all duration-200 overflow-hidden shadow-sm ${
+                className={`bg-white dark:bg-[#0B101D] border rounded-2xl transition-all duration-200 overflow-hidden shadow-xs ${
                   isOpen
                     ? 'border-blue-500/50 dark:border-blue-500/60 ring-1 ring-blue-500/20 shadow-lg dark:shadow-[0_4px_20px_rgba(59,130,246,0.1)]'
                     : 'border-slate-200/80 dark:border-[#1E2638] hover:border-slate-300 dark:hover:border-slate-700'
@@ -119,7 +87,7 @@ export function FaqSection() {
                   aria-expanded={isOpen}
                   aria-controls={panelId}
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-semibold text-slate-900 dark:text-white text-base sm:text-lg group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-semibold text-slate-900 dark:text-white text-base sm:text-lg group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer min-h-[52px]"
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 font-mono text-xs flex items-center justify-center font-bold shrink-0">
@@ -169,10 +137,10 @@ export function FaqSection() {
           className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-[#090E1A] dark:to-[#0E172A] border border-blue-200 dark:border-[#1E2C4A] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left shadow-md"
         >
           <div className="space-y-1">
-            <h4 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg flex items-center justify-center sm:justify-start gap-2">
+            <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg flex items-center justify-center sm:justify-start gap-2">
               <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
               Still have questions?
-            </h4>
+            </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
               Ask AlgoVision's 24/7 AI tutor for instant conceptual breakdowns.
             </p>
@@ -180,7 +148,7 @@ export function FaqSection() {
 
           <a
             href="#ai"
-            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm inline-flex items-center gap-2 shadow-md shadow-blue-500/20 shrink-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm inline-flex items-center gap-2 shadow-md shadow-blue-500/20 shrink-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-h-[44px]"
           >
             <span>Ask AI Tutor</span>
             <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -191,4 +159,7 @@ export function FaqSection() {
     </section>
   );
 }
+
+export default FaqSection;
+
 

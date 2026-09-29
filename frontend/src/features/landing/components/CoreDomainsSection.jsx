@@ -1,84 +1,7 @@
 import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ArrowRight,
-  Database,
-  Network,
-  Cpu,
-  Boxes,
-  Layers3,
-  GitBranch,
-  Sparkles
-} from 'lucide-react';
-
-const DOMAIN_DATA = [
-  {
-    id: 'DSA',
-    label: 'Data Structures & Algorithms',
-    short: 'DSA',
-    icon: GitBranch,
-    color: 'blue',
-    description: 'Visualize algorithms, data structures and problem-solving patterns.',
-    concepts: ['Arrays', 'Trees', 'Graphs', 'Dynamic Programming'],
-    metric: '120+ Concepts',
-    visual: 'algorithm'
-  },
-  {
-    id: 'OS',
-    label: 'Operating Systems',
-    short: 'OS',
-    icon: Cpu,
-    color: 'violet',
-    description: 'Understand processes, memory, scheduling and system behavior.',
-    concepts: ['Processes', 'Threads', 'Memory', 'Scheduling'],
-    metric: '40+ Concepts',
-    visual: 'os'
-  },
-  {
-    id: 'DBMS',
-    label: 'Database Management',
-    short: 'DBMS',
-    icon: Database,
-    color: 'emerald',
-    description: 'Explore queries, indexing, transactions and database internals.',
-    concepts: ['SQL', 'Indexing', 'Transactions', 'Normalization'],
-    metric: '35+ Concepts',
-    visual: 'database'
-  },
-  {
-    id: 'NETWORKS',
-    label: 'Computer Networks',
-    short: 'Networks',
-    icon: Network,
-    color: 'cyan',
-    description: 'See how data moves through protocols and network layers.',
-    concepts: ['TCP/IP', 'HTTP', 'DNS', 'Routing'],
-    metric: '30+ Concepts',
-    visual: 'network'
-  },
-  {
-    id: 'OOP',
-    label: 'Object Oriented Programming',
-    short: 'OOP',
-    icon: Boxes,
-    color: 'amber',
-    description: 'Understand classes, objects and relationships visually.',
-    concepts: ['Classes', 'Inheritance', 'Polymorphism', 'Abstraction'],
-    metric: '25+ Concepts',
-    visual: 'oop'
-  },
-  {
-    id: 'SYSTEM',
-    label: 'System Design',
-    short: 'System Design',
-    icon: Layers3,
-    color: 'rose',
-    description: 'Visualize scalable architectures and distributed systems.',
-    concepts: ['Caching', 'Load Balancing', 'Queues', 'Scalability'],
-    metric: '20+ Concepts',
-    visual: 'system'
-  }
-];
+import { ArrowRight, Sparkles } from 'lucide-react';
+import { CS_DOMAINS_DATA } from '../data/landingData';
 
 const ConceptNode = memo(function ConceptNode({ position, title, subtitle }) {
   return (
@@ -88,7 +11,7 @@ const ConceptNode = memo(function ConceptNode({ position, title, subtitle }) {
     >
       <div className="relative rounded-xl border border-slate-200 dark:border-[#263044] bg-white/90 dark:bg-[#0D1422]/95 backdrop-blur px-3.5 py-3 shadow-lg">
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-blue-500 shadow-sm shadow-blue-500/50" aria-hidden="true" />
+          <div className="w-2 h-2 rounded-full bg-blue-500 shadow-xs shadow-blue-500/50" aria-hidden="true" />
           <div className="min-w-0">
             <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
               {title}
@@ -104,9 +27,9 @@ const ConceptNode = memo(function ConceptNode({ position, title, subtitle }) {
 });
 
 export function CoreDomainsSection({ onNavigateToDsa }) {
-  const [activeDomain, setActiveDomain] = useState('DSA');
+  const [activeDomainId, setActiveDomainId] = useState('dsa');
 
-  const active = DOMAIN_DATA.find((domain) => domain.id === activeDomain) || DOMAIN_DATA[0];
+  const active = CS_DOMAINS_DATA.find((domain) => domain.id === activeDomainId) || CS_DOMAINS_DATA[0];
 
   const handleStartLearning = () => {
     if (onNavigateToDsa) {
@@ -118,11 +41,13 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
 
   const handleKeyDown = (e, index) => {
     if (e.key === 'ArrowRight') {
-      const nextIndex = (index + 1) % DOMAIN_DATA.length;
-      setActiveDomain(DOMAIN_DATA[nextIndex].id);
+      e.preventDefault();
+      const nextIndex = (index + 1) % CS_DOMAINS_DATA.length;
+      setActiveDomainId(CS_DOMAINS_DATA[nextIndex].id);
     } else if (e.key === 'ArrowLeft') {
-      const prevIndex = (index - 1 + DOMAIN_DATA.length) % DOMAIN_DATA.length;
-      setActiveDomain(DOMAIN_DATA[prevIndex].id);
+      e.preventDefault();
+      const prevIndex = (index - 1 + CS_DOMAINS_DATA.length) % CS_DOMAINS_DATA.length;
+      setActiveDomainId(CS_DOMAINS_DATA[prevIndex].id);
     }
   };
 
@@ -151,9 +76,9 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
           aria-label="Computer Science Domains"
           className="flex flex-wrap justify-center gap-2 mb-8"
         >
-          {DOMAIN_DATA.map((domain, idx) => {
+          {CS_DOMAINS_DATA.map((domain, idx) => {
             const Icon = domain.icon;
-            const isActive = activeDomain === domain.id;
+            const isActive = activeDomainId === domain.id;
 
             return (
               <button
@@ -163,10 +88,10 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
                 aria-selected={isActive}
                 aria-controls={`panel-${domain.id}`}
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => setActiveDomain(domain.id)}
+                onClick={() => setActiveDomainId(domain.id)}
                 onKeyDown={(e) => handleKeyDown(e, idx)}
                 className={`
-                  group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl
+                  group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl min-h-[44px]
                   border text-xs sm:text-sm font-semibold transition-all cursor-pointer
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
                   ${isActive
@@ -274,7 +199,7 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
 
                 <button
                   onClick={handleStartLearning}
-                  className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                  className="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 min-w-[44px] min-h-[44px]"
                   aria-label={`Start learning ${active.label}`}
                 >
                   <ArrowRight className="w-4 h-4" aria-hidden="true" />
@@ -295,18 +220,7 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
                 >
                   {/* CENTRAL DOMAIN NODE */}
                   <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <motion.div
-                      animate={{
-                        boxShadow: [
-                          '0 0 0 rgba(59,130,246,0)',
-                          '0 0 35px rgba(59,130,246,0.15)',
-                          '0 0 0 rgba(59,130,246,0)'
-                        ]
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity
-                      }}
+                    <div
                       className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-blue-400/30 dark:border-blue-500/30 bg-white dark:bg-[#0D1422] flex flex-col items-center justify-center shadow-xl"
                     >
                       <active.icon className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500 mb-2" aria-hidden="true" />
@@ -316,7 +230,7 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
                       <span className="text-[9px] uppercase tracking-widest text-slate-400 mt-1">
                         Visualize
                       </span>
-                    </motion.div>
+                    </div>
                   </div>
 
                   {/* CONNECTING LINES */}
@@ -365,4 +279,7 @@ export function CoreDomainsSection({ onNavigateToDsa }) {
     </section>
   );
 }
+
+export default CoreDomainsSection;
+
 

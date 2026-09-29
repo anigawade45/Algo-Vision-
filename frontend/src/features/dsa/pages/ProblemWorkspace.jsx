@@ -25,7 +25,9 @@ import {
 import { DsaNavbar } from '../components/home/DsaNavbar';
 import { ProblemStage } from '../components/problem/ProblemStage';
 import { UnderstandingStage } from '../components/understanding/UnderstandingStage';
+import { AnalogyStage } from '../components/analogy';
 import { PatternStage } from '../components/pattern';
+import { AlgorithmStage } from '../components/algorithm';
 import { PseudocodeStage } from '../components/pseudocode';
 import { DryRunStage } from '../components/dryrun';
 import { PracticeStage } from '../components/practice';
@@ -35,9 +37,9 @@ import { MOCK_PROBLEMS, getProblemById } from '../data/mockProblems';
 const WORKSPACE_STAGES = [
   { id: 'problem', stepNo: '01', name: 'Your Problem', icon: Target, isBuilt: true },
   { id: 'understand', stepNo: '02', name: 'Understand', icon: Brain, isBuilt: true },
-  { id: 'analogy', stepNo: '03', name: 'Analogy', icon: Sparkles, isBuilt: false },
+  { id: 'analogy', stepNo: '03', name: 'Analogy', icon: Sparkles, isBuilt: true },
   { id: 'pattern', stepNo: '04', name: 'Pattern', icon: Grid, isBuilt: true },
-  { id: 'algorithm', stepNo: '05', name: 'Algorithm', icon: Workflow, isBuilt: false },
+  { id: 'algorithm', stepNo: '05', name: 'Algorithm', icon: Workflow, isBuilt: true },
   { id: 'pseudocode', stepNo: '06', name: 'Pseudocode', icon: FileCode2, isBuilt: true },
   { id: 'code', stepNo: '07', name: 'Code', icon: Code2, isBuilt: false },
   { id: 'dryrun', stepNo: '08', name: 'Dry Run', icon: PlayCircle, isBuilt: true },
@@ -393,9 +395,28 @@ export default function ProblemWorkspace({
               />
             )}
 
+            {currentStageId === 'analogy' && (
+              <AnalogyStage
+                problemData={problem}
+                onCompleteStage={handleStageComplete}
+                onNextStage={() => setCurrentStageId('pattern')}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
             {currentStageId === 'pattern' && (
               <PatternStage
                 problem={problem}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'algorithm' && (
+              <AlgorithmStage
+                problem={problem}
+                problemData={problem}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

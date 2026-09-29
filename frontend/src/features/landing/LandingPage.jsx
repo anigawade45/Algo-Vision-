@@ -2,7 +2,9 @@ import React from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { TrustStrip } from './components/TrustStrip';
+import { CoreDomainsSection } from './components/CoreDomainsSection';
 import { ProblemSection } from './components/ProblemSection';
+import { DifferentiatorSection } from './components/DifferentiatorSection';
 import { ModulesSection } from './components/ModulesSection';
 import { AiSection } from './components/AiSection';
 import { FaqSection } from './components/FaqSection';
@@ -16,7 +18,9 @@ export function LandingPage({ theme, toggleTheme, onNavigateToDsa }) {
       <main className="w-full overflow-hidden">
         <HeroSection theme={theme} onNavigateToDsa={onNavigateToDsa} />
         <TrustStrip />
+        <CoreDomainsSection onNavigateToDsa={onNavigateToDsa} />
         <ProblemSection />
+        <DifferentiatorSection />
         <ModulesSection onNavigateToDsa={onNavigateToDsa} />
         <AiSection />
         <FaqSection />
@@ -26,3 +30,5 @@ export function LandingPage({ theme, toggleTheme, onNavigateToDsa }) {
     </div>
   );
 }
+
+export default LandingPage;
