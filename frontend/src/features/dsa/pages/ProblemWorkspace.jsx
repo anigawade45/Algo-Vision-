@@ -29,6 +29,7 @@ import { AnalogyStage } from '../components/analogy';
 import { PatternStage } from '../components/pattern';
 import { AlgorithmStage } from '../components/algorithm';
 import { PseudocodeStage } from '../components/pseudocode';
+import { CodeStage } from '../components/code';
 import { DryRunStage } from '../components/dryrun';
 import { PracticeStage } from '../components/practice';
 
@@ -41,7 +42,7 @@ const WORKSPACE_STAGES = [
   { id: 'pattern', stepNo: '04', name: 'Pattern', icon: Grid, isBuilt: true },
   { id: 'algorithm', stepNo: '05', name: 'Algorithm', icon: Workflow, isBuilt: true },
   { id: 'pseudocode', stepNo: '06', name: 'Pseudocode', icon: FileCode2, isBuilt: true },
-  { id: 'code', stepNo: '07', name: 'Code', icon: Code2, isBuilt: false },
+  { id: 'code', stepNo: '07', name: 'Code', icon: Code2, isBuilt: true },
   { id: 'dryrun', stepNo: '08', name: 'Dry Run', icon: PlayCircle, isBuilt: true },
   { id: 'visualize', stepNo: '09', name: 'Visualize', icon: Eye, isBuilt: false },
   { id: 'complexity', stepNo: '10', name: 'Complexity', icon: Gauge, isBuilt: false },
@@ -427,6 +428,15 @@ export default function ProblemWorkspace({
               <PseudocodeStage
                 problem={problem}
                 selectedApproachId={selectedApproachId}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'code' && (
+              <CodeStage
+                problem={problem}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

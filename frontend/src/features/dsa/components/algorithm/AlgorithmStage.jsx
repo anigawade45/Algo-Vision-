@@ -101,7 +101,7 @@ export function AlgorithmStage({
       {/* SECTION 02 — INTERACTIVE FLOWCHART */}
       {flowchart && (
         <section className="space-y-4" aria-labelledby="flowchart-heading">
-          <div className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.08em] text-blue-600 dark:text-blue-400 uppercase flex items-center gap-2">
+          <div className="text-[11px] sm:text-xs font-mono font-bold tracking-[0.08em] text-indigo-600 dark:text-indigo-400 uppercase flex items-center gap-2">
             <span>02</span>
             <span aria-hidden="true">•</span>
             <span id="flowchart-heading">EXECUTION FLOWCHART</span>

@@ -1,1 +1,1 @@
-// Code component exports
+export { CodeStage } from './CodeStage';

@@ -26,22 +26,25 @@ export function AnalogyStage({ problemData, onCompleteStage, onNextStage, onOpen
 
   return (
     <div className="space-y-6 font-sans w-full pb-12">
-      {/* COMPACT HEADER */}
-      <header className="border-b border-slate-200/80 dark:border-slate-800/80 pb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400 tracking-[0.08em] uppercase leading-none flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>03 · ANALOGY</span>
-          </span>
-          {problem.category && (
-            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 border border-blue-200/60 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 font-mono text-[11px] font-semibold leading-none">
-              {problem.category}
+      {/* HEADER */}
+      <header className="border-b border-slate-200/80 dark:border-slate-800/80 pb-6 sm:pb-7">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400 tracking-[0.08em] uppercase leading-none">
+              03  ·  ANALOGY
             </span>
-          )}
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-sans">
-            {analogyData?.intro?.subtitle || 'A familiar situation that mirrors this algorithm.'}
-          </p>
-        </div>
+            {isFallback && (
+              <span className="text-[11px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 font-mono">
+                Demo Mode: {problem.title}
+              </span>
+            )}
+            {problem.category && (
+              <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 border border-blue-200/60 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 font-mono text-[11px] font-semibold leading-none">
+                {problem.category}
+              </span>
+            )}
+          </div>
+
         {onOpenSpec && (
           <button type="button" onClick={onOpenSpec}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-xs font-mono font-bold cursor-pointer border border-blue-200/80 dark:border-blue-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors">
@@ -49,31 +52,21 @@ export function AnalogyStage({ problemData, onCompleteStage, onNextStage, onOpen
             <span>Spec</span>
           </button>
         )}
+        </div>
+
+        <h1 className="text-2xl sm:text-3xl md:text-[38px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mt-4 sm:mt-4.5">
+          {analogyData?.intro?.title || 'Connect to a Familiar Analogy'}
+        </h1>
+
+        <p className="text-[15px] sm:text-base text-slate-600 dark:text-slate-400 font-normal leading-relaxed max-w-2xl mt-2.5 sm:mt-3">
+          {analogyData?.intro?.subtitle || 'A familiar situation that mirrors this algorithm without the code.'}
+        </p>
       </header>
 
       {/* STAGE BODY */}
       <div className="space-y-6">
-        {/* REAL-WORLD SCENARIO */}
+        {/* REAL-WORLD SCENARIO - STORYTELLING */}
         <AnalogyScenario scenario={analogyData?.scenario} />
-
-        {/* 02 — INTERACTIVE STEP VISUALIZER */}
-        {analogyData?.stepVisualizer && (
-          <AnalogyStepVisualizer stepVisualizer={analogyData.stepVisualizer} />
-        )}
-
-        {/* 03 — INTERACTIVE CARD DISCOVERY */}
-        <AnalogyInteraction
-          scenario={analogyData?.scenario}
-          interaction={analogyData?.interaction}
-          onDiscoveryStateChange={(discovered) => setIsDiscovered(discovered)}
-        />
-
-        {/* 04 — DSA CONNECTION & TAKEAWAY */}
-        <AnalogyMapping
-          dsaConnection={analogyData?.dsaConnection}
-          takeaway={analogyData?.takeaway}
-          isDiscovered={isDiscovered}
-        />
       </div>
 
       {/* NAVIGATION FOOTER */}
