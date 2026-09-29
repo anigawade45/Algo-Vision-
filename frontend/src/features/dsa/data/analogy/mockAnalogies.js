@@ -48,6 +48,97 @@ export const getAnalogyForProblem = (problemId) => {
         title: 'Exploring Uncharted Archipelago',
         story: `Imagine you are an explorer flying over an uncharted ocean dotted with islands. You have a blank map, and your job is to count exactly how many distinct islands exist.\n\nYou decide to parachute down onto the first piece of land you see. To ensure you don't count this island twice, you pull out a red marker and paint the ground you are standing on. Then, you walk north, south, east, and west, painting all connected landmasses red until you hit water in every direction.\n\nOnce the entire island is painted, you fly back up into the sky. You scan the ocean again. If you see unpainted land, you know it must be a brand new island! You parachute down and repeat the process.\n\nThis methodical exploration and marking of connected land is exactly how Breadth-First Search (BFS) or Depth-First Search (DFS) counts connected components in a grid.`
       }
+    },
+    'merge-intervals': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'Consolidating Meeting Bookings',
+        story: `Imagine you are an office manager looking at a messy schedule of room bookings for the day. Someone booked the room from 9 AM to 11 AM, someone else booked it from 10 AM to 12 PM, and a third person from 1 PM to 2 PM.\n\nInstead of having a fragmented schedule, you want to merge overlapping bookings to know exactly when the room is occupied.\n\nYou first sort the bookings by their start times. You look at the first booking (9 to 11 AM). The next booking starts at 10 AM, which is before the first one ends. So, you merge them into a single block from 9 AM to 12 PM. The third booking starts at 1 PM, which is after 12 PM, so it remains a separate block.\n\nThis simple process of sorting and extending the "current" block's end time is exactly how the Merge Intervals algorithm operates.`
+      }
+    },
+    'longest-substring-no-repeat': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Unforgiving Bouncer',
+        story: `Imagine a nightclub with a very strict bouncer. The rule is: no two people with the same name can be inside the club at the same time.\n\nA line of people (the string of characters) is waiting to get in. The bouncer lets people in one by one. As long as a person's name is not already inside, they enter, and the bouncer writes down the new record for the most people inside.\n\nBut suddenly, another "John" arrives at the door. The bouncer cannot let him in while the first "John" is still inside. So, the bouncer starts kicking people out from the front of the line (the left side) until the first "John" leaves. Only then can the new "John" enter.\n\nThis expanding and contracting line of people is the essence of the Sliding Window technique used to find the longest unique substring.`
+      }
+    },
+    'shortest-path-graph': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Expanding Ripple',
+        story: `Imagine dropping a stone into a calm pond. A circular ripple expands outward from the center. The first wave hits objects that are exactly 1 foot away, then the next wave hits objects 2 feet away, and so on.\n\nIf you want to find the shortest path from the center to a specific lily pad, you just wait until the first ripple touches it. Because the ripple expands evenly in all directions step-by-step, the first time it reaches the lily pad is guaranteed to be the shortest possible route.\n\nThis "expanding wave" concept is exactly how Breadth-First Search (BFS) works. It explores all neighbors 1 step away, then all neighbors 2 steps away, ensuring the shortest path is always found first in an unweighted graph.`
+      }
+    },
+    'climbing-stairs': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Staircase Sequence',
+        story: `Imagine you are standing at the bottom of a staircase. To get to step 3, you can either step up from step 2 (taking a 1-step hop), or you can step up from step 1 (taking a 2-step hop). There are no other ways to physically land on step 3.\n\nThis means the total number of ways to reach step 3 is simply the number of ways to reach step 1 PLUS the number of ways to reach step 2.\n\nAs you keep climbing, this pattern continues. The ways to reach step 4 is the sum of ways to reach step 2 and step 3. You only ever need to remember the last two steps you calculated!\n\nThis simple addition of previous states is the foundation of Dynamic Programming, mirroring the famous Fibonacci sequence.`
+      }
+    },
+    'house-robber': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Cautious Thief',
+        story: `Imagine you are a thief walking down a street of houses. Each house has a different amount of cash. However, every house has a security alarm linked to its immediate neighbors. If you rob two adjacent houses, the alarms will ring.\n\nAs you stand in front of House #3, you have a choice. You can either rob House #3 (which means you must have skipped House #2, and thus you add House #3's cash to whatever you stole up to House #1). Or, you can skip House #3 entirely, meaning you keep whatever maximum cash you accumulated up to House #2.\n\nYou simply compare the two scenarios: (House #1's Loot + House #3) versus (House #2's Loot), and choose the bigger number. \n\nBy continually making this choice at every house, you perfectly maximize your loot without ever triggering the alarms, a classic Dynamic Programming approach.`
+      }
+    },
+    'subsets': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'Packing for a Trip',
+        story: `Imagine you are packing for a weekend trip, and you lay out three items on your bed: a Hat, a Camera, and an Umbrella.\n\nFor every single item, you make a binary choice: either pack it in your bag, or leave it on the bed. First, you look at the Hat (Yes or No). Then, for each of those choices, you look at the Camera (Yes or No). Finally, for each of those, you look at the Umbrella (Yes or No).\n\nBy exploring every "Yes" and every "No" path sequentially, you eventually map out every possible combination of packed bags, from a completely empty bag to a bag with all three items.\n\nThis exhaustive decision tree where you try a path, record it, and then "backtrack" to try the alternate path is the core of Backtracking.`
+      }
+    },
+    'course-schedule': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The College Degree Path',
+        story: `Imagine you are enrolling in college classes. You want to take "Advanced Robotics," but it requires "Intro to Programming." But "Intro to Programming" requires "Basic Math."\n\nYou cannot just start with Advanced Robotics. You must find a course that has absolutely zero prerequisites (like Basic Math) and take it first. Once you pass Basic Math, it's "unlocked," and you cross it off the prerequisite list for Intro to Programming. Now, Intro to Programming has zero prerequisites, so you can take it next!\n\nIf you ever end up in a situation where every remaining class requires another remaining class (a prerequisite loop), you can never graduate. \n\nThis process of finding tasks with zero dependencies and systematically unlocking the next tasks is called Topological Sorting.`
+      }
+    },
+    'connected-components': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'Merging Friend Groups',
+        story: `Imagine a large room full of strangers. You start handing out identical colored wristbands. Initially, everyone gets a unique color because everyone is a separate group.\n\nThen, someone announces: "Alice and Bob are friends!" You tell Alice and Bob to pick one of their wristband colors and both wear the same color. Later, "Bob and Charlie are friends!" Charlie switches his wristband to match Alice and Bob's color. They are now one big connected group.\n\nWhenever two people are declared friends, their entire friend networks merge into a single color. At the end of the night, you just count how many different wristband colors are left in the room to know exactly how many distinct friend groups exist.\n\nThis efficient merging of sets is exactly how the Union-Find (Disjoint Set) algorithm counts connected components.`
+      }
+    },
+    'kth-smallest-bst': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'Reading the Organized Library',
+        story: `Imagine a magical library where books are arranged in a very strict hierarchy. For any given book, all books with earlier alphabetical titles are placed on the left shelf, and all books with later titles are on the right shelf.\n\nIf you are asked to find the 3rd alphabetically first book, you don't need to gather all the books and sort them. You just start at the entrance and always walk to the furthest left shelf you can find. You read that book (it's the 1st!). Then you move up to its parent book, read it (that's the 2nd!). Then you check its right shelf.\n\nBecause the library is perfectly organized, simply reading the shelves in a "Left, Parent, Right" order guarantees you are reading the books in perfectly sorted order. This is the beauty of an Inorder Traversal on a Binary Search Tree.`
+      }
+    },
+    'top-k-frequent': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Voting Bins',
+        story: `Imagine a massive election with millions of votes for various candidates. You want to find the top 2 most popular candidates.\n\nInstead of sorting a giant list of names, you use a clever system. You first tally up the votes. Alice got 5 votes, Bob got 2, and Charlie got 5.\n\nThen, you set up a row of buckets labeled 1, 2, 3, 4, 5... representing the number of votes. You drop Alice and Charlie's names into Bucket #5, and Bob's name into Bucket #2.\n\nTo find the winners, you just walk from the end of the row (the highest vote bucket) backward. You look in Bucket #5 and immediately find Alice and Charlie! You've found your top 2 candidates without having to do a complex, time-consuming sort.\n\nThis method of grouping by frequency into indexed buckets is called Bucket Sort.`
+      }
+    },
+    'product-except-self': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Two-Way Conveyor Belt',
+        story: `Imagine a factory assembly line with 4 stations. You want every station to know the combined product of all OTHER stations, but you are not allowed to just multiply everything together and divide by each station's value.\n\nInstead, you use two conveyor belts. The first belt runs left-to-right. As it passes station 2, it drops off the product of everything to the left (just station 1). As it passes station 3, it drops off the product of stations 1 and 2.\n\nThe second belt runs right-to-left. As it passes station 2, it drops off the product of everything to its right (stations 3 and 4).\n\nNow, station 2 just multiplies the box from the left belt with the box from the right belt. Without ever using division, station 2 has perfectly calculated the product of everything except itself!`
+      }
+    },
+    'single-number': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Magical Cancellation Pairs',
+        story: `Imagine a room where people are wearing name tags. Every single person has an identical twin in the room with the exact same name tag, except for one lone person.\n\nYou have a magical ledger. When you write a name in the ledger, it appears. But if you write the exact same name again, the ink magically erases both entries completely!\n\nYou walk around the room and write down everyone's name on your ledger. Because every twin appears twice, their names continually write and erase themselves. \n\nAt the very end of the night, the only name left in your ledger is the person who didn't have a twin to cancel them out! This self-canceling magic is exactly how the XOR (Exclusive OR) bitwise operation finds a single number in constant space.`
+      }
+    },
+    'word-search': {
+      intro: { subtitle: 'A familiar situation that mirrors this algorithm.' },
+      scenario: {
+        title: 'The Maze of Letters',
+        story: `Imagine you are trapped in a giant grid-like maze where every room has a single letter painted on the floor. You are looking for a path that spells "APPLE."\n\nYou stand on a room with an 'A'. Great! You mark the door with a chalk "X" so you don't walk in circles. You look around and see a 'P' to the north. You step into it. You see another 'P' to the east. You step into it. Then you look around... but there is no 'L' anywhere!\n\nYou hit a dead end. But you don't panic. You simply step backward into the first 'P' room, erase your chalk "X", and try a different door (maybe south this time).\n\nThis strategy of exploring a path deeply, marking where you've been, and retreating when you hit a dead end to try another route is the classic Depth-First Search with Backtracking.`
+      }
     }
   };
 
