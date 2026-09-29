@@ -5,15 +5,26 @@ import { Wifi, Layers, LayoutDashboard, ArrowRight, Play, Lock, CheckCircle2, Gl
 export default function CnHome({ theme, toggleTheme }) {
   const cnTopics = [
     {
-      id: 'tcp-handshake',
-      title: 'TCP 3-Way Handshake & Session Flow',
-      description: 'Simulate SYN, SYN-ACK, ACK connection establishment, data packet transmission, and FIN teardown with interactive sequence & ack tracking.',
+      id: 'fundamentals',
+      title: 'Computer Network Fundamentals',
+      description: 'Master core networking principles: data communication model, transmission media, PAN/LAN/MAN/WAN scale, and essential hardware networking devices.',
       author: 'Core Team',
       status: 'Live & Ready',
       isLive: true,
-      path: '/cn/tcp-handshake',
-      badge: 'Interactive Simulator',
+      path: '/cn/fundamentals',
+      badge: 'Foundational Track',
       badgeColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+    },
+    {
+      id: 'topologies',
+      title: 'Network Topologies & Simulation',
+      description: 'Simulate packet transmissions across Bus, Star, Ring, Mesh, Tree, and Hybrid layouts with link cuts, node fault testing, and comparative tradeoffs matrix.',
+      author: 'Core Team',
+      status: 'Live & Ready',
+      isLive: true,
+      path: '/cn/topologies',
+      badge: 'Interactive Simulator',
+      badgeColor: 'bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border-teal-200 dark:border-teal-800',
     },
     {
       id: 'osi-layers',
@@ -113,10 +124,10 @@ export default function CnHome({ theme, toggleTheme }) {
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-emerald-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                4 Active Simulators
+                5 Active Simulators
               </span>
               <span>•</span>
-              <span>4 Interactive Tracks</span>
+              <span>5 Interactive Tracks</span>
             </div>
           </div>
         </div>
