@@ -24,6 +24,7 @@ import OsHome from '@/features/os/pages/OsHome';
 import OsFundamentals from '@/features/os/pages/OsFundamentals';
 import ProcessManagement from '@/features/os/pages/ProcessManagement';
 import Deadlocks from '@/features/os/pages/Deadlocks';
+import BankersAlgorithm from '@/features/os/pages/BankersAlgorithm';
 
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
@@ -215,6 +216,15 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <Deadlocks theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/bankers-algorithm"
+              element={
+                <ProtectedRoute>
+                  <BankersAlgorithm theme={theme} toggleTheme={toggleTheme} />
                 </ProtectedRoute>
               }
             />

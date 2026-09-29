@@ -5,6 +5,7 @@ import CpuScheduling from './pages/CpuScheduling';
 import OsFundamentals from './pages/OsFundamentals';
 import ProcessManagement from './pages/ProcessManagement';
 import Deadlocks from './pages/Deadlocks';
+import BankersAlgorithm from './pages/BankersAlgorithm';
 
 export const osRoutes = (
   <>
@@ -12,6 +13,7 @@ export const osRoutes = (
     <Route path="/os/fundamentals" element={<OsFundamentals />} />
     <Route path="/os/process-management" element={<ProcessManagement />} />
     <Route path="/os/deadlocks" element={<Deadlocks />} />
+    <Route path="/os/bankers-algorithm" element={<BankersAlgorithm />} />
     <Route path="/os/cpu-scheduling" element={<CpuScheduling />} />
   </>
 );
