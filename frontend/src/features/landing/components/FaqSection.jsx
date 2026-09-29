@@ -56,7 +56,7 @@ export function FaqSection() {
           className="text-center max-w-3xl mx-auto mb-12 space-y-3"
         >
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-[#0E172A] border border-blue-200 dark:border-[#1E2E4A] text-blue-600 dark:text-[#3B82F6] text-[11px] font-semibold uppercase tracking-wider font-mono">
-            <HelpCircle className="w-3.5 h-3.5" aria-hidden="true" />
+            <HelpCircle className="w-3.5 h-3.5" />
             <span>GOT QUESTIONS?</span>
           </div>
 
@@ -70,21 +70,15 @@ export function FaqSection() {
         </motion.div>
 
         {/* Category Filter Pills */}
-        <div
-          role="tablist"
-          aria-label="FAQ Categories"
-          className="flex flex-wrap items-center justify-center gap-2 mb-10"
-        >
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
           {categories.map((cat) => (
             <button
               key={cat}
-              role="tab"
-              aria-selected={activeCategory === cat}
               onClick={() => {
                 setActiveCategory(cat);
                 setOpenIndex(0);
               }}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold font-mono transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold font-mono transition-all duration-200 ${
                 activeCategory === cat
                   ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
                   : 'bg-white dark:bg-[#0B101D] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-[#1E2638] hover:border-slate-300 dark:hover:border-slate-700'
@@ -95,16 +89,13 @@ export function FaqSection() {
           ))}
         </div>
 
-        {/* Accordion List with WAI-ARIA Expand / Collapse */}
-        <div className="space-y-4 mb-14" role="region" aria-label="Frequently Asked Questions Accordion">
+        {/* Accordion List with Framer Motion Expand / Collapse */}
+        <div className="space-y-4 mb-14">
           {filteredFaqs.map((faq, idx) => {
             const isOpen = openIndex === idx;
-            const buttonId = `faq-btn-${idx}`;
-            const panelId = `faq-panel-${idx}`;
-
             return (
               <motion.div
-                key={faq.q}
+                key={idx}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
@@ -115,11 +106,8 @@ export function FaqSection() {
                 }`}
               >
                 <button
-                  id={buttonId}
-                  aria-expanded={isOpen}
-                  aria-controls={panelId}
                   onClick={() => setOpenIndex(isOpen ? null : idx)}
-                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-semibold text-slate-900 dark:text-white text-base sm:text-lg group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+                  className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 font-semibold text-slate-900 dark:text-white text-base sm:text-lg group"
                 >
                   <div className="flex items-center gap-3">
                     <span className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 font-mono text-xs flex items-center justify-center font-bold shrink-0">
@@ -134,16 +122,12 @@ export function FaqSection() {
                     className={`w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-transform duration-300 shrink-0 ${
                       isOpen ? 'rotate-180 text-blue-600 dark:text-blue-400' : ''
                     }`}
-                    aria-hidden="true"
                   />
                 </button>
 
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div
-                      id={panelId}
-                      role="region"
-                      aria-labelledby={buttonId}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
@@ -170,7 +154,7 @@ export function FaqSection() {
         >
           <div className="space-y-1">
             <h4 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg flex items-center justify-center sm:justify-start gap-2">
-              <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+              <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               Still have questions?
             </h4>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
@@ -180,10 +164,10 @@ export function FaqSection() {
 
           <a
             href="#ai"
-            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm inline-flex items-center gap-2 shadow-md shadow-blue-500/20 shrink-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm inline-flex items-center gap-2 shadow-md shadow-blue-500/20 shrink-0 transition-all"
           >
             <span>Ask AI Tutor</span>
-            <ArrowRight className="w-4 h-4" aria-hidden="true" />
+            <ArrowRight className="w-4 h-4" />
           </a>
         </motion.div>
 
@@ -191,4 +175,3 @@ export function FaqSection() {
     </section>
   );
 }
-

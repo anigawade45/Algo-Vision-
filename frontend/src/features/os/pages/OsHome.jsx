@@ -5,9 +5,20 @@ import { Cpu, Terminal, LayoutDashboard, ArrowLeft, ArrowRight, Play, Layers, Cl
 export default function OsHome({ theme, toggleTheme }) {
   const osTopics = [
     {
+      id: 'os-fundamentals',
+      title: 'OS Fundamentals & Architecture',
+      description: 'Explore OS goals, 5-layer system architecture, dual-mode execution (User vs Kernel), system calls, and boot process.',
+      author: 'Parvej',
+      status: 'Live & Ready',
+      isLive: true,
+      path: '/os/fundamentals',
+      badge: 'Core Track',
+      badgeColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+    },
+    {
       id: 'cpu-scheduling',
       title: 'CPU Scheduling Algorithms',
-      description: 'Simulate FCFS, SJF, SRTF, and Round Robin process scheduling step-by-step with interactive Gantt charts.',
+      description: 'Simulate FCFS, SJF, SRTF, Priority, and Round Robin process scheduling step-by-step with interactive Gantt charts.',
       author: 'Parvej',
       status: 'Live & Ready',
       isLive: true,
@@ -110,10 +121,10 @@ export default function OsHome({ theme, toggleTheme }) {
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-cyan-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-cyan-300" />
-                1 Active Simulator
+                2 Active Modules
               </span>
               <span>•</span>
-              <span>4 Interactive Tracks</span>
+              <span>5 Total Learning Tracks</span>
             </div>
           </div>
         </div>
