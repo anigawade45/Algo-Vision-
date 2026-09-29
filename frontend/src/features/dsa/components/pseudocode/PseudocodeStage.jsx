@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { FileText, Check, ArrowRight } from 'lucide-react';
 import { getPseudocodeByProblemAndApproach } from '../../data/pseudocode';
 import SelectedApproach from './SelectedApproach';
-import ProblemContextCard from './ProblemContextCard';
-import ThinkInSteps from './ThinkInSteps';
 import PseudocodeViewer from './PseudocodeViewer';
 import StepWalkthrough from './StepWalkthrough';
 import DecisionPoints from './DecisionPoints';
-import PseudocodeTakeaway from './PseudocodeTakeaway';
 
 /**
  * STAGE 06 — PSEUDOCODE
@@ -56,19 +53,14 @@ export function PseudocodeStage({
     intro,
     approachName,
     approachContext,
-    context,
-    stepOverview,
     lines,
     walkthrough,
     decisions,
-    takeaway,
   } = pseudocodeData;
 
   // Dynamically compute section numbers to ensure unbroken ordering
   let sectionCounter = 1;
   const selectedApproachNo = String(sectionCounter++).padStart(2, '0');
-  const contextNo = context ? String(sectionCounter++).padStart(2, '0') : null;
-  const thinkInStepsNo = stepOverview ? String(sectionCounter++).padStart(2, '0') : null;
   const viewerNo = lines ? String(sectionCounter++).padStart(2, '0') : null;
   const walkthroughNo = walkthrough ? String(sectionCounter++).padStart(2, '0') : null;
   const decisionsNo = decisions ? String(sectionCounter++).padStart(2, '0') : null;
@@ -125,75 +117,26 @@ export function PseudocodeStage({
         sectionNo={selectedApproachNo}
       />
 
-      {/* SECTION 02 — INPUT / PROBLEM CONTEXT */}
-      {context && (
-        <ProblemContextCard context={context} sectionNo={contextNo} />
-      )}
-
-      {/* SECTION 03 — THINK IN STEPS */}
-      {stepOverview && (
-        <ThinkInSteps stepOverview={stepOverview} sectionNo={thinkInStepsNo} />
-      )}
-
-      {/* SECTION 04 — PSEUDOCODE VIEWER & INTERACTIVE STEP MODE */}
+      {/* SECTION 02 — PSEUDOCODE VIEWER & INTERACTIVE STEP MODE */}
       {lines && (
         <PseudocodeViewer lines={lines} sectionNo={viewerNo} />
       )}
 
-      {/* SECTION 05 — STEP-BY-STEP WALKTHROUGH */}
+      {/* SECTION 03 — STEP-BY-STEP WALKTHROUGH */}
       {walkthrough && (
         <StepWalkthrough walkthrough={walkthrough} sectionNo={walkthroughNo} />
       )}
 
-      {/* SECTION 06 — IMPORTANT DECISION POINTS */}
+      {/* SECTION 04 — IMPORTANT DECISION POINTS */}
       {decisions && (
         <DecisionPoints decisions={decisions} sectionNo={decisionsNo} />
       )}
 
-
-      {/* SECTION 08 — PSEUDOCODE CHECKPOINT */}
+      {/* COMPLETION ACTIONS */}
       <section
-        aria-labelledby="pseudocode-checkpoint-heading"
-        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 space-y-5"
+        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80"
       >
-        <div className="space-y-1" aria-live="polite">
-          <span className="text-[11px] font-mono font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase block">
-            STAGE CHECKPOINT
-          </span>
-          <h2 id="pseudocode-checkpoint-heading" className="text-xl font-bold text-slate-900 dark:text-white">
-            {understood ? '06 · PSEUDOCODE UNDERSTOOD ✓' : 'CHECK YOUR PSEUDOCODE LOGIC'}
-          </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-            {understood
-              ? 'You are ready to translate these language-independent steps into programming language code.'
-              : 'Before moving on to Stage 07 (Code), make sure you can explain:'}
-          </p>
-        </div>
-
-        {!understood && (
-          <div className="space-y-2 text-xs font-mono text-slate-700 dark:text-slate-300">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What happens first in the algorithm</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What operations repeat in loops</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What conditions control decision branches</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>Where the final result comes from</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
             aria-pressed={understood}

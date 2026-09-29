@@ -12,20 +12,6 @@ export const kthLargestPseudocode = {
     title: 'Turn the chosen algorithm into clear, step-by-step logic.',
     subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
   },
-  context: {
-    title: 'Kth Largest Element in an Array',
-    inputFormat: 'nums = Array[int], k = int',
-    inputVisual: 'nums = [ 3, 2, 1, 5, 6, 4 ], k = 2',
-    kValue: 'K = 2',
-    goal: 'Find the 2nd largest value in the array.',
-  },
-  stepOverview: [
-    { stepNo: '01', title: 'Initialize', description: 'Create an empty min-heap.' },
-    { stepNo: '02', title: 'Process values', description: 'Iterate over each value in the array.' },
-    { stepNo: '03', title: 'Add value', description: 'Insert the current value into the heap.' },
-    { stepNo: '04', title: 'Maintain K values', description: 'If heap size exceeds K, remove the smallest value.' },
-    { stepNo: '05', title: 'Return result', description: 'Return the smallest value remaining in the heap.' },
-  ],
   lines: [
     { line: 1, type: 'start', text: 'START', explanation: 'Algorithm execution begins.' },
     { line: 2, type: 'instruction', text: 'Create an empty min-heap.', explanation: 'Initialize a min-heap structure to hold our top K candidate values.' },

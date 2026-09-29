@@ -22,6 +22,22 @@ export const twoSumPattern = {
       { label: 'Must satisfy', sub: 'Required relation' },
       { label: 'Target condition', sub: 'Sum equals 9' },
     ],
+    abstraction: {
+      title: 'Abstract the problem.',
+      subtitle: 'Specific numbers are no longer important. What matters is the relationship.',
+      concrete: {
+        items: ['2', '7', '11', '15'],
+        target: '9',
+      },
+      abstractFormula: {
+        varA: 'VALUE A',
+        operator: '+',
+        varB: 'VALUE B',
+        equals: '=',
+        result: 'TARGET',
+      },
+      statement: 'When specific values disappear, the relationship remains intact.',
+    },
   },
 
   signals: {
@@ -53,23 +69,6 @@ export const twoSumPattern = {
         detail: 'Output requires identifying the exact indices/positions corresponding to the valid pair.',
       },
     ],
-  },
-
-  abstraction: {
-    title: 'Abstract the problem.',
-    subtitle: 'Specific numbers are no longer important. What matters is the relationship.',
-    concrete: {
-      items: ['2', '7', '11', '15'],
-      target: '9',
-    },
-    abstractFormula: {
-      varA: 'VALUE A',
-      operator: '+',
-      varB: 'VALUE B',
-      equals: '=',
-      result: 'TARGET',
-    },
-    statement: 'When specific values disappear, the relationship remains intact.',
   },
 
   pattern: {
@@ -121,36 +120,6 @@ export const twoSumPattern = {
       'Which optimization to use',
       'Exact implementation steps',
     ],
-  },
-
-  recognitionCheck: {
-    question: 'Which description best matches the structural pattern of Two Sum?',
-    options: [
-      {
-        id: 'opt_a',
-        text: 'Find a single value that satisfies a condition.',
-        isCorrect: false,
-        feedback: 'Incorrect. Two Sum requires evaluating a pair of values working together, not a single element.',
-      },
-      {
-        id: 'opt_b',
-        text: 'Find two values whose relationship satisfies a target.',
-        isCorrect: true,
-        feedback: 'Correct! The problem is defined by a pair of values satisfying a specified relationship.',
-      },
-      {
-        id: 'opt_c',
-        text: 'Traverse every value in a fixed sequential order.',
-        isCorrect: false,
-        feedback: 'Incorrect. Sequential traversal describes an execution step (algorithm), not the core structural pattern.',
-      },
-    ],
-  },
-
-  takeaway: {
-    specificProblem: 'Find two values that sum to 9.',
-    generalPattern: 'Find two values that satisfy a required relationship.',
-    finalStatement: 'The numbers changed, but the structure stayed the same. When a problem is defined by a relationship between multiple values, look for the relationship before thinking about the algorithm.',
   },
 };
 

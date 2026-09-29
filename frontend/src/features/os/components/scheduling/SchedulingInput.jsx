@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus, Trash2, Play } from 'lucide-react';
 
-export default function SchedulingInput({ processes, setProcesses, onSimulate, selectedAlgorithm }) {
+export default function SchedulingInput({ processes, setProcesses, onSimulate, selectedAlgorithm, timeQuantum = 2, setTimeQuantum }) {
   const handleInputChange = (id, field, value) => {
     const updated = processes.map((p) => {
       if (p.id === id) {
@@ -44,6 +44,9 @@ export default function SchedulingInput({ processes, setProcesses, onSimulate, s
     setProcesses(processes.filter((p) => p.id !== id));
   };
 
+  const showQuantum = selectedAlgorithm === 'RR' || selectedAlgorithm === 'MLQ';
+  const showPriorityNote = selectedAlgorithm === 'Priority' || selectedAlgorithm === 'MLQ';
+
   return (
     <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-5 shadow-sm space-y-4">
       <div className="flex items-center justify-between border-b border-slate-100 dark:border-[#1E2638] pb-3">
@@ -57,6 +60,25 @@ export default function SchedulingInput({ processes, setProcesses, onSimulate, s
         </button>
       </div>
 
+      {showQuantum && setTimeQuantum && (
+        <div className="p-3 bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-between">
+          <label className="text-xs font-bold text-blue-700 dark:text-blue-400 font-mono">
+            Time Quantum (Q):
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min="1"
+              max="20"
+              value={timeQuantum}
+              onChange={(e) => setTimeQuantum(Math.max(1, Number(e.target.value) || 1))}
+              className="w-16 px-2 py-1 text-center border border-blue-300 dark:border-blue-500/40 rounded-lg bg-white dark:bg-[#070A12] text-slate-800 dark:text-slate-200 font-mono text-xs font-bold focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+            <span className="text-[10px] text-slate-400 font-mono">ms</span>
+          </div>
+        </div>
+      )}
+
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
@@ -66,7 +88,9 @@ export default function SchedulingInput({ processes, setProcesses, onSimulate, s
               <th className="py-2.5 px-2">Burst Time</th>
               <th className="py-2.5 px-2">
                 Priority
-                <span className="text-[9px] font-normal text-slate-400 block">(Ignored)</span>
+                <span className="text-[9px] font-normal text-slate-400 block">
+                  {showPriorityNote ? '(Lower = Higher)' : '(Ignored)'}
+                </span>
               </th>
               <th className="py-2.5 px-2 text-center">Action</th>
             </tr>
@@ -123,7 +147,7 @@ export default function SchedulingInput({ processes, setProcesses, onSimulate, s
         className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all shadow-md shadow-blue-500/15"
       >
         <Play className="w-4 h-4 fill-current" />
-        <span>SIMULATE FCFS</span>
+        <span>SIMULATE {selectedAlgorithm}</span>
       </button>
     </div>
   );

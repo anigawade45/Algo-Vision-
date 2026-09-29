@@ -1,11 +1,6 @@
 import slidingWindowMaximumDryRun from './slidingWindowMaximumDryRun.js';
 import kthLargestDryRun from './kthLargestDryRun.js';
 
-/**
- * Mock Dry Run Datasets for all 20 problems in AlgoVision.
- * Ensures Stage 08 renders language-independent step execution traces
- * for any selected problem in the workspace without problem-specific JSX conditionals.
- */
 export const MOCK_DRY_RUNS = {
   "sliding-window-maximum": slidingWindowMaximumDryRun,
   "kth-largest-element": kthLargestDryRun,
@@ -67,27 +62,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "-"
+            "value": "-",
+            "label": "Current Index"
           },
           {
             "name": "num",
-            "value": "-"
+            "value": "-",
+            "label": "Current Number"
           },
           {
             "name": "complement",
-            "value": "-"
+            "value": "-",
+            "label": "Target Complement"
           },
           {
             "name": "hashMap",
-            "value": "{ }"
+            "value": "{ }",
+            "label": "Hash Map (num ➔ index)"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Indices Result"
           }
         ],
         "before": {
-          "hashMap": "{ }"
+          "i": "-",
+          "num": "-",
+          "complement": "-",
+          "hashMap": "{ }",
+          "result": "[ ]"
         },
         "condition": {
           "text": "Execution starting",
@@ -98,7 +102,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Create an empty hash map."
         },
         "after": {
-          "hashMap": "{ }"
+          "i": "-",
+          "num": "-",
+          "complement": "-",
+          "hashMap": "{ }",
+          "result": "[ ]"
         },
         "changes": [],
         "currentResult": "[ ]",
@@ -113,28 +121,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "0"
+            "value": "0",
+            "label": "Current Index"
           },
           {
             "name": "num",
-            "value": "2"
+            "value": "2",
+            "label": "Current Number"
           },
           {
             "name": "complement",
-            "value": "7"
+            "value": "7",
+            "label": "Target Complement"
           },
           {
             "name": "hashMap",
-            "value": "{ }"
+            "value": "{ }",
+            "label": "Hash Map (num ➔ index)"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Indices Result"
           }
         ],
         "before": {
           "i": "-",
-          "num": "-"
+          "num": "-",
+          "complement": "-",
+          "hashMap": "{ }",
+          "result": "[ ]"
         },
         "condition": {
           "text": "Calculate complement: 9 - 2 = 7",
@@ -147,7 +163,9 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "i": "0",
           "num": "2",
-          "complement": "7"
+          "complement": "7",
+          "hashMap": "{ }",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -178,27 +196,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "0"
+            "value": "0",
+            "label": "Current Index"
           },
           {
             "name": "num",
-            "value": "2"
+            "value": "2",
+            "label": "Current Number"
           },
           {
             "name": "complement",
-            "value": "7"
+            "value": "7",
+            "label": "Target Complement"
           },
           {
             "name": "hashMap",
-            "value": "{ 2: 0 }"
+            "value": "{ 2: 0 }",
+            "label": "Hash Map (num ➔ index)"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Indices Result"
           }
         ],
         "before": {
-          "hashMap": "{ }"
+          "i": "0",
+          "num": "2",
+          "complement": "7",
+          "hashMap": "{ }",
+          "result": "[ ]"
         },
         "condition": {
           "text": "Is 7 in hashMap { }?",
@@ -209,7 +236,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Complement 7 not found. Store map[2] = 0."
         },
         "after": {
-          "hashMap": "{ 2: 0 }"
+          "i": "0",
+          "num": "2",
+          "complement": "7",
+          "hashMap": "{ 2: 0 }",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -230,28 +261,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "1"
+            "value": "1",
+            "label": "Current Index"
           },
           {
             "name": "num",
-            "value": "7"
+            "value": "7",
+            "label": "Current Number"
           },
           {
             "name": "complement",
-            "value": "2"
+            "value": "2",
+            "label": "Target Complement"
           },
           {
             "name": "hashMap",
-            "value": "{ 2: 0 }"
+            "value": "{ 2: 0 }",
+            "label": "Hash Map (num ➔ index)"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Indices Result"
           }
         ],
         "before": {
           "i": "0",
-          "num": "2"
+          "num": "2",
+          "complement": "7",
+          "hashMap": "{ 2: 0 }",
+          "result": "[ ]"
         },
         "condition": {
           "text": "Calculate complement: 9 - 7 = 2",
@@ -264,7 +303,9 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "i": "1",
           "num": "7",
-          "complement": "2"
+          "complement": "2",
+          "hashMap": "{ 2: 0 }",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -295,26 +336,35 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "1"
+            "value": "1",
+            "label": "Current Index"
           },
           {
             "name": "num",
-            "value": "7"
+            "value": "7",
+            "label": "Current Number"
           },
           {
             "name": "complement",
-            "value": "2"
+            "value": "2",
+            "label": "Target Complement"
           },
           {
             "name": "hashMap",
-            "value": "{ 2: 0 }"
+            "value": "{ 2: 0 }",
+            "label": "Hash Map (num ➔ index)"
           },
           {
             "name": "result",
-            "value": "[ 0, 1 ]"
+            "value": "[ 0, 1 ]",
+            "label": "Indices Result"
           }
         ],
         "before": {
+          "i": "1",
+          "num": "7",
+          "complement": "2",
+          "hashMap": "{ 2: 0 }",
           "result": "[ ]"
         },
         "condition": {
@@ -326,6 +376,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Match found! Return index of 2 (0) and current index 1."
         },
         "after": {
+          "i": "1",
+          "num": "7",
+          "complement": "2",
+          "hashMap": "{ 2: 0 }",
           "result": "[ 0, 1 ]"
         },
         "changes": [
@@ -408,22 +462,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "-"
+            "value": "-",
+            "label": "Character Index"
           },
           {
             "name": "currentChar",
-            "value": "-"
+            "value": "-",
+            "label": "Current Character"
           },
           {
             "name": "stack",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Symbol Stack"
           },
           {
             "name": "isValid",
-            "value": "true"
+            "value": "true",
+            "label": "Valid Status"
           }
         ],
         "before": {
+          "i": "-",
+          "currentChar": "-",
           "stack": "[ ]",
           "isValid": "true"
         },
@@ -436,6 +496,8 @@ export const MOCK_DRY_RUNS = {
           "description": "Initialize empty symbol stack."
         },
         "after": {
+          "i": "-",
+          "currentChar": "-",
           "stack": "[ ]",
           "isValid": "true"
         },
@@ -452,24 +514,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "0"
+            "value": "0",
+            "label": "Character Index"
           },
           {
             "name": "currentChar",
-            "value": "\"(\""
+            "value": "\"(\"",
+            "label": "Current Character"
           },
           {
             "name": "stack",
-            "value": "[ \"(\" ]"
+            "value": "[ \"(\" ]",
+            "label": "Symbol Stack"
           },
           {
             "name": "isValid",
-            "value": "true"
+            "value": "true",
+            "label": "Valid Status"
           }
         ],
         "before": {
+          "i": "-",
           "currentChar": "-",
-          "stack": "[ ]"
+          "stack": "[ ]",
+          "isValid": "true"
         },
         "condition": {
           "text": "Is \"(\" an opening bracket?",
@@ -480,8 +548,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Push \"(\" onto stack."
         },
         "after": {
+          "i": "0",
           "currentChar": "\"(\"",
-          "stack": "[ \"(\" ]"
+          "stack": "[ \"(\" ]",
+          "isValid": "true"
         },
         "changes": [
           {
@@ -507,24 +577,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "1"
+            "value": "1",
+            "label": "Character Index"
           },
           {
             "name": "currentChar",
-            "value": "\"[\""
+            "value": "\"[\"",
+            "label": "Current Character"
           },
           {
             "name": "stack",
-            "value": "[ \"(\", \"[\" ]"
+            "value": "[ \"(\", \"[\" ]",
+            "label": "Symbol Stack"
           },
           {
             "name": "isValid",
-            "value": "true"
+            "value": "true",
+            "label": "Valid Status"
           }
         ],
         "before": {
+          "i": "0",
           "currentChar": "\"(\"",
-          "stack": "[ \"(\" ]"
+          "stack": "[ \"(\" ]",
+          "isValid": "true"
         },
         "condition": {
           "text": "Is \"[\" an opening bracket?",
@@ -535,8 +611,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Push \"[\" onto stack."
         },
         "after": {
+          "i": "1",
           "currentChar": "\"[\"",
-          "stack": "[ \"(\", \"[\" ]"
+          "stack": "[ \"(\", \"[\" ]",
+          "isValid": "true"
         },
         "changes": [
           {
@@ -562,24 +640,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "2"
+            "value": "2",
+            "label": "Character Index"
           },
           {
             "name": "currentChar",
-            "value": "\"]\""
+            "value": "\"]\"",
+            "label": "Current Character"
           },
           {
             "name": "stack",
-            "value": "[ \"(\" ]"
+            "value": "[ \"(\" ]",
+            "label": "Symbol Stack"
           },
           {
             "name": "isValid",
-            "value": "true"
+            "value": "true",
+            "label": "Valid Status"
           }
         ],
         "before": {
+          "i": "1",
           "currentChar": "\"[\"",
-          "stack": "[ \"(\", \"[\" ]"
+          "stack": "[ \"(\", \"[\" ]",
+          "isValid": "true"
         },
         "condition": {
           "text": "Is \"]\" a closing bracket & does top \"[\" match \"]\"?",
@@ -590,8 +674,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Pop \"[\" from stack top."
         },
         "after": {
+          "i": "2",
           "currentChar": "\"]\"",
-          "stack": "[ \"(\" ]"
+          "stack": "[ \"(\" ]",
+          "isValid": "true"
         },
         "changes": [
           {
@@ -617,24 +703,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "3"
+            "value": "3",
+            "label": "Character Index"
           },
           {
             "name": "currentChar",
-            "value": "\")\""
+            "value": "\")\"",
+            "label": "Current Character"
           },
           {
             "name": "stack",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Symbol Stack"
           },
           {
             "name": "isValid",
-            "value": "true"
+            "value": "true",
+            "label": "Valid Status"
           }
         ],
         "before": {
+          "i": "2",
           "currentChar": "\"]\"",
-          "stack": "[ \"(\" ]"
+          "stack": "[ \"(\" ]",
+          "isValid": "true"
         },
         "condition": {
           "text": "Is \")\" a closing bracket & does top \"(\" match \")\"?",
@@ -645,8 +737,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Pop \"(\" from stack top."
         },
         "after": {
+          "i": "3",
           "currentChar": "\")\"",
-          "stack": "[ ]"
+          "stack": "[ ]",
+          "isValid": "true"
         },
         "changes": [
           {
@@ -672,24 +766,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "4"
+            "value": "4",
+            "label": "Character Index"
           },
           {
             "name": "currentChar",
-            "value": "-"
+            "value": "-",
+            "label": "Current Character"
           },
           {
             "name": "stack",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Symbol Stack"
           },
           {
             "name": "isValid",
-            "value": "true"
+            "value": "true",
+            "label": "Valid Status"
           }
         ],
         "before": {
+          "i": "3",
           "currentChar": "\")\"",
-          "stack": "[ ]"
+          "stack": "[ ]",
+          "isValid": "true"
         },
         "condition": {
           "text": "End of input reached. Is stack empty?",
@@ -700,7 +800,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Return true because stack is completely empty."
         },
         "after": {
+          "i": "4",
           "currentChar": "-",
+          "stack": "[ ]",
           "isValid": "true"
         },
         "changes": [
@@ -779,19 +881,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "prev",
-            "value": "Node(1)"
+            "value": "Node(1)",
+            "label": "Previous Node (prev)"
           },
           {
             "name": "curr",
-            "value": "Node(2)"
+            "value": "Node(2)",
+            "label": "Current Node (curr)"
           },
           {
             "name": "nextTemp",
-            "value": "Node(2)"
+            "value": "Node(2)",
+            "label": "Next Temp Node (nextTemp)"
           },
           {
             "name": "reversedPortion",
-            "value": "1 ➔ NULL"
+            "value": "1 ➔ NULL",
+            "label": "Reversed Portion"
           }
         ],
         "before": {
@@ -848,19 +954,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "prev",
-            "value": "Node(2)"
+            "value": "Node(2)",
+            "label": "Previous Node (prev)"
           },
           {
             "name": "curr",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Current Node (curr)"
           },
           {
             "name": "nextTemp",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Next Temp Node (nextTemp)"
           },
           {
             "name": "reversedPortion",
-            "value": "2 ➔ 1 ➔ NULL"
+            "value": "2 ➔ 1 ➔ NULL",
+            "label": "Reversed Portion"
           }
         ],
         "before": {
@@ -917,19 +1027,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "prev",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Previous Node (prev)"
           },
           {
             "name": "curr",
-            "value": "NULL"
+            "value": "NULL",
+            "label": "Current Node (curr)"
           },
           {
             "name": "nextTemp",
-            "value": "NULL"
+            "value": "NULL",
+            "label": "Next Temp Node (nextTemp)"
           },
           {
             "name": "reversedPortion",
-            "value": "3 ➔ 2 ➔ 1 ➔ NULL"
+            "value": "3 ➔ 2 ➔ 1 ➔ NULL",
+            "label": "Reversed Portion"
           }
         ],
         "before": {
@@ -986,24 +1100,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "prev",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Previous Node (prev)"
           },
           {
             "name": "curr",
-            "value": "NULL"
+            "value": "NULL",
+            "label": "Current Node (curr)"
           },
           {
             "name": "nextTemp",
-            "value": "NULL"
+            "value": "NULL",
+            "label": "Next Temp Node (nextTemp)"
           },
           {
             "name": "reversedPortion",
-            "value": "3 ➔ 2 ➔ 1 ➔ NULL"
+            "value": "3 ➔ 2 ➔ 1 ➔ NULL",
+            "label": "Reversed Portion"
           }
         ],
         "before": {
+          "prev": "Node(3)",
           "curr": "NULL",
-          "prev": "Node(3)"
+          "nextTemp": "NULL",
+          "reversedPortion": "3 ➔ 2 ➔ 1 ➔ NULL"
         },
         "condition": {
           "text": "Is curr == NULL?",
@@ -1014,8 +1134,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Return prev (Node 3 as new head of reversed list)."
         },
         "after": {
+          "prev": "Node(3)",
           "curr": "NULL",
-          "prev": "Node(3)"
+          "nextTemp": "NULL",
+          "reversedPortion": "3 ➔ 2 ➔ 1 ➔ NULL"
         },
         "changes": [],
         "currentResult": "3 ➔ 2 ➔ 1 ➔ NULL",
@@ -1083,15 +1205,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(1)"
+            "value": "Node(1)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1) ]"
+            "value": "[ traverse(1) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
@@ -1125,19 +1250,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(1)"
+            "value": "Node(1)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1) ]"
+            "value": "[ traverse(1) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
           "node": "Node(1)",
+          "callStack": "[ traverse(1) ]",
           "result": "[ ]"
         },
         "condition": {
@@ -1150,6 +1279,7 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "node": "Node(1)",
+          "callStack": "[ traverse(1) ]",
           "result": "[ ]"
         },
         "changes": [],
@@ -1165,18 +1295,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(1)"
+            "value": "Node(1)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1) ]"
+            "value": "[ traverse(1) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1 ]"
+            "value": "[ 1 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
+          "node": "Node(1)",
+          "callStack": "[ traverse(1) ]",
           "result": "[ ]"
         },
         "condition": {
@@ -1188,6 +1323,8 @@ export const MOCK_DRY_RUNS = {
           "description": "Append Node 1 value to result array."
         },
         "after": {
+          "node": "Node(1)",
+          "callStack": "[ traverse(1) ]",
           "result": "[ 1 ]"
         },
         "changes": [
@@ -1209,20 +1346,24 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(2)"
+            "value": "Node(2)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1), traverse(2) ]"
+            "value": "[ traverse(1), traverse(2) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1 ]"
+            "value": "[ 1 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
           "node": "Node(1)",
-          "callStack": "[ traverse(1) ]"
+          "callStack": "[ traverse(1) ]",
+          "result": "[ 1 ]"
         },
         "condition": {
           "text": "Does Node 1 have a right child?",
@@ -1234,7 +1375,8 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "node": "Node(2)",
-          "callStack": "[ traverse(1), traverse(2) ]"
+          "callStack": "[ traverse(1), traverse(2) ]",
+          "result": "[ 1 ]"
         },
         "changes": [
           {
@@ -1260,20 +1402,24 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1), traverse(2), traverse(3) ]"
+            "value": "[ traverse(1), traverse(2), traverse(3) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1 ]"
+            "value": "[ 1 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
           "node": "Node(2)",
-          "callStack": "[ traverse(1), traverse(2) ]"
+          "callStack": "[ traverse(1), traverse(2) ]",
+          "result": "[ 1 ]"
         },
         "condition": {
           "text": "Does Node 2 have a left child?",
@@ -1285,7 +1431,8 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "node": "Node(3)",
-          "callStack": "[ traverse(1), traverse(2), traverse(3) ]"
+          "callStack": "[ traverse(1), traverse(2), traverse(3) ]",
+          "result": "[ 1 ]"
         },
         "changes": [
           {
@@ -1311,19 +1458,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1), traverse(2), traverse(3) ]"
+            "value": "[ traverse(1), traverse(2), traverse(3) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1 ]"
+            "value": "[ 1 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
           "node": "Node(3)",
+          "callStack": "[ traverse(1), traverse(2), traverse(3) ]",
           "result": "[ 1 ]"
         },
         "condition": {
@@ -1336,6 +1487,7 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "node": "Node(3)",
+          "callStack": "[ traverse(1), traverse(2), traverse(3) ]",
           "result": "[ 1 ]"
         },
         "changes": [],
@@ -1351,18 +1503,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1), traverse(2) ]"
+            "value": "[ traverse(1), traverse(2) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1, 3 ]"
+            "value": "[ 1, 3 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
+          "node": "Node(3)",
+          "callStack": "[ traverse(1), traverse(2), traverse(3) ]",
           "result": "[ 1 ]"
         },
         "condition": {
@@ -1374,6 +1531,8 @@ export const MOCK_DRY_RUNS = {
           "description": "Append 3 to result array. Pop traverse(3) from call stack."
         },
         "after": {
+          "node": "Node(3)",
+          "callStack": "[ traverse(1), traverse(2) ]",
           "result": "[ 1, 3 ]"
         },
         "changes": [
@@ -1405,21 +1564,24 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "Node(2)"
+            "value": "Node(2)",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ traverse(1) ]"
+            "value": "[ traverse(1) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1, 3, 2 ]"
+            "value": "[ 1, 3, 2 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
           "node": "Node(3)",
-          "result": "[ 1, 3 ]",
-          "callStack": "[ traverse(1), traverse(2) ]"
+          "callStack": "[ traverse(1), traverse(2) ]",
+          "result": "[ 1, 3 ]"
         },
         "condition": {
           "text": "Has the left subtree of Node 2 completed?",
@@ -1431,8 +1593,8 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "node": "Node(2)",
-          "result": "[ 1, 3, 2 ]",
-          "callStack": "[ traverse(1) ]"
+          "callStack": "[ traverse(1) ]",
+          "result": "[ 1, 3, 2 ]"
         },
         "changes": [
           {
@@ -1462,20 +1624,24 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "node",
-            "value": "NULL"
+            "value": "NULL",
+            "label": "Active Node"
           },
           {
             "name": "callStack",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ 1, 3, 2 ]"
+            "value": "[ 1, 3, 2 ]",
+            "label": "Inorder Result Array"
           }
         ],
         "before": {
           "node": "Node(2)",
-          "callStack": "[ traverse(1) ]"
+          "callStack": "[ traverse(1) ]",
+          "result": "[ 1, 3, 2 ]"
         },
         "condition": {
           "text": "Are all recursive calls now complete?",
@@ -1487,7 +1653,8 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "node": "NULL",
-          "callStack": "[ ]"
+          "callStack": "[ ]",
+          "result": "[ 1, 3, 2 ]"
         },
         "changes": [
           {
@@ -1571,25 +1738,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "r",
-            "value": "0"
+            "value": "0",
+            "label": "Row Index (r)"
           },
           {
             "name": "c",
-            "value": "0"
+            "value": "0",
+            "label": "Column Index (c)"
           },
           {
             "name": "grid[r][c]",
-            "value": "\"1\""
+            "value": "\"1\"",
+            "label": "Cell Value"
           },
           {
             "name": "islandCount",
-            "value": "1"
+            "value": "1",
+            "label": "Island Counter"
           }
         ],
         "before": {
           "r": "0",
           "c": "0",
-          "grid[0][0]": "\"1\"",
+          "grid[r][c]": "\"1\"",
           "islandCount": "0"
         },
         "condition": {
@@ -1603,7 +1774,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "r": "0",
           "c": "0",
-          "grid[0][0]": "\"1\"",
+          "grid[r][c]": "\"1\"",
           "islandCount": "1"
         },
         "changes": [
@@ -1625,25 +1796,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "r",
-            "value": "0"
+            "value": "0",
+            "label": "Row Index (r)"
           },
           {
             "name": "c",
-            "value": "0"
+            "value": "0",
+            "label": "Column Index (c)"
           },
           {
             "name": "grid[r][c]",
-            "value": "\"0\""
+            "value": "\"0\"",
+            "label": "Cell Value"
           },
           {
             "name": "islandCount",
-            "value": "1"
+            "value": "1",
+            "label": "Island Counter"
           }
         ],
         "before": {
           "r": "0",
           "c": "0",
-          "grid[0][0]": "\"1\"",
+          "grid[r][c]": "\"1\"",
           "islandCount": "1"
         },
         "condition": {
@@ -1657,7 +1832,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "r": "0",
           "c": "0",
-          "grid[0][0]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "changes": [
@@ -1679,24 +1854,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "r",
-            "value": "0"
+            "value": "0",
+            "label": "Row Index (r)"
           },
           {
             "name": "c",
-            "value": "1"
+            "value": "1",
+            "label": "Column Index (c)"
           },
           {
             "name": "grid[r][c]",
-            "value": "\"0\""
+            "value": "\"0\"",
+            "label": "Cell Value"
           },
           {
             "name": "islandCount",
-            "value": "1"
+            "value": "1",
+            "label": "Island Counter"
           }
         ],
         "before": {
-          "grid[0][1]": "\"1\"",
-          "grid[1][0]": "\"1\"",
+          "r": "0",
+          "c": "0",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "condition": {
@@ -1708,8 +1888,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Recursively sink connected land cells grid[0][1] and grid[1][0] to \"0\"."
         },
         "after": {
-          "grid[0][1]": "\"0\"",
-          "grid[1][0]": "\"0\"",
+          "r": "0",
+          "c": "1",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "changes": [
@@ -1736,25 +1917,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "r",
-            "value": "0"
+            "value": "0",
+            "label": "Row Index (r)"
           },
           {
             "name": "c",
-            "value": "1"
+            "value": "1",
+            "label": "Column Index (c)"
           },
           {
             "name": "grid[r][c]",
-            "value": "\"0\""
+            "value": "\"0\"",
+            "label": "Cell Value"
           },
           {
             "name": "islandCount",
-            "value": "1"
+            "value": "1",
+            "label": "Island Counter"
           }
         ],
         "before": {
           "r": "0",
           "c": "1",
-          "grid[0][1]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "condition": {
@@ -1768,7 +1953,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "r": "0",
           "c": "1",
-          "grid[0][1]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "changes": [
@@ -1795,25 +1980,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "r",
-            "value": "3"
+            "value": "3",
+            "label": "Row Index (r)"
           },
           {
             "name": "c",
-            "value": "4"
+            "value": "4",
+            "label": "Column Index (c)"
           },
           {
             "name": "grid[r][c]",
-            "value": "\"0\""
+            "value": "\"0\"",
+            "label": "Cell Value"
           },
           {
             "name": "islandCount",
-            "value": "1"
+            "value": "1",
+            "label": "Island Counter"
           }
         ],
         "before": {
           "r": "0",
           "c": "1",
-          "grid[0][1]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "condition": {
@@ -1827,7 +2016,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "r": "3",
           "c": "4",
-          "grid[3][4]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "changes": [
@@ -1854,25 +2043,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "r",
-            "value": "3"
+            "value": "3",
+            "label": "Row Index (r)"
           },
           {
             "name": "c",
-            "value": "4"
+            "value": "4",
+            "label": "Column Index (c)"
           },
           {
             "name": "grid[r][c]",
-            "value": "\"0\""
+            "value": "\"0\"",
+            "label": "Cell Value"
           },
           {
             "name": "islandCount",
-            "value": "1"
+            "value": "1",
+            "label": "Island Counter"
           }
         ],
         "before": {
           "r": "3",
           "c": "4",
-          "grid[3][4]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "condition": {
@@ -1886,7 +2079,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "r": "3",
           "c": "4",
-          "grid[3][4]": "\"0\"",
+          "grid[r][c]": "\"0\"",
           "islandCount": "1"
         },
         "changes": [],
@@ -1959,22 +2152,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "1"
+            "value": "1",
+            "label": "Interval Index"
           },
           {
             "name": "curr",
-            "value": "[2, 6]"
+            "value": "[2, 6]",
+            "label": "Current Interval"
           },
           {
             "name": "lastMerged",
-            "value": "[1, 3]"
+            "value": "[1, 3]",
+            "label": "Last Merged Range"
           },
           {
             "name": "merged",
-            "value": "[[1, 3]]"
+            "value": "[[1, 3]]",
+            "label": "Merged Intervals"
           }
         ],
         "before": {
+          "i": "-",
+          "curr": "-",
+          "lastMerged": "-",
           "merged": "[ ]"
         },
         "condition": {
@@ -1986,6 +2186,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Seed merged list with first interval [1, 3]."
         },
         "after": {
+          "i": "1",
+          "curr": "[2, 6]",
+          "lastMerged": "[1, 3]",
           "merged": "[[1, 3]]"
         },
         "changes": [
@@ -2007,23 +2210,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "1"
+            "value": "1",
+            "label": "Interval Index"
           },
           {
             "name": "curr",
-            "value": "[2, 6]"
+            "value": "[2, 6]",
+            "label": "Current Interval"
           },
           {
             "name": "lastMerged",
-            "value": "[1, 6]"
+            "value": "[1, 6]",
+            "label": "Last Merged Range"
           },
           {
             "name": "merged",
-            "value": "[[1, 6]]"
+            "value": "[[1, 6]]",
+            "label": "Merged Intervals"
           }
         ],
         "before": {
-          "lastMerged": "[1, 3]"
+          "i": "1",
+          "curr": "[2, 6]",
+          "lastMerged": "[1, 3]",
+          "merged": "[[1, 3]]"
         },
         "condition": {
           "text": "Does curr.start (2) <= lastMerged.end (3)?",
@@ -2034,7 +2244,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Extend lastMerged.end = MAX(3, 6) = 6."
         },
         "after": {
-          "lastMerged": "[1, 6]"
+          "i": "1",
+          "curr": "[2, 6]",
+          "lastMerged": "[1, 6]",
+          "merged": "[[1, 6]]"
         },
         "changes": [
           {
@@ -2055,22 +2268,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "2"
+            "value": "2",
+            "label": "Interval Index"
           },
           {
             "name": "curr",
-            "value": "[8, 10]"
+            "value": "[8, 10]",
+            "label": "Current Interval"
           },
           {
             "name": "lastMerged",
-            "value": "[8, 10]"
+            "value": "[8, 10]",
+            "label": "Last Merged Range"
           },
           {
             "name": "merged",
-            "value": "[[1, 6], [8, 10]]"
+            "value": "[[1, 6], [8, 10]]",
+            "label": "Merged Intervals"
           }
         ],
         "before": {
+          "i": "1",
+          "curr": "[2, 6]",
+          "lastMerged": "[1, 6]",
           "merged": "[[1, 6]]"
         },
         "condition": {
@@ -2082,6 +2302,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Append new independent interval [8, 10]."
         },
         "after": {
+          "i": "2",
+          "curr": "[8, 10]",
+          "lastMerged": "[8, 10]",
           "merged": "[[1, 6], [8, 10]]"
         },
         "changes": [
@@ -2103,22 +2326,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "3"
+            "value": "3",
+            "label": "Interval Index"
           },
           {
             "name": "curr",
-            "value": "[15, 18]"
+            "value": "[15, 18]",
+            "label": "Current Interval"
           },
           {
             "name": "lastMerged",
-            "value": "[15, 18]"
+            "value": "[15, 18]",
+            "label": "Last Merged Range"
           },
           {
             "name": "merged",
-            "value": "[[1, 6], [8, 10], [15, 18]]"
+            "value": "[[1, 6], [8, 10], [15, 18]]",
+            "label": "Merged Intervals"
           }
         ],
         "before": {
+          "i": "2",
+          "curr": "[8, 10]",
+          "lastMerged": "[8, 10]",
           "merged": "[[1, 6], [8, 10]]"
         },
         "condition": {
@@ -2130,6 +2360,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Append interval [15, 18]."
         },
         "after": {
+          "i": "3",
+          "curr": "[15, 18]",
+          "lastMerged": "[15, 18]",
           "merged": "[[1, 6], [8, 10], [15, 18]]"
         },
         "changes": [
@@ -2151,22 +2384,31 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "4"
+            "value": "4",
+            "label": "Interval Index"
           },
           {
             "name": "curr",
-            "value": "-"
+            "value": "-",
+            "label": "Current Interval"
           },
           {
             "name": "lastMerged",
-            "value": "[15, 18]"
+            "value": "[15, 18]",
+            "label": "Last Merged Range"
           },
           {
             "name": "merged",
-            "value": "[[1, 6], [8, 10], [15, 18]]"
+            "value": "[[1, 6], [8, 10], [15, 18]]",
+            "label": "Merged Intervals"
           }
         ],
-        "before": {},
+        "before": {
+          "i": "3",
+          "curr": "[15, 18]",
+          "lastMerged": "[15, 18]",
+          "merged": "[[1, 6], [8, 10], [15, 18]]"
+        },
         "condition": {
           "text": "Linear sweep complete",
           "evaluation": "DONE",
@@ -2175,7 +2417,12 @@ export const MOCK_DRY_RUNS = {
         "action": {
           "description": "Return merged array."
         },
-        "after": {},
+        "after": {
+          "i": "4",
+          "curr": "-",
+          "lastMerged": "[15, 18]",
+          "merged": "[[1, 6], [8, 10], [15, 18]]"
+        },
         "changes": [],
         "currentResult": "[[1, 6], [8, 10], [15, 18]]",
         "explanation": "All overlapping ranges consolidated."
@@ -2255,27 +2502,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "0"
+            "value": "0",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "0"
+            "value": "0",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "-"
+            "value": "-",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ }"
+            "value": "{ }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "0"
+            "value": "0",
+            "label": "Max Length"
           }
         ],
         "before": {
-          "charSet": "{ }"
+          "left": "0",
+          "right": "0",
+          "char": "a",
+          "charSet": "{ }",
+          "maxLength": "0"
         },
         "condition": {
           "text": "Start execution",
@@ -2286,7 +2542,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Set left = 0, maxLength = 0, charSet = empty set."
         },
         "after": {
-          "charSet": "{ }"
+          "left": "0",
+          "right": "0",
+          "char": "-",
+          "charSet": "{ }",
+          "maxLength": "0"
         },
         "changes": [],
         "currentResult": "0",
@@ -2307,26 +2567,34 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "0"
+            "value": "0",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "0"
+            "value": "0",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"a\""
+            "value": "\"a\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"a\" }"
+            "value": "{ \"a\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "1"
+            "value": "1",
+            "label": "Max Length"
           }
         ],
         "before": {
+          "left": "0",
+          "right": "0",
+          "char": "-",
           "charSet": "{ }",
           "maxLength": "0"
         },
@@ -2339,6 +2607,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"a\" to charSet. Update maxLength = MAX(0, 1) = 1."
         },
         "after": {
+          "left": "0",
+          "right": "0",
+          "char": "\"a\"",
           "charSet": "{ \"a\" }",
           "maxLength": "1"
         },
@@ -2377,26 +2648,34 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "0"
+            "value": "0",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "1"
+            "value": "1",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"a\", \"b\" }"
+            "value": "{ \"a\", \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "2"
+            "value": "2",
+            "label": "Max Length"
           }
         ],
         "before": {
+          "left": "0",
+          "right": "0",
+          "char": "\"a\"",
           "charSet": "{ \"a\" }",
           "maxLength": "1"
         },
@@ -2409,6 +2688,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"b\" to charSet. Update maxLength = MAX(1, 2) = 2."
         },
         "after": {
+          "left": "0",
+          "right": "1",
+          "char": "\"b\"",
           "charSet": "{ \"a\", \"b\" }",
           "maxLength": "2"
         },
@@ -2452,26 +2734,34 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "0"
+            "value": "0",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "2"
+            "value": "2",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"c\""
+            "value": "\"c\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"a\", \"b\", \"c\" }"
+            "value": "{ \"a\", \"b\", \"c\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
+          "left": "0",
+          "right": "1",
+          "char": "\"b\"",
           "charSet": "{ \"a\", \"b\" }",
           "maxLength": "2"
         },
@@ -2484,6 +2774,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"c\" to charSet. Update maxLength = MAX(2, 3) = 3."
         },
         "after": {
+          "left": "0",
+          "right": "2",
+          "char": "\"c\"",
           "charSet": "{ \"a\", \"b\", \"c\" }",
           "maxLength": "3"
         },
@@ -2526,28 +2819,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "1"
+            "value": "1",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "3"
+            "value": "3",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"a\""
+            "value": "\"a\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"b\", \"c\" }"
+            "value": "{ \"b\", \"c\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "0",
-          "charSet": "{ \"a\", \"b\", \"c\" }"
+          "right": "2",
+          "char": "\"c\"",
+          "charSet": "{ \"a\", \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[3] (\"a\") in charSet { \"a\", \"b\", \"c\" }?",
@@ -2559,7 +2860,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "1",
-          "charSet": "{ \"b\", \"c\" }"
+          "right": "3",
+          "char": "\"a\"",
+          "charSet": "{ \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2599,27 +2903,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "1"
+            "value": "1",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "3"
+            "value": "3",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"a\""
+            "value": "\"a\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"b\", \"c\", \"a\" }"
+            "value": "{ \"b\", \"c\", \"a\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
-          "charSet": "{ \"b\", \"c\" }"
+          "left": "1",
+          "right": "3",
+          "char": "\"a\"",
+          "charSet": "{ \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[3] (\"a\") in charSet { \"b\", \"c\" }?",
@@ -2630,7 +2943,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"a\" to charSet. Current window \"bca\" length = 3."
         },
         "after": {
-          "charSet": "{ \"b\", \"c\", \"a\" }"
+          "left": "1",
+          "right": "3",
+          "char": "\"a\"",
+          "charSet": "{ \"b\", \"c\", \"a\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2656,28 +2973,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "2"
+            "value": "2",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "4"
+            "value": "4",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"c\", \"a\" }"
+            "value": "{ \"c\", \"a\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "1",
-          "charSet": "{ \"b\", \"c\", \"a\" }"
+          "right": "3",
+          "char": "\"a\"",
+          "charSet": "{ \"b\", \"c\", \"a\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[4] (\"b\") in charSet { \"b\", \"c\", \"a\" }?",
@@ -2689,7 +3014,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "2",
-          "charSet": "{ \"c\", \"a\" }"
+          "right": "4",
+          "char": "\"b\"",
+          "charSet": "{ \"c\", \"a\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2729,27 +3057,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "2"
+            "value": "2",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "4"
+            "value": "4",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"c\", \"a\", \"b\" }"
+            "value": "{ \"c\", \"a\", \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
-          "charSet": "{ \"c\", \"a\" }"
+          "left": "2",
+          "right": "4",
+          "char": "\"b\"",
+          "charSet": "{ \"c\", \"a\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[4] (\"b\") in charSet { \"c\", \"a\" }?",
@@ -2760,7 +3097,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"b\" to charSet. Current window \"cab\" length = 3."
         },
         "after": {
-          "charSet": "{ \"c\", \"a\", \"b\" }"
+          "left": "2",
+          "right": "4",
+          "char": "\"b\"",
+          "charSet": "{ \"c\", \"a\", \"b\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2786,28 +3127,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "3"
+            "value": "3",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "5"
+            "value": "5",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"c\""
+            "value": "\"c\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"a\", \"b\" }"
+            "value": "{ \"a\", \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "2",
-          "charSet": "{ \"c\", \"a\", \"b\" }"
+          "right": "4",
+          "char": "\"b\"",
+          "charSet": "{ \"c\", \"a\", \"b\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[5] (\"c\") in charSet { \"c\", \"a\", \"b\" }?",
@@ -2819,7 +3168,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "3",
-          "charSet": "{ \"a\", \"b\" }"
+          "right": "5",
+          "char": "\"c\"",
+          "charSet": "{ \"a\", \"b\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2859,27 +3211,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "3"
+            "value": "3",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "5"
+            "value": "5",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"c\""
+            "value": "\"c\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"a\", \"b\", \"c\" }"
+            "value": "{ \"a\", \"b\", \"c\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
-          "charSet": "{ \"a\", \"b\" }"
+          "left": "3",
+          "right": "5",
+          "char": "\"c\"",
+          "charSet": "{ \"a\", \"b\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[5] (\"c\") in charSet { \"a\", \"b\" }?",
@@ -2890,7 +3251,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"c\" to charSet. Current window \"abc\" length = 3."
         },
         "after": {
-          "charSet": "{ \"a\", \"b\", \"c\" }"
+          "left": "3",
+          "right": "5",
+          "char": "\"c\"",
+          "charSet": "{ \"a\", \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2916,28 +3281,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "4"
+            "value": "4",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "6"
+            "value": "6",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"b\", \"c\" }"
+            "value": "{ \"b\", \"c\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "3",
-          "charSet": "{ \"a\", \"b\", \"c\" }"
+          "right": "5",
+          "char": "\"c\"",
+          "charSet": "{ \"a\", \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[6] (\"b\") in charSet { \"a\", \"b\", \"c\" }?",
@@ -2949,7 +3322,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "4",
-          "charSet": "{ \"b\", \"c\" }"
+          "right": "6",
+          "char": "\"b\"",
+          "charSet": "{ \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -2990,28 +3366,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "5"
+            "value": "5",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "6"
+            "value": "6",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"c\" }"
+            "value": "{ \"c\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "4",
-          "charSet": "{ \"b\", \"c\" }"
+          "right": "6",
+          "char": "\"b\"",
+          "charSet": "{ \"b\", \"c\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[6] (\"b\") still in charSet { \"b\", \"c\" }?",
@@ -3023,7 +3407,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "5",
-          "charSet": "{ \"c\" }"
+          "right": "6",
+          "char": "\"b\"",
+          "charSet": "{ \"c\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -3053,27 +3440,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "5"
+            "value": "5",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "6"
+            "value": "6",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"c\", \"b\" }"
+            "value": "{ \"c\", \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
-          "charSet": "{ \"c\" }"
+          "left": "5",
+          "right": "6",
+          "char": "\"b\"",
+          "charSet": "{ \"c\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[6] (\"b\") in charSet { \"c\" }?",
@@ -3084,7 +3480,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"b\" to charSet. Current window \"cb\" length = 2."
         },
         "after": {
-          "charSet": "{ \"c\", \"b\" }"
+          "left": "5",
+          "right": "6",
+          "char": "\"b\"",
+          "charSet": "{ \"c\", \"b\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -3110,28 +3510,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "6"
+            "value": "6",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "7"
+            "value": "7",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"b\" }"
+            "value": "{ \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "5",
-          "charSet": "{ \"c\", \"b\" }"
+          "right": "6",
+          "char": "\"b\"",
+          "charSet": "{ \"c\", \"b\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[7] (\"b\") in charSet { \"c\", \"b\" }?",
@@ -3143,7 +3551,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "6",
-          "charSet": "{ \"b\" }"
+          "right": "7",
+          "char": "\"b\"",
+          "charSet": "{ \"b\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -3179,28 +3590,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "7"
+            "value": "7",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "7"
+            "value": "7",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ }"
+            "value": "{ }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
           "left": "6",
-          "charSet": "{ \"b\" }"
+          "right": "7",
+          "char": "\"b\"",
+          "charSet": "{ \"b\" }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[7] (\"b\") still in charSet { \"b\" }?",
@@ -3212,7 +3631,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "left": "7",
-          "charSet": "{ }"
+          "right": "7",
+          "char": "\"b\"",
+          "charSet": "{ }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -3242,27 +3664,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "7"
+            "value": "7",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "7"
+            "value": "7",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "\"b\""
+            "value": "\"b\"",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"b\" }"
+            "value": "{ \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
         "before": {
-          "charSet": "{ }"
+          "left": "7",
+          "right": "7",
+          "char": "\"b\"",
+          "charSet": "{ }",
+          "maxLength": "3"
         },
         "condition": {
           "text": "Is s[7] (\"b\") in charSet { }?",
@@ -3273,7 +3704,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Add \"b\" to charSet. Window \"b\" length = 1."
         },
         "after": {
-          "charSet": "{ \"b\" }"
+          "left": "7",
+          "right": "7",
+          "char": "\"b\"",
+          "charSet": "{ \"b\" }",
+          "maxLength": "3"
         },
         "changes": [
           {
@@ -3298,26 +3733,37 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "left",
-            "value": "7"
+            "value": "7",
+            "label": "Left Pointer"
           },
           {
             "name": "right",
-            "value": "7"
+            "value": "7",
+            "label": "Right Pointer"
           },
           {
             "name": "char",
-            "value": "-"
+            "value": "-",
+            "label": "Current Character"
           },
           {
             "name": "charSet",
-            "value": "{ \"b\" }"
+            "value": "{ \"b\" }",
+            "label": "HashSet (Unique Chars)"
           },
           {
             "name": "maxLength",
-            "value": "3"
+            "value": "3",
+            "label": "Max Length"
           }
         ],
-        "before": {},
+        "before": {
+          "left": "7",
+          "right": "7",
+          "char": "\"b\"",
+          "charSet": "{ \"b\" }",
+          "maxLength": "3"
+        },
         "condition": {
           "text": "Traversal complete (right = 8 >= len)",
           "evaluation": "DONE",
@@ -3326,7 +3772,13 @@ export const MOCK_DRY_RUNS = {
         "action": {
           "description": "Traversal finished. All 8 characters processed. Return final maxLength = 3."
         },
-        "after": {},
+        "after": {
+          "left": "7",
+          "right": "7",
+          "char": "-",
+          "charSet": "{ \"b\" }",
+          "maxLength": "3"
+        },
         "changes": [],
         "currentResult": "3",
         "explanation": "Completed scan over entire string \"abcabcbb\". Longest unique substring length is 3 (\"abc\")."
@@ -3405,23 +3857,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "currNode",
-            "value": "A"
+            "value": "A",
+            "label": "Current Node"
           },
           {
             "name": "dist",
-            "value": "0"
+            "value": "0",
+            "label": "Distance Hops"
           },
           {
             "name": "queue",
-            "value": "[ (A, 0) ]"
+            "value": "[ (A, 0) ]",
+            "label": "BFS Queue"
           },
           {
             "name": "visited",
-            "value": "{ A }"
+            "value": "{ A }",
+            "label": "Visited Set"
           }
         ],
         "before": {
-          "queue": "[ (A, 0) ]"
+          "currNode": "A",
+          "dist": "0",
+          "queue": "[ (A, 0) ]",
+          "visited": "{ A }"
         },
         "condition": {
           "text": "Start BFS traversal",
@@ -3432,7 +3891,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Enqueue (A, 0) and mark A visited."
         },
         "after": {
-          "queue": "[ (A, 0) ]"
+          "currNode": "A",
+          "dist": "0",
+          "queue": "[ (A, 0) ]",
+          "visited": "{ A }"
         },
         "changes": [],
         "currentResult": "0",
@@ -3456,22 +3918,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "currNode",
-            "value": "A"
+            "value": "A",
+            "label": "Current Node"
           },
           {
             "name": "dist",
-            "value": "0"
+            "value": "0",
+            "label": "Distance Hops"
           },
           {
             "name": "queue",
-            "value": "[ (B, 1), (C, 1) ]"
+            "value": "[ (B, 1), (C, 1) ]",
+            "label": "BFS Queue"
           },
           {
             "name": "visited",
-            "value": "{ A, B, C }"
+            "value": "{ A, B, C }",
+            "label": "Visited Set"
           }
         ],
         "before": {
+          "currNode": "A",
+          "dist": "0",
           "queue": "[ (A, 0) ]",
           "visited": "{ A }"
         },
@@ -3484,6 +3952,8 @@ export const MOCK_DRY_RUNS = {
           "description": "Pop (A, 0). Discover and enqueue unvisited neighbors B and C with distance 1."
         },
         "after": {
+          "currNode": "A",
+          "dist": "0",
           "queue": "[ (B, 1), (C, 1) ]",
           "visited": "{ A, B, C }"
         },
@@ -3520,19 +3990,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "currNode",
-            "value": "B"
+            "value": "B",
+            "label": "Current Node"
           },
           {
             "name": "dist",
-            "value": "1"
+            "value": "1",
+            "label": "Distance Hops"
           },
           {
             "name": "queue",
-            "value": "[ (C, 1), (D, 2) ]"
+            "value": "[ (C, 1), (D, 2) ]",
+            "label": "BFS Queue"
           },
           {
             "name": "visited",
-            "value": "{ A, B, C, D }"
+            "value": "{ A, B, C, D }",
+            "label": "Visited Set"
           }
         ],
         "before": {
@@ -3595,24 +4069,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "currNode",
-            "value": "C"
+            "value": "C",
+            "label": "Current Node"
           },
           {
             "name": "dist",
-            "value": "1"
+            "value": "1",
+            "label": "Distance Hops"
           },
           {
             "name": "queue",
-            "value": "[ (D, 2) ]"
+            "value": "[ (D, 2) ]",
+            "label": "BFS Queue"
           },
           {
             "name": "visited",
-            "value": "{ A, B, C, D }"
+            "value": "{ A, B, C, D }",
+            "label": "Visited Set"
           }
         ],
         "before": {
           "currNode": "B",
-          "queue": "[ (C, 1), (D, 2) ]"
+          "dist": "1",
+          "queue": "[ (C, 1), (D, 2) ]",
+          "visited": "{ A, B, C, D }"
         },
         "condition": {
           "text": "Is C destination D?",
@@ -3624,7 +4104,9 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "currNode": "C",
-          "queue": "[ (D, 2) ]"
+          "dist": "1",
+          "queue": "[ (D, 2) ]",
+          "visited": "{ A, B, C, D }"
         },
         "changes": [
           {
@@ -3656,25 +4138,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "currNode",
-            "value": "D"
+            "value": "D",
+            "label": "Current Node"
           },
           {
             "name": "dist",
-            "value": "2"
+            "value": "2",
+            "label": "Distance Hops"
           },
           {
             "name": "queue",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "BFS Queue"
           },
           {
             "name": "visited",
-            "value": "{ A, B, C, D }"
+            "value": "{ A, B, C, D }",
+            "label": "Visited Set"
           }
         ],
         "before": {
           "currNode": "C",
           "dist": "1",
-          "queue": "[ (D, 2) ]"
+          "queue": "[ (D, 2) ]",
+          "visited": "{ A, B, C, D }"
         },
         "condition": {
           "text": "Is D destination D?",
@@ -3687,7 +4174,8 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "currNode": "D",
           "dist": "2",
-          "queue": "[ ]"
+          "queue": "[ ]",
+          "visited": "{ A, B, C, D }"
         },
         "changes": [
           {
@@ -3770,15 +4258,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "-"
+            "value": "-",
+            "label": "Current Step Index"
           },
           {
             "name": "dp",
-            "value": "[ 0, 1, 2, -, -, - ]"
+            "value": "[ 0, 1, 2, -, -, - ]",
+            "label": "DP Array (ways to step)"
           },
           {
             "name": "result",
-            "value": "2"
+            "value": "2",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -3823,15 +4314,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "3"
+            "value": "3",
+            "label": "Current Step Index"
           },
           {
             "name": "dp",
-            "value": "[ 0, 1, 2, 3, -, - ]"
+            "value": "[ 0, 1, 2, 3, -, - ]",
+            "label": "DP Array (ways to step)"
           },
           {
             "name": "result",
-            "value": "3"
+            "value": "3",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -3881,15 +4375,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "4"
+            "value": "4",
+            "label": "Current Step Index"
           },
           {
             "name": "dp",
-            "value": "[ 0, 1, 2, 3, 5, - ]"
+            "value": "[ 0, 1, 2, 3, 5, - ]",
+            "label": "DP Array (ways to step)"
           },
           {
             "name": "result",
-            "value": "5"
+            "value": "5",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -3939,15 +4436,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "5"
+            "value": "5",
+            "label": "Current Step Index"
           },
           {
             "name": "dp",
-            "value": "[ 0, 1, 2, 3, 5, 8 ]"
+            "value": "[ 0, 1, 2, 3, 5, 8 ]",
+            "label": "DP Array (ways to step)"
           },
           {
             "name": "result",
-            "value": "8"
+            "value": "8",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -3997,15 +4497,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "5"
+            "value": "5",
+            "label": "Current Step Index"
           },
           {
             "name": "dp",
-            "value": "[ 0, 1, 2, 3, 5, 8 ]"
+            "value": "[ 0, 1, 2, 3, 5, 8 ]",
+            "label": "DP Array (ways to step)"
           },
           {
             "name": "result",
-            "value": "8"
+            "value": "8",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -4085,19 +4588,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "-"
+            "value": "-",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "0"
+            "value": "0",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "0"
+            "value": "0",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "0"
+            "value": "0",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4139,19 +4646,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "2"
+            "value": "2",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "0"
+            "value": "0",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "2"
+            "value": "2",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "2"
+            "value": "2",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4203,19 +4714,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "7"
+            "value": "7",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "2"
+            "value": "2",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "7"
+            "value": "7",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "7"
+            "value": "7",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4272,19 +4787,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "9"
+            "value": "9",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "7"
+            "value": "7",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "11"
+            "value": "11",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "11"
+            "value": "11",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4341,19 +4860,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "3"
+            "value": "3",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "11"
+            "value": "11",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "11"
+            "value": "11",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "11"
+            "value": "11",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4400,19 +4923,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "1"
+            "value": "1",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "11"
+            "value": "11",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "12"
+            "value": "12",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "12"
+            "value": "12",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4464,19 +4991,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "1"
+            "value": "1",
+            "label": "Current House Value"
           },
           {
             "name": "rob1",
-            "value": "11"
+            "value": "11",
+            "label": "Max (2 steps back)"
           },
           {
             "name": "rob2",
-            "value": "12"
+            "value": "12",
+            "label": "Max (1 step back)"
           },
           {
             "name": "result",
-            "value": "12"
+            "value": "12",
+            "label": "Current Max Profit"
           }
         ],
         "before": {
@@ -4494,6 +5025,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Return rob2 = 12."
         },
         "after": {
+          "num": "1",
+          "rob1": "11",
+          "rob2": "12",
           "result": "12"
         },
         "changes": [],
@@ -4555,19 +5089,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "0"
+            "value": "0",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]) ]"
+            "value": "[ backtrack(0,[]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
@@ -4619,19 +5157,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "1"
+            "value": "1",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ 1 ]"
+            "value": "[ 1 ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]), backtrack(1,[1]) ]"
+            "value": "[ backtrack(0,[]), backtrack(1,[1]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
@@ -4651,7 +5193,8 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "index": "1",
           "path": "[ 1 ]",
-          "callStack": "[ backtrack(0,[]), backtrack(1,[1]) ]"
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]) ]",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -4682,19 +5225,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "2"
+            "value": "2",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ 1, 2 ]"
+            "value": "[ 1, 2 ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]"
+            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
@@ -4714,7 +5261,8 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "index": "2",
           "path": "[ 1, 2 ]",
-          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]"
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -4745,24 +5293,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "3"
+            "value": "3",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ 1, 2, 3 ]"
+            "value": "[ 1, 2, 3 ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]), backtrack(3,[1,2,3]) ]"
+            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]), backtrack(3,[1,2,3]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ [1, 2, 3] ]"
+            "value": "[ [1, 2, 3] ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
           "index": "2",
           "path": "[ 1, 2 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]",
           "result": "[ ]"
         },
         "condition": {
@@ -4776,6 +5329,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "index": "3",
           "path": "[ 1, 2, 3 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]), backtrack(3,[1,2,3]) ]",
           "result": "[ [1, 2, 3] ]"
         },
         "changes": [
@@ -4807,23 +5361,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "3"
+            "value": "3",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ 1, 2 ]"
+            "value": "[ 1, 2 ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]"
+            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ [1, 2, 3], [1, 2] ]"
+            "value": "[ [1, 2, 3], [1, 2] ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
+          "index": "3",
           "path": "[ 1, 2, 3 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]), backtrack(3,[1,2,3]) ]",
           "result": "[ [1, 2, 3] ]"
         },
         "condition": {
@@ -4835,7 +5395,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Pop 3 from path. Recurse right (exclude 3) and collect subset [1, 2]."
         },
         "after": {
+          "index": "3",
           "path": "[ 1, 2 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]",
           "result": "[ [1, 2, 3], [1, 2] ]"
         },
         "changes": [
@@ -4867,23 +5429,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "3"
+            "value": "3",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ 1, 3 ]"
+            "value": "[ 1, 3 ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(3,[1,3]) ]"
+            "value": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(3,[1,3]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ [1, 2, 3], [1, 2], [1, 3] ]"
+            "value": "[ [1, 2, 3], [1, 2], [1, 3] ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
+          "index": "3",
           "path": "[ 1, 2 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(2,[1,2]) ]",
           "result": "[ [1, 2, 3], [1, 2] ]"
         },
         "condition": {
@@ -4895,7 +5463,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Pop 2, exclude 2, push 3. Collect leaf subset [1, 3]."
         },
         "after": {
+          "index": "3",
           "path": "[ 1, 3 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(3,[1,3]) ]",
           "result": "[ [1, 2, 3], [1, 2], [1, 3] ]"
         },
         "changes": [
@@ -4927,23 +5497,29 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "3"
+            "value": "3",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ 1 ]"
+            "value": "[ 1 ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ backtrack(0,[]), backtrack(1,[1]) ]"
+            "value": "[ backtrack(0,[]), backtrack(1,[1]) ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ [1, 2, 3], [1, 2], [1, 3], [1] ]"
+            "value": "[ [1, 2, 3], [1, 2], [1, 3], [1] ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
+          "index": "3",
           "path": "[ 1, 3 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]), backtrack(3,[1,3]) ]",
           "result": "[ [1, 2, 3], [1, 2], [1, 3] ]"
         },
         "condition": {
@@ -4955,7 +5531,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Pop 3. Collect leaf subset [1]."
         },
         "after": {
+          "index": "3",
           "path": "[ 1 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]) ]",
           "result": "[ [1, 2, 3], [1, 2], [1, 3], [1] ]"
         },
         "changes": [
@@ -4982,23 +5560,30 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "index",
-            "value": "3"
+            "value": "3",
+            "label": "Recursion Depth Index"
           },
           {
             "name": "path",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Current Subset Path"
           },
           {
             "name": "callStack",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Call Stack"
           },
           {
             "name": "result",
-            "value": "[ [1,2,3], [1,2], [1,3], [1], [2,3], [2], [3], [] ]"
+            "value": "[ [1,2,3], [1,2], [1,3], [1], [2,3], [2], [3], [] ]",
+            "label": "Generated Power Set"
           }
         ],
         "before": {
-          "path": "[ 1 ]"
+          "index": "3",
+          "path": "[ 1 ]",
+          "callStack": "[ backtrack(0,[]), backtrack(1,[1]) ]",
+          "result": "[ [1, 2, 3], [1, 2], [1, 3], [1] ]"
         },
         "condition": {
           "text": "All subtrees explored?",
@@ -5103,23 +5688,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "-"
+            "value": "-",
+            "label": "Currently Processed Course"
           },
           {
             "name": "inDegree",
-            "value": "[ 0, 1, 1, 2 ]"
+            "value": "[ 0, 1, 1, 2 ]",
+            "label": "In-Degrees [c0, c1, c2, c3]"
           },
           {
             "name": "queue",
-            "value": "[ 0 ]"
+            "value": "[ 0 ]",
+            "label": "Zero In-Degree Queue"
           },
           {
             "name": "processedCount",
-            "value": "0"
+            "value": "0",
+            "label": "Completed Courses Count"
           },
           {
             "name": "result",
-            "value": "-"
+            "value": "-",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5138,9 +5728,11 @@ export const MOCK_DRY_RUNS = {
           "description": "Course 0 has 0 prerequisites. Enqueue course 0."
         },
         "after": {
+          "curr": "-",
           "inDegree": "[ 0, 1, 1, 2 ]",
           "queue": "[ 0 ]",
-          "result": "false"
+          "processedCount": "0",
+          "result": "-"
         },
         "changes": [
           {
@@ -5166,30 +5758,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "0"
+            "value": "0",
+            "label": "Currently Processed Course"
           },
           {
             "name": "inDegree",
-            "value": "[ 0, 0, 0, 2 ]"
+            "value": "[ 0, 0, 0, 2 ]",
+            "label": "In-Degrees [c0, c1, c2, c3]"
           },
           {
             "name": "queue",
-            "value": "[ 1, 2 ]"
+            "value": "[ 1, 2 ]",
+            "label": "Zero In-Degree Queue"
           },
           {
             "name": "processedCount",
-            "value": "1"
+            "value": "1",
+            "label": "Completed Courses Count"
           },
           {
             "name": "result",
-            "value": "-"
+            "value": "-",
+            "label": "Current Result"
           }
         ],
         "before": {
           "curr": "-",
+          "inDegree": "[ 0, 1, 1, 2 ]",
           "queue": "[ 0 ]",
           "processedCount": "0",
-          "result": "false"
+          "result": "-"
         },
         "condition": {
           "text": "queue not empty",
@@ -5203,7 +5801,8 @@ export const MOCK_DRY_RUNS = {
           "curr": "0",
           "inDegree": "[ 0, 0, 0, 2 ]",
           "queue": "[ 1, 2 ]",
-          "processedCount": "1"
+          "processedCount": "1",
+          "result": "-"
         },
         "changes": [
           {
@@ -5239,30 +5838,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "1"
+            "value": "1",
+            "label": "Currently Processed Course"
           },
           {
             "name": "inDegree",
-            "value": "[ 0, 0, 0, 1 ]"
+            "value": "[ 0, 0, 0, 1 ]",
+            "label": "In-Degrees [c0, c1, c2, c3]"
           },
           {
             "name": "queue",
-            "value": "[ 2 ]"
+            "value": "[ 2 ]",
+            "label": "Zero In-Degree Queue"
           },
           {
             "name": "processedCount",
-            "value": "2"
+            "value": "2",
+            "label": "Completed Courses Count"
           },
           {
             "name": "result",
-            "value": "-"
+            "value": "-",
+            "label": "Current Result"
           }
         ],
         "before": {
           "curr": "0",
+          "inDegree": "[ 0, 0, 0, 2 ]",
           "queue": "[ 1, 2 ]",
           "processedCount": "1",
-          "result": "false"
+          "result": "-"
         },
         "condition": {
           "text": "queue not empty",
@@ -5276,7 +5881,8 @@ export const MOCK_DRY_RUNS = {
           "curr": "1",
           "inDegree": "[ 0, 0, 0, 1 ]",
           "queue": "[ 2 ]",
-          "processedCount": "2"
+          "processedCount": "2",
+          "result": "-"
         },
         "changes": [
           {
@@ -5312,30 +5918,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "2"
+            "value": "2",
+            "label": "Currently Processed Course"
           },
           {
             "name": "inDegree",
-            "value": "[ 0, 0, 0, 0 ]"
+            "value": "[ 0, 0, 0, 0 ]",
+            "label": "In-Degrees [c0, c1, c2, c3]"
           },
           {
             "name": "queue",
-            "value": "[ 3 ]"
+            "value": "[ 3 ]",
+            "label": "Zero In-Degree Queue"
           },
           {
             "name": "processedCount",
-            "value": "3"
+            "value": "3",
+            "label": "Completed Courses Count"
           },
           {
             "name": "result",
-            "value": "-"
+            "value": "-",
+            "label": "Current Result"
           }
         ],
         "before": {
           "curr": "1",
+          "inDegree": "[ 0, 0, 0, 1 ]",
           "queue": "[ 2 ]",
           "processedCount": "2",
-          "result": "false"
+          "result": "-"
         },
         "condition": {
           "text": "queue not empty",
@@ -5349,7 +5961,8 @@ export const MOCK_DRY_RUNS = {
           "curr": "2",
           "inDegree": "[ 0, 0, 0, 0 ]",
           "queue": "[ 3 ]",
-          "processedCount": "3"
+          "processedCount": "3",
+          "result": "-"
         },
         "changes": [
           {
@@ -5385,30 +5998,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "3"
+            "value": "3",
+            "label": "Currently Processed Course"
           },
           {
             "name": "inDegree",
-            "value": "[ 0, 0, 0, 0 ]"
+            "value": "[ 0, 0, 0, 0 ]",
+            "label": "In-Degrees [c0, c1, c2, c3]"
           },
           {
             "name": "queue",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Zero In-Degree Queue"
           },
           {
             "name": "processedCount",
-            "value": "4"
+            "value": "4",
+            "label": "Completed Courses Count"
           },
           {
             "name": "result",
-            "value": "-"
+            "value": "-",
+            "label": "Current Result"
           }
         ],
         "before": {
           "curr": "2",
+          "inDegree": "[ 0, 0, 0, 0 ]",
           "queue": "[ 3 ]",
           "processedCount": "3",
-          "result": "false"
+          "result": "-"
         },
         "condition": {
           "text": "queue not empty",
@@ -5420,9 +6039,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "curr": "3",
+          "inDegree": "[ 0, 0, 0, 0 ]",
           "queue": "[ ]",
           "processedCount": "4",
-          "result": "true"
+          "result": "-"
         },
         "changes": [
           {
@@ -5458,28 +6078,36 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "3"
+            "value": "3",
+            "label": "Currently Processed Course"
           },
           {
             "name": "inDegree",
-            "value": "[ 0, 0, 0, 0 ]"
+            "value": "[ 0, 0, 0, 0 ]",
+            "label": "In-Degrees [c0, c1, c2, c3]"
           },
           {
             "name": "queue",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Zero In-Degree Queue"
           },
           {
             "name": "processedCount",
-            "value": "4"
+            "value": "4",
+            "label": "Completed Courses Count"
           },
           {
             "name": "result",
-            "value": "true"
+            "value": "true",
+            "label": "Current Result"
           }
         ],
         "before": {
+          "curr": "3",
+          "inDegree": "[ 0, 0, 0, 0 ]",
+          "queue": "[ ]",
           "processedCount": "4",
-          "result": "true"
+          "result": "-"
         },
         "condition": {
           "text": "processedCount (4) == numCourses (4)?",
@@ -5490,6 +6118,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Return true."
         },
         "after": {
+          "curr": "3",
+          "inDegree": "[ 0, 0, 0, 0 ]",
+          "queue": "[ ]",
+          "processedCount": "4",
           "result": "true"
         },
         "changes": [],
@@ -5555,19 +6187,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "edge",
-            "value": "-"
+            "value": "-",
+            "label": "Current Edge [u, v]"
           },
           {
             "name": "parent",
-            "value": "[ 0, 1, 2, 3, 4 ]"
+            "value": "[ 0, 1, 2, 3, 4 ]",
+            "label": "Parent Pointer Array"
           },
           {
             "name": "components",
-            "value": "5"
+            "value": "5",
+            "label": "Component Count"
           },
           {
             "name": "result",
-            "value": "5"
+            "value": "5",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5609,19 +6245,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "edge",
-            "value": "[ 0, 1 ]"
+            "value": "[ 0, 1 ]",
+            "label": "Current Edge [u, v]"
           },
           {
             "name": "parent",
-            "value": "[ 1, 1, 2, 3, 4 ]"
+            "value": "[ 1, 1, 2, 3, 4 ]",
+            "label": "Parent Pointer Array"
           },
           {
             "name": "components",
-            "value": "4"
+            "value": "4",
+            "label": "Component Count"
           },
           {
             "name": "result",
-            "value": "4"
+            "value": "4",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5678,19 +6318,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "edge",
-            "value": "[ 1, 2 ]"
+            "value": "[ 1, 2 ]",
+            "label": "Current Edge [u, v]"
           },
           {
             "name": "parent",
-            "value": "[ 1, 2, 2, 3, 4 ]"
+            "value": "[ 1, 2, 2, 3, 4 ]",
+            "label": "Parent Pointer Array"
           },
           {
             "name": "components",
-            "value": "3"
+            "value": "3",
+            "label": "Component Count"
           },
           {
             "name": "result",
-            "value": "3"
+            "value": "3",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5747,19 +6391,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "edge",
-            "value": "[ 3, 4 ]"
+            "value": "[ 3, 4 ]",
+            "label": "Current Edge [u, v]"
           },
           {
             "name": "parent",
-            "value": "[ 1, 2, 2, 4, 4 ]"
+            "value": "[ 1, 2, 2, 4, 4 ]",
+            "label": "Parent Pointer Array"
           },
           {
             "name": "components",
-            "value": "2"
+            "value": "2",
+            "label": "Component Count"
           },
           {
             "name": "result",
-            "value": "2"
+            "value": "2",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5816,19 +6464,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "edge",
-            "value": "[ 3, 4 ]"
+            "value": "[ 3, 4 ]",
+            "label": "Current Edge [u, v]"
           },
           {
             "name": "parent",
-            "value": "[ 1, 2, 2, 4, 4 ]"
+            "value": "[ 1, 2, 2, 4, 4 ]",
+            "label": "Parent Pointer Array"
           },
           {
             "name": "components",
-            "value": "2"
+            "value": "2",
+            "label": "Component Count"
           },
           {
             "name": "result",
-            "value": "2"
+            "value": "2",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5846,6 +6498,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Return remaining components count = 2."
         },
         "after": {
+          "edge": "[ 3, 4 ]",
+          "parent": "[ 1, 2, 2, 4, 4 ]",
+          "components": "2",
           "result": "2"
         },
         "changes": [],
@@ -5911,19 +6566,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "NULL"
+            "value": "NULL",
+            "label": "Current Node"
           },
           {
             "name": "stack",
-            "value": "[ Node(5), Node(3), Node(2), Node(1) ]"
+            "value": "[ Node(5), Node(3), Node(2), Node(1) ]",
+            "label": "Traversal Stack"
           },
           {
             "name": "count",
-            "value": "0"
+            "value": "0",
+            "label": "Rank Counter"
           },
           {
             "name": "result",
-            "value": "-"
+            "value": "-",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -5970,19 +6629,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "Node(1)"
+            "value": "Node(1)",
+            "label": "Current Node"
           },
           {
             "name": "stack",
-            "value": "[ Node(5), Node(3), Node(2) ]"
+            "value": "[ Node(5), Node(3), Node(2) ]",
+            "label": "Traversal Stack"
           },
           {
             "name": "count",
-            "value": "1"
+            "value": "1",
+            "label": "Rank Counter"
           },
           {
             "name": "result",
-            "value": "1"
+            "value": "1",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6039,19 +6702,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "Node(2)"
+            "value": "Node(2)",
+            "label": "Current Node"
           },
           {
             "name": "stack",
-            "value": "[ Node(5), Node(3) ]"
+            "value": "[ Node(5), Node(3) ]",
+            "label": "Traversal Stack"
           },
           {
             "name": "count",
-            "value": "2"
+            "value": "2",
+            "label": "Rank Counter"
           },
           {
             "name": "result",
-            "value": "2"
+            "value": "2",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6108,19 +6775,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Current Node"
           },
           {
             "name": "stack",
-            "value": "[ Node(5) ]"
+            "value": "[ Node(5) ]",
+            "label": "Traversal Stack"
           },
           {
             "name": "count",
-            "value": "3"
+            "value": "3",
+            "label": "Rank Counter"
           },
           {
             "name": "result",
-            "value": "3"
+            "value": "3",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6177,23 +6848,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "curr",
-            "value": "Node(3)"
+            "value": "Node(3)",
+            "label": "Current Node"
           },
           {
             "name": "stack",
-            "value": "[ Node(5) ]"
+            "value": "[ Node(5) ]",
+            "label": "Traversal Stack"
           },
           {
             "name": "count",
-            "value": "3"
+            "value": "3",
+            "label": "Rank Counter"
           },
           {
             "name": "result",
-            "value": "3"
+            "value": "3",
+            "label": "Current Result"
           }
         ],
         "before": {
           "curr": "Node(3)",
+          "stack": "[ Node(5) ]",
           "count": "3",
           "result": "3"
         },
@@ -6206,6 +6882,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Return value 3."
         },
         "after": {
+          "curr": "Node(3)",
+          "stack": "[ Node(5) ]",
+          "count": "3",
           "result": "3"
         },
         "changes": [],
@@ -6266,15 +6945,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "freqMap",
-            "value": "{ 1: 3, 2: 2, 3: 1 }"
+            "value": "{ 1: 3, 2: 2, 3: 1 }",
+            "label": "Frequency Map"
           },
           {
             "name": "minHeap",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Min-Heap [(freq, num)]"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6319,15 +7001,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "freqMap",
-            "value": "{ 1: 3, 2: 2, 3: 1 }"
+            "value": "{ 1: 3, 2: 2, 3: 1 }",
+            "label": "Frequency Map"
           },
           {
             "name": "minHeap",
-            "value": "[ (3, 1) ]"
+            "value": "[ (3, 1) ]",
+            "label": "Min-Heap [(freq, num)]"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6344,7 +7029,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Push (freq: 3, num: 1). Min-heap size becomes 1."
         },
         "after": {
-          "minHeap": "[ (3, 1) ]"
+          "freqMap": "{ 1: 3, 2: 2, 3: 1 }",
+          "minHeap": "[ (3, 1) ]",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -6365,15 +7052,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "freqMap",
-            "value": "{ 1: 3, 2: 2, 3: 1 }"
+            "value": "{ 1: 3, 2: 2, 3: 1 }",
+            "label": "Frequency Map"
           },
           {
             "name": "minHeap",
-            "value": "[ (2, 2), (3, 1) ]"
+            "value": "[ (2, 2), (3, 1) ]",
+            "label": "Min-Heap [(freq, num)]"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6390,7 +7080,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Push (freq: 2, num: 2). Heap rearranges: (2,2) at root (min frequency)."
         },
         "after": {
-          "minHeap": "[ (2, 2), (3, 1) ]"
+          "freqMap": "{ 1: 3, 2: 2, 3: 1 }",
+          "minHeap": "[ (2, 2), (3, 1) ]",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -6411,15 +7103,18 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "freqMap",
-            "value": "{ 1: 3, 2: 2, 3: 1 }"
+            "value": "{ 1: 3, 2: 2, 3: 1 }",
+            "label": "Frequency Map"
           },
           {
             "name": "minHeap",
-            "value": "[ (2, 2), (3, 1) ]"
+            "value": "[ (2, 2), (3, 1) ]",
+            "label": "Min-Heap [(freq, num)]"
           },
           {
             "name": "result",
-            "value": "[ ]"
+            "value": "[ ]",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6436,7 +7131,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Push (1,3). Heap size becomes 3 > 2. Pop root min pair (1,3)."
         },
         "after": {
-          "minHeap": "[ (2, 2), (3, 1) ]"
+          "freqMap": "{ 1: 3, 2: 2, 3: 1 }",
+          "minHeap": "[ (2, 2), (3, 1) ]",
+          "result": "[ ]"
         },
         "changes": [
           {
@@ -6457,18 +7154,22 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "freqMap",
-            "value": "{ 1: 3, 2: 2, 3: 1 }"
+            "value": "{ 1: 3, 2: 2, 3: 1 }",
+            "label": "Frequency Map"
           },
           {
             "name": "minHeap",
-            "value": "[ (2, 2), (3, 1) ]"
+            "value": "[ (2, 2), (3, 1) ]",
+            "label": "Min-Heap [(freq, num)]"
           },
           {
             "name": "result",
-            "value": "[ 1, 2 ]"
+            "value": "[ 1, 2 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
+          "freqMap": "{ 1: 3, 2: 2, 3: 1 }",
           "minHeap": "[ (2, 2), (3, 1) ]",
           "result": "[ ]"
         },
@@ -6481,6 +7182,8 @@ export const MOCK_DRY_RUNS = {
           "description": "Extract numbers {1, 2} from remaining heap pairs."
         },
         "after": {
+          "freqMap": "{ 1: 3, 2: 2, 3: 1 }",
+          "minHeap": "[ (2, 2), (3, 1) ]",
           "result": "[ 1, 2 ]"
         },
         "changes": [
@@ -6553,23 +7256,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "-"
+            "value": "-",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "1"
+            "value": "1",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "1"
+            "value": "1",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 1, 1, 1, 1 ]"
+            "value": "[ 1, 1, 1, 1 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 1, 1, 1, 1 ]"
+            "value": "[ 1, 1, 1, 1 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -6588,7 +7296,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Set output array ans to [1,1,1,1]. Prefix accumulator = 1."
         },
         "after": {
+          "i": "-",
           "prefix": "1",
+          "suffix": "1",
           "ans": "[ 1, 1, 1, 1 ]",
           "result": "[ 1, 1, 1, 1 ]"
         },
@@ -6611,28 +7321,34 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "3"
+            "value": "3",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "24"
+            "value": "24",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "1"
+            "value": "1",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 1, 1, 2, 6 ]"
+            "value": "[ 1, 1, 2, 6 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 1, 1, 2, 6 ]"
+            "value": "[ 1, 1, 2, 6 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
           "i": "-",
           "prefix": "1",
+          "suffix": "1",
           "ans": "[ 1, 1, 1, 1 ]",
           "result": "[ 1, 1, 1, 1 ]"
         },
@@ -6647,6 +7363,7 @@ export const MOCK_DRY_RUNS = {
         "after": {
           "i": "3",
           "prefix": "24",
+          "suffix": "1",
           "ans": "[ 1, 1, 2, 6 ]",
           "result": "[ 1, 1, 2, 6 ]"
         },
@@ -6684,27 +7401,33 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "3"
+            "value": "3",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "24"
+            "value": "24",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "4"
+            "value": "4",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 1, 1, 2, 6 ]"
+            "value": "[ 1, 1, 2, 6 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 1, 1, 2, 6 ]"
+            "value": "[ 1, 1, 2, 6 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
           "i": "3",
+          "prefix": "24",
           "suffix": "1",
           "ans": "[ 1, 1, 2, 6 ]",
           "result": "[ 1, 1, 2, 6 ]"
@@ -6719,8 +7442,10 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "i": "3",
+          "prefix": "24",
           "suffix": "4",
-          "ans": "[ 1, 1, 2, 6 ]"
+          "ans": "[ 1, 1, 2, 6 ]",
+          "result": "[ 1, 1, 2, 6 ]"
         },
         "changes": [
           {
@@ -6741,27 +7466,33 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "2"
+            "value": "2",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "24"
+            "value": "24",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "12"
+            "value": "12",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 1, 1, 8, 6 ]"
+            "value": "[ 1, 1, 8, 6 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 1, 1, 8, 6 ]"
+            "value": "[ 1, 1, 8, 6 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
           "i": "3",
+          "prefix": "24",
           "suffix": "4",
           "ans": "[ 1, 1, 2, 6 ]",
           "result": "[ 1, 1, 2, 6 ]"
@@ -6776,6 +7507,7 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "i": "2",
+          "prefix": "24",
           "suffix": "12",
           "ans": "[ 1, 1, 8, 6 ]",
           "result": "[ 1, 1, 8, 6 ]"
@@ -6814,27 +7546,33 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "1"
+            "value": "1",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "24"
+            "value": "24",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "24"
+            "value": "24",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 1, 12, 8, 6 ]"
+            "value": "[ 1, 12, 8, 6 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 1, 12, 8, 6 ]"
+            "value": "[ 1, 12, 8, 6 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
           "i": "2",
+          "prefix": "24",
           "suffix": "12",
           "ans": "[ 1, 1, 8, 6 ]",
           "result": "[ 1, 1, 8, 6 ]"
@@ -6849,6 +7587,7 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "i": "1",
+          "prefix": "24",
           "suffix": "24",
           "ans": "[ 1, 12, 8, 6 ]",
           "result": "[ 1, 12, 8, 6 ]"
@@ -6887,27 +7626,33 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "0"
+            "value": "0",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "24"
+            "value": "24",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "24"
+            "value": "24",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 24, 12, 8, 6 ]"
+            "value": "[ 24, 12, 8, 6 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 24, 12, 8, 6 ]"
+            "value": "[ 24, 12, 8, 6 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
           "i": "1",
+          "prefix": "24",
           "suffix": "24",
           "ans": "[ 1, 12, 8, 6 ]",
           "result": "[ 1, 12, 8, 6 ]"
@@ -6922,6 +7667,8 @@ export const MOCK_DRY_RUNS = {
         },
         "after": {
           "i": "0",
+          "prefix": "24",
+          "suffix": "24",
           "ans": "[ 24, 12, 8, 6 ]",
           "result": "[ 24, 12, 8, 6 ]"
         },
@@ -6954,26 +7701,34 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "i",
-            "value": "0"
+            "value": "0",
+            "label": "Pass Index"
           },
           {
             "name": "prefix",
-            "value": "24"
+            "value": "24",
+            "label": "Prefix Accumulator"
           },
           {
             "name": "suffix",
-            "value": "24"
+            "value": "24",
+            "label": "Suffix Accumulator"
           },
           {
             "name": "ans",
-            "value": "[ 24, 12, 8, 6 ]"
+            "value": "[ 24, 12, 8, 6 ]",
+            "label": "Answer Array"
           },
           {
             "name": "result",
-            "value": "[ 24, 12, 8, 6 ]"
+            "value": "[ 24, 12, 8, 6 ]",
+            "label": "Current Result"
           }
         ],
         "before": {
+          "i": "0",
+          "prefix": "24",
+          "suffix": "24",
           "ans": "[ 24, 12, 8, 6 ]",
           "result": "[ 24, 12, 8, 6 ]"
         },
@@ -6986,6 +7741,10 @@ export const MOCK_DRY_RUNS = {
           "description": "Return result array [ 24, 12, 8, 6 ]."
         },
         "after": {
+          "i": "0",
+          "prefix": "24",
+          "suffix": "24",
+          "ans": "[ 24, 12, 8, 6 ]",
           "result": "[ 24, 12, 8, 6 ]"
         },
         "changes": [],
@@ -7047,19 +7806,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "-"
+            "value": "-",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "0"
+            "value": "0",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0000"
+            "value": "0000",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "0"
+            "value": "0",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7077,6 +7840,7 @@ export const MOCK_DRY_RUNS = {
           "description": "Set XOR accumulator acc to 0 (binary 0000)."
         },
         "after": {
+          "num": "-",
           "acc": "0",
           "accBit": "0000",
           "result": "0"
@@ -7100,19 +7864,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "4"
+            "value": "4",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "4"
+            "value": "4",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0100"
+            "value": "0100",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "4"
+            "value": "4",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7169,19 +7937,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "1"
+            "value": "1",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "5"
+            "value": "5",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0101"
+            "value": "0101",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "5"
+            "value": "5",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7238,19 +8010,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "2"
+            "value": "2",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "7"
+            "value": "7",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0111"
+            "value": "0111",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "7"
+            "value": "7",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7307,19 +8083,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "1"
+            "value": "1",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "6"
+            "value": "6",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0110"
+            "value": "0110",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "6"
+            "value": "6",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7376,19 +8156,23 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "2"
+            "value": "2",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "4"
+            "value": "4",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0100"
+            "value": "0100",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "4"
+            "value": "4",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7445,22 +8229,27 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "num",
-            "value": "2"
+            "value": "2",
+            "label": "Current Number"
           },
           {
             "name": "acc",
-            "value": "4"
+            "value": "4",
+            "label": "XOR Accumulator (Decimal)"
           },
           {
             "name": "accBit",
-            "value": "0100"
+            "value": "0100",
+            "label": "XOR Accumulator (Binary)"
           },
           {
             "name": "result",
-            "value": "4"
+            "value": "4",
+            "label": "Current Result"
           }
         ],
         "before": {
+          "num": "2",
           "acc": "4",
           "accBit": "0100",
           "result": "4"
@@ -7474,6 +8263,9 @@ export const MOCK_DRY_RUNS = {
           "description": "Return accumulator result = 4."
         },
         "after": {
+          "num": "2",
+          "acc": "4",
+          "accBit": "0100",
           "result": "4"
         },
         "changes": [],
@@ -7544,23 +8336,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(0, 0)"
+            "value": "(0, 0)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "A"
+            "value": "A",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "0"
+            "value": "0",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"A\""
+            "value": "\"A\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "false"
+            "value": "false",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7619,23 +8416,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(0, 1)"
+            "value": "(0, 1)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "B"
+            "value": "B",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "1"
+            "value": "1",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"AB\""
+            "value": "\"AB\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "false"
+            "value": "false",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7657,7 +8459,8 @@ export const MOCK_DRY_RUNS = {
           "cell": "(0, 1)",
           "char": "B",
           "idx": "1",
-          "path": "\"AB\""
+          "path": "\"AB\"",
+          "result": "false"
         },
         "changes": [
           {
@@ -7693,23 +8496,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(0, 2)"
+            "value": "(0, 2)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "C"
+            "value": "C",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "2"
+            "value": "2",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"ABC\""
+            "value": "\"ABC\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "false"
+            "value": "false",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7731,7 +8539,8 @@ export const MOCK_DRY_RUNS = {
           "cell": "(0, 2)",
           "char": "C",
           "idx": "2",
-          "path": "\"ABC\""
+          "path": "\"ABC\"",
+          "result": "false"
         },
         "changes": [
           {
@@ -7767,23 +8576,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(1, 2)"
+            "value": "(1, 2)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "C"
+            "value": "C",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "3"
+            "value": "3",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"ABCC\""
+            "value": "\"ABCC\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "false"
+            "value": "false",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7805,7 +8619,8 @@ export const MOCK_DRY_RUNS = {
           "cell": "(1, 2)",
           "char": "C",
           "idx": "3",
-          "path": "\"ABCC\""
+          "path": "\"ABCC\"",
+          "result": "false"
         },
         "changes": [
           {
@@ -7841,23 +8656,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(2, 2)"
+            "value": "(2, 2)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "E"
+            "value": "E",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "4"
+            "value": "4",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"ABCCE\""
+            "value": "\"ABCCE\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "false"
+            "value": "false",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7879,7 +8699,8 @@ export const MOCK_DRY_RUNS = {
           "cell": "(2, 2)",
           "char": "E",
           "idx": "4",
-          "path": "\"ABCCE\""
+          "path": "\"ABCCE\"",
+          "result": "false"
         },
         "changes": [
           {
@@ -7915,23 +8736,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(2, 1)"
+            "value": "(2, 1)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "D"
+            "value": "D",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "6"
+            "value": "6",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"ABCCED\""
+            "value": "\"ABCCED\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "true"
+            "value": "true",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -7995,23 +8821,28 @@ export const MOCK_DRY_RUNS = {
         "variables": [
           {
             "name": "cell",
-            "value": "(2, 1)"
+            "value": "(2, 1)",
+            "label": "Current Grid Coordinate"
           },
           {
             "name": "char",
-            "value": "D"
+            "value": "D",
+            "label": "Grid Character"
           },
           {
             "name": "idx",
-            "value": "6"
+            "value": "6",
+            "label": "Word Target Index"
           },
           {
             "name": "path",
-            "value": "\"ABCCED\""
+            "value": "\"ABCCED\"",
+            "label": "Matched Substring Path (Derived State)"
           },
           {
             "name": "result",
-            "value": "true"
+            "value": "true",
+            "label": "Current Result"
           }
         ],
         "before": {
@@ -8030,6 +8861,10 @@ export const MOCK_DRY_RUNS = {
           "description": "The search succeeds immediately. Return true."
         },
         "after": {
+          "cell": "(2, 1)",
+          "char": "D",
+          "idx": "6",
+          "path": "\"ABCCED\"",
           "result": "true"
         },
         "changes": [],
@@ -8044,10 +8879,6 @@ export const MOCK_DRY_RUNS = {
   }
 };
 
-/**
- * Helper function to retrieve dry run dataset by problem ID and approach ID.
- * Returns null if problem ID is unknown or not matched (no fallback to wrong problem).
- */
 export function getDryRunByProblemAndApproach(problemId, approachId) {
   if (!problemId) return null;
 
