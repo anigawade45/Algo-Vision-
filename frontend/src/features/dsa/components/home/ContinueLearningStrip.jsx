@@ -69,7 +69,7 @@ export function ContinueLearningStrip({ onContinueSession, onNavigateToSaved, on
               key={rp.title}
               type="button"
               onClick={onContinueSession}
-              className="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] hover:border-blue-400 text-xs font-mono text-slate-700 dark:text-slate-300 transition-colors cursor-pointer min-h-[40px]"
+              className="shrink-0 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] hover:border-blue-400 text-xs font-mono text-slate-700 dark:text-slate-300 transition-colors cursor-pointer min-h-10"
             >
               <Clock className="w-3.5 h-3.5 text-slate-400" />
               <span className="font-semibold">{rp.title}</span>
@@ -85,7 +85,7 @@ export function ContinueLearningStrip({ onContinueSession, onNavigateToSaved, on
           <button
             type="button"
             onClick={onNavigateToSaved}
-            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 p-3 sm:p-0 rounded-lg sm:rounded-none bg-white sm:bg-transparent dark:bg-[#0B101D] sm:dark:bg-transparent border sm:border-0 border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group min-h-[44px]"
+            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 p-3 sm:p-0 rounded-lg sm:rounded-none bg-white sm:bg-transparent dark:bg-[#0B101D] sm:dark:bg-transparent border sm:border-0 border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group min-h-11"
           >
             <div className="flex items-center gap-2">
               <Bookmark className="w-4 h-4 text-blue-500" aria-hidden="true" />
@@ -97,7 +97,7 @@ export function ContinueLearningStrip({ onContinueSession, onNavigateToSaved, on
           <button
             type="button"
             onClick={onNavigateToHistory}
-            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 p-3 sm:p-0 rounded-lg sm:rounded-none bg-white sm:bg-transparent dark:bg-[#0B101D] sm:dark:bg-transparent border sm:border-0 border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group min-h-[44px]"
+            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 p-3 sm:p-0 rounded-lg sm:rounded-none bg-white sm:bg-transparent dark:bg-[#0B101D] sm:dark:bg-transparent border sm:border-0 border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group min-h-11"
           >
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-blue-500" aria-hidden="true" />
@@ -109,7 +109,7 @@ export function ContinueLearningStrip({ onContinueSession, onNavigateToSaved, on
           <button
             type="button"
             onClick={onNavigateToPractice}
-            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 p-3 sm:p-0 rounded-lg sm:rounded-none bg-white sm:bg-transparent dark:bg-[#0B101D] sm:dark:bg-transparent border sm:border-0 border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group min-h-[44px]"
+            className="w-full sm:w-auto flex items-center justify-between sm:justify-start gap-2 p-3 sm:p-0 rounded-lg sm:rounded-none bg-white sm:bg-transparent dark:bg-[#0B101D] sm:dark:bg-transparent border sm:border-0 border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer group min-h-11"
           >
             <div className="flex items-center gap-2">
               <Target className="w-4 h-4 text-blue-500" aria-hidden="true" />

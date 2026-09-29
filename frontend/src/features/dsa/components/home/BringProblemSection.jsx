@@ -146,7 +146,7 @@ export function BringProblemSection({ onAnalyze }) {
                 onBlur={() => setIsFocused(false)}
                 onKeyDown={handleKeyDown}
                 placeholder="Paste your problem statement or text here..."
-                className="w-full p-4 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200 dark:border-[#1C2638] text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none transition-all resize-y min-h-[120px]"
+                className="w-full p-4 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200 dark:border-[#1C2638] text-sm font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none transition-all resize-y min-h-30"
               />
             )}
           </div>

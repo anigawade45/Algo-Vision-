@@ -25,7 +25,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
             </span>
           </button>
 
-          <div className="hidden sm:block h-4 w-[1px] bg-slate-300 dark:bg-slate-700 mx-1" aria-hidden="true" />
+          <div className="hidden sm:block h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1" aria-hidden="true" />
 
           {/* Desktop Breadcrumbs */}
           <nav className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 font-mono" aria-label="Breadcrumb navigation">
@@ -55,7 +55,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
         <div className="hidden sm:flex items-center gap-2 sm:gap-3">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-h-[40px]"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-h-10"
           >
             <LayoutDashboard className="w-3.5 h-3.5 text-blue-500" aria-hidden="true" />
             <span>Dashboard</span>
@@ -65,7 +65,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
             <button
               type="button"
               onClick={onNavigateToSubmit}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-h-[40px]"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-h-10"
             >
               <PlusCircle className="w-3.5 h-3.5" aria-hidden="true" />
               <span>New Problem</span>
@@ -76,7 +76,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-w-[40px] min-h-[40px] flex items-center justify-center"
+              className="p-2.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors cursor-pointer min-w-10 min-h-10 flex items-center justify-center"
               title="Toggle theme mode"
               aria-label="Toggle light and dark theme mode"
             >
@@ -90,7 +90,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
 
           <button
             type="button"
-            className="p-2.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors relative cursor-pointer min-w-[40px] min-h-[40px] flex items-center justify-center"
+            className="p-2.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors relative cursor-pointer min-w-10 min-h-10 flex items-center justify-center"
             aria-label="Notifications"
           >
             <Bell className="w-4 h-4" aria-hidden="true" />
@@ -98,7 +98,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
           </button>
 
           <div
-            className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-sm ring-2 ring-slate-200 dark:ring-slate-800 cursor-pointer"
+            className="w-9 h-9 rounded-full bg-linear-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-sm ring-2 ring-slate-200 dark:ring-slate-800 cursor-pointer"
             role="img"
             aria-label="User avatar"
           >
@@ -112,7 +112,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+              className="p-2.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white min-w-11 min-h-11 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
               aria-label="Toggle light and dark theme mode"
             >
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
@@ -122,7 +122,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2.5 rounded-lg bg-slate-100 dark:bg-[#161F33] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#1E2638] min-w-[44px] min-h-[44px] flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
+            className="p-2.5 rounded-lg bg-slate-100 dark:bg-[#161F33] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#1E2638] min-w-11 min-h-11 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
             aria-expanded={mobileMenuOpen}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
           >
@@ -139,7 +139,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
           <Link
             to="/dashboard"
             onClick={() => setMobileMenuOpen(false)}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-200 text-sm font-semibold cursor-pointer min-h-[44px]"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-200 text-sm font-semibold cursor-pointer min-h-11"
           >
             <LayoutDashboard className="w-4 h-4 text-blue-500" aria-hidden="true" />
             <span>Student Dashboard</span>
@@ -152,7 +152,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
                 setMobileMenuOpen(false);
                 onNavigateToSubmit();
               }}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md shadow-blue-500/20 cursor-pointer min-h-[44px]"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md shadow-blue-500/20 cursor-pointer min-h-11"
             >
               <PlusCircle className="w-4 h-4" aria-hidden="true" />
               <span>New Problem</span>
@@ -174,7 +174,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
           <div className="flex items-center justify-between pt-1">
             <button
               type="button"
-              className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-300 py-2 cursor-pointer min-h-[44px]"
+              className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-300 py-2 cursor-pointer min-h-11"
               aria-label="Notifications"
             >
               <Bell className="w-4 h-4 text-blue-500" />
@@ -182,7 +182,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
             </button>
 
             <div className="flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-300">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+              <div className="w-7 h-7 rounded-full bg-linear-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-xs">
                 <User className="w-3.5 h-3.5" />
               </div>
               <span>Profile</span>

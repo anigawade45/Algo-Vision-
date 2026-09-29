@@ -7,7 +7,7 @@ export function DsaModuleHero({ onScrollToInput, onScrollToEngine }) {
     <section className="relative font-sans min-h-auto lg:min-h-[calc(100vh-5.5rem)] flex flex-col justify-between w-full max-w-7xl mx-auto pt-2 sm:pt-4 pb-4 space-y-6 lg:space-y-0">
       
       {/* Ambient Spatial Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-56 bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-56 bg-linear-to-b from-blue-500/10 via-indigo-500/5 to-transparent rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
 
       {/* Main Hero Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center relative z-10 w-full my-auto py-2">
@@ -37,7 +37,7 @@ export function DsaModuleHero({ onScrollToInput, onScrollToEngine }) {
             <button
               type="button"
               onClick={onScrollToInput}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer min-h-[44px] w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition-all shadow-md shadow-blue-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer min-h-11 w-full sm:w-auto"
             >
               <Sparkles className="w-4 h-4" aria-hidden="true" />
               <span>Bring a Problem →</span>
@@ -46,7 +46,7 @@ export function DsaModuleHero({ onScrollToInput, onScrollToEngine }) {
             <button
               type="button"
               onClick={onScrollToEngine}
-              className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:border-blue-500 font-semibold text-sm transition-colors cursor-pointer min-h-[44px] w-full sm:w-auto"
+              className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:border-blue-500 font-semibold text-sm transition-colors cursor-pointer min-h-11 w-full sm:w-auto"
             >
               <PlayCircle className="w-4 h-4 text-blue-500" aria-hidden="true" />
               <span>Explore Learning Engine</span>
@@ -74,7 +74,7 @@ export function DsaModuleHero({ onScrollToInput, onScrollToEngine }) {
         aria-label="Scroll to Learning Engine"
         className="flex flex-col items-center justify-center cursor-pointer pt-2 group relative z-10 shrink-0 self-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-full"
       >
-        <div className="w-[1px] h-6 bg-gradient-to-b from-blue-500/40 via-slate-300 dark:via-slate-800 to-transparent group-hover:h-8 transition-all" />
+        <div className="w-px h-6 bg-linear-to-b from-blue-500/40 via-slate-300 dark:via-slate-800 to-transparent group-hover:h-8 transition-all" />
         <span className="text-[10px] font-mono tracking-widest uppercase text-slate-400 dark:text-slate-500 group-hover:text-blue-500 bg-slate-50 dark:bg-[#05070E] px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 my-0.5 flex items-center gap-1 transition-colors">
           <span>LEARNING ENGINE</span>
           <ChevronDown className="w-3 h-3 text-blue-500 group-hover:translate-y-0.5 transition-transform" />
