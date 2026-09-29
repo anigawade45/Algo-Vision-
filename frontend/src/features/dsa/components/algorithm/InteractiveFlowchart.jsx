@@ -243,15 +243,7 @@ export function InteractiveFlowchart({ flowchartData }) {
                 {activeNode.description}
               </p>
 
-              {activeNode.codeSnippet && (
-                <div className="mt-2 p-2.5 rounded-lg bg-slate-900 text-emerald-400 font-mono text-[11px] space-y-1">
-                  <div className="flex items-center gap-1.5 text-slate-400 text-[9px] uppercase font-bold">
-                    <Code className="w-3 h-3" />
-                    <span>CODE SNIPPET</span>
-                  </div>
-                  <code>{activeNode.codeSnippet}</code>
-                </div>
-              )}
+
             </div>
 
             {/* Live State Variables Inspector */}
