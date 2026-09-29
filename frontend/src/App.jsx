@@ -23,6 +23,7 @@ import CpuScheduling from '@/features/os/pages/CpuScheduling';
 import OsHome from '@/features/os/pages/OsHome';
 import OsFundamentals from '@/features/os/pages/OsFundamentals';
 import ProcessManagement from '@/features/os/pages/ProcessManagement';
+import Deadlocks from '@/features/os/pages/Deadlocks';
 
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
@@ -205,6 +206,15 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <ProcessManagement theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/deadlocks"
+              element={
+                <ProtectedRoute>
+                  <Deadlocks theme={theme} toggleTheme={toggleTheme} />
                 </ProtectedRoute>
               }
             />

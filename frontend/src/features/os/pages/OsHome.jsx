@@ -49,13 +49,14 @@ export default function OsHome({ theme, toggleTheme }) {
     },
     {
       id: 'deadlocks',
-      title: 'Deadlocks & Banker\'s Algorithm',
-      description: 'Analyze Resource Allocation Graphs (RAG) and run safety checks using Banker\'s avoidance algorithm.',
-      author: 'Core Team',
-      status: 'In Development',
-      isLive: false,
-      badge: 'Coming Soon',
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700',
+      title: 'Deadlocks & Resource Allocation Graph',
+      description: 'Analyze Resource Allocation Graphs (RAG), detect circular wait cycles, Coffman conditions, and simulate recovery.',
+      author: 'Parvej',
+      status: 'Live & Ready',
+      isLive: true,
+      path: '/os/deadlocks',
+      badge: 'Interactive RAG Engine',
+      badgeColor: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
     },
     {
       id: 'memory-management',
@@ -132,7 +133,7 @@ export default function OsHome({ theme, toggleTheme }) {
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-cyan-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-cyan-300" />
-                3 Active Modules
+                4 Active Modules
               </span>
               <span>•</span>
               <span>6 Total Learning Tracks</span>
