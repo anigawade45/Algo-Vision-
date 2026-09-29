@@ -140,6 +140,8 @@ export function CoreModulesGrid({ onExploreModule }) {
                       ? '/dsa'
                       : module.id === 'os'
                       ? '/os'
+                      : module.id === 'networks'
+                      ? '/cn'
                       : `/modules/${module.id}`
                   }
                   onClick={(e) => e.stopPropagation()}

@@ -10,7 +10,7 @@ import { StatsCards } from './components/StatsCards';
 import { WeeklyActivityChart } from './components/WeeklyActivityChart';
 import { AiRecommendations } from './components/AiRecommendations';
 import { FloatingAiMentor } from './components/FloatingAiMentor';
-import { VisualizerModal, QuizModal } from './components/InteractiveModals';
+import { VisualizerModal } from './components/InteractiveModals';
 
 export default function DashboardPage({ theme, toggleTheme }) {
   const navigate = useNavigate();
@@ -19,7 +19,6 @@ export default function DashboardPage({ theme, toggleTheme }) {
   const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [isVisualizerOpen, setIsVisualizerOpen] = useState(false);
   const [visualizerInitialModule, setVisualizerInitialModule] = useState('dsa');
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
 
   // Sync theme with document class if not provided
   useEffect(() => {
@@ -31,15 +30,13 @@ export default function DashboardPage({ theme, toggleTheme }) {
     setIsVisualizerOpen(true);
   };
 
-  const handleOpenQuiz = () => {
-    setIsQuizOpen(true);
-  };
-
   const handleExploreModule = (moduleId) => {
     if (moduleId === 'dsa') {
       navigate('/dsa');
     } else if (moduleId === 'os') {
       navigate('/os');
+    } else if (moduleId === 'networks' || moduleId === 'cn') {
+      navigate('/cn');
     } else {
       navigate(`/modules/${moduleId}`);
     }
@@ -53,7 +50,6 @@ export default function DashboardPage({ theme, toggleTheme }) {
         setMobileOpen={setMobileOpen}
         onOpenAiMentor={() => setIsAiMentorOpen(true)}
         onOpenVisualizer={handleOpenVisualizer}
-        onOpenQuiz={handleOpenQuiz}
       />
 
       {/* 2. Main Body Container (Pushed right by sidebar width on desktop) */}
@@ -95,7 +91,6 @@ export default function DashboardPage({ theme, toggleTheme }) {
           <QuickActions
             onOpenAiMentor={() => setIsAiMentorOpen(true)}
             onOpenVisualizer={() => handleOpenVisualizer('dsa')}
-            onOpenQuiz={handleOpenQuiz}
           />
 
           {/* Section 5: AI Tailored Recommendations */}
@@ -111,7 +106,7 @@ export default function DashboardPage({ theme, toggleTheme }) {
                   : 'dsa';
                 handleOpenVisualizer(mod);
               } else {
-                navigate('/modules/networks');
+                navigate('/cn');
               }
             }}
           />
@@ -135,12 +130,6 @@ export default function DashboardPage({ theme, toggleTheme }) {
         isOpen={isVisualizerOpen}
         onClose={() => setIsVisualizerOpen(false)}
         initialModule={visualizerInitialModule}
-      />
-
-      {/* 5. Interactive Practice Quiz Modal */}
-      <QuizModal
-        isOpen={isQuizOpen}
-        onClose={() => setIsQuizOpen(false)}
       />
     </div>
   );

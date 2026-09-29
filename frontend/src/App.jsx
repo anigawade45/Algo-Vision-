@@ -23,6 +23,13 @@ import CpuScheduling from '@/features/os/pages/CpuScheduling';
 import OsHome from '@/features/os/pages/OsHome';
 import OsFundamentals from '@/features/os/pages/OsFundamentals';
 
+import CnHome from '@/features/cn/pages/CnHome';
+import NetworkFundamentals from '@/features/cn/pages/NetworkFundamentals';
+import NetworkTopologies from '@/features/cn/pages/NetworkTopologies';
+import OsiLayers from '@/features/cn/pages/OsiLayers';
+import IpSubnetting from '@/features/cn/pages/IpSubnetting';
+import RoutingProtocols from '@/features/cn/pages/RoutingProtocols';
+
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
   return (
@@ -232,9 +239,89 @@ export default function App() {
               element={<Navigate to="/modules/:moduleId" replace />}
             />
 
+            {/* COMPUTER NETWORKS MODULE ROUTES */}
+            <Route
+              path="/cn"
+              element={
+                <ProtectedRoute>
+                  <CnHome theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/fundamentals"
+              element={
+                <ProtectedRoute>
+                  <NetworkFundamentals theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/network-fundamentals"
+              element={<Navigate to="/cn/fundamentals" replace />}
+            />
+
+            <Route
+              path="/cn/topologies"
+              element={
+                <ProtectedRoute>
+                  <NetworkTopologies theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/network-topologies"
+              element={<Navigate to="/cn/topologies" replace />}
+            />
+
+            <Route
+              path="/cn/topology"
+              element={<Navigate to="/cn/topologies" replace />}
+            />
+
+            <Route
+              path="/cn/tcp-handshake"
+              element={<Navigate to="/cn/fundamentals" replace />}
+            />
+
+            <Route
+              path="/cn/osi-layers"
+              element={
+                <ProtectedRoute>
+                  <OsiLayers theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/ip-subnetting"
+              element={
+                <ProtectedRoute>
+                  <IpSubnetting theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/routing-protocols"
+              element={
+                <ProtectedRoute>
+                  <RoutingProtocols theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/networks"
-              element={<Navigate to="/modules/networks" replace />}
+              element={<Navigate to="/cn" replace />}
+            />
+
+            <Route
+              path="/modules/networks"
+              element={<Navigate to="/cn" replace />}
             />
 
             <Route

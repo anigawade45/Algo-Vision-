@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { studentProfile } from '../data/mockDashboardData';
 
-export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisualizer, onOpenQuiz }) {
+export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisualizer }) {
   const location = useLocation();
   const { logout } = useAuth();
 
@@ -36,8 +36,7 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
       path: '/dsa',
       icon: Binary,
       active: location.pathname.startsWith('/dsa'),
-      badge: 'Core',
-      badgeColor: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20',
+      badge: null,
     },
     {
       name: 'Operating Systems',
@@ -48,9 +47,9 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
     },
     {
       name: 'Computer Networks',
-      path: '/modules/networks',
+      path: '/cn',
       icon: Wifi,
-      active: location.pathname.includes('/modules/networks') || location.search.includes('module=networks'),
+      active: location.pathname.startsWith('/cn') || location.pathname.includes('/modules/networks') || location.search.includes('module=networks'),
       badge: null,
     },
     {
@@ -58,8 +57,7 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
       path: '/modules/sysdesign',
       icon: Server,
       active: location.pathname.includes('/modules/sysdesign') || location.search.includes('module=sysdesign'),
-      badge: 'New',
-      badgeColor: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20',
+      badge: null,
     },
   ];
 
@@ -69,15 +67,6 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
       path: '/dashboard?tab=progress',
       icon: TrendingUp,
       active: location.search.includes('tab=progress'),
-    },
-    {
-      name: 'Practice & Quiz',
-      path: '/dashboard?tab=quiz',
-      icon: HelpCircle,
-      active: location.search.includes('tab=quiz'),
-      badge: '3 Due',
-      badgeColor: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
-      action: () => onOpenQuiz && onOpenQuiz(),
     },
     {
       name: 'AI Mentor',
