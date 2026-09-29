@@ -16,19 +16,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Two Sum',
-      inputFormat: 'nums = Array[int], target = int',
-      inputVisual: 'nums = [ 2, 7, 11, 15 ], target = 9',
-      kValue: 'Target = 9',
-      goal: 'Find two indices whose values sum to 9.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize', description: 'Create an empty hash map for value-to-index mapping.' },
-      { stepNo: '02', title: 'Calculate complement', description: 'For each item, compute complement = target - current value.' },
-      { stepNo: '03', title: 'Check map', description: 'If complement exists in map, return indices immediately.' },
-      { stepNo: '04', title: 'Store entry', description: 'Otherwise store current value and index in map.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Algorithm begins.' },
       { line: 2, type: 'instruction', text: 'Create an empty hash map (value ➔ index).', explanation: 'Map allows O(1) average lookup for required complement values.' },
@@ -63,19 +50,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Valid Parentheses',
-      inputFormat: 's = String of brackets',
-      inputVisual: 's = " ( [ { } ] ) "',
-      kValue: 'Bracket Sequence',
-      goal: 'Determine if all open brackets close in correct nested order.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize', description: 'Create an empty stack structure.' },
-      { stepNo: '02', title: 'Push open brackets', description: 'Push opening symbols onto stack.' },
-      { stepNo: '03', title: 'Match closing brackets', description: 'Pop and check matching type when closing symbol is seen.' },
-      { stepNo: '04', title: 'Verify empty stack', description: 'Return true if stack is empty at end.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Algorithm starts.' },
       { line: 2, type: 'instruction', text: 'Create an empty stack.', explanation: 'Stack tracks nested opening symbols in Last-In-First-Out order.' },
@@ -112,19 +86,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Reverse Linked List',
-      inputFormat: 'head = ListNode (val, next)',
-      inputVisual: 'head = 1 ➔ 2 ➔ 3 ➔ 4 ➔ NULL',
-      kValue: 'Singly Linked List',
-      goal: 'Invert pointer directions so tail becomes new head.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize pointers', description: 'Set prev = null, curr = head.' },
-      { stepNo: '02', title: 'Save next node', description: 'Store reference to curr.next.' },
-      { stepNo: '03', title: 'Reverse pointer', description: 'Point curr.next to prev.' },
-      { stepNo: '04', title: 'Advance pointers', description: 'Move prev and curr forward.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize prev = NULL, curr = head.', explanation: 'Track previous and current node pointers.' },
@@ -159,19 +120,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Binary Tree Inorder Traversal',
-      inputFormat: 'root = TreeNode (val, left, right)',
-      inputVisual: 'root = [ 1, null, 2, 3 ]',
-      kValue: 'Tree Hierarchy',
-      goal: 'Collect node values in Left ➔ Root ➔ Right order.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Base condition', description: 'If node is null, return.' },
-      { stepNo: '02', title: 'Traverse left', description: 'Recursively visit left subtree.' },
-      { stepNo: '03', title: 'Record node', description: 'Append current node value to result.' },
-      { stepNo: '04', title: 'Traverse right', description: 'Recursively visit right subtree.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Function traverse(node, result):', explanation: 'Define recursive traversal helper.' },
@@ -205,19 +153,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Number of Islands',
-      inputFormat: 'grid = 2D Matrix [row][col]',
-      inputVisual: 'grid = [ ["1","1","0"], ["1","1","0"], ["0","0","1"] ]',
-      kValue: 'Spatial Matrix',
-      goal: 'Count isolated contiguous land components.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Scan grid', description: 'Iterate over grid coordinates (row r, col c).' },
-      { stepNo: '02', title: 'Find land', description: 'When grid[r][c] is "1", increment islandCount.' },
-      { stepNo: '03', title: 'Explore DFS', description: 'Flood-fill connected land cells to "0" (water).' },
-      { stepNo: '04', title: 'Return total', description: 'Return total islandCount.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Set islandCount = 0.', explanation: 'Initialize region counter.' },
@@ -254,19 +189,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Sliding Window Maximum',
-      inputFormat: 'nums = Array[int], k = int',
-      inputVisual: 'nums = [ 1, 3, -1, -3, 5, 3, 6, 7 ], k = 3',
-      kValue: 'Window K = 3',
-      goal: 'Find max element in every shifting window.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Deque', description: 'Create empty deque for candidate indices.' },
-      { stepNo: '02', title: 'Remove Out-of-Window Indices', description: 'Pop index from front if outside window.' },
-      { stepNo: '03', title: 'Maintain monotonicity', description: 'Pop smaller elements from back.' },
-      { stepNo: '04', title: 'Record result', description: 'Front of deque holds window max.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution starts.' },
       { line: 2, type: 'instruction', text: 'Initialize empty deque and result array.', explanation: 'Deque stores candidate indices in decreasing value order.' },
@@ -341,19 +263,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Merge Intervals',
-      inputFormat: 'intervals = [[start, end], ...]',
-      inputVisual: 'intervals = [[1,3],[2,6],[8,10],[15,18]]',
-      kValue: 'Interval Ranges',
-      goal: 'Consolidate overlapping range boundaries.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Sort intervals', description: 'Sort list by start coordinates.' },
-      { stepNo: '02', title: 'Initialize merged list', description: 'Add first interval to merged result.' },
-      { stepNo: '03', title: 'Check overlap', description: 'If current start <= last merged end, extend end.' },
-      { stepNo: '04', title: 'Append non-overlapping', description: 'Otherwise append current interval.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Sort intervals by start coordinate ascending.', explanation: 'Ordering ensures adjacent intervals overlap.' },
@@ -389,19 +298,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Longest Substring Without Repeating Characters',
-      inputFormat: 's = String',
-      inputVisual: 's = " a b c a b c b b "',
-      kValue: 'Unique Character Span',
-      goal: 'Find max length of contiguous distinct substring.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize pointers', description: 'Set left = 0, maxLength = 0, charSet = empty.' },
-      { stepNo: '02', title: 'Expand right', description: 'Advance right pointer through string.' },
-      { stepNo: '03', title: 'Contract left on duplicate', description: 'Shrink left while character is duplicated.' },
-      { stepNo: '04', title: 'Update max', description: 'Update maxLength = MAX(maxLength, right - left + 1).' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution starts.' },
       { line: 2, type: 'instruction', text: 'Initialize left = 0, maxLength = 0, charSet = empty set.', explanation: 'Setup window bounds and duplicate tracker.' },
@@ -469,19 +365,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Shortest Path in Unweighted Graph',
-      inputFormat: 'graph = Adjacency List [node ➔ neighbors]',
-      inputVisual: 'graph = A ➔ [B, C], B ➔ [D], start = A, target = D',
-      kValue: 'Unweighted Graph',
-      goal: 'Find minimum edge step hops from start to destination.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Queue', description: 'Push (startNode, distance 0) to queue.' },
-      { stepNo: '02', title: 'Pop node', description: 'De-queue current node and distance.' },
-      { stepNo: '03', title: 'Check target', description: 'If node is target, return distance.' },
-      { stepNo: '04', title: 'Push neighbors', description: 'Push unvisited neighbors with dist + 1.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution starts.' },
       { line: 2, type: 'instruction', text: 'Initialize queue = [(startNode, 0)], visited = {startNode}.', explanation: 'BFS queue ensures level-by-level shortest path expansion.' },
@@ -518,19 +401,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Climbing Stairs',
-      inputFormat: 'n = int (staircase steps)',
-      inputVisual: 'n = 5',
-      kValue: 'Staircase Steps N = 5',
-      goal: 'Compute distinct ways to reach top using jumps of 1 or 2 steps.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Check Base Cases', description: 'If n <= 2, return n immediately.' },
-      { stepNo: '02', title: 'Initialize DP Table', description: 'Create dp array of size n + 1 with dp[1] = 1, dp[2] = 2.' },
-      { stepNo: '03', title: 'Iterate & Transition', description: 'For i from 3 to n, calculate dp[i] = dp[i-1] + dp[i-2].' },
-      { stepNo: '04', title: 'Return Result', description: 'Return dp[n] as the total distinct ways.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'condition', text: 'IF n <= 2:', explanation: 'Direct base case check for small staircases.' },
@@ -565,19 +435,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'House Robber',
-      inputFormat: 'nums = Array[int] (house stash values)',
-      inputVisual: 'nums = [ 2, 7, 9, 3, 1 ]',
-      kValue: 'Stash Values',
-      goal: 'Maximize total loot without robbing two adjacent houses.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Rolling Vars', description: 'Set rob1 = 0 and rob2 = 0 to track previous maximums.' },
-      { stepNo: '02', title: 'Iterate Houses', description: 'For each house num in nums, compute max loot.' },
-      { stepNo: '03', title: 'Compute Transition', description: 'temp = MAX(rob2, rob1 + num).' },
-      { stepNo: '04', title: 'Update Rolling Vars', description: 'Shift rob1 = rob2 and rob2 = temp.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize rob1 = 0, rob2 = 0.', explanation: 'rob1 tracks max loot 2 houses back; rob2 tracks max loot 1 house back.' },
@@ -612,19 +469,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Subsets',
-      inputFormat: 'nums = Array[int] (unique elements)',
-      inputVisual: 'nums = [ 1, 2, 3 ]',
-      kValue: 'Unique Elements',
-      goal: 'Generate all 2^N possible unique subsets (Power Set).',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Result', description: 'Create empty result list.' },
-      { stepNo: '02', title: 'Base Case Check', description: 'When index == nums.length, append copy of path to result.' },
-      { stepNo: '03', title: 'Include Choice', description: 'Push nums[index] to path and recurse.' },
-      { stepNo: '04', title: 'Exclude Choice', description: 'Pop nums[index] from path and recurse.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize result = [].', explanation: 'Create accumulator for all generated subsets.' },
@@ -662,19 +506,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Course Schedule',
-      inputFormat: 'numCourses = int, prerequisites = [[a, b], ...]',
-      inputVisual: 'numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]',
-      kValue: 'Directed Graph',
-      goal: 'Determine if all courses can be finished without circular dependencies.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Build Graph', description: 'Create adjacency list adj and inDegree array.' },
-      { stepNo: '02', title: 'Enqueue Zero In-Degree Nodes', description: 'Push all courses with inDegree == 0 into queue.' },
-      { stepNo: '03', title: 'Process Queue', description: 'Dequeue node, increment processedCount, decrement neighbor in-degrees.' },
-      { stepNo: '04', title: 'Verify Completion', description: 'Return true if processedCount == numCourses.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Build adj list and inDegree array from prerequisites.', explanation: 'Map directed edges (b -> a) and compute in-degrees for each course.' },
@@ -715,19 +546,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Number of Connected Components in an Undirected Graph',
-      inputFormat: 'n = int (nodes), edges = [[u, v], ...]',
-      inputVisual: 'n = 5, edges = [[0,1],[1,2],[3,4]]',
-      kValue: 'Undirected Graph',
-      goal: 'Count distinct connected subgraphs using Disjoint Set Union.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize DSU', description: 'Set parent[i] = i for all nodes 0..n-1 and components = n.' },
-      { stepNo: '02', title: 'Define Find with Path Compression', description: 'Recursively trace root and flatten tree structure.' },
-      { stepNo: '03', title: 'Process Edges', description: 'Find root U and root V for each edge [u, v].' },
-      { stepNo: '04', title: 'Union Roots', description: 'If rootU != rootV, set parent[rootU] = rootV and decrement components.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize parent array parent[i] = i for i=0..n-1, components = n.', explanation: 'Start with n disconnected component trees.' },
@@ -765,19 +583,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Kth Smallest Element in a BST',
-      inputFormat: 'root = TreeNode, k = int',
-      inputVisual: 'Tree = [5, 3, 6, 2, 4, 1], k = 3',
-      kValue: 'Rank K = 3',
-      goal: 'Find the k-th smallest key using in-order traversal (Left-Root-Right).',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Traversal Stack', description: 'Create empty stack, set curr = root and count = 0.' },
-      { stepNo: '02', title: 'Push Left Branch', description: 'Push all left subchild nodes onto stack.' },
-      { stepNo: '03', title: 'Pop & Increment Count', description: 'Pop top node, increment count by 1.' },
-      { stepNo: '04', title: 'Check K Rank', description: 'If count == k, return curr.val. Else move curr to curr.right.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize stack = [], curr = root, count = 0.', explanation: 'Stack simulates recursion stack for iterative inorder traversal.' },
@@ -814,19 +619,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Top K Frequent Elements',
-      inputFormat: 'nums = Array[int], k = int',
-      inputVisual: 'nums = [ 1, 1, 1, 2, 2, 3 ], k = 2',
-      kValue: 'Target K = 2',
-      goal: 'Find the k most frequent numbers using frequency counting and a bounded min-heap.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Build Frequency Map', description: 'Count frequency of each element in nums array.' },
-      { stepNo: '02', title: 'Initialize Min-Heap', description: 'Create empty min-heap for (frequency, element) pairs.' },
-      { stepNo: '03', title: 'Maintain Bounded Heap', description: 'Push pairs; if size > k, pop min element.' },
-      { stepNo: '04', title: 'Extract Result', description: 'Return elements remaining in min-heap.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Build freqMap from nums array.', explanation: 'Map each unique number to its occurrence count in O(N) time.' },
@@ -861,19 +653,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Product of Array Except Self',
-      inputFormat: 'nums = Array[int]',
-      inputVisual: 'nums = [ 1, 2, 3, 4 ]',
-      kValue: 'Array Elements',
-      goal: 'Compute array where output[i] equals product of all elements except nums[i] in O(N) without division.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Answer Array', description: 'Create ans array of size N filled with 1s.' },
-      { stepNo: '02', title: 'Left Prefix Pass', description: 'Multiply left products into ans array from i=0 to N-1.' },
-      { stepNo: '03', title: 'Right Suffix Pass', description: 'Multiply right products into ans array from i=N-1 down to 0.' },
-      { stepNo: '04', title: 'Return Output', description: 'Return ans array.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize ans array of size N filled with 1.', explanation: 'Ans stores running prefix and suffix product results.' },
@@ -911,18 +690,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Single Number',
-      inputFormat: 'nums = Array[int]',
-      inputVisual: 'nums = [ 4, 1, 2, 1, 2 ]',
-      kValue: 'Paired Integers',
-      goal: 'Find unique non-repeated element in linear time O(N) and O(1) extra space.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Initialize Accumulator', description: 'Set acc = 0.' },
-      { stepNo: '02', title: 'Iterate & XOR', description: 'For each num in nums, compute acc = acc XOR num.' },
-      { stepNo: '03', title: 'Return Unique Number', description: 'Return acc (duplicate pairs cancel out).' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'instruction', text: 'Initialize acc = 0.', explanation: '0 is identity element for XOR operation (A ^ 0 = A).' },
@@ -954,19 +721,6 @@ export const MOCK_PSEUDOCODES = {
       title: 'Turn the chosen algorithm into clear, step-by-step logic.',
       subtitle: 'Before writing code, describe exactly what the algorithm needs to do.',
     },
-    context: {
-      title: 'Word Search',
-      inputFormat: 'board = 2D Matrix[char], word = string',
-      inputVisual: 'board = [ ["A","B","C","E"], ["S","F","C","S"], ["A","D","E","E"] ], word = "ABCCED"',
-      kValue: '2D Grid & Word String',
-      goal: 'Determine if word exists in grid by traversing adjacent cells without reusing any cell in a single path.',
-    },
-    stepOverview: [
-      { stepNo: '01', title: 'Scan Grid Cells', description: 'Loop row r and col c across board.' },
-      { stepNo: '02', title: 'Start DFS Search', description: 'If board[r][c] matches word[0], run dfs(r, c, 0).' },
-      { stepNo: '03', title: 'DFS Base & Boundary Checks', description: 'Return true if idx == word.length; return false if out of bounds or character mismatch.' },
-      { stepNo: '04', title: 'Mark Visited & Backtrack', description: 'Temporarily mark cell with "#", explore 4 neighbors, restore cell value.' },
-    ],
     lines: [
       { line: 1, type: 'start', text: 'START', explanation: 'Execution begins.' },
       { line: 2, type: 'loop', text: 'FOR r FROM 0 TO ROWS - 1 DO:', explanation: 'Scan every row in grid.' },
@@ -1010,7 +764,7 @@ MOCK_PSEUDOCODES['kth-largest-element-in-an-array'] = MOCK_PSEUDOCODES['kth-larg
  */
 export function getPseudocodeByProblemAndApproach(problemId, approachId) {
   if (!problemId) return MOCK_PSEUDOCODES['binary-tree-inorder'] || kthLargestPseudocode;
-  
+
   if (MOCK_PSEUDOCODES[problemId]) {
     return MOCK_PSEUDOCODES[problemId];
   }

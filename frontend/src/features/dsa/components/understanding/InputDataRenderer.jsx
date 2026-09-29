@@ -1,14 +1,10 @@
 import React from 'react';
 import { ArrowRight, Grid3X3, GitBranch, Layers, Network } from 'lucide-react';
 
-/**
- * Safely parses tree from either node list objects or LeetCode level-order array (e.g. [1, null, 2, 3]).
- */
 function parseBinaryTree(inputData) {
   if (!inputData) return null;
   const { value } = inputData;
 
-  // Option A: Explicit node list [{ id: 1, val: 1, left: null, right: 2 }, ...]
   const nodeList = Array.isArray(inputData?.treeNodes)
     ? inputData.treeNodes
     : Array.isArray(value?.treeNodes)
@@ -24,6 +20,7 @@ function parseBinaryTree(inputData) {
     nodeList.forEach((n) => {
       nodeMap[n.id ?? n.val] = { val: n.val, left: null, right: null };
     });
+    
     let root = null;
     nodeList.forEach((n) => {
       const curr = nodeMap[n.id ?? n.val];

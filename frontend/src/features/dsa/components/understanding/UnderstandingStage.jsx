@@ -279,49 +279,11 @@ export function UnderstandingStage({ problemData, onCompleteStage, onNextStage, 
         </div>
       </section>
 
-      {/* COMPLETION CHECKPOINT */}
+      {/* COMPLETION ACTIONS */}
       <section
-        aria-labelledby="understand-checkpoint-heading"
-        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 space-y-5"
+        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80"
       >
-        <div className="space-y-1" aria-live="polite">
-          <span className="text-[11px] font-mono font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase block">
-            STAGE CHECKPOINT
-          </span>
-          <h2 id="understand-checkpoint-heading" className="text-xl font-bold text-slate-900 dark:text-white">
-            {understood ? '✓ UNDERSTOOD' : 'CHECK YOUR UNDERSTANDING'}
-          </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-            {understood
-              ? 'You are ready to connect this problem to a familiar real-world idea.'
-              : 'Before moving on, make sure you can explain:'}
-          </p>
-        </div>
-
-        {!understood && (
-          <div className="space-y-2 text-xs font-mono text-slate-700 dark:text-slate-300 pl-3 border-l-2 border-blue-500/40 py-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What the problem gives you</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What it asks you to find</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What the output represents</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>Why the examples satisfy the requirement</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
             aria-pressed={understood}

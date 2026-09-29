@@ -3,11 +3,8 @@ import { FileText, Check, ArrowRight } from 'lucide-react';
 import { getPatternByProblemId } from '../../data/pattern';
 import PatternStructure from './PatternStructure';
 import PatternSignals from './PatternSignals';
-import PatternAbstraction from './PatternAbstraction';
 import PatternFingerprint from './PatternFingerprint';
 import PatternSolutionFamilies from './PatternSolutionFamilies';
-import PatternRecognitionCheck from './PatternRecognitionCheck';
-import PatternTakeaway from './PatternTakeaway';
 
 /**
  * STAGE 04 — PATTERN
@@ -55,19 +52,14 @@ export function PatternStage({
     pattern,
     fingerprint,
     solutionFamilies,
-    recognitionCheck,
-    takeaway,
   } = patternData;
 
   // Dynamically compute section numbers to ensure unbroken numerical ordering
   let sectionCounter = 1;
   const structureNo = structure ? String(sectionCounter++).padStart(2, '0') : null;
   const signalsNo = signals ? String(sectionCounter++).padStart(2, '0') : null;
-  const abstractionNo = abstraction ? String(sectionCounter++).padStart(2, '0') : null;
   const fingerprintNo = (pattern && fingerprint) ? String(sectionCounter++).padStart(2, '0') : null;
   const solutionFamiliesNo = solutionFamilies ? String(sectionCounter++).padStart(2, '0') : null;
-  const recognitionCheckNo = recognitionCheck ? String(sectionCounter++).padStart(2, '0') : null;
-  const takeawayNo = takeaway ? String(sectionCounter++).padStart(2, '0') : null;
 
   return (
     <div className="space-y-10 sm:space-y-12 font-sans w-full pb-12">
@@ -114,9 +106,9 @@ export function PatternStage({
         </p>
       </header>
 
-      {/* SECTION 01 — LOOK AT THE STRUCTURE */}
+      {/* SECTION 01 — LOOK AT THE STRUCTURE & ABSTRACTION */}
       {structure && (
-        <PatternStructure structure={structure} sectionNo={structureNo} />
+        <PatternStructure structure={structure} abstraction={abstraction} sectionNo={structureNo} />
       )}
 
       {/* SECTION 02 — WHAT STANDS OUT? (SIGNALS) */}
@@ -124,12 +116,7 @@ export function PatternStage({
         <PatternSignals signals={signals} sectionNo={signalsNo} />
       )}
 
-      {/* SECTION 03 — ABSTRACT THE PROBLEM */}
-      {abstraction && (
-        <PatternAbstraction abstraction={abstraction} sectionNo={abstractionNo} />
-      )}
-
-      {/* SECTION 04 — PATTERN RECOGNITION & FINGERPRINT */}
+      {/* SECTION 03 — PATTERN RECOGNITION & FINGERPRINT */}
       {pattern && fingerprint && (
         <PatternFingerprint
           pattern={pattern}
@@ -138,7 +125,7 @@ export function PatternStage({
         />
       )}
 
-      {/* SECTION 05 — CONNECT THE PATTERN TO SOLUTION FAMILIES */}
+      {/* SECTION 04 — CONNECT THE PATTERN TO SOLUTION FAMILIES */}
       {solutionFamilies && (
         <PatternSolutionFamilies
           patternName={pattern?.name}
@@ -147,66 +134,11 @@ export function PatternStage({
         />
       )}
 
-      {/* SECTION 06 — RECOGNITION CHECKPOINT */}
-      {recognitionCheck && (
-        <PatternRecognitionCheck
-          recognitionCheck={recognitionCheck}
-          sectionNo={recognitionCheckNo}
-        />
-      )}
-
-      {/* SECTION 08 — CONNECT BACK TO PROBLEM & FINAL TAKEAWAY */}
-      {takeaway && (
-        <PatternTakeaway
-          takeaway={takeaway}
-          patternName={pattern?.name}
-          sectionNo={takeawayNo}
-        />
-      )}
-
-      {/* COMPLETION CHECKPOINT */}
+      {/* COMPLETION ACTIONS */}
       <section
-        aria-labelledby="pattern-checkpoint-heading"
-        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 space-y-5"
+        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80"
       >
-        <div className="space-y-1" aria-live="polite">
-          <span className="text-[11px] font-mono font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase block">
-            STAGE CHECKPOINT
-          </span>
-          <h2 id="pattern-checkpoint-heading" className="text-xl font-bold text-slate-900 dark:text-white">
-            {understood ? '04 · PATTERN RECOGNIZED ✓' : 'CHECK YOUR PATTERN RECOGNITION'}
-          </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 font-medium">
-            {understood
-              ? 'The next stage will determine which approach to use and how it works.'
-              : 'Before moving on to Stage 05 (Algorithm), make sure you can explain:'}
-          </p>
-        </div>
-
-        {!understood && (
-          <div className="space-y-2 text-xs font-mono text-slate-700 dark:text-slate-300">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>The structural shape of the problem</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What structural signals identify it</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>What solution families are relevant</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-500 shrink-0" aria-hidden="true" />
-                <span>Why Stage 05 (Algorithm) decides the exact approach</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
             aria-pressed={understood}

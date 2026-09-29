@@ -6,5 +6,4 @@ export * from './StatePanel';
 export * from './ExecutionTrace';
 export * from './CurrentResult';
 export * from './StepExplanation';
-export * from './ExecutionSummary';
 export * from './DryRunCheckpoint';

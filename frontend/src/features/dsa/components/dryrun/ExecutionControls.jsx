@@ -11,7 +11,6 @@ export function ExecutionControls({
   onNext,
   onPrev,
   onReset,
-  sectionNo = '03',
   isFullscreen = false,
   onToggleFullscreen,
 }) {
@@ -77,11 +76,9 @@ export function ExecutionControls({
 
       <div className="p-3 sm:p-3.5 rounded-2xl bg-[#070A13] border border-slate-800 text-white font-sans space-y-2 shadow-lg">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* Left Step Counter Badge */}
+          {/* Left Control Panel Badge */}
           <div className="flex items-center gap-2 font-mono text-xs font-bold text-blue-400 uppercase tracking-[0.08em]">
-            <span>{sectionNo}</span>
-            <span className="text-slate-500">•</span>
-            <span>EXECUTION STEP CONTROLS</span>
+            <span>EXECUTION CONTROLS</span>
             <span className="ml-1 px-2.5 py-0.5 rounded-lg bg-blue-600/30 border border-blue-500/50 text-blue-300 font-extrabold text-xs">
               Step {currentStep + 1} / {totalSteps}
             </span>

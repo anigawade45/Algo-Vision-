@@ -122,8 +122,12 @@ function renderPatternVisual(inputLabel, inputVisual) {
   );
 }
 
-export function PatternStructure({ structure, sectionNo = '01' }) {
+export function PatternStructure({ structure, abstraction: propAbstraction, sectionNo = '01' }) {
   if (!structure) return null;
+
+  const abstraction = propAbstraction || structure.abstraction;
+  const abstractFormula = abstraction?.abstractFormula;
+  const statement = abstraction?.statement;
 
   return (
     <section className="space-y-3.5 font-sans" aria-labelledby="pattern-structure-heading">
@@ -166,7 +170,7 @@ export function PatternStructure({ structure, sectionNo = '01' }) {
         {/* Structural Relationship Flow */}
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {structure.coreRelationship.map((rel, idx) => (
+            {structure.coreRelationship?.map((rel, idx) => (
               <div
                 key={idx}
                 className="space-y-1 sm:pl-3 sm:border-l border-slate-200 dark:border-slate-800 first:pl-0 first:border-l-0"
@@ -186,6 +190,39 @@ export function PatternStructure({ structure, sectionNo = '01' }) {
             ))}
           </div>
         </div>
+
+        {/* Abstract Structural Formula & Insight (Merged Step 03) */}
+        {abstractFormula && (
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" aria-hidden="true" />
+              <span className="text-xs sm:text-[13px] font-mono font-extrabold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+                GENERAL STRUCTURAL FORMULA
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3.5 font-mono font-extrabold text-xs sm:text-sm py-1">
+              <span className="px-3 py-1.5 rounded-lg bg-blue-500/10 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 shadow-xs">
+                {abstractFormula.varA}
+              </span>
+              <span className="text-blue-500 font-bold">{abstractFormula.operator}</span>
+              <span className="px-3 py-1.5 rounded-lg bg-blue-500/10 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 shadow-xs">
+                {abstractFormula.varB}
+              </span>
+              <span className="text-blue-500 font-bold">{abstractFormula.equals}</span>
+              <span className="px-3 py-1.5 rounded-lg bg-emerald-500/10 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900/60 text-emerald-700 dark:text-emerald-300 shadow-xs">
+                {abstractFormula.result}
+              </span>
+            </div>
+
+            {statement && (
+              <div className="pl-3.5 border-l-2 border-amber-500 py-1 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
+                <span className="font-bold text-amber-600 dark:text-amber-400 mr-1.5">💡 Insight:</span>
+                <span>{statement}</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );

@@ -4,7 +4,6 @@ import ExecutionInput from './ExecutionInput';
 import InitialState from './InitialState';
 import ExecutionControls from './ExecutionControls';
 import StepExplanation from './StepExplanation';
-import ExecutionSummary from './ExecutionSummary';
 import DryRunCheckpoint from './DryRunCheckpoint';
 import ExecutionTableView from './ExecutionTableView';
 import { Minimize2, Maximize2 } from 'lucide-react';
@@ -66,7 +65,6 @@ export function DryRunStage({
     approachName,
     initialState,
     steps,
-    summary,
   } = dryRunData;
 
   const safeStepIdx = Math.min(Math.max(0, currentStep), steps.length - 1);
@@ -148,7 +146,6 @@ export function DryRunStage({
               onNext={handleNext}
               onPrev={handlePrev}
               onReset={handleReset}
-              sectionNo="03"
               isFullscreen={true}
               onToggleFullscreen={() => setIsFullscreen(false)}
             />
@@ -157,14 +154,14 @@ export function DryRunStage({
               steps={steps}
               currentStep={safeStepIdx}
               onSelectStep={(idx) => setCurrentStep(idx)}
-              sectionNo="04"
+              sectionNo="03"
             />
 
             {currentStepData?.explanation && (
               <StepExplanation
                 explanation={currentStepData.explanation}
                 stepNo={currentStepData.stepNo}
-                sectionNo="05"
+                sectionNo="04"
               />
             )}
           </div>
@@ -246,7 +243,6 @@ export function DryRunStage({
         onNext={handleNext}
         onPrev={handlePrev}
         onReset={handleReset}
-        sectionNo={getNextSectionNo()}
         isFullscreen={false}
         onToggleFullscreen={() => setIsFullscreen(true)}
       />
@@ -268,23 +264,11 @@ export function DryRunStage({
         />
       )}
 
-      {/* POST EXECUTION SUMMARY & CHECKPOINT HANDOFF */}
-      {summary && (
-        <ExecutionSummary
-          summary={summary}
-          sectionNo={getNextSectionNo()}
-        />
-      )}
-
-      <div className="h-px bg-slate-200/80 dark:bg-slate-800/80 my-4" />
-
-      {/* SECTION — DRY RUN CHECKPOINT */}
+      {/* COMPLETION ACTIONS */}
       <DryRunCheckpoint
         understood={understood}
         onCheckpoint={handleCheckpoint}
         onNextStage={onNextStage}
-        sectionNo={getNextSectionNo()}
-        stageNo={stageNo}
       />
     </div>
   );
