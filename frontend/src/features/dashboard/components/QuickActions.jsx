@@ -1,15 +1,13 @@
 import React from 'react';
-import { Bot, Sparkles, Target, ArrowRight, Zap, Play } from 'lucide-react';
+import { Bot, Sparkles, ArrowRight, Zap } from 'lucide-react';
 import { quickActions } from '../data/mockDashboardData';
 
-export function QuickActions({ onOpenAiMentor, onOpenVisualizer, onOpenQuiz }) {
+export function QuickActions({ onOpenAiMentor, onOpenVisualizer }) {
   const handleAction = (type) => {
     if (type === 'open-ai') {
       onOpenAiMentor && onOpenAiMentor();
     } else if (type === 'open-visualizer') {
       onOpenVisualizer && onOpenVisualizer('dsa');
-    } else if (type === 'open-quiz') {
-      onOpenQuiz && onOpenQuiz();
     }
   };
 
@@ -19,8 +17,6 @@ export function QuickActions({ onOpenAiMentor, onOpenVisualizer, onOpenQuiz }) {
         return <Bot className="w-5 h-5" />;
       case 'Sparkles':
         return <Sparkles className="w-5 h-5" />;
-      case 'Target':
-        return <Target className="w-5 h-5" />;
       default:
         return <Zap className="w-5 h-5" />;
     }
@@ -35,7 +31,7 @@ export function QuickActions({ onOpenAiMentor, onOpenVisualizer, onOpenQuiz }) {
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {quickActions.map((action) => (
           <button
             key={action.id}

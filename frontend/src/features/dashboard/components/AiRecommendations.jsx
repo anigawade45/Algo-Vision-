@@ -47,7 +47,7 @@ export function AiRecommendations({ onAction }) {
             </span>
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Personalized suggestions generated based on your quiz performance and incomplete simulations.
+            Personalized suggestions generated based on your learning activity and interactive simulations.
           </p>
         </div>
       </div>

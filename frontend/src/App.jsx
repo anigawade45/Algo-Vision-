@@ -22,6 +22,12 @@ import SavedProblems from '@/features/dsa/pages/SavedProblems';
 import CpuScheduling from '@/features/os/pages/CpuScheduling';
 import OsHome from '@/features/os/pages/OsHome';
 
+import CnHome from '@/features/cn/pages/CnHome';
+import TcpHandshake from '@/features/cn/pages/TcpHandshake';
+import OsiLayers from '@/features/cn/pages/OsiLayers';
+import IpSubnetting from '@/features/cn/pages/IpSubnetting';
+import RoutingProtocols from '@/features/cn/pages/RoutingProtocols';
+
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
   return (
@@ -222,9 +228,60 @@ export default function App() {
               element={<Navigate to="/modules/:moduleId" replace />}
             />
 
+            {/* COMPUTER NETWORKS MODULE ROUTES */}
+            <Route
+              path="/cn"
+              element={
+                <ProtectedRoute>
+                  <CnHome theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/tcp-handshake"
+              element={
+                <ProtectedRoute>
+                  <TcpHandshake theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/osi-layers"
+              element={
+                <ProtectedRoute>
+                  <OsiLayers theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/ip-subnetting"
+              element={
+                <ProtectedRoute>
+                  <IpSubnetting theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/routing-protocols"
+              element={
+                <ProtectedRoute>
+                  <RoutingProtocols theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
             <Route
               path="/networks"
-              element={<Navigate to="/modules/networks" replace />}
+              element={<Navigate to="/cn" replace />}
+            />
+
+            <Route
+              path="/modules/networks"
+              element={<Navigate to="/cn" replace />}
             />
 
             <Route
