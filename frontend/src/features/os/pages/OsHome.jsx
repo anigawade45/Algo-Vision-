@@ -1,60 +1,48 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Cpu, Terminal, LayoutDashboard, ArrowLeft, ArrowRight, Play, Layers, Clock, Lock, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Cpu, Terminal, LayoutDashboard, ArrowRight, Play, Layers, CheckCircle2 } from 'lucide-react';
 
-export default function OsHome({ theme, toggleTheme }) {
+export default function OsHome() {
   const osTopics = [
     {
       id: 'os-fundamentals',
       title: 'OS Fundamentals & Architecture',
       description: 'Explore OS goals, 5-layer system architecture, dual-mode execution (User vs Kernel), system calls, and boot process.',
-      author: 'Parvej',
-      status: 'Live & Ready',
-      isLive: true,
       path: '/os/fundamentals',
       badge: 'Core Track',
       badgeColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
     },
     {
+      id: 'process-management',
+      title: 'Process Management & PCB',
+      description: 'Program vs Process, Process Control Block (PCB) inspector, interactive 5-state transition diagram, fork/exec trees, context switching, and OS queues.',
+      path: '/os/process-management',
+      badge: 'Interactive Visualizer',
+      badgeColor: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+    },
+    {
       id: 'cpu-scheduling',
       title: 'CPU Scheduling Algorithms',
       description: 'Simulate FCFS, SJF, SRTF, Priority, and Round Robin process scheduling step-by-step with interactive Gantt charts.',
-      author: 'Parvej',
-      status: 'Live & Ready',
-      isLive: true,
       path: '/os/cpu-scheduling',
       badge: 'Interactive Simulator',
       badgeColor: 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
     },
     {
-      id: 'process-sync',
-      title: 'Process Synchronization',
-      description: 'Visualize Semaphores, Mutex locks, Dining Philosophers, and Producer-Consumer concurrency problems.',
-      author: 'Core Team',
-      status: 'In Development',
-      isLive: false,
-      badge: 'Coming Soon',
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700',
-    },
-    {
       id: 'deadlocks',
-      title: 'Deadlocks & Banker\'s Algorithm',
-      description: 'Analyze Resource Allocation Graphs (RAG) and run safety checks using Banker\'s avoidance algorithm.',
-      author: 'Core Team',
-      status: 'In Development',
-      isLive: false,
-      badge: 'Coming Soon',
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700',
+      title: 'Deadlocks & Resource Allocation Graph',
+      description: 'Analyze Resource Allocation Graphs (RAG), detect circular wait cycles, Coffman conditions, and simulate recovery.',
+      path: '/os/deadlocks',
+      badge: 'Interactive RAG Engine',
+      badgeColor: 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800',
     },
     {
-      id: 'memory-management',
-      title: 'Virtual Memory & Page Replacement',
-      description: 'Trace FIFO, LRU, and Optimal page replacement algorithms with page table translations and fault counters.',
-      author: 'Core Team',
-      status: 'In Development',
-      isLive: false,
-      badge: 'Coming Soon',
-      badgeColor: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700',
+      id: 'bankers-algorithm',
+      title: 'Banker\'s Avoidance Algorithm',
+      description: 'Matrix configurator, Need matrix calculator, Dijkstra\'s safety algorithm simulator, safe sequence generator, and resource request test bench.',
+      path: '/os/bankers-algorithm',
+      badge: 'Safety Simulator',
+      badgeColor: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     },
   ];
 
@@ -115,16 +103,14 @@ export default function OsHome({ theme, toggleTheme }) {
             </h1>
 
             <p className="text-cyan-100 text-sm sm:text-base leading-relaxed">
-              Explore process management, CPU scheduling algorithms, memory virtualization, and synchronization primitives through interactive dry-run simulations.
+              Explore OS fundamentals, process management, CPU scheduling algorithms, deadlock graphs, and Banker's avoidance algorithm through interactive dry-run simulations.
             </p>
 
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-cyan-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-cyan-300" />
-                2 Active Modules
+                5 Interactive OS Modules
               </span>
-              <span>•</span>
-              <span>5 Total Learning Tracks</span>
             </div>
           </div>
         </div>
@@ -142,19 +128,12 @@ export default function OsHome({ theme, toggleTheme }) {
             {osTopics.map((topic) => (
               <div
                 key={topic.id}
-                className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-200 ${
-                  topic.isLive
-                    ? 'border-cyan-200 dark:border-cyan-800/80 hover:border-cyan-400 dark:hover:border-cyan-600 hover:shadow-lg'
-                    : 'border-slate-200/80 dark:border-slate-800/80 opacity-80'
-                }`}
+                className="rounded-3xl bg-white dark:bg-[#111827] border border-cyan-200 dark:border-cyan-800/80 hover:border-cyan-400 dark:hover:border-cyan-600 p-6 shadow-sm hover:shadow-lg flex flex-col justify-between space-y-5 transition-all duration-200"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${topic.badgeColor}`}>
                       {topic.badge}
-                    </span>
-                    <span className="text-xs font-mono text-slate-400">
-                      Module by {topic.author}
                     </span>
                   </div>
 
@@ -167,29 +146,15 @@ export default function OsHome({ theme, toggleTheme }) {
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-                    Status: <strong className={topic.isLive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400'}>{topic.status}</strong>
-                  </span>
-
-                  {topic.isLive ? (
-                    <Link
-                      to={topic.path}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 hover:scale-102 transition-all"
-                    >
-                      <Play className="w-3.5 h-3.5 fill-white" />
-                      <span>Launch Simulator</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  ) : (
-                    <button
-                      disabled
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-400 text-xs font-semibold cursor-not-allowed"
-                    >
-                      <Lock className="w-3.5 h-3.5" />
-                      <span>In Development</span>
-                    </button>
-                  )}
+                <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-end">
+                  <Link
+                    to={topic.path}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 hover:scale-102 transition-all"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <span>Launch Simulator</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               </div>
             ))}
