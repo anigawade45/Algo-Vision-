@@ -32,6 +32,7 @@ import { PseudocodeStage } from '../components/pseudocode';
 import { CodeStage } from '../components/code';
 import { DryRunStage } from '../components/dryrun';
 import { PracticeStage } from '../components/practice';
+import { ComplexityStage } from '../components/complexity';
 
 import { MOCK_PROBLEMS, getProblemById } from '../data/mockProblems';
 
@@ -45,7 +46,7 @@ const WORKSPACE_STAGES = [
   { id: 'code', stepNo: '07', name: 'Code', icon: Code2, isBuilt: true },
   { id: 'dryrun', stepNo: '08', name: 'Dry Run', icon: PlayCircle, isBuilt: true },
   { id: 'visualize', stepNo: '09', name: 'Visualize', icon: Eye, isBuilt: false },
-  { id: 'complexity', stepNo: '10', name: 'Complexity', icon: Gauge, isBuilt: false },
+  { id: 'complexity', stepNo: '10', name: 'Complexity', icon: Gauge, isBuilt: true },
   { id: 'practice', stepNo: '11', name: 'Practice', icon: CheckCircle2, isBuilt: true },
 ];
 
@@ -447,6 +448,15 @@ export default function ProblemWorkspace({
               <DryRunStage
                 problem={problem}
                 selectedApproachId={selectedApproachId}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'complexity' && (
+              <ComplexityStage
+                problem={problem}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
