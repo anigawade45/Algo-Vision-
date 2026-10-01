@@ -20,6 +20,7 @@ import ProblemSubmit from '@/features/dsa/pages/ProblemSubmit';
 import ProblemWorkspace from '@/features/dsa/pages/ProblemWorkspace';
 import ProblemHistory from '@/features/dsa/pages/ProblemHistory';
 import SavedProblems from '@/features/dsa/pages/SavedProblems';
+import MyProblems from '@/features/dsa/pages/MyProblems';
 
 import CpuScheduling from '@/features/os/pages/CpuScheduling';
 import OsHome from '@/features/os/pages/OsHome';
@@ -176,6 +177,15 @@ export default function App() {
             <Route
               path="/dsa/submit"
               element={<Navigate to="/dsa/problem/new" replace />}
+            />
+
+            <Route
+              path="/dsa/my-problems"
+              element={
+                <ProtectedRoute>
+                  <MyProblems theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
             />
 
             <Route

@@ -1,0 +1,40 @@
+import apiClient from './apiClient';
+
+/**
+ * Fetch list of published DSA problems with optional query filters
+ */
+export const getProblems = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const url = query ? `/problems?${query}` : '/problems';
+  return await apiClient.get(url);
+};
+
+/**
+ * Fetch DSA problems created by the currently authenticated user
+ */
+export const getMyProblems = async () => {
+  return await apiClient.get('/problems/mine');
+};
+
+/**
+ * Fetch distinct DSA problem categories
+ */
+export const getProblemCategories = async () => {
+  return await apiClient.get('/problems/categories');
+};
+
+/**
+ * Fetch single DSA problem by ID or slug
+ */
+export const getProblemById = async (idOrSlug) => {
+  return await apiClient.get(`/problems/${idOrSlug}`);
+};
+
+export const getProblem = getProblemById;
+
+/**
+ * Create / upload a new DSA problem via form
+ */
+export const createProblem = async (problemData) => {
+  return await apiClient.post('/problems', problemData);
+};

@@ -13,6 +13,7 @@ import {
   Trash2,
   Layers,
 } from 'lucide-react';
+import { createProblem } from '@/api/dsa.api';
 
 const TWO_SUM_EXAMPLE = {
   title: 'Two Sum',
@@ -237,7 +238,7 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
     setApiError(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setTouched({
@@ -267,18 +268,31 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
 
     // Form payload with testCases array and formatted single fields
     const submissionPayload = {
-      ...formData,
-      testCases,
-      input: testCases.map((tc, idx) => `Pair ${idx + 1}:\n${tc.input}`).join('\n\n'),
-      output: testCases.map((tc, idx) => `Pair ${idx + 1}:\n${tc.output}`).join('\n\n'),
+      title: formData.title,
+      description: formData.description,
+      constraints: formData.constraints,
+      approach: formData.approach,
+      testCases: testCases.map((tc, idx) => ({
+        id: idx + 1,
+        inputRaw: tc.input,
+        outputRaw: tc.output,
+        input: tc.input,
+        output: tc.output,
+      })),
     };
 
-    setTimeout(() => {
+    try {
+      const res = await createProblem(submissionPayload);
       setIsSubmitting(false);
+      const createdProblem = res.data || res.problem || res;
       if (onAnalyzeSuccess) {
-        onAnalyzeSuccess(submissionPayload);
+        onAnalyzeSuccess(createdProblem);
       }
-    }, 1200);
+    } catch (err) {
+      console.error('Problem submission failed:', err);
+      setIsSubmitting(false);
+      setApiError(err.message || 'Failed to submit problem to backend. Please try again.');
+    }
   };
 
   return (

@@ -33,6 +33,7 @@ import { CodeStage } from '../components/code';
 import { DryRunStage } from '../components/dryrun';
 import { PracticeStage } from '../components/practice';
 import { ComplexityStage } from '../components/complexity';
+import { getProblems } from '@/api/dsa.api';
 
 import { MOCK_PROBLEMS, getProblemById } from '../data/mockProblems';
 
@@ -63,8 +64,25 @@ export default function ProblemWorkspace({
   const [completedStages, setCompletedStages] = useState({ problem: true });
   const [showSpecDrawer, setShowSpecDrawer] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
+  const [dbProblems, setDbProblems] = useState([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedProblemId, setSelectedProblemId] = useState(id || 'two-sum');
   const [selectedApproachId, setSelectedApproachId] = useState('minHeap');
+
+  const loadBackendProblems = async () => {
+    try {
+      const res = await getProblems();
+      if (res?.success && Array.isArray(res?.data?.problems) && res.data.problems.length > 0) {
+        setDbProblems(res.data.problems);
+      }
+    } catch (err) {
+      console.log('Using local fallback problems:', err.message);
+    }
+  };
+
+  useEffect(() => {
+    loadBackendProblems();
+  }, []);
 
   // Keep selectedProblemId synced when URL param id changes
   useEffect(() => {
@@ -80,6 +98,14 @@ export default function ProblemWorkspace({
     }
   };
 
+  const handleProblemCreated = (newProblem) => {
+    loadBackendProblems();
+    const newId = newProblem.problemId || newProblem.id;
+    if (newId) {
+      handleProblemChange(newId);
+    }
+  };
+
   // Handle ESC key to close problem spec modal
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -91,11 +117,12 @@ export default function ProblemWorkspace({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSpecDrawer]);
 
+  const allProblems = dbProblems.length > 0 ? dbProblems : MOCK_PROBLEMS;
   const activeProblemId = selectedProblemId || id || 'two-sum';
 
-  const problem = problemData && problemData.title && (problemData.id === activeProblemId || !id)
+  const problem = (problemData && problemData.title && (problemData.id === activeProblemId || !id))
     ? problemData
-    : getProblemById(activeProblemId);
+    : (dbProblems.find((p) => p.problemId === activeProblemId || p.id === activeProblemId) || getProblemById(activeProblemId));
 
   const activeStage = WORKSPACE_STAGES.find((s) => s.id === currentStageId) || WORKSPACE_STAGES[1];
   const activeStageIdx = WORKSPACE_STAGES.findIndex((s) => s.id === currentStageId);
@@ -192,24 +219,7 @@ export default function ProblemWorkspace({
           {/* Active Problem Summary Card & Selector inside Sidebar */}
           {isSidebarExpanded && (
             <div className="p-4 border-b border-slate-100 dark:border-[#162032] space-y-2.5">
-              <label htmlFor="problem-selector-dropdown" className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-semibold block">
-                SELECT TEST PROBLEM ({MOCK_PROBLEMS.length} DATA TYPES)
-              </label>
-
-              <select
-                id="problem-selector-dropdown"
-                value={selectedProblemId}
-                onChange={(e) => handleProblemChange(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-lg p-2 text-slate-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {MOCK_PROBLEMS.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.title}
-                  </option>
-                ))}
-              </select>
-
-              <div className="space-y-1 pt-1">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
                   <span>Progress</span>
                   <span className="font-bold text-blue-600 dark:text-blue-400">{completedCount} / 11</span>
@@ -587,7 +597,6 @@ export default function ProblemWorkspace({
           </div>
         </div>
       )}
-
     </div>
   );
 }
