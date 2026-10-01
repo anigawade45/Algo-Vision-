@@ -44,6 +44,14 @@ export default function OsHome() {
       badge: 'Safety Simulator',
       badgeColor: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     },
+    {
+      id: 'process-synchronization',
+      title: 'Process Synchronization',
+      description: 'Race condition simulator, critical section criteria, Mutex locks, Binary & Counting Semaphores, Bounded Buffer Producer-Consumer, and Readers-Writers database.',
+      path: '/os/process-synchronization',
+      badge: 'Concurrency Engine',
+      badgeColor: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
+    },
   ];
 
   return (
