@@ -180,6 +180,53 @@ const getCurrentUser = async (userId) => {
   return user;
 };
 
+/**
+ * Update user profile (name, etc.)
+ */
+const updateProfile = async (userId, { name }) => {
+  if (!name || !name.trim()) {
+    throw new AppError('Name cannot be empty', 400);
+  }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  user.name = name.trim();
+  await user.save();
+
+  return user;
+};
+
+/**
+ * Change user password
+ */
+const changePassword = async (userId, { currentPassword, newPassword }) => {
+  if (!currentPassword || !newPassword) {
+    throw new AppError('Both current password and new password are required', 400);
+  }
+
+  if (newPassword.length < 6) {
+    throw new AppError('New password must be at least 6 characters long', 400);
+  }
+
+  const user = await User.findById(userId).select('+password');
+  if (!user) {
+    throw new AppError('User not found', 404);
+  }
+
+  const isMatch = await user.comparePassword(currentPassword);
+  if (!isMatch) {
+    throw new AppError('Current password is incorrect', 400);
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  return { success: true, message: 'Password updated successfully' };
+};
+
 module.exports = {
   AppError,
   registerUser,
@@ -187,4 +234,6 @@ module.exports = {
   resendVerificationEmail,
   loginUser,
   getCurrentUser,
+  updateProfile,
+  changePassword,
 };

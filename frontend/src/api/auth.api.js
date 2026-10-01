@@ -41,3 +41,17 @@ export const logoutUser = async () => {
 export const getCurrentUser = async () => {
   return await apiClient.get('/auth/me');
 };
+
+/**
+ * Update authenticated user profile (name, etc.)
+ */
+export const updateProfile = async ({ name }) => {
+  return await apiClient.put('/auth/profile', { name });
+};
+
+/**
+ * Change authenticated user password
+ */
+export const changePassword = async ({ currentPassword, newPassword }) => {
+  return await apiClient.put('/auth/change-password', { currentPassword, newPassword });
+};

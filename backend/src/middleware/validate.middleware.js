@@ -56,8 +56,38 @@ const validateLogin = [
   handleValidationErrors,
 ];
 
+/**
+ * Validation rules for profile update
+ */
+const validateUpdateProfile = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Name cannot be empty')
+    .isLength({ min: 2 })
+    .withMessage('Name must be at least 2 characters long'),
+  handleValidationErrors,
+];
+
+/**
+ * Validation rules for password change
+ */
+const validateChangePassword = [
+  body('currentPassword')
+    .notEmpty()
+    .withMessage('Current password is required'),
+  body('newPassword')
+    .notEmpty()
+    .withMessage('New password is required')
+    .isLength({ min: 6 })
+    .withMessage('New password must be at least 6 characters long'),
+  handleValidationErrors,
+];
+
 module.exports = {
   validateRegister,
   validateLogin,
+  validateUpdateProfile,
+  validateChangePassword,
   handleValidationErrors,
 };

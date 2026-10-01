@@ -101,6 +101,11 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // Update local user state
+  const updateUser = (updatedFields) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedFields } : null));
+  };
+
   const value = {
     user,
     loading,
@@ -111,6 +116,7 @@ export function AuthProvider({ children }) {
     resendVerificationLink,
     logout,
     refreshUser: checkAuth,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

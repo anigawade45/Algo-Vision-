@@ -400,8 +400,17 @@ export default function App() {
             />
 
             <Route
+              path="/profile/settings"
+              element={
+                <ProtectedRoute>
+                  <DashboardPage theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
               path="/settings"
-              element={<Navigate to="/dashboard?tab=settings" replace />}
+              element={<Navigate to="/profile/settings" replace />}
             />
 
             {/* UNKNOWN / 404 CATCH-ALL ROUTE */}

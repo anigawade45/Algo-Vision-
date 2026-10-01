@@ -114,6 +114,46 @@ const getMe = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Update user profile (name, etc.)
+ * @route   PUT /api/auth/profile
+ * @access  Private
+ */
+const updateProfile = async (req, res, next) => {
+  try {
+    const user = await authService.updateProfile(req.user.id, req.body);
+    const userObj = user.toJSON ? user.toJSON() : { ...user };
+
+    const safeUser = {
+      id: userObj._id || userObj.id,
+      name: userObj.name,
+      email: userObj.email,
+      avatar: userObj.avatar ?? null,
+      isVerified: userObj.isVerified ?? false,
+      createdAt: userObj.createdAt,
+      updatedAt: userObj.updatedAt,
+    };
+
+    return successResponse(res, 200, 'Profile updated successfully', { user: safeUser });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Change user password
+ * @route   PUT /api/auth/change-password
+ * @access  Private
+ */
+const changePassword = async (req, res, next) => {
+  try {
+    const result = await authService.changePassword(req.user.id, req.body);
+    return successResponse(res, 200, result.message);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   verifyEmail,
@@ -121,4 +161,6 @@ module.exports = {
   login,
   logout,
   getMe,
+  updateProfile,
+  changePassword,
 };

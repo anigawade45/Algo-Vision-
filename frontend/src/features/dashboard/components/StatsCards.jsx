@@ -1,19 +1,57 @@
 import React from 'react';
-import { Clock, CheckCircle2, Trophy, Flame, TrendingUp, ArrowUpRight } from 'lucide-react';
-import { learningStats } from '../data/mockDashboardData';
+import { Clock, CheckCircle2, Code2, Flame } from 'lucide-react';
 
-const iconMap = {
-  Clock: Clock,
-  CheckCircle2: CheckCircle2,
-  Trophy: Trophy,
-  Flame: Flame,
-};
+export function StatsCards({ stats }) {
+  const currentStats = stats || {
+    problemsSolved: 0,
+    topicsCompleted: 59,
+    learningStreak: 14,
+    learningHours: 48.5,
+  };
 
-export function StatsCards() {
+  const statItems = [
+    {
+      id: 'problems',
+      label: 'Problems Solved',
+      value: currentStats.problemsSolved ?? 0,
+      unit: '',
+      icon: Code2,
+      color: 'text-indigo-600 dark:text-indigo-400',
+      bgLight: 'bg-indigo-50 dark:bg-indigo-950/40',
+    },
+    {
+      id: 'topics',
+      label: 'Topics Completed',
+      value: currentStats.topicsCompleted ?? 59,
+      unit: '',
+      icon: CheckCircle2,
+      color: 'text-emerald-600 dark:text-emerald-400',
+      bgLight: 'bg-emerald-50 dark:bg-emerald-950/40',
+    },
+    {
+      id: 'streak',
+      label: 'Learning Streak',
+      value: currentStats.learningStreak ?? 14,
+      unit: 'Days',
+      icon: Flame,
+      color: 'text-amber-600 dark:text-amber-400',
+      bgLight: 'bg-amber-50 dark:bg-amber-950/40',
+    },
+    {
+      id: 'hours',
+      label: 'Learning Hours',
+      value: currentStats.learningHours ?? 48.5,
+      unit: 'hrs',
+      icon: Clock,
+      color: 'text-blue-600 dark:text-blue-400',
+      bgLight: 'bg-blue-50 dark:bg-blue-950/40',
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-sans">
-      {learningStats.map((stat) => {
-        const Icon = iconMap[stat.icon] || Clock;
+      {statItems.map((stat) => {
+        const Icon = stat.icon;
 
         return (
           <div
@@ -40,22 +78,6 @@ export function StatsCards() {
                   {stat.unit}
                 </span>
               )}
-            </div>
-
-            <div className="mt-2.5 flex items-center gap-1.5 text-xs">
-              <span
-                className={`inline-flex items-center gap-0.5 font-semibold text-[11px] px-1.5 py-0.2 rounded-md ${
-                  stat.trend === 'up'
-                    ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40'
-                    : 'bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/40'
-                }`}
-              >
-                {stat.trend === 'up' && <ArrowUpRight className="w-3 h-3" />}
-                {stat.delta}
-              </span>
-              <span className="text-slate-500 dark:text-slate-400 truncate text-[11.5px]">
-                {stat.subtext}
-              </span>
             </div>
           </div>
         );

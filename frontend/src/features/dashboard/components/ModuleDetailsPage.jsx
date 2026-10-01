@@ -30,6 +30,9 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
   const navigate = useNavigate();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebar_collapsed') === 'true';
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [isVisualizerOpen, setIsVisualizerOpen] = useState(false);
@@ -38,6 +41,14 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [moduleId]);
+
+  const handleToggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem('sidebar_collapsed', String(next));
+      return next;
+    });
+  };
 
   const currentModule =
     coreModules.find((m) => m.id === moduleId) || coreModules[0];
@@ -71,17 +82,23 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
 
   return (
     <div className="min-h-screen w-full bg-[#FAFAFA] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 flex transition-colors duration-200 font-sans">
-      {/* 1. Left Fixed Sidebar */}
+      {/* 1. Left Sidebar */}
       <Sidebar
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={handleToggleSidebar}
         onOpenAiMentor={() => setIsAiMentorOpen(true)}
         onOpenVisualizer={() => setIsVisualizerOpen(true)}
         onOpenQuiz={() => setIsQuizOpen(true)}
       />
 
       {/* 2. Main Body Container */}
-      <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
+          isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         {/* Top Navbar Header */}
         <DashboardNavbar
           theme={theme}

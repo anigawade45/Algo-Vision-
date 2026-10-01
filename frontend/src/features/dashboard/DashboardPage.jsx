@@ -1,29 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation, Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { DashboardNavbar } from './components/DashboardNavbar';
 import { WelcomeBanner } from './components/WelcomeBanner';
 import { ContinueLearningCard } from './components/ContinueLearningCard';
 import { CoreModulesGrid } from './components/CoreModulesGrid';
 import { QuickActions } from './components/QuickActions';
-import { StatsCards } from './components/StatsCards';
-import { WeeklyActivityChart } from './components/WeeklyActivityChart';
-import { AiRecommendations } from './components/AiRecommendations';
+import { AccountSettingsPage } from './components/AccountSettingsPage';
 import { FloatingAiMentor } from './components/FloatingAiMentor';
 import { VisualizerModal } from './components/InteractiveModals';
 
 export default function DashboardPage({ theme, toggleTheme }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab');
+  const isSettingsPage =
+    location.pathname === '/profile/settings' ||
+    location.pathname === '/settings' ||
+    activeTab === 'settings';
+
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebar_collapsed') === 'true';
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [isVisualizerOpen, setIsVisualizerOpen] = useState(false);
   const [visualizerInitialModule, setVisualizerInitialModule] = useState('dsa');
 
-  // Sync theme with document class if not provided
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [location.pathname, activeTab]);
+
+  const handleToggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem('sidebar_collapsed', String(next));
+      return next;
+    });
+  };
 
   const handleOpenVisualizer = (moduleId = 'dsa') => {
     setVisualizerInitialModule(moduleId);
@@ -44,16 +61,22 @@ export default function DashboardPage({ theme, toggleTheme }) {
 
   return (
     <div className="min-h-screen w-full bg-[#FAFAFA] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 flex transition-colors duration-200 font-sans">
-      {/* 1. Left Fixed Sidebar */}
+      {/* 1. Left Sidebar */}
       <Sidebar
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={handleToggleSidebar}
         onOpenAiMentor={() => setIsAiMentorOpen(true)}
         onOpenVisualizer={handleOpenVisualizer}
       />
 
-      {/* 2. Main Body Container (Pushed right by sidebar width on desktop) */}
-      <div className="flex-1 lg:pl-72 flex flex-col min-w-0">
+      {/* 2. Main Body Container */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
+          isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+        }`}
+      >
         {/* Top Navbar Header */}
         <DashboardNavbar
           theme={theme}
@@ -76,46 +99,38 @@ export default function DashboardPage({ theme, toggleTheme }) {
 
         {/* Dashboard Main Content Area */}
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl w-full mx-auto space-y-8">
-          {/* Section 1: Welcome Banner */}
-          <WelcomeBanner onOpenAiMentor={() => setIsAiMentorOpen(true)} />
+          {isSettingsPage ? (
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+                <Link
+                  to="/dashboard"
+                  className="hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1 transition-colors"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Back to Dashboard</span>
+                </Link>
+              </div>
 
-          {/* Section 2: Continue Learning Card */}
-          <ContinueLearningCard
-            onContinue={() => navigate('/modules/dsa')}
-          />
+              <AccountSettingsPage />
+            </div>
+          ) : (
+            <>
+              {/* Section 1: Welcome Banner */}
+              <WelcomeBanner />
 
-          {/* Section 3: Four Core Module Cards */}
-          <CoreModulesGrid onExploreModule={handleExploreModule} />
+              {/* Section 2: Featured / Continue Learning Card */}
+              <ContinueLearningCard onContinue={handleExploreModule} />
 
-          {/* Section 4: Quick Actions */}
-          <QuickActions
-            onOpenAiMentor={() => setIsAiMentorOpen(true)}
-            onOpenVisualizer={() => handleOpenVisualizer('dsa')}
-          />
+              {/* Section 3: Four Core Module Cards */}
+              <CoreModulesGrid onExploreModule={handleExploreModule} />
 
-          {/* Section 5: AI Tailored Recommendations */}
-          <AiRecommendations
-            onAction={(rec) => {
-              if (rec.actionType === 'visualize') {
-                const mod = rec.module.toLowerCase().includes('os')
-                  ? 'os'
-                  : rec.module.toLowerCase().includes('network')
-                  ? 'networks'
-                  : rec.module.toLowerCase().includes('design')
-                  ? 'sysdesign'
-                  : 'dsa';
-                handleOpenVisualizer(mod);
-              } else {
-                navigate('/cn');
-              }
-            }}
-          />
-
-          {/* Section 6: Learning Statistics (4 Cards) */}
-          <StatsCards />
-
-          {/* Section 7: Weekly Activity Chart */}
-          <WeeklyActivityChart />
+              {/* Section 4: Quick Actions */}
+              <QuickActions
+                onOpenAiMentor={() => setIsAiMentorOpen(true)}
+                onOpenVisualizer={() => handleOpenVisualizer('dsa')}
+              />
+            </>
+          )}
         </main>
       </div>
 
