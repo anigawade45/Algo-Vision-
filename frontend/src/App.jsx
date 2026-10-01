@@ -26,6 +26,7 @@ import ProcessManagement from '@/features/os/pages/ProcessManagement';
 import Deadlocks from '@/features/os/pages/Deadlocks';
 import BankersAlgorithm from '@/features/os/pages/BankersAlgorithm';
 import ProcessSynchronization from '@/features/os/pages/ProcessSynchronization';
+import MemoryManagement from '@/features/os/pages/MemoryManagement';
 
 import CnHome from '@/features/cn/pages/CnHome';
 import NetworkFundamentals from '@/features/cn/pages/NetworkFundamentals';
@@ -242,6 +243,15 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <ProcessSynchronization theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/memory-management"
+              element={
+                <ProtectedRoute>
+                  <MemoryManagement theme={theme} toggleTheme={toggleTheme} />
                 </ProtectedRoute>
               }
             />

@@ -52,6 +52,14 @@ export default function OsHome() {
       badge: 'Concurrency Engine',
       badgeColor: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
     },
+    {
+      id: 'memory-management',
+      title: 'Memory Management & Allocation',
+      description: 'MMU relocation & address translation, logical vs physical addresses, First/Best/Worst Fit allocation strategies, internal & external fragmentation, and compaction.',
+      path: '/os/memory-management',
+      badge: 'RAM Simulator',
+      badgeColor: 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
+    },
   ];
 
   return (
