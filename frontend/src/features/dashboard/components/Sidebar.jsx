@@ -21,7 +21,10 @@ import { studentProfile } from '../data/mockDashboardData';
 
 export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisualizer }) {
   const location = useLocation();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
+
+  const userName = user?.name || studentProfile.name;
+  const userInitials = userName ? userName.substring(0, 2).toUpperCase() : 'ST';
 
   const mainNavItems = [
     {
@@ -111,9 +114,8 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-50 w-72 bg-white dark:bg-[#0B0F19] border-r border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between transition-transform duration-300 ease-in-out font-sans ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed top-0 left-0 bottom-0 z-50 w-72 bg-white dark:bg-[#0B0F19] border-r border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between transition-transform duration-300 ease-in-out font-sans ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          }`}
       >
         {/* TOP: Brand Header */}
         <div className="flex flex-col">
@@ -185,30 +187,27 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
                         }
                         setMobileOpen(false);
                       }}
-                      className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-[13.5px] font-medium transition-all duration-150 ${
-                        isActive
+                      className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-[13.5px] font-medium transition-all duration-150 ${isActive
                           ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25 font-semibold'
                           : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#111827] hover:text-slate-900 dark:hover:text-white'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <Icon
-                          className={`w-4.5 h-4.5 shrink-0 transition-colors ${
-                            isActive
+                          className={`w-4.5 h-4.5 shrink-0 transition-colors ${isActive
                               ? 'text-white'
                               : 'text-slate-400 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                          }`}
+                            }`}
                         />
                         <span className="truncate">{item.name}</span>
                       </div>
 
                       {item.badge && (
                         <span
-                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                            isActive
+                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${isActive
                               ? 'bg-white/20 text-white border-white/30'
                               : item.badgeColor
-                          }`}
+                            }`}
                         >
                           {item.badge}
                         </span>
@@ -240,34 +239,31 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
                           setMobileOpen(false);
                         }
                       }}
-                      className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-[13.5px] font-medium transition-all duration-150 ${
-                        isActive
+                      className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-[13.5px] font-medium transition-all duration-150 ${isActive
                           ? 'bg-blue-600 text-white shadow-sm font-semibold'
                           : item.isSpecial
-                          ? 'text-blue-600 dark:text-blue-400 bg-blue-50/70 dark:bg-blue-950/30 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200/60 dark:border-blue-500/20'
-                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#111827] hover:text-slate-900 dark:hover:text-white'
-                      }`}
+                            ? 'text-blue-600 dark:text-blue-400 bg-blue-50/70 dark:bg-blue-950/30 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200/60 dark:border-blue-500/20'
+                            : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#111827] hover:text-slate-900 dark:hover:text-white'
+                        }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <Icon
-                          className={`w-4.5 h-4.5 shrink-0 transition-colors ${
-                            isActive
+                          className={`w-4.5 h-4.5 shrink-0 transition-colors ${isActive
                               ? 'text-white'
                               : item.isSpecial
-                              ? 'text-blue-600 dark:text-blue-400'
-                              : 'text-slate-400 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                          }`}
+                                ? 'text-blue-600 dark:text-blue-400'
+                                : 'text-slate-400 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                            }`}
                         />
                         <span className="truncate">{item.name}</span>
                       </div>
 
                       {item.badge && (
                         <span
-                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                            isActive
+                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${isActive
                               ? 'bg-white/20 text-white border-white/30'
                               : item.badgeColor
-                          }`}
+                            }`}
                         >
                           {item.badge}
                         </span>
@@ -316,14 +312,14 @@ export function Sidebar({ mobileOpen, setMobileOpen, onOpenAiMentor, onOpenVisua
           {/* Student Profile Quick View */}
           <div className="pt-2 px-1 flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-linear-to-br from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center ring-2 ring-blue-500/20 shadow-xs shrink-0">
-              {studentProfile.initials}
+              {userInitials}
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
-                {studentProfile.name}
+                {userName}
               </span>
               <span className="text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
-                {studentProfile.rollNo}
+                {user?.email || studentProfile.rollNo}
               </span>
             </div>
           </div>

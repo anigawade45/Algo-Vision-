@@ -1,28 +1,61 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { Terminal, ArrowRight, Lock, Mail, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Terminal, ArrowRight, Lock, Mail, Sparkles, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 
 export default function LoginPage({ theme }) {
-  const { login } = useAuth();
+  const { login, resendVerificationLink } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isUnverified, setIsUnverified] = useState(false);
+  const [resendStatus, setResendStatus] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const from = location.state?.from?.pathname || '/dashboard';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError('Please fill in all required fields.');
       return;
     }
-    setError('');
-    login(email, password);
-    navigate(from, { replace: true });
+
+    try {
+      setError('');
+      setIsUnverified(false);
+      setResendStatus('');
+      setIsSubmitting(true);
+
+      const result = await login(email, password);
+
+      if (result.success) {
+        navigate(from, { replace: true });
+      } else {
+        if (result.status === 403 || result.message?.toLowerCase().includes('verify')) {
+          setIsUnverified(true);
+        }
+        setError(result.message || 'Invalid email or password.');
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!email) return;
+    try {
+      setResendStatus('');
+      const res = await resendVerificationLink(email);
+      setResendStatus(res.message || 'Verification link sent if account exists.');
+    } catch (err) {
+      setResendStatus('Failed to send verification email.');
+    }
   };
 
   return (
@@ -64,8 +97,29 @@ export default function LoginPage({ theme }) {
           </div>
 
           {error && (
-            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 text-xs font-medium">
-              {error}
+            <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 text-xs font-medium space-y-2">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+              {isUnverified && (
+                <div className="pt-2 border-t border-rose-200/60 dark:border-rose-900/60">
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    className="text-xs font-bold underline hover:text-rose-700 dark:hover:text-rose-300 flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>Resend Verification Email to {email}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {resendStatus && (
+            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/50 text-blue-600 dark:text-blue-400 text-xs font-medium">
+              {resendStatus}
             </div>
           )}
 
@@ -81,7 +135,8 @@ export default function LoginPage({ theme }) {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="student@algovision.io"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50"
                   required
                 />
               </div>
@@ -98,7 +153,8 @@ export default function LoginPage({ theme }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                  disabled={isSubmitting}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-white text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors disabled:opacity-50"
                   required
                 />
               </div>
@@ -106,10 +162,20 @@ export default function LoginPage({ theme }) {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+              disabled={isSubmitting}
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-md shadow-blue-500/20 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span>Sign In to Dashboard</span>
-              <ArrowRight className="w-4 h-4" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In to Dashboard</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 

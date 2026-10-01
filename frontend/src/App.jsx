@@ -9,6 +9,8 @@ import NotFoundPage from '@/components/NotFoundPage';
 import { LandingPage } from '@/features/landing/LandingPage';
 import LoginPage from '@/features/auth/pages/LoginPage';
 import RegisterPage from '@/features/auth/pages/RegisterPage';
+import VerifyEmailSentPage from '@/features/auth/pages/VerifyEmailSentPage';
+import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
 
 import DashboardPage from '@/features/dashboard/DashboardPage';
 import { ModuleDetailsPage } from '@/features/dashboard/components/ModuleDetailsPage';
@@ -120,6 +122,24 @@ export default function App() {
               element={
                 <PublicOnlyRoute>
                   <RegisterPage theme={theme} />
+                </PublicOnlyRoute>
+              }
+            />
+
+            <Route
+              path="/verify-email-sent"
+              element={
+                <PublicOnlyRoute>
+                  <VerifyEmailSentPage />
+                </PublicOnlyRoute>
+              }
+            />
+
+            <Route
+              path="/verify-email/:token"
+              element={
+                <PublicOnlyRoute>
+                  <VerifyEmailPage />
                 </PublicOnlyRoute>
               }
             />

@@ -16,6 +16,7 @@ import {
   Command,
   X
 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import { studentProfile } from '../data/mockDashboardData';
 
 export function DashboardNavbar({
@@ -27,10 +28,15 @@ export function DashboardNavbar({
   onOpenAiMentor,
   onSelectTopic
 }) {
+  const { user, logout } = useAuth();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notifications, setNotifications] = useState(studentProfile.notifications);
   const [searchFocused, setSearchFocused] = useState(false);
+
+  const userName = user?.name || studentProfile.name;
+  const userEmail = user?.email || studentProfile.email;
+  const userInitials = userName ? userName.substring(0, 2).toUpperCase() : 'ST';
 
   const notifRef = useRef(null);
   const profileRef = useRef(null);
@@ -265,11 +271,11 @@ export function DashboardNavbar({
             aria-label="User profile menu"
           >
             <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-xs">
-              {studentProfile.initials}
+              {userInitials}
             </div>
             <div className="hidden md:flex flex-col text-left">
               <span className="text-xs font-semibold text-slate-900 dark:text-white leading-tight flex items-center gap-1">
-                {studentProfile.name}
+                {userName}
                 <ChevronDown className="w-3 h-3 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300" />
               </span>
               <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-none mt-0.5">
@@ -283,10 +289,10 @@ export function DashboardNavbar({
             <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
               <div className="px-3 py-2.5 border-b border-slate-100 dark:border-slate-800">
                 <p className="text-xs font-bold text-slate-900 dark:text-white">
-                  {studentProfile.name}
+                  {userName}
                 </p>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
-                  {studentProfile.email}
+                  {userEmail}
                 </p>
                 <div className="mt-1.5 flex items-center gap-2">
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold border border-blue-200 dark:border-blue-800">
@@ -326,7 +332,10 @@ export function DashboardNavbar({
               <div className="pt-1 border-t border-slate-100 dark:border-slate-800">
                 <Link
                   to="/"
-                  onClick={() => setProfileDropdownOpen(false)}
+                  onClick={() => {
+                    logout();
+                    setProfileDropdownOpen(false);
+                  }}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                 >
                   <LogOut className="w-3.5 h-3.5" />

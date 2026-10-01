@@ -1,48 +1,119 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import {
+  getCurrentUser,
+  loginUser,
+  registerUser,
+  logoutUser,
+  verifyEmail as verifyEmailApi,
+  resendVerification as resendVerificationApi,
+} from '@/api/auth.api';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const storedAuth = localStorage.getItem('algo_vision_auth');
-    return storedAuth === null ? true : storedAuth === 'true';
-  });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('algo_vision_user');
-    return saved ? JSON.parse(saved) : { name: 'Student', email: 'student@algovision.io' };
-  });
+  // Check initial authentication state on app startup
+  const checkAuth = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await getCurrentUser();
+      if (res?.success && res?.data?.user) {
+        setUser(res.data.user);
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      // 401 Unauthorized is expected for unauthenticated users on initial load
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const login = (email, password) => {
-    const userObj = { email, name: email ? email.split('@')[0] : 'Student' };
-    setIsAuthenticated(true);
-    setUser(userObj);
-    localStorage.setItem('algo_vision_auth', 'true');
-    localStorage.setItem('algo_vision_user', JSON.stringify(userObj));
-    return true;
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  // Authenticate user via backend API
+  const login = async (email, password) => {
+    try {
+      const res = await loginUser({ email, password });
+      if (res?.success && res?.data?.user) {
+        setUser(res.data.user);
+        return { success: true, user: res.data.user };
+      }
+      return { success: false, message: res?.message || 'Login failed' };
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Invalid email or password';
+      const status = error.status || error.response?.status;
+      const errors = error.response?.data?.errors || null;
+      return { success: false, message, status, errors };
+    }
   };
 
-  const register = (name, email, password) => {
-    const userObj = { email: email || 'student@algovision.io', name: name || 'Student' };
-    setIsAuthenticated(true);
-    setUser(userObj);
-    localStorage.setItem('algo_vision_auth', 'true');
-    localStorage.setItem('algo_vision_user', JSON.stringify(userObj));
-    return true;
+  // Register user via backend API (DOES NOT set user state / auto-login)
+  const register = async (name, email, password) => {
+    try {
+      const res = await registerUser({ name, email, password });
+      return {
+        success: true,
+        message: res?.message || 'Registration successful. Please verify your email.',
+      };
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Registration failed';
+      const errors = error.response?.data?.errors || null;
+      return { success: false, message, errors };
+    }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    localStorage.setItem('algo_vision_auth', 'false');
-    localStorage.removeItem('algo_vision_user');
+  // Verify email token
+  const verifyAccountEmail = async (token) => {
+    try {
+      const res = await verifyEmailApi(token);
+      return { success: true, message: res?.message || 'Email verified successfully' };
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Invalid or expired verification link';
+      return { success: false, message };
+    }
   };
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, register, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  // Resend verification email
+  const resendVerificationLink = async (email) => {
+    try {
+      const res = await resendVerificationApi(email);
+      return { success: true, message: res?.message || 'Verification email sent.' };
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Failed to resend email';
+      return { success: false, message };
+    }
+  };
+
+  // Logout user via backend API
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } catch (error) {
+      console.error('Logout error:', error.message);
+    } finally {
+      setUser(null);
+    }
+  };
+
+  const value = {
+    user,
+    loading,
+    isAuthenticated: !!user,
+    login,
+    register,
+    verifyAccountEmail,
+    resendVerificationLink,
+    logout,
+    refreshUser: checkAuth,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
