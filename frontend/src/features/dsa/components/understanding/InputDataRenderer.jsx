@@ -567,6 +567,7 @@ function renderGraphSVG(graphObj, isDirected = false) {
  */
 function formatCompactJSON(obj) {
   if (obj === null || obj === undefined) return String(obj);
+  if (typeof obj === 'string') return obj;
   if (typeof obj !== 'object') return JSON.stringify(obj);
 
   const stringifyHelper = (val, level = 0) => {
