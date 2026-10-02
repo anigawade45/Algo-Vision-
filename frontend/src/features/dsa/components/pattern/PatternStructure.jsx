@@ -138,7 +138,7 @@ export function PatternStructure({ structure, abstraction: propAbstraction, sect
         <span>LOOK AT WHAT THE PROBLEM IS ASKING</span>
       </div>
 
-      <h2 id="pattern-structure-heading" className="text-xl sm:text-[22px] font-bold text-slate-900 dark:text-white leading-snug">
+      <h2 id="pattern-structure-heading" className="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-snug">
         {structure.title}
       </h2>
       <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -161,7 +161,7 @@ export function PatternStructure({ structure, abstraction: propAbstraction, sect
             <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
               {structure.targetLabel}
             </span>
-            <div className="px-4 py-2.5 rounded-xl bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 font-mono font-extrabold text-xs sm:text-sm text-blue-700 dark:text-blue-300 inline-block w-fit">
+            <div className="px-3.5 py-1.5 rounded-lg bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 font-mono text-sm font-bold text-blue-700 dark:text-blue-300 shadow-xs inline-block w-fit">
               {structure.targetValue}
             </div>
           </div>
@@ -191,38 +191,7 @@ export function PatternStructure({ structure, abstraction: propAbstraction, sect
           </div>
         </div>
 
-        {/* Abstract Structural Formula & Insight (Merged Step 03) */}
-        {abstractFormula && (
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" aria-hidden="true" />
-              <span className="text-xs sm:text-[13px] font-mono font-extrabold tracking-wider uppercase text-blue-600 dark:text-blue-400">
-                GENERAL STRUCTURAL FORMULA
-              </span>
-            </div>
 
-            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3.5 font-mono font-extrabold text-xs sm:text-sm py-1">
-              <span className="px-3 py-1.5 rounded-lg bg-blue-500/10 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 shadow-xs">
-                {abstractFormula.varA}
-              </span>
-              <span className="text-blue-500 font-bold">{abstractFormula.operator}</span>
-              <span className="px-3 py-1.5 rounded-lg bg-blue-500/10 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-900/60 text-blue-700 dark:text-blue-300 shadow-xs">
-                {abstractFormula.varB}
-              </span>
-              <span className="text-blue-500 font-bold">{abstractFormula.equals}</span>
-              <span className="px-3 py-1.5 rounded-lg bg-emerald-500/10 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-900/60 text-emerald-700 dark:text-emerald-300 shadow-xs">
-                {abstractFormula.result}
-              </span>
-            </div>
-
-            {statement && (
-              <div className="pl-3.5 border-l-2 border-amber-500 py-1 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
-                <span className="font-bold text-amber-600 dark:text-amber-400 mr-1.5">💡 Insight:</span>
-                <span>{statement}</span>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </section>
   );

@@ -8,18 +8,12 @@ import React, { useState } from 'react';
 export function PatternSolutionFamilies({ patternName, solutionFamilies, sectionNo = '05' }) {
   if (!solutionFamilies || !solutionFamilies.families) return null;
 
-  const [selectedFamilyIds, setSelectedFamilyIds] = useState(
-    new Set(solutionFamilies.families.map((f) => f.id))
+  const [selectedFamilyId, setSelectedFamilyId] = useState(
+    solutionFamilies.families.length > 0 ? solutionFamilies.families[0].id : null
   );
 
   const toggleFamily = (id) => {
-    const next = new Set(selectedFamilyIds);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-    setSelectedFamilyIds(next);
+    setSelectedFamilyId(id);
   };
 
   return (
@@ -31,34 +25,22 @@ export function PatternSolutionFamilies({ patternName, solutionFamilies, section
         <span>SOLUTION FAMILIES</span>
       </div>
 
-      <h2 id="pattern-solution-families-heading" className="text-xl sm:text-[22px] font-bold text-slate-900 dark:text-white leading-snug">
+      <h2 id="pattern-solution-families-heading" className="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-snug">
         What approaches should come to mind?
       </h2>
       <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
         Pattern recognition identifies which families of tools and approaches are relevant.
       </p>
 
-      {/* Main Solution Families Card */}
-      <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] space-y-5 shadow-xs transition-colors">
-        {/* Pattern to Family Tree Header */}
-        <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200/60 dark:border-[#162032] space-y-1 transition-colors">
-          <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider block">
-            RECOGNIZED STRUCTURAL PATTERN
-          </span>
-          <span className="text-sm font-extrabold text-slate-900 dark:text-white font-mono block">
-            {patternName || 'RECOGNIZED PATTERN'}
-          </span>
-        </div>
-
-        {/* Interactive Solution Families List */}
-        <div className="space-y-2.5">
-          <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-            RELEVANT SOLUTION FAMILIES & TOOLS
-          </span>
+      {/* Interactive Solution Families List */}
+      <div className="space-y-3 pt-2">
+        <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
+          RELEVANT SOLUTION FAMILIES & TOOLS
+        </span>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {solutionFamilies.families.map((fam) => {
-              const isSelected = selectedFamilyIds.has(fam.id);
+              const isSelected = selectedFamilyId === fam.id;
               return (
                 <button
                   key={fam.id}
@@ -96,15 +78,6 @@ export function PatternSolutionFamilies({ patternName, solutionFamilies, section
           </div>
         </div>
 
-        {/* Boundary Note */}
-        <div className="p-3.5 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-900/40 text-xs text-blue-900 dark:text-blue-200 leading-relaxed font-sans flex items-start gap-2.5">
-          <span className="text-blue-600 dark:text-blue-400 font-bold shrink-0">💡</span>
-          <span>
-            {solutionFamilies.note ||
-              'Pattern recognition tells us which families of approaches are relevant. Algorithm (Stage 05) will decide which approach to choose and how it works.'}
-          </span>
-        </div>
-      </div>
     </section>
   );
 }

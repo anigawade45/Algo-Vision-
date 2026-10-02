@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Sparkles, ArrowRight } from 'lucide-react';
+import { FileText, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { MOCK_PROBLEMS } from '../../data/mockProblems';
 import { getAnalogyForProblem } from '../../data/analogy/mockAnalogies';
 import { AnalogyScenario } from './AnalogyScenario';
@@ -15,12 +15,13 @@ import { AnalogyStepVisualizer } from './AnalogyStepVisualizer';
 export function AnalogyStage({ problemData, onCompleteStage, onNextStage, onOpenSpec }) {
   const problem = problemData && problemData.title ? problemData : MOCK_PROBLEMS[0];
   const analogyData = getAnalogyForProblem(problem.id);
-  const [isDiscovered, setIsDiscovered] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
-    setIsDiscovered(false);
-    if (onCompleteStage) onCompleteStage('analogy');
-  }, [problem?.id, onCompleteStage]);
+    if (isCompleted && onCompleteStage) {
+      onCompleteStage('analogy');
+    }
+  }, [isCompleted, onCompleteStage]);
 
   const isFallback = !problemData || !problemData.title;
 
@@ -69,16 +70,39 @@ export function AnalogyStage({ problemData, onCompleteStage, onNextStage, onOpen
         <AnalogyScenario scenario={analogyData?.scenario} />
       </div>
 
-      {/* NAVIGATION FOOTER */}
-      {onNextStage && (
-        <div className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-end">
-          <button type="button" onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
-            <span>Continue to Stage 04: Pattern</span>
+      {/* Footer Action */}
+      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          aria-pressed={isCompleted}
+          onClick={() => setIsCompleted(!isCompleted)}
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            isCompleted
+              ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+              : 'bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          {isCompleted ? (
+            <>
+              <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Analogy Mastered ✓</span>
+            </>
+          ) : (
+            <span>I Understand This Analogy</span>
+          )}
+        </button>
+
+        {onNextStage && (
+          <button
+            type="button"
+            onClick={onNextStage}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          >
+            <span>Next: Stage 04 Pattern →</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

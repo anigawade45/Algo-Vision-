@@ -189,7 +189,6 @@ export default function ProblemWorkspace({
       console.log('Workspace state update failed:', err.message);
     }
   };
-
   const handleProblemChange = (newId) => {
     setSelectedProblemId(newId);
     if (id) {
@@ -488,7 +487,7 @@ export default function ProblemWorkspace({
           </div>
 
           {/* Active Stage View */}
-          <div className="min-h-[500px]">
+          <div className="min-h-[500px]" key={targetProblemId}>
             {currentStageId === 'problem' && (
               <ProblemStage
                 problemData={problem}

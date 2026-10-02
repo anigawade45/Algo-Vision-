@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Play, RotateCcw, CheckCircle2, XCircle, Clock, FileCode2, ArrowRight, Terminal } from 'lucide-react';
+import { Play, RotateCcw, CheckCircle2, XCircle, Clock, FileCode2, ArrowRight, Terminal, Check } from 'lucide-react';
 import { getStarterCode } from '../../data/code/mockCodeTemplates';
 
 const LANGUAGES = [
@@ -21,6 +21,13 @@ export function CodeStage({
   const [code, setCode] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionResult, setExecutionResult] = useState(null);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  useEffect(() => {
+    if (isCompleted && onCompleteStage) {
+      onCompleteStage('code');
+    }
+  }, [isCompleted, onCompleteStage]);
 
   // Preserve user code per language using a ref
   const userCodeCache = useRef({});
@@ -79,6 +86,8 @@ export function CodeStage({
       });
       
       if (onCompleteStage) onCompleteStage('code');
+      // Auto-mark as completed when tests pass for convenience
+      setIsCompleted(true);
     }, 1500);
   };
 
@@ -257,19 +266,39 @@ export function CodeStage({
         </div>
       </div>
 
-      {/* STAGE NAVIGATION */}
-      {onNextStage && (
-        <div className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex justify-end">
+      {/* Footer Action */}
+      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          aria-pressed={isCompleted}
+          onClick={() => setIsCompleted(!isCompleted)}
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            isCompleted
+              ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+              : 'bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          {isCompleted ? (
+            <>
+              <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Code Mastered ✓</span>
+            </>
+          ) : (
+            <span>I Understand This Code</span>
+          )}
+        </button>
+
+        {onNextStage && (
           <button
             type="button"
             onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            <span>Continue to Dry Run</span>
-            <ArrowRight className="w-4 h-4 shrink-0" />
+            <span>Next: Stage 08 Dry Run →</span>
+            <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

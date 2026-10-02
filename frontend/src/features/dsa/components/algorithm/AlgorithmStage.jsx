@@ -1,5 +1,5 @@
-import React from 'react';
-import { FileText, ArrowRight, BookOpen } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, ArrowRight, Check } from 'lucide-react';
 import { getAlgorithmForProblem } from '../../data/algorithm/mockAlgorithms';
 import { InteractiveFlowchart } from './InteractiveFlowchart';
 
@@ -10,9 +10,18 @@ import { InteractiveFlowchart } from './InteractiveFlowchart';
 export function AlgorithmStage({
   problem,
   problemData,
+  onCompleteStage,
   onNextStage,
   onOpenSpec,
 }) {
+  const [isCompleted, setIsCompleted] = useState(false);
+  
+  React.useEffect(() => {
+    if (isCompleted && onCompleteStage) {
+      onCompleteStage('algorithm');
+    }
+  }, [isCompleted, onCompleteStage]);
+  
   const activeProblem = problem || problemData;
   const algorithmData = getAlgorithmForProblem(activeProblem?.id, activeProblem?.title);
 
@@ -75,17 +84,20 @@ export function AlgorithmStage({
           </div>
 
           <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] shadow-xs space-y-5">
-            <div className="space-y-4">
+            <div className="space-y-0 relative">
+              {/* Vertical line connecting steps */}
+              <div className="absolute left-3 top-3 bottom-8 w-px bg-slate-200 dark:bg-slate-800" aria-hidden="true" />
+              
               {steps.map((st, idx) => (
-                <div key={st.stepNo} className="flex gap-4 items-start">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60 flex items-center justify-center shrink-0 mt-0.5">
+                <div key={st.stepNo} className="flex gap-4 items-start relative pb-7 last:pb-0">
+                  <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60 flex items-center justify-center shrink-0 mt-0.5 relative z-10 border-2 border-white dark:border-[#0B101D]">
                     <span className="text-blue-700 dark:text-blue-400 text-[11px] font-bold font-mono">
                       {idx + 1}
                     </span>
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-[15px] text-slate-900 dark:text-white">
-                      {st.title}
+                  <div className="space-y-1.5 pt-0.5">
+                    <h4 className="font-bold text-[15px] text-slate-900 dark:text-white font-mono uppercase tracking-tight">
+                      Step {idx + 1}: {st.title}
                     </h4>
                     <p className="text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
                       {st.description}
@@ -111,19 +123,39 @@ export function AlgorithmStage({
         </section>
       )}
 
-      {/* STAGE NAVIGATION */}
-      {onNextStage && (
-        <div className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex justify-end">
+      {/* Footer Action */}
+      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          aria-pressed={isCompleted}
+          onClick={() => setIsCompleted(!isCompleted)}
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            isCompleted
+              ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+              : 'bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          {isCompleted ? (
+            <>
+              <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Algorithm Mastered ✓</span>
+            </>
+          ) : (
+            <span>I Understand This Algorithm</span>
+          )}
+        </button>
+
+        {onNextStage && (
           <button
             type="button"
             onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            <span>Continue to Pseudocode</span>
+            <span>Next: Stage 06 Pseudocode →</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
     </div>
   );
