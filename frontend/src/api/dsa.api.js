@@ -14,7 +14,7 @@ export const getProblems = async (params = {}) => {
  */
 export const getMyProblems = async () => {
   return await apiClient.get('/problems/mine');
-};
+}; 
 
 /**
  * Fetch distinct DSA problem categories
@@ -37,4 +37,25 @@ export const getProblem = getProblemById;
  */
 export const createProblem = async (problemData) => {
   return await apiClient.post('/problems', problemData);
+};
+
+/**
+ * Retrieve user's workspace state for a problem
+ */
+export const getProblemWorkspace = async (problemId) => {
+  return await apiClient.get(`/problems/${problemId}/workspace`);
+};
+
+/**
+ * Initialize workspace state for a problem
+ */
+export const createProblemWorkspace = async (problemId) => {
+  return await apiClient.post(`/problems/${problemId}/workspace`);
+};
+
+/**
+ * Update user's workspace state (currentStage / completedStages)
+ */
+export const updateProblemWorkspace = async (problemId, data) => {
+  return await apiClient.patch(`/problems/${problemId}/workspace`, data);
 };

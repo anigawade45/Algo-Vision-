@@ -33,9 +33,9 @@ import { CodeStage } from '../components/code';
 import { DryRunStage } from '../components/dryrun';
 import { PracticeStage } from '../components/practice';
 import { ComplexityStage } from '../components/complexity';
-import { getProblems } from '@/api/dsa.api';
+import { getProblems, getProblemById, getProblemWorkspace, createProblemWorkspace, updateProblemWorkspace } from '@/api/dsa.api';
 
-import { MOCK_PROBLEMS, getProblemById } from '../data/mockProblems';
+import { MOCK_PROBLEMS, getProblemById as getMockProblemById } from '../data/mockProblems';
 
 const WORKSPACE_STAGES = [
   { id: 'problem', stepNo: '01', name: 'Your Problem', icon: Target, isBuilt: true },
@@ -51,6 +51,34 @@ const WORKSPACE_STAGES = [
   { id: 'practice', stepNo: '11', name: 'Practice', icon: CheckCircle2, isBuilt: true },
 ];
 
+const STAGE_ID_MAP = {
+  1: 'problem',
+  2: 'understand',
+  3: 'analogy',
+  4: 'pattern',
+  5: 'algorithm',
+  6: 'pseudocode',
+  7: 'code',
+  8: 'dryrun',
+  9: 'visualize',
+  10: 'complexity',
+  11: 'practice',
+};
+
+const STAGE_NUM_MAP = {
+  problem: 1,
+  understand: 2,
+  analogy: 3,
+  pattern: 4,
+  algorithm: 5,
+  pseudocode: 6,
+  code: 7,
+  dryrun: 8,
+  visualize: 9,
+  complexity: 10,
+  practice: 11,
+};
+
 export default function ProblemWorkspace({
   theme,
   toggleTheme,
@@ -60,14 +88,16 @@ export default function ProblemWorkspace({
 }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [currentStageId, setCurrentStageId] = useState('understand');
-  const [completedStages, setCompletedStages] = useState({ problem: true });
+  const [currentStageId, setCurrentStageId] = useState('problem');
+  const [completedStages, setCompletedStages] = useState({});
+  const [activeProblem, setActiveProblem] = useState(problemData || null);
   const [showSpecDrawer, setShowSpecDrawer] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [dbProblems, setDbProblems] = useState([]);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedProblemId, setSelectedProblemId] = useState(id || 'two-sum');
   const [selectedApproachId, setSelectedApproachId] = useState('minHeap');
+
+  const targetProblemId = id || selectedProblemId || 'two-sum';
 
   const loadBackendProblems = async () => {
     try {
@@ -91,18 +121,79 @@ export default function ProblemWorkspace({
     }
   }, [id]);
 
+  // Load Real Problem & Workspace State from Backend
+  useEffect(() => {
+    let isMounted = true;
+
+    const initializeWorkspaceFlow = async () => {
+      // 1. Fetch Real Problem Data
+      try {
+        const pRes = await getProblemById(targetProblemId);
+        if (pRes?.success && pRes?.data?.problem && isMounted) {
+          setActiveProblem(pRes.data.problem);
+        }
+      } catch (err) {
+        console.log('Failed loading problem from backend:', err.message);
+      }
+
+      // 2. Fetch Workspace State
+      try {
+        let wsRes = await getProblemWorkspace(targetProblemId);
+        let ws = wsRes?.data?.workspace;
+
+        // Initialize workspace if null
+        if (!ws) {
+          const createWsRes = await createProblemWorkspace(targetProblemId);
+          ws = createWsRes?.data?.workspace;
+        }
+
+        if (ws && isMounted) {
+          if (ws.currentStage && STAGE_ID_MAP[ws.currentStage]) {
+            setCurrentStageId(STAGE_ID_MAP[ws.currentStage]);
+          }
+
+          if (Array.isArray(ws.completedStages)) {
+            const compObj = {};
+            ws.completedStages.forEach((stNum) => {
+              const stId = STAGE_ID_MAP[stNum];
+              if (stId) compObj[stId] = true;
+            });
+            setCompletedStages(compObj);
+          }
+        }
+      } catch (wsErr) {
+        console.log('Workspace state persistence note:', wsErr.message);
+      }
+    };
+
+    initializeWorkspaceFlow();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id, selectedProblemId]);
+
+  // Helper to persist workspace state to backend
+  const persistWorkspaceState = async (nextStageId, updatedCompletedMap) => {
+    try {
+      const stageNum = STAGE_NUM_MAP[nextStageId] || 1;
+      const compArr = Object.keys(updatedCompletedMap)
+        .map((stId) => STAGE_NUM_MAP[stId])
+        .filter(Boolean);
+
+      await updateProblemWorkspace(targetProblemId, {
+        currentStage: stageNum,
+        completedStages: compArr,
+      });
+    } catch (err) {
+      console.log('Workspace state update failed:', err.message);
+    }
+  };
+
   const handleProblemChange = (newId) => {
     setSelectedProblemId(newId);
     if (id) {
       navigate(`/dsa/workspace/${newId}`);
-    }
-  };
-
-  const handleProblemCreated = (newProblem) => {
-    loadBackendProblems();
-    const newId = newProblem.problemId || newProblem.id;
-    if (newId) {
-      handleProblemChange(newId);
     }
   };
 
@@ -117,30 +208,38 @@ export default function ProblemWorkspace({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSpecDrawer]);
 
-  const allProblems = dbProblems.length > 0 ? dbProblems : MOCK_PROBLEMS;
-  const activeProblemId = selectedProblemId || id || 'two-sum';
+  const problem = activeProblem || (problemData && problemData.title ? problemData : getMockProblemById(targetProblemId));
 
-  const problem = (problemData && problemData.title && (problemData.id === activeProblemId || !id))
-    ? problemData
-    : (dbProblems.find((p) => p.problemId === activeProblemId || p.id === activeProblemId) || getProblemById(activeProblemId));
-
-  const activeStage = WORKSPACE_STAGES.find((s) => s.id === currentStageId) || WORKSPACE_STAGES[1];
+  const activeStage = WORKSPACE_STAGES.find((s) => s.id === currentStageId) || WORKSPACE_STAGES[0];
   const activeStageIdx = WORKSPACE_STAGES.findIndex((s) => s.id === currentStageId);
   const completedCount = Object.keys(completedStages).length;
 
+  const handleStageSelect = (stageId) => {
+    setCurrentStageId(stageId);
+    persistWorkspaceState(stageId, completedStages);
+  };
+
   const handleStageComplete = (stageId) => {
-    setCompletedStages((prev) => ({ ...prev, [stageId]: true }));
+    const updated = { ...completedStages, [stageId]: true };
+    setCompletedStages(updated);
+    persistWorkspaceState(currentStageId, updated);
   };
 
   const handleNextStage = () => {
     if (activeStageIdx < WORKSPACE_STAGES.length - 1) {
-      setCurrentStageId(WORKSPACE_STAGES[activeStageIdx + 1].id);
+      const nextStageId = WORKSPACE_STAGES[activeStageIdx + 1].id;
+      const updated = { ...completedStages, [currentStageId]: true };
+      setCompletedStages(updated);
+      setCurrentStageId(nextStageId);
+      persistWorkspaceState(nextStageId, updated);
     }
   };
 
   const handlePrevStage = () => {
     if (activeStageIdx > 0) {
-      setCurrentStageId(WORKSPACE_STAGES[activeStageIdx - 1].id);
+      const prevStageId = WORKSPACE_STAGES[activeStageIdx - 1].id;
+      setCurrentStageId(prevStageId);
+      persistWorkspaceState(prevStageId, completedStages);
     }
   };
 
@@ -252,7 +351,7 @@ export default function ProblemWorkspace({
                   <button
                     key={st.id}
                     type="button"
-                    onClick={() => setCurrentStageId(st.id)}
+                    onClick={() => handleStageSelect(st.id)}
                     title={st.name}
                     aria-current={isSelected ? 'step' : undefined}
                     className={`w-full text-xs font-mono transition-all cursor-pointer flex items-center border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isSidebarExpanded
@@ -365,7 +464,7 @@ export default function ProblemWorkspace({
                   <button
                     key={st.id}
                     type="button"
-                    onClick={() => setCurrentStageId(st.id)}
+                    onClick={() => handleStageSelect(st.id)}
                     aria-current={isSelected ? 'step' : undefined}
                     className={`shrink-0 px-3 py-2 rounded-xl border flex items-center gap-2 transition-all cursor-pointer min-h-[38px] ${isSelected
                       ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
