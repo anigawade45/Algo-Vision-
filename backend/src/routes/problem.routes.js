@@ -2,6 +2,7 @@ const express = require('express');
 const problemController = require('../controllers/problem.controller');
 const problemWorkspaceRoutes = require('./problemWorkspace.routes');
 const problemUnderstandingRoutes = require('./problemUnderstanding.routes');
+const problemAnalogyRoutes = require('./problemAnalogy.routes');
 const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
@@ -11,6 +12,9 @@ router.use('/:problemId/workspace', problemWorkspaceRoutes);
 
 // Stage 02 Understanding routes
 router.use('/:problemId/understanding', problemUnderstandingRoutes);
+
+// Stage 03 Analogy routes
+router.use('/:problemId/analogy', problemAnalogyRoutes);
 
 // Base problem routes
 router.get('/', problemController.getProblems);

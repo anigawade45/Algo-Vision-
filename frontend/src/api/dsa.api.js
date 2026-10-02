@@ -81,3 +81,25 @@ export const regenerateProblemUnderstanding = async (problemId) => {
   return await apiClient.post(`/problems/${problemId}/understanding/regenerate`);
 };
 
+/**
+ * Retrieve Stage 03 Problem Analogy data
+ */
+export const getProblemAnalogy = async (problemId) => {
+  return await apiClient.get(`/problems/${problemId}/analogy`);
+};
+
+/**
+ * Generate Stage 03 Problem Analogy via Gemini AI
+ */
+export const generateProblemAnalogy = async (problemId) => {
+  return await apiClient.post(`/problems/${problemId}/analogy/generate`);
+};
+
+/**
+ * Force regenerate Stage 03 Problem Analogy via Gemini AI
+ */
+export const regenerateProblemAnalogy = async (problemId) => {
+  return await apiClient.post(`/problems/${problemId}/analogy/regenerate`);
+};
+
+
