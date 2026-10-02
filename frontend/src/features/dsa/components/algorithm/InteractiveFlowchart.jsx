@@ -12,6 +12,8 @@ import {
   GitBranch,
   Code,
   Terminal,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 
 export function InteractiveFlowchart({ flowchartData }) {
@@ -26,6 +28,7 @@ export function InteractiveFlowchart({ flowchartData }) {
 
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Auto-play timer
   useEffect(() => {
@@ -75,8 +78,8 @@ export function InteractiveFlowchart({ flowchartData }) {
   };
 
   return (
-    <section className="space-y-4" aria-label="Interactive Algorithm Flowchart">
-      <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] shadow-xs space-y-6">
+    <section className={`transition-all duration-300 font-sans ${isFullscreen ? 'fixed inset-0 z-50 p-4 sm:p-8 bg-slate-50/95 dark:bg-[#05070E]/95 backdrop-blur-md overflow-y-auto' : 'space-y-4'}`} aria-label="Interactive Algorithm Flowchart">
+      <div className={`rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] shadow-xs flex flex-col ${isFullscreen ? 'min-h-full max-w-7xl mx-auto p-6 sm:p-8 space-y-8' : 'p-5 sm:p-6 space-y-6'}`}>
         
         {/* Header & Controls Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-[#162032] pb-4">
@@ -140,6 +143,21 @@ export function InteractiveFlowchart({ flowchartData }) {
             >
               <SkipForward className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
+
+            <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1" aria-hidden="true"></div>
+
+            <button
+              type="button"
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+            >
+              {isFullscreen ? (
+                <Minimize2 className="w-3.5 h-3.5" aria-hidden="true" />
+              ) : (
+                <Maximize2 className="w-3.5 h-3.5" aria-hidden="true" />
+              )}
+            </button>
           </div>
         </div>
 
@@ -152,7 +170,7 @@ export function InteractiveFlowchart({ flowchartData }) {
               FLOWCHART GRAPH (Click node to inspect step)
             </span>
 
-            <div className="flex flex-col items-center space-y-2.5 py-2">
+            <div className="flex flex-col items-center py-2">
               {nodes.map((node, idx) => {
                 const isActive = node.id === activeNodeId;
                 const isDecision = node.type === 'decision';
@@ -168,7 +186,7 @@ export function InteractiveFlowchart({ flowchartData }) {
                         clipPath: isDecision ? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' : 'none'
                       }}
                       className={`flex flex-col items-center justify-center transition-all duration-300 cursor-pointer text-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 relative ${
-                        isStartEnd ? 'w-64 min-h-[4.5rem] rounded-full px-8 p-4' : isDecision ? 'w-[18rem] min-h-[9rem] rounded-none px-12 py-8' : 'w-64 min-h-[5rem] rounded-md shadow-sm p-4'
+                        isStartEnd ? 'w-48 min-h-[3.5rem] rounded-full px-6 p-3' : isDecision ? 'w-[14rem] min-h-[7rem] rounded-none px-8 py-5' : 'w-48 min-h-[4rem] rounded-md shadow-sm p-3'
                       } ${
                         isActive
                           ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/30 scale-110 z-10 font-bold'
@@ -186,37 +204,38 @@ export function InteractiveFlowchart({ flowchartData }) {
                          </div>
                       )}
 
-                      <span className={`text-[9px] font-mono font-bold uppercase tracking-wider mb-1 ${
+                      <span className={`text-[9px] font-mono font-bold uppercase tracking-wider mb-0.5 ${
                         isActive ? 'text-white/80' : isDecision ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500'
                       }`}>
                         {node.label || node.type}
                       </span>
                       
-                      <span className="font-bold text-sm font-sans leading-tight">
+                      <span className={`font-bold font-sans leading-tight ${isDecision ? 'text-xs' : 'text-[13px]'}`}>
                         {node.title}
                       </span>
 
                       {/* Formal Side Arrow for NO branch */}
                       {isDecision && (
-                        <div className="absolute top-1/2 -right-16 flex items-center transform -translate-y-1/2 z-0 opacity-60">
-                          <div className="h-0.5 w-12 bg-slate-400 dark:bg-slate-500"></div>
-                          <span className="text-[9px] font-bold font-mono text-slate-500 dark:text-slate-400 absolute -top-4 left-4">NO</span>
-                          <div className="w-2 h-2 border-r-2 border-b-2 border-slate-400 dark:border-slate-500 transform -rotate-45 -ml-1"></div>
+                        <div className="absolute top-1/2 -right-12 flex items-center transform -translate-y-1/2 z-0">
+                          <div className="h-0.5 w-10 bg-slate-400 dark:bg-slate-500 relative">
+                            <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] font-bold font-mono bg-red-100 dark:bg-red-900/60 text-red-700 dark:text-red-400 px-1.5 py-0.5 rounded border border-red-200 dark:border-red-800 shadow-xs">NO</span>
+                          </div>
+                          <div className="w-1.5 h-1.5 border-r-2 border-b-2 border-slate-400 dark:border-slate-500 transform -rotate-45 -ml-1"></div>
                         </div>
                       )}
                     </button>
 
                     {/* Flowchart Arrow connector */}
                     {idx < nodes.length - 1 && (
-                      <div className="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 my-1 relative h-8">
+                      <div className="flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 relative h-8 w-8 z-0">
                         {/* Downward Arrow Label for YES branch */}
                         {isDecision && (
-                          <span className="text-[9px] font-bold font-mono text-slate-500 dark:text-slate-400 absolute left-4 bg-slate-50 dark:bg-[#070A13] px-1 z-10">
+                          <span className="absolute left-6 top-1/2 -translate-y-1/2 text-[9px] font-bold font-mono bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800 z-10 shadow-xs">
                             YES
                           </span>
                         )}
                         <div className="w-0.5 h-full bg-slate-300 dark:bg-slate-700"></div>
-                        <ArrowDown className="w-4 h-4 absolute -bottom-1.5 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                        <ArrowDown className="w-3.5 h-3.5 absolute -bottom-1 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                       </div>
                     )}
                   </React.Fragment>

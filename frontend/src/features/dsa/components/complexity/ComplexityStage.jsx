@@ -9,7 +9,8 @@ import {
   Code2, 
   Calculator,
   CheckCircle2,
-  ListRestart
+  ListRestart,
+  Check
 } from 'lucide-react';
 import { getComplexityData } from '../../data/complexity/mockComplexity';
 
@@ -18,6 +19,7 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
   const [activeSection, setActiveSection] = useState('time');
   const [timeStepIndex, setTimeStepIndex] = useState(0);
   const [spaceStepIndex, setSpaceStepIndex] = useState(0);
+  const [isRevealed, setIsRevealed] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
   const timeSteps = complexityData.time.steps;
@@ -28,16 +30,22 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
     setTimeStepIndex(0);
     setSpaceStepIndex(0);
     setActiveSection('time');
+    setIsRevealed(false);
     setIsCompleted(false);
   }, [problem.id]);
 
   // Mark complete when both sections are fully revealed
   useEffect(() => {
     if (timeStepIndex === timeSteps.length - 1 && spaceStepIndex === spaceSteps.length - 1) {
-      setIsCompleted(true);
-      if (onCompleteStage) onCompleteStage('complexity');
+      setIsRevealed(true);
     }
-  }, [timeStepIndex, spaceStepIndex, timeSteps.length, spaceSteps.length, onCompleteStage]);
+  }, [timeStepIndex, spaceStepIndex, timeSteps.length, spaceSteps.length]);
+
+  useEffect(() => {
+    if (isCompleted && onCompleteStage) {
+      onCompleteStage('complexity');
+    }
+  }, [isCompleted, onCompleteStage]);
 
   const handleNextTimeStep = () => {
     if (timeStepIndex < timeSteps.length - 1) {
@@ -262,30 +270,39 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
         </div>
       </div>
 
-      {/* Completion Banner */}
-      {isCompleted && (
-        <div className="p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in zoom-in-95 duration-500">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <div>
-              <h3 className="text-emerald-800 dark:text-emerald-300 font-bold text-lg">Complexity Understood!</h3>
-              <p className="text-emerald-600 dark:text-emerald-400/80 text-sm">
-                You've successfully calculated the time ({complexityData.time.complexity}) and space ({complexityData.space.complexity}) complexity.
-              </p>
-            </div>
-          </div>
-          
+      {/* Footer Action */}
+      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          aria-pressed={isCompleted}
+          onClick={() => setIsCompleted(!isCompleted)}
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            isCompleted
+              ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+              : 'bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          {isCompleted ? (
+            <>
+              <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Complexity Mastered ✓</span>
+            </>
+          ) : (
+            <span>I Understand This Complexity</span>
+          )}
+        </button>
+
+        {onNextStage && (
           <button
+            type="button"
             onClick={onNextStage}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold font-mono text-sm transition-colors shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            Practice Next
-            <ChevronRight className="w-4 h-4" />
+            <span>Next: Stage 10 Practice →</span>
+            <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
     </div>
   );

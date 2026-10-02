@@ -69,7 +69,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
           <span className="text-[11px] font-mono font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase block">
             INTERACTIVE EXPLORER
           </span>
-          <h2 id="example-explorer-heading" className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+          <h2 id="example-explorer-heading" className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
             Sample Case Analysis
           </h2>
         </div>
@@ -216,7 +216,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
                 <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
                   Given Input:
                 </span>
-                <div className="font-mono text-xs sm:text-sm text-slate-900 dark:text-white font-bold py-1">
+                <div className="font-mono text-sm font-bold tracking-tight text-slate-900 dark:text-white py-1">
                   {inputRaw}
                 </div>
               </div>
@@ -247,7 +247,7 @@ export function GenericExampleExplorer({ testCases = [] }) {
                 id="reasoning-explanation-panel"
                 className="mt-3 border-l-2 border-blue-500 pl-4 py-1 text-xs font-mono space-y-1 text-slate-700 dark:text-slate-300 transition-all duration-200 motion-reduce:transition-none"
               >
-                <div className="font-bold text-slate-900 dark:text-white mb-1">
+                <div className="text-sm font-bold tracking-tight text-slate-900 dark:text-white mb-1">
                   Example Explanation:
                 </div>
                 <ul className="space-y-1.5">

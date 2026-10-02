@@ -73,6 +73,13 @@ export default function ProblemWorkspace({
     }
   }, [id]);
 
+  // Reset stages and progress when problem changes
+  useEffect(() => {
+    const currentActiveProblem = id || selectedProblemId || 'two-sum';
+    setCompletedStages({ problem: true });
+    setCurrentStageId('understand');
+  }, [id, selectedProblemId]);
+
   const handleProblemChange = (newId) => {
     setSelectedProblemId(newId);
     if (id) {
@@ -379,7 +386,7 @@ export default function ProblemWorkspace({
           </div>
 
           {/* Active Stage View */}
-          <div className="min-h-[500px]">
+          <div className="min-h-[500px]" key={activeProblemId}>
             {currentStageId === 'problem' && (
               <ProblemStage
                 problemData={problem}

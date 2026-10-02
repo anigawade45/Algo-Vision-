@@ -3,7 +3,6 @@ import { FileText, Check, ArrowRight } from 'lucide-react';
 import { getPatternByProblemId } from '../../data/pattern';
 import PatternStructure from './PatternStructure';
 import PatternSignals from './PatternSignals';
-import PatternFingerprint from './PatternFingerprint';
 import PatternSolutionFamilies from './PatternSolutionFamilies';
 
 /**
@@ -50,7 +49,6 @@ export function PatternStage({
     signals,
     abstraction,
     pattern,
-    fingerprint,
     solutionFamilies,
   } = patternData;
 
@@ -58,7 +56,6 @@ export function PatternStage({
   let sectionCounter = 1;
   const structureNo = structure ? String(sectionCounter++).padStart(2, '0') : null;
   const signalsNo = signals ? String(sectionCounter++).padStart(2, '0') : null;
-  const fingerprintNo = (pattern && fingerprint) ? String(sectionCounter++).padStart(2, '0') : null;
   const solutionFamiliesNo = solutionFamilies ? String(sectionCounter++).padStart(2, '0') : null;
 
   return (
@@ -116,16 +113,9 @@ export function PatternStage({
         <PatternSignals signals={signals} sectionNo={signalsNo} />
       )}
 
-      {/* SECTION 03 — PATTERN RECOGNITION & FINGERPRINT */}
-      {pattern && fingerprint && (
-        <PatternFingerprint
-          pattern={pattern}
-          fingerprint={fingerprint}
-          sectionNo={fingerprintNo}
-        />
-      )}
 
-      {/* SECTION 04 — CONNECT THE PATTERN TO SOLUTION FAMILIES */}
+
+      {/* SECTION 03 — CONNECT THE PATTERN TO SOLUTION FAMILIES */}
       {solutionFamilies && (
         <PatternSolutionFamilies
           patternName={pattern?.name}
@@ -134,43 +124,39 @@ export function PatternStage({
         />
       )}
 
-      {/* COMPLETION ACTIONS */}
-      <section
-        className="pt-6 border-t border-slate-200/80 dark:border-slate-800/80"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      {/* Footer Action */}
+      <div className="mt-6 p-5 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          aria-pressed={understood}
+          onClick={handleCheckpoint}
+          className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            understood
+              ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+              : 'bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          {understood ? (
+            <>
+              <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
+              <span>Pattern Recognized ✓</span>
+            </>
+          ) : (
+            <span>I Recognize the Pattern</span>
+          )}
+        </button>
+
+        {onNextStage && (
           <button
             type="button"
-            aria-pressed={understood}
-            onClick={handleCheckpoint}
-            className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-mono font-bold shadow-xs transition-all duration-150 cursor-pointer min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${
-              understood
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
+            onClick={onNextStage}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
-            {understood ? (
-              <>
-                <Check className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span>Pattern Recognized ✓</span>
-              </>
-            ) : (
-              <span>I Recognize the Pattern</span>
-            )}
+            <span>Next: Stage 05 Algorithm →</span>
+            <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
           </button>
-
-          {onNextStage && (
-            <button
-              type="button"
-              onClick={onNextStage}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-            >
-              <span>Continue to Algorithm</span>
-              <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
-            </button>
-          )}
-        </div>
-      </section>
+        )}
+      </div>
     </div>
   );
 }
