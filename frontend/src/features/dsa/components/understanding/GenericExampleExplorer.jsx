@@ -15,7 +15,7 @@ import { OutputDataRenderer } from './OutputDataRenderer';
  * data-driven example exploration & reasoning across all 10 DSA problem types.
  * Isolates Two Sum interaction cleanly behind `interaction.type === "pair_sum"`.
  */
-export function GenericExampleExplorer({ testCases = [] }) {
+export function GenericExampleExplorer({ testCases = [], testCaseExplanations = [], problemType, category }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [selectedIndices, setSelectedIndices] = useState([]);
   const [showReasoning, setShowReasoning] = useState(false);
@@ -31,6 +31,14 @@ export function GenericExampleExplorer({ testCases = [] }) {
 
   const currentTestCase = testCases[activeIdx] || testCases[0];
   const { inputStructured, outputStructured, reasoning, interaction, inputRaw, outputRaw } = currentTestCase;
+  const activeTestCaseId = currentTestCase.id || activeIdx + 1;
+
+  const aiExplanationObj = (testCaseExplanations || []).find(
+    (item) => Number(item.testCaseId) === Number(activeTestCaseId)
+  );
+  const aiExplanationText = aiExplanationObj?.explanation;
+
+  const hasExplanation = (reasoning && reasoning.length > 0) || Boolean(aiExplanationText);
 
   const handleExampleChange = (idx) => {
     setActiveIdx(idx);
@@ -209,26 +217,24 @@ export function GenericExampleExplorer({ testCases = [] }) {
         ) : (
           /* OPTION 2: Generic Clean Input ➔ Output Transformation View */
           <div className="space-y-4">
-            {inputStructured ? (
-              <InputDataRenderer inputData={inputStructured} label="GIVEN INPUT" />
-            ) : (
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-                  Given Input:
-                </span>
-                <div className="font-mono text-sm font-bold tracking-tight text-slate-900 dark:text-white py-1">
-                  {inputRaw}
-                </div>
-              </div>
-            )}
+            <InputDataRenderer
+              inputData={inputStructured || (inputRaw !== undefined ? { value: inputRaw, type: problemType, category } : null)}
+              label="GIVEN INPUT"
+            />
 
             {/* Delegate output rendering cleanly to OutputDataRenderer */}
-            <OutputDataRenderer outputData={outputStructured} rawOutput={outputRaw} label="EXPECTED OUTPUT" />
+            <OutputDataRenderer
+              outputData={outputStructured}
+              rawOutput={outputRaw}
+              problemType={problemType}
+              category={category}
+              label="EXPECTED OUTPUT"
+            />
           </div>
         )}
 
         {/* Reasoning Dropdown */}
-        {reasoning && reasoning.length > 0 && (
+        {hasExplanation && (
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80">
             <button
               type="button"
@@ -238,25 +244,34 @@ export function GenericExampleExplorer({ testCases = [] }) {
               className="inline-flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded"
             >
               <Eye className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-              <span>{showReasoning ? 'Hide expected output explanation' : 'Why is this the expected output?'}</span>
+              <span>{showReasoning ? 'Hide example explanation' : 'Why is this the expected output?'}</span>
               {showReasoning ? <ChevronUp className="w-3.5 h-3.5 shrink-0" aria-hidden="true" /> : <ChevronDown className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />}
             </button>
 
             {showReasoning && (
               <div
                 id="reasoning-explanation-panel"
-                className="mt-3 border-l-2 border-blue-500 pl-4 py-1 text-xs font-mono space-y-1 text-slate-700 dark:text-slate-300 transition-all duration-200 motion-reduce:transition-none"
+                className="mt-3 border-l-2 border-blue-500 pl-4 py-1 text-xs font-mono space-y-2 text-slate-700 dark:text-slate-300 transition-all duration-200 motion-reduce:transition-none"
               >
-                <div className="text-sm font-bold tracking-tight text-slate-900 dark:text-white mb-1">
-                  Example Explanation:
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  Example Analysis:
                 </div>
-                <ul className="space-y-1.5">
-                  {reasoning.map((item, idx) => (
-                    <li key={idx} className="text-slate-600 dark:text-slate-400">
-                      • {typeof item === 'object' ? `${item.label}: ${item.value}` : String(item)}
-                    </li>
-                  ))}
-                </ul>
+
+                {aiExplanationText && (
+                  <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-sans text-xs sm:text-sm bg-blue-50/50 dark:bg-blue-950/30 p-2.5 rounded-lg border border-blue-100 dark:border-blue-900/40">
+                    {aiExplanationText}
+                  </p>
+                )}
+
+                {reasoning && reasoning.length > 0 && (
+                  <ul className="space-y-1.5 pt-1">
+                    {reasoning.map((item, idx) => (
+                      <li key={idx} className="text-slate-600 dark:text-slate-400">
+                        • {typeof item === 'object' ? `${item.label}: ${item.value}` : String(item)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
           </div>

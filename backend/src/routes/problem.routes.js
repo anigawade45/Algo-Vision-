@@ -1,12 +1,16 @@
 const express = require('express');
 const problemController = require('../controllers/problem.controller');
 const problemWorkspaceRoutes = require('./problemWorkspace.routes');
+const problemUnderstandingRoutes = require('./problemUnderstanding.routes');
 const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
 
 // Workspace routes
 router.use('/:problemId/workspace', problemWorkspaceRoutes);
+
+// Stage 02 Understanding routes
+router.use('/:problemId/understanding', problemUnderstandingRoutes);
 
 // Base problem routes
 router.get('/', problemController.getProblems);

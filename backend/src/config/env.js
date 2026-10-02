@@ -38,6 +38,8 @@ const env = Object.freeze({
   smtpUser: process.env.SMTP_USER || '',
   smtpPassword: process.env.SMTP_PASSWORD || '',
   emailFrom: process.env.EMAIL_FROM || 'AlgoVision <no-reply@algovision.io>',
+  geminiApiKey: process.env.GEMINI_API_KEY || '',
+  geminiModel: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
 });
 
 module.exports = env;

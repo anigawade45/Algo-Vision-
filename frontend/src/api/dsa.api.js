@@ -59,3 +59,25 @@ export const createProblemWorkspace = async (problemId) => {
 export const updateProblemWorkspace = async (problemId, data) => {
   return await apiClient.patch(`/problems/${problemId}/workspace`, data);
 };
+
+/**
+ * Retrieve Stage 02 Problem Understanding data
+ */
+export const getProblemUnderstanding = async (problemId) => {
+  return await apiClient.get(`/problems/${problemId}/understanding`);
+};
+
+/**
+ * Generate Stage 02 Problem Understanding via Gemini AI
+ */
+export const generateProblemUnderstanding = async (problemId) => {
+  return await apiClient.post(`/problems/${problemId}/understanding/generate`);
+};
+
+/**
+ * Force regenerate Stage 02 Problem Understanding via Gemini AI
+ */
+export const regenerateProblemUnderstanding = async (problemId) => {
+  return await apiClient.post(`/problems/${problemId}/understanding/regenerate`);
+};
+

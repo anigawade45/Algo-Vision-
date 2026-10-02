@@ -10,6 +10,7 @@ export const MOCK_UNDERSTAND = {
     category: 'Array',
     difficulty: 'Easy',
     objective: 'Find two numbers in the array whose sum equals the target.',
+    objectiveExplanation: 'Find indices of two numbers in array that add up to target.',
     description: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.',
     constraints: [
       '2 ≤ nums.length ≤ 10⁴',
@@ -57,18 +58,18 @@ export const MOCK_UNDERSTAND = {
     observations: [
       {
         stepNo: '01',
-        title: 'TWO VALUES WORK TOGETHER',
-        detail: 'The answer depends on a pair of values, not a single value.',
+        title: 'EXACTLY ONE SOLUTION EXISTS',
+        detail: 'The problem guarantees that each input will have precisely one valid pair that satisfies the condition, eliminating ambiguous or multiple answers.',
       },
       {
         stepNo: '02',
-        title: 'THE TARGET DEFINES THE RELATIONSHIP',
-        detail: 'The two values must combine to produce the given target sum.',
+        title: 'ELEMENT REUSE IS FORBIDDEN',
+        detail: 'The same array element at a single index cannot be used twice to reach the target sum.',
       },
       {
         stepNo: '03',
-        title: 'THE OUTPUT IDENTIFIES THEIR POSITIONS',
-        detail: 'The answer refers to where the values appear in the original array.',
+        title: 'ORDER OF INDICES IN OUTPUT IS FLEXIBLE',
+        detail: 'The resulting index pair can be returned in any order without affecting correctness.',
       },
     ],
   },

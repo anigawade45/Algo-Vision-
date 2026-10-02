@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Grid3X3, GitBranch, Layers, Network } from 'lucide-react';
+import { ArrowRight, Grid3X3, GitBranch, Layers, Network, RotateCcw } from 'lucide-react';
 
 function parseBinaryTree(inputData) {
   if (!inputData) return null;
@@ -35,6 +35,17 @@ function parseBinaryTree(inputData) {
     return root;
   }
 
+  let parsedFromStr = null;
+  const strVal = typeof inputData === 'string' ? inputData : typeof inputData?.value === 'string' ? inputData.value : '';
+  if (strVal) {
+    const rootMatch = strVal.match(/root\s*=\s*(\[[^\]]*\])/i) || strVal.match(/\[([^\]]*)\]/);
+    if (rootMatch) {
+      try {
+        parsedFromStr = JSON.parse(rootMatch[1].replace(/null/g, 'null'));
+      } catch (e) {}
+    }
+  }
+
   // Option B: LeetCode Level-Order Array Serialization (e.g. [1, null, 2, 3])
   const arr = Array.isArray(value?.root)
     ? value.root
@@ -44,11 +55,13 @@ function parseBinaryTree(inputData) {
         ? value.arrayForm
         : Array.isArray(inputData?.arrayForm)
           ? inputData.arrayForm
-          : Array.isArray(value)
-            ? value
-            : Array.isArray(inputData?.nodes) && typeof inputData.nodes[0] !== 'object'
-              ? inputData.nodes
-              : [];
+          : Array.isArray(parsedFromStr)
+            ? parsedFromStr
+            : Array.isArray(value)
+              ? value
+              : Array.isArray(inputData?.nodes) && typeof inputData.nodes[0] !== 'object'
+                ? inputData.nodes
+                : [];
 
   if (!Array.isArray(arr) || arr.length === 0 || arr[0] === null || arr[0] === undefined) {
     return null;
@@ -83,35 +96,43 @@ function parseBinaryTree(inputData) {
   return root;
 }
 
+function getTreeHeight(root) {
+  if (!root) return 0;
+  return 1 + Math.max(getTreeHeight(root.left), getTreeHeight(root.right));
+}
+
 /**
  * Traverses root tree structure and computes (x, y) coordinates & connecting lines for SVG rendering.
+ * Uses depth-aware exponential scaling to guarantee zero node collisions even on deep/skewed trees.
  */
 function layoutTree(root) {
   if (!root) return { nodes: [], lines: [], viewBox: '0 0 320 180', width: 320, height: 180 };
 
+  const height = getTreeHeight(root);
   const nodes = [];
   const lines = [];
 
-  function traverse(node, x, y, dx) {
+  function traverse(node, x, y, level, pathId) {
     if (!node) return;
-    nodes.push({ id: `node-${node.val}-${x}-${y}`, val: node.val, x, y });
+    nodes.push({ id: `node-${pathId}-${node.val}`, val: node.val, x, y });
 
-    const nextY = y + 52;
-    const nextDx = Math.max(dx * 0.55, 28);
+    const nextY = y + 58;
+    // Scale horizontal offset based on depth level to maintain clean minimum 40px spacing
+    const dx = Math.max(40, Math.pow(1.7, Math.max(0, height - level - 2)) * 34);
 
     if (node.left) {
       const leftX = x - dx;
-      lines.push({ id: `line-${node.val}-${node.left.val}`, x1: x, y1: y, x2: leftX, y2: nextY });
-      traverse(node.left, leftX, nextY, nextDx);
+      lines.push({ id: `line-${pathId}-L`, x1: x, y1: y, x2: leftX, y2: nextY });
+      traverse(node.left, leftX, nextY, level + 1, `${pathId}L`);
     }
     if (node.right) {
       const rightX = x + dx;
-      lines.push({ id: `line-${node.val}-${node.right.val}`, x1: x, y1: y, x2: rightX, y2: nextY });
-      traverse(node.right, rightX, nextY, nextDx);
+      lines.push({ id: `line-${pathId}-R`, x1: x, y1: y, x2: rightX, y2: nextY });
+      traverse(node.right, rightX, nextY, level + 1, `${pathId}R`);
     }
   }
 
-  traverse(root, 160, 36, 65);
+  traverse(root, 0, 36, 0, 'R');
 
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   nodes.forEach(n => {
@@ -121,19 +142,223 @@ function layoutTree(root) {
     if (n.y > maxY) maxY = n.y;
   });
 
-  const paddingX = 35;
-  const paddingY = 30;
-  const width = Math.max(maxX - minX + paddingX * 2, 140);
-  const height = Math.max(maxY - minY + paddingY * 2, 100);
-  const viewBox = `${minX - paddingX} ${minY - paddingY} ${width} ${height}`;
+  const paddingX = 42;
+  const paddingY = 32;
+  const width = Math.max(maxX - minX + paddingX * 2, 160);
+  const heightPx = Math.max(maxY - minY + paddingY * 2, 120);
+  const viewBox = `${minX - paddingX} ${minY - paddingY} ${width} ${heightPx}`;
 
-  return { nodes, lines, viewBox, width, height };
+  return { nodes, lines, viewBox, width, height: heightPx };
+}
+
+function isNaryTreeArray(arr, type, category, title) {
+  if (
+    type === 'nary_tree' ||
+    type === 'n_ary_tree' ||
+    (category && String(category).toLowerCase().includes('n-ary')) ||
+    (title && String(title).toLowerCase().includes('n-ary'))
+  ) {
+    return true;
+  }
+
+  if (!Array.isArray(arr) || arr.length < 4 || arr[0] === null || arr[1] !== null) {
+    return false;
+  }
+
+  // Count consecutive non-null items in child groups after arr[1] === null
+  let maxConsecutiveNonNull = 0;
+  let currentConsecutive = 0;
+
+  for (let i = 2; i < arr.length; i++) {
+    if (arr[i] !== null && arr[i] !== undefined) {
+      currentConsecutive++;
+      if (currentConsecutive > maxConsecutiveNonNull) {
+        maxConsecutiveNonNull = currentConsecutive;
+      }
+    } else {
+      currentConsecutive = 0;
+    }
+  }
+
+  // If there are 2 or more consecutive non-null children in a group, it is an N-ary Tree (e.g. [1, null, 3, 2, 4, null, 5, 6])
+  return maxConsecutiveNonNull >= 2;
+}
+
+function parseNaryTree(arr) {
+  if (!Array.isArray(arr) || arr.length === 0 || arr[0] === null || arr[0] === undefined) return null;
+
+  const root = { val: arr[0], children: [] };
+  const queue = [root];
+  let i = 1;
+
+  while (queue.length > 0 && i < arr.length) {
+    const parent = queue.shift();
+
+    if (i < arr.length && arr[i] === null) {
+      i++;
+    }
+
+    while (i < arr.length && arr[i] !== null) {
+      if (arr[i] !== undefined) {
+        const child = { val: arr[i], children: [] };
+        parent.children.push(child);
+        queue.push(child);
+      }
+      i++;
+    }
+  }
+
+  return root;
+}
+
+function getNaryTreeHeight(root) {
+  if (!root) return 0;
+  if (!root.children || root.children.length === 0) return 1;
+  return 1 + Math.max(...root.children.map(getNaryTreeHeight));
+}
+
+function layoutNaryTree(root) {
+  if (!root) return { nodes: [], lines: [], viewBox: '0 0 320 180', width: 320, height: 180 };
+
+  const height = getNaryTreeHeight(root);
+  const nodes = [];
+  const lines = [];
+
+  function traverse(node, x, y, level, pathId) {
+    if (!node) return;
+    nodes.push({ id: `node-${pathId}-${node.val}`, val: node.val, x, y });
+
+    const numChildren = node.children ? node.children.length : 0;
+    if (numChildren > 0) {
+      const nextY = y + 62;
+      const childSpacing = Math.max(52, Math.pow(1.6, Math.max(0, height - level - 2)) * 38);
+      const totalWidth = (numChildren - 1) * childSpacing;
+      const startX = x - totalWidth / 2;
+
+      node.children.forEach((child, idx) => {
+        const childX = startX + idx * childSpacing;
+        lines.push({ id: `line-${pathId}-${idx}`, x1: x, y1: y, x2: childX, y2: nextY });
+        traverse(child, childX, nextY, level + 1, `${pathId}_${idx}`);
+      });
+    }
+  }
+
+  traverse(root, 0, 36, 0, 'R');
+
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  nodes.forEach((n) => {
+    if (n.x < minX) minX = n.x;
+    if (n.x > maxX) maxX = n.x;
+    if (n.y < minY) minY = n.y;
+    if (n.y > maxY) maxY = n.y;
+  });
+
+  const paddingX = 45;
+  const paddingY = 32;
+  const width = Math.max(maxX - minX + paddingX * 2, 180);
+  const heightPx = Math.max(maxY - minY + paddingY * 2, 120);
+  const viewBox = `${minX - paddingX} ${minY - paddingY} ${width} ${heightPx}`;
+
+  return { nodes, lines, viewBox, width, height: heightPx };
 }
 
 /**
- * Helper to build visual SVG nodes & line coordinates from level-order binary tree data.
+ * Helper to build visual SVG nodes & line coordinates from binary or N-ary tree data.
  */
 function renderBinaryTreeSVG(inputData) {
+  const strVal = typeof inputData === 'string' ? inputData : typeof inputData?.value === 'string' ? inputData.value : '';
+  let parsedFromStr = null;
+  if (strVal) {
+    const rootMatch = strVal.match(/root\s*=\s*(\[[^\]]*\])/i) || strVal.match(/\[([^\]]*)\]/);
+    if (rootMatch) {
+      try {
+        parsedFromStr = JSON.parse(rootMatch[1].replace(/null/g, 'null'));
+      } catch (e) {}
+    }
+  }
+
+  const arr = Array.isArray(inputData?.root)
+    ? inputData.root
+    : Array.isArray(inputData?.value?.root)
+      ? inputData.value.root
+      : Array.isArray(inputData?.arrayForm)
+        ? inputData.arrayForm
+        : Array.isArray(parsedFromStr)
+          ? parsedFromStr
+          : Array.isArray(inputData?.value)
+            ? inputData.value
+            : Array.isArray(inputData)
+              ? inputData
+              : [];
+
+  const isNary = isNaryTreeArray(arr, inputData?.type, inputData?.category, inputData?.title);
+
+  if (isNary) {
+    const naryRoot = parseNaryTree(arr);
+    if (!naryRoot) return null;
+    const { nodes, lines, viewBox, width } = layoutNaryTree(naryRoot);
+
+    return (
+      <div className="flex items-start max-w-full overflow-x-auto py-1">
+        <svg
+          viewBox={viewBox}
+          style={{ width: `${Math.min(Math.max(width, 180), 450)}px`, height: 'auto' }}
+          className="text-slate-700 dark:text-slate-200"
+          aria-label="N-ary Tree Diagram"
+        >
+          <defs>
+            <marker
+              id="arrowhead-nary"
+              markerWidth="8"
+              markerHeight="6"
+              refX="22"
+              refY="3"
+              orient="auto"
+            >
+              <polygon points="0 0, 8 3, 0 6" fill="currentColor" className="text-slate-400 dark:text-slate-500" />
+            </marker>
+          </defs>
+
+          {/* Connecting Edge Lines with Arrowheads */}
+          {lines.map((l) => (
+            <line
+              key={l.id}
+              x1={l.x1}
+              y1={l.y1}
+              x2={l.x2}
+              y2={l.y2}
+              stroke="currentColor"
+              strokeWidth="2"
+              markerEnd="url(#arrowhead-nary)"
+              className="text-slate-300 dark:text-slate-700"
+            />
+          ))}
+
+          {/* Tree Nodes */}
+          {nodes.map((n) => (
+            <g key={n.id} className="cursor-default">
+              <circle
+                cx={n.x}
+                cy={n.y}
+                r="18"
+                className="fill-white dark:fill-[#0F172A] stroke-blue-500 dark:stroke-blue-400 stroke-2 drop-shadow-xs"
+              />
+              <text
+                x={n.x}
+                y={n.y + 4}
+                textAnchor="middle"
+                className="fill-slate-900 dark:fill-white font-mono text-xs font-bold"
+              >
+                {n.val}
+              </text>
+            </g>
+          ))}
+        </svg>
+      </div>
+    );
+  }
+
+  // Binary Tree Fallback
   const root = parseBinaryTree(inputData);
   if (!root) return null;
 
@@ -187,28 +412,59 @@ function renderBinaryTreeSVG(inputData) {
 
 /**
  * Helper to build visual SVG graph layout.
+ * Uses preset coordinates for small graphs (N <= 5) and dynamic circular
+ * trigonometric positioning for N >= 6 to guarantee zero node overlaps.
  */
 function renderGraphSVG(graphObj, isDirected = false) {
   const adjacency = graphObj?.adjacency || {};
   const nodes = Object.keys(adjacency);
   if (nodes.length === 0) return null;
 
-  // Pre-calculated node coordinates for up to 5 nodes
-  const defaultPosMap = {
-    '0': { x: 50, y: 50 },
-    '1': { x: 150, y: 30 },
-    '2': { x: 150, y: 110 },
-    '3': { x: 250, y: 110 },
-    '4': { x: 250, y: 30 },
-  };
-
+  const N = nodes.length;
   const posMap = {};
-  nodes.forEach((n, idx) => {
-    posMap[n] = defaultPosMap[n] || {
-      x: 50 + (idx % 3) * 90,
-      y: 40 + Math.floor(idx / 3) * 70,
+
+  if (N <= 5) {
+    const presets = {
+      1: [{ x: 100, y: 60 }],
+      2: [{ x: 70, y: 60 }, { x: 190, y: 60 }],
+      3: [{ x: 60, y: 90 }, { x: 130, y: 35 }, { x: 200, y: 90 }],
+      4: [{ x: 60, y: 35 }, { x: 190, y: 35 }, { x: 190, y: 110 }, { x: 60, y: 110 }],
+      5: [{ x: 50, y: 70 }, { x: 140, y: 30 }, { x: 140, y: 110 }, { x: 230, y: 30 }, { x: 230, y: 110 }],
     };
+    const coords = presets[N];
+    nodes.forEach((n, idx) => {
+      posMap[n] = coords[idx];
+    });
+  } else {
+    // Dynamic circular layout algorithm for N >= 6 nodes (guarantees ZERO node collisions)
+    const Rx = Math.max(130, N * 22);
+    const Ry = Math.max(70, N * 13);
+    const cx = Rx + 40;
+    const cy = Ry + 40;
+
+    nodes.forEach((n, idx) => {
+      const angle = (2 * Math.PI * idx) / N - Math.PI / 2;
+      posMap[n] = {
+        x: Math.round(cx + Rx * Math.cos(angle)),
+        y: Math.round(cy + Ry * Math.sin(angle)),
+      };
+    });
+  }
+
+  // Calculate bounding box dynamically
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  Object.values(posMap).forEach((p) => {
+    if (p.x < minX) minX = p.x;
+    if (p.x > maxX) maxX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.y > maxY) maxY = p.y;
   });
+
+  const padX = 36;
+  const padY = 32;
+  const widthPx = Math.max(maxX - minX + padX * 2, 280);
+  const heightPx = Math.max(maxY - minY + padY * 2, 140);
+  const viewBox = `${minX - padX} ${minY - padY} ${widthPx} ${heightPx}`;
 
   const edges = [];
   const added = new Set();
@@ -231,8 +487,8 @@ function renderGraphSVG(graphObj, isDirected = false) {
   return (
     <div className="flex items-start max-w-full overflow-x-auto py-1">
       <svg
-        viewBox="20 10 280 130"
-        style={{ width: '310px', height: 'auto' }}
+        viewBox={viewBox}
+        style={{ width: `${Math.min(Math.max(widthPx, 280), 460)}px`, height: 'auto' }}
         className="text-slate-700 dark:text-slate-200"
         aria-label="Graph structure visual diagram"
       >
@@ -352,8 +608,7 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
   const { type, value, label: customLabel } = inputData;
   const displayLabel = customLabel || label;
 
-  // Safe data extractors for any data structure configuration
-  const arrayVal = Array.isArray(value?.array)
+  let rawArrayVal = Array.isArray(value?.array)
     ? value.array
     : Array.isArray(inputData?.array)
       ? inputData.array
@@ -369,24 +624,203 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
                 ? value.elements
                 : Array.isArray(inputData?.elements)
                   ? inputData.elements
-                  : Array.isArray(value)
+                  : Array.isArray(value) && value.length > 0 && !Array.isArray(value[0])
                     ? value
                     : [];
 
-  const targetVal = value?.target ?? inputData.target;
+  let rawTargetVal = value?.target ?? inputData.target;
   const strVal = typeof value === 'string' ? value : typeof inputData.value === 'string' ? inputData.value : '';
-  const nodesList = Array.isArray(value?.nodes)
-    ? value.nodes
-    : Array.isArray(inputData?.nodes)
-      ? inputData.nodes
-      : Array.isArray(value?.head)
-        ? value.head
-        : Array.isArray(inputData?.head)
-          ? inputData.head
-          : Array.isArray(value)
-            ? value
-            : [];
-  const treeArray = Array.isArray(value?.arrayForm)
+
+  let posVal = value?.pos ?? inputData?.pos;
+  if (posVal === undefined && strVal) {
+    const posMatch = strVal.match(/pos\s*=\s*(-?\d+)/i);
+    if (posMatch) {
+      posVal = Number(posMatch[1]);
+    }
+  }
+  const cyclePos = (posVal !== undefined && posVal !== null && !isNaN(Number(posVal)) && Number(posVal) >= 0) ? Number(posVal) : null;
+
+  let derivedType = type;
+  let arrayVal = rawArrayVal;
+  let targetVal = rawTargetVal;
+  let pTreeArray = Array.isArray(value?.p) ? value.p : Array.isArray(inputData?.p) ? inputData.p : null;
+  let qTreeArray = Array.isArray(value?.q) ? value.q : Array.isArray(inputData?.q) ? inputData.q : null;
+  let parsedSingleTreeArray = null;
+
+  let parsedLinkedList = Array.isArray(value?.head)
+    ? value.head
+    : Array.isArray(inputData?.head)
+      ? inputData.head
+      : Array.isArray(value?.nodes)
+        ? value.nodes
+        : Array.isArray(inputData?.nodes)
+          ? inputData.nodes
+          : Array.isArray(value?.list)
+            ? value.list
+            : Array.isArray(inputData?.list)
+              ? inputData.list
+              : null;
+
+  const isLinkedListCategory =
+    type === 'linked_list' ||
+    type === 'linkedlist' ||
+    (inputData?.category && String(inputData.category).toLowerCase().includes('linked list')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('linked list'));
+
+  const isGraphCategory =
+    type === 'graph' ||
+    type === 'graph_prerequisites' ||
+    type === 'graph_edges' ||
+    type === 'graph_weighted' ||
+    (inputData?.category && String(inputData.category).toLowerCase().includes('graph')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('graph')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('course schedule')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('components')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('partition')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('distances')) ||
+    (inputData?.title && String(inputData.title).toLowerCase().includes('redundant connection'));
+
+  let extractedEdges = Array.isArray(value?.edges)
+    ? value.edges
+    : Array.isArray(inputData?.edges)
+      ? inputData.edges
+      : null;
+
+  let extractedPrereqs = Array.isArray(value?.prerequisites)
+    ? value.prerequisites
+    : Array.isArray(inputData?.prerequisites)
+      ? inputData.prerequisites
+      : null;
+
+  let extractedN = value?.n ?? inputData?.n ?? value?.numCourses ?? inputData?.numCourses;
+  let extractedStart = value?.start ?? inputData?.start ?? value?.source ?? inputData?.source;
+  let extractedDest = value?.destination ?? inputData?.destination ?? value?.target ?? inputData?.target;
+
+  if (strVal && (!extractedEdges && !extractedPrereqs)) {
+    const edgesMatch = strVal.match(/edges\s*=\s*(\[\s*(?:\[[^\]]*\]\s*,?\s*)*\])/i) || strVal.match(/edges\s*=\s*(\[\s*[\s\S]*?\])/i);
+    const prereqMatch = strVal.match(/prerequisites\s*=\s*(\[\s*(?:\[[^\]]*\]\s*,?\s*)*\])/i) || strVal.match(/prerequisites\s*=\s*(\[\s*[\s\S]*?\])/i);
+    const nMatch = strVal.match(/(?:n|numCourses)\s*=\s*(\d+)/i);
+    const startMatch = strVal.match(/(?:start|source)\s*=\s*(\d+)/i);
+    const destMatch = strVal.match(/(?:destination|target|dest)\s*=\s*(\d+)/i);
+
+    if (edgesMatch) {
+      try {
+        extractedEdges = JSON.parse(edgesMatch[1]);
+      } catch (e) {}
+    }
+    if (prereqMatch) {
+      try {
+        extractedPrereqs = JSON.parse(prereqMatch[1]);
+      } catch (e) {}
+    }
+    if (nMatch && extractedN === undefined) extractedN = Number(nMatch[1]);
+    if (startMatch && extractedStart === undefined) extractedStart = Number(startMatch[1]);
+    if (destMatch && extractedDest === undefined) extractedDest = Number(destMatch[1]);
+  }
+
+  if (!extractedEdges && !extractedPrereqs && isGraphCategory) {
+    if (Array.isArray(value) && value.length > 0 && Array.isArray(value[0])) {
+      extractedEdges = value;
+    } else if (Array.isArray(inputData?.value) && Array.isArray(inputData.value[0])) {
+      extractedEdges = inputData.value;
+    } else if (strVal) {
+      const matrixMatch = strVal.match(/(\[\s*\[[\s\S]*?\]\s*\])/);
+      if (matrixMatch) {
+        try {
+          const parsedMatrix = JSON.parse(matrixMatch[1]);
+          if (Array.isArray(parsedMatrix) && parsedMatrix.length > 0 && Array.isArray(parsedMatrix[0])) {
+            extractedEdges = parsedMatrix;
+          }
+        } catch (e) {}
+      }
+    }
+  }
+
+  if (extractedEdges !== null || extractedPrereqs !== null || isGraphCategory || value?.adjacency || inputData?.adjacency || (extractedN !== undefined && isGraphCategory)) {
+    derivedType = 'graph';
+  }
+
+  if (!parsedLinkedList && isLinkedListCategory && !isGraphCategory && Array.isArray(rawArrayVal) && rawArrayVal.length > 0) {
+    parsedLinkedList = rawArrayVal;
+  }
+
+  if (strVal && (!derivedType || derivedType === 'string' || !arrayVal.length)) {
+    const headMatch = strVal.match(/head\s*=\s*(\[[^\]]*\])/i);
+    const arrowMatch = strVal.match(/(-?\d+\s*->\s*)+-?\d+/i);
+    const pMatch = strVal.match(/p\s*=\s*(\[[^\]]*\])/i);
+    const qMatch = strVal.match(/q\s*=\s*(\[[^\]]*\])/i);
+    const rootMatch = strVal.match(/root\s*=\s*(\[[^\]]*\])/i);
+
+    if (headMatch) {
+      try {
+        parsedLinkedList = JSON.parse(headMatch[1]);
+        derivedType = 'linked_list';
+      } catch (e) {}
+    } else if (arrowMatch) {
+      parsedLinkedList = strVal.split('->').map(s => s.trim()).filter(s => s.toLowerCase() !== 'null' && s.length > 0).map(Number);
+      derivedType = 'linked_list';
+    } else if (isLinkedListCategory && !isGraphCategory) {
+      const arrayMatch = strVal.match(/\[([\d\s,.-]*)\]/);
+      if (arrayMatch) {
+        try {
+          parsedLinkedList = arrayMatch[1].trim() === '' ? [] : JSON.parse(`[${arrayMatch[1]}]`);
+          derivedType = 'linked_list';
+        } catch (e) {}
+      } else if (strVal.trim() === '[]' || strVal.trim() === 'null' || strVal.trim() === '') {
+        parsedLinkedList = [];
+        derivedType = 'linked_list';
+      }
+    } else if (pMatch && qMatch) {
+      try {
+        pTreeArray = JSON.parse(pMatch[1].replace(/null/g, 'null'));
+        qTreeArray = JSON.parse(qMatch[1].replace(/null/g, 'null'));
+        derivedType = 'two_binary_trees';
+      } catch (e) {}
+    } else if (rootMatch) {
+      try {
+        parsedSingleTreeArray = JSON.parse(rootMatch[1].replace(/null/g, 'null'));
+        derivedType = 'binary_tree';
+      } catch (e) {}
+    } else if (derivedType !== 'graph' && !isGraphCategory) {
+      const arrayMatch = strVal.match(/\[([\d\s,.-]+)\]/);
+      const targetMatch = strVal.match(/target\s*=\s*(-?\d+)/i);
+      if (arrayMatch && targetMatch) {
+        try {
+          arrayVal = JSON.parse(`[${arrayMatch[1]}]`);
+          targetVal = Number(targetMatch[1]);
+          derivedType = 'array_with_target';
+        } catch (e) {}
+      } else if (arrayMatch && !targetMatch) {
+        try {
+          arrayVal = JSON.parse(`[${arrayMatch[1]}]`);
+          derivedType = 'array';
+        } catch (e) {}
+      }
+    }
+  }
+
+  if ((parsedLinkedList !== null || isLinkedListCategory) && !isGraphCategory && derivedType !== 'graph') {
+    derivedType = 'linked_list';
+  }
+
+  if ((pTreeArray || qTreeArray) && derivedType !== 'two_binary_trees') {
+    derivedType = 'two_binary_trees';
+  }
+
+  const nodesList = parsedLinkedList !== null
+    ? parsedLinkedList
+    : (Array.isArray(value?.nodes)
+      ? value.nodes
+      : Array.isArray(inputData?.nodes)
+        ? inputData.nodes
+        : Array.isArray(value?.head)
+          ? value.head
+          : Array.isArray(inputData?.head)
+            ? inputData.head
+            : Array.isArray(value) && derivedType === 'linked_list'
+              ? value
+              : []);
+  const treeArray = parsedSingleTreeArray || (Array.isArray(value?.arrayForm)
     ? value.arrayForm
     : Array.isArray(inputData?.arrayForm)
       ? inputData.arrayForm
@@ -396,7 +830,14 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
           ? inputData.root
           : Array.isArray(value)
             ? value
-            : [];
+            : []);
+
+  const isNaryTree = isNaryTreeArray(treeArray, type, inputData?.category, inputData?.title);
+  if (isNaryTree && derivedType !== 'two_binary_trees') {
+    derivedType = 'nary_tree';
+  } else if (treeArray && treeArray.length > 0 && derivedType !== 'two_binary_trees' && (!derivedType || derivedType === 'string')) {
+    derivedType = 'binary_tree';
+  }
 
   const gridMatrix = Array.isArray(value?.grid)
     ? value.grid
@@ -420,31 +861,54 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
   // Graph Extraction Logic
   let graphObj = value?.adjacency ? value : inputData.adjacency ? inputData : { adjacency: {} };
   if (!graphObj.adjacency || Object.keys(graphObj.adjacency).length === 0) {
-    if (value?.prerequisites || inputData?.prerequisites) {
-      const prereqs = value?.prerequisites || inputData?.prerequisites || [];
-      const numCourses = value?.numCourses || inputData?.numCourses || 2;
+    if (extractedPrereqs !== null && Array.isArray(extractedPrereqs)) {
+      const numCourses = extractedN !== undefined ? extractedN : 2;
       const adj = {};
       for (let i = 0; i < numCourses; i++) adj[i] = [];
-      prereqs.forEach(([c, p]) => {
+      extractedPrereqs.forEach(([c, p]) => {
         if (!adj[p]) adj[p] = [];
         adj[p].push(c);
+        if (!adj[c]) adj[c] = [];
       });
       graphObj = { adjacency: adj, numCourses, mode: 'prerequisites' };
-    } else if (value?.edges || inputData?.edges) {
-      const edges = value?.edges || inputData?.edges || [];
-      const n = value?.n || inputData?.n || 5;
+    } else if (extractedEdges !== null || extractedN !== undefined || isGraphCategory) {
       const adj = {};
-      for (let i = 0; i < n; i++) adj[i] = [];
-      edges.forEach(([u, v]) => {
-        if (!adj[u]) adj[u] = [];
-        if (!adj[v]) adj[v] = [];
-        adj[u].push(v);
-        adj[v].push(u);
-      });
-      graphObj = { adjacency: adj, n, mode: 'components' };
+      let maxNodeId = (extractedN !== undefined && extractedN > 0) ? extractedN - 1 : 0;
+
+      if (Array.isArray(extractedEdges) && extractedEdges.length > 0) {
+        extractedEdges.forEach((e) => {
+          if (!Array.isArray(e) || e.length < 2) return;
+          const u = e[0];
+          const v = e[1];
+          if (typeof u === 'number' && u > maxNodeId) maxNodeId = u;
+          if (typeof v === 'number' && v > maxNodeId) maxNodeId = v;
+
+          const uKey = String(u);
+          const vKey = String(v);
+
+          if (!adj[uKey]) adj[uKey] = [];
+          if (!adj[vKey]) adj[vKey] = [];
+          if (!adj[uKey].includes(v)) adj[uKey].push(v);
+          if (!adj[vKey].includes(u)) adj[vKey].push(u);
+        });
+      }
+
+      const totalNodes = extractedN !== undefined ? extractedN : (Object.keys(adj).length > 0 ? maxNodeId + 1 : 0);
+      for (let i = 0; i < totalNodes; i++) {
+        const key = String(i);
+        if (!adj[key]) adj[key] = [];
+      }
+
+      graphObj = {
+        adjacency: adj,
+        n: totalNodes,
+        mode: 'components',
+        start: extractedStart,
+        destination: extractedDest,
+      };
     }
   }
-  const isDirected = inputData.isDirected || value?.isDirected || inputData.mode === 'prerequisites' || type === 'graph_prerequisites';
+  const isDirected = inputData.isDirected || value?.isDirected || inputData.mode === 'prerequisites' || derivedType === 'graph_prerequisites';
 
   return (
     <div className="space-y-2.5">
@@ -457,25 +921,31 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
             ? isCharGrid
               ? `2D CHARACTER GRID · ${gridMatrix.length} × ${gridMatrix[0]?.length || 0}`
               : `2D GRID · ${gridMatrix.length} × ${gridMatrix[0]?.length || 0}`
-            : type === 'array_with_target'
-              ? 'ARRAY (nums) & TARGET'
-              : type === 'single_value'
-                ? 'TARGET STEPS (n)'
-                : type === 'array'
-                  ? 'ARRAY (nums)'
-                  : type === 'binary_tree' || type === 'tree'
-                    ? 'BINARY TREE'
-                    : type === 'graph' || type === 'graph_prerequisites' || type === 'graph_edges'
-                      ? 'GRAPH STRUCTURE'
-                      : type === 'intervals'
-                        ? 'INTERVAL RANGES'
-                        : displayLabel}
+            : derivedType === 'linked_list'
+              ? 'HEAD OF LINKED LIST'
+              : derivedType === 'array_with_target'
+                ? 'ARRAY (nums) & TARGET'
+                : derivedType === 'single_value'
+                  ? 'TARGET STEPS (n)'
+                  : derivedType === 'array'
+                    ? 'ARRAY (nums)'
+                    : derivedType === 'nary_tree'
+                      ? 'N-ARY TREE'
+                      : derivedType === 'two_binary_trees'
+                        ? 'TWO BINARY TREES (p & q)'
+                        : derivedType === 'binary_tree' || derivedType === 'tree'
+                          ? 'BINARY TREE'
+                        : derivedType === 'graph' || derivedType === 'graph_prerequisites' || derivedType === 'graph_edges'
+                          ? 'GRAPH STRUCTURE'
+                          : derivedType === 'intervals'
+                            ? 'INTERVAL RANGES'
+                            : displayLabel}
         </span>
       </div>
 
       <div className="py-2 text-xs font-mono space-y-3">
         {/* TYPE 0: Single Value / Scalar Input (e.g. Climbing Stairs) */}
-        {type === 'single_value' && (
+        {derivedType === 'single_value' && (
           <div className="flex flex-wrap items-center gap-6 py-1 font-mono">
             <div className="space-y-1.5">
               <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase font-bold block">
@@ -504,7 +974,7 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
         )}
 
         {/* TYPE 1: Standard Array */}
-        {type === 'array' && (
+        {derivedType === 'array' && !isGraphCategory && (
           <div className="space-y-1.5 font-mono">
             <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase font-bold block">
               ARRAY (nums)
@@ -523,7 +993,7 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
         )}
 
         {/* TYPE 2: Array + Target */}
-        {type === 'array_with_target' && (
+        {derivedType === 'array_with_target' && (
           <div className="flex flex-wrap items-stretch gap-6 sm:gap-8">
             <div className="space-y-1.5">
               <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase font-bold block">
@@ -569,37 +1039,72 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
         )}
 
         {/* TYPE 4: Linked List */}
-        {type === 'linked_list' && (
-          <div className="flex flex-wrap items-center gap-2 overflow-x-auto py-2" aria-label="Singly linked list nodes">
-            <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-mono text-[10px] font-bold uppercase tracking-wider">
-              HEAD
-            </span>
-            <ArrowRight className="w-4 h-4 text-blue-500 shrink-0" aria-hidden="true" />
+        {(type === 'linked_list' || derivedType === 'linked_list') && (
+          <div className="space-y-2.5 font-mono">
+            {cyclePos !== null && cyclePos >= 0 && cyclePos < nodesList.length && (
+              <div className="text-[11px] font-mono text-amber-700 dark:text-amber-300 font-extrabold bg-amber-50 dark:bg-amber-950/60 px-3 py-1.5 rounded-lg border border-amber-200 dark:border-amber-900/60 inline-flex items-center gap-2 shadow-xs">
+                <RotateCcw className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
+                <span>CYCLE DETECTED: Tail node ({nodesList[nodesList.length - 1]}) points back to index {cyclePos} (val: {nodesList[cyclePos]})</span>
+              </div>
+            )}
 
-            {nodesList.map((val, idx) => (
-              <React.Fragment key={idx}>
-                {/* 2-Compartment Split Node Box ([ Val | next ]) */}
-                <div className="inline-flex items-stretch rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0D1322] shadow-xs overflow-hidden divide-x divide-slate-200 dark:divide-slate-800">
-                  <div className="px-3 py-1.5 font-mono text-sm font-extrabold text-emerald-600 dark:text-emerald-400 min-w-9 text-center flex items-center justify-center">
-                    {val}
-                  </div>
-                  <div className="px-2 py-1.5 bg-slate-50 dark:bg-[#070A13] flex items-center justify-center text-slate-400 dark:text-slate-500 font-mono text-[10px] font-bold uppercase tracking-tight">
-                    next
-                  </div>
-                </div>
+            <div className="flex flex-wrap items-center gap-2 overflow-x-auto py-2" aria-label="Singly linked list nodes">
+              <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 font-mono text-[10px] font-bold uppercase tracking-wider shrink-0 border border-blue-200 dark:border-blue-900/60">
+                HEAD
+              </span>
+              <ArrowRight className="w-4 h-4 text-blue-500 shrink-0" aria-hidden="true" />
 
-                <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 shrink-0" aria-hidden="true" />
-              </React.Fragment>
-            ))}
+              {nodesList && nodesList.length > 0 ? (
+                nodesList.map((val, idx) => {
+                  const isCycleTarget = cyclePos !== null && idx === cyclePos;
 
-            <span className="font-mono text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400">
-              Null
-            </span>
+                  return (
+                    <React.Fragment key={idx}>
+                      <div className="flex flex-col items-center">
+                        {isCycleTarget && (
+                          <span className="text-[9px] font-mono font-extrabold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/90 px-1.5 py-0.5 rounded border border-amber-300 dark:border-amber-800 mb-1 shadow-2xs">
+                            pos {cyclePos} (target)
+                          </span>
+                        )}
+                        <div className={`inline-flex items-stretch rounded-xl border bg-white dark:bg-[#0D1322] shadow-xs overflow-hidden divide-x ${
+                          isCycleTarget
+                            ? 'border-amber-400 dark:border-amber-700 ring-2 ring-amber-400/30 divide-amber-200 dark:divide-amber-900/60'
+                            : 'border-slate-300 dark:border-slate-700 divide-slate-200 dark:divide-slate-800'
+                        }`}>
+                          <div className="px-3 py-1.5 font-mono text-sm font-extrabold text-emerald-600 dark:text-emerald-400 min-w-[36px] text-center flex items-center justify-center">
+                            {val}
+                          </div>
+                          <div className={`px-2 py-1.5 flex items-center justify-center font-mono text-[10px] font-bold uppercase tracking-wider ${
+                            isCycleTarget ? 'bg-amber-50/80 dark:bg-[#120F06] text-amber-600 dark:text-amber-400' : 'bg-slate-50 dark:bg-[#070A13] text-slate-400 dark:text-slate-500'
+                          }`}>
+                            NEXT
+                          </div>
+                        </div>
+                      </div>
+
+                      <ArrowRight className={`w-4 h-4 shrink-0 ${isCycleTarget ? 'text-amber-500' : 'text-slate-400 dark:text-slate-600'}`} aria-hidden="true" />
+                    </React.Fragment>
+                  );
+                })
+              ) : null}
+
+              {/* Trailing Null OR Cycle Loop Indicator */}
+              {cyclePos !== null && cyclePos >= 0 && cyclePos < nodesList.length ? (
+                <span className="px-3 py-1 rounded-xl bg-amber-100 dark:bg-amber-950/90 border border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-300 font-mono text-xs font-extrabold flex items-center gap-1.5 shadow-xs shrink-0">
+                  <RotateCcw className="w-3.5 h-3.5 text-amber-500 shrink-0" aria-hidden="true" />
+                  <span>↩ Cycle to idx {cyclePos} (val: {nodesList[cyclePos]})</span>
+                </span>
+              ) : (
+                <span className="font-mono text-xs sm:text-sm font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+                  Null
+                </span>
+              )}
+            </div>
           </div>
         )}
 
-        {/* TYPE 5: Binary Tree / Tree */}
-        {(type === 'binary_tree' || type === 'tree') && (
+        {/* TYPE 5: Binary Tree / N-Ary Tree */}
+        {(derivedType === 'binary_tree' || derivedType === 'tree' || derivedType === 'nary_tree') && (
           <div className="space-y-3 font-mono">
             <div className="flex flex-wrap items-center justify-between gap-4 text-xs">
               <div className="flex items-center gap-2">
@@ -621,6 +1126,43 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
             {/* Visual SVG Diagram - Open Canvas */}
             <div className="py-1">
               {renderBinaryTreeSVG(inputData)}
+            </div>
+          </div>
+        )}
+
+        {/* TYPE 5.1: Two Binary Trees (e.g. Same Tree p & q) */}
+        {derivedType === 'two_binary_trees' && (
+          <div className="space-y-4 font-mono">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Tree P */}
+              <div className="p-4 rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 space-y-2.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                  <span className="font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider text-[11px]">
+                    TREE P (root)
+                  </span>
+                  <span className="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400">
+                    [{pTreeArray ? pTreeArray.map(v => v === null ? 'null' : v).join(', ') : 'null'}]
+                  </span>
+                </div>
+                <div className="py-1 flex justify-center">
+                  {renderBinaryTreeSVG({ root: pTreeArray })}
+                </div>
+              </div>
+
+              {/* Tree Q */}
+              <div className="p-4 rounded-xl bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 space-y-2.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs border-b border-slate-100 dark:border-slate-800/80 pb-2">
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider text-[11px]">
+                    TREE Q (root)
+                  </span>
+                  <span className="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400">
+                    [{qTreeArray ? qTreeArray.map(v => v === null ? 'null' : v).join(', ') : 'null'}]
+                  </span>
+                </div>
+                <div className="py-1 flex justify-center">
+                  {renderBinaryTreeSVG({ root: qTreeArray })}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -848,7 +1390,7 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
         )}
 
         {/* DEFAULT FALLBACK: Compact Formatted Primitive, Matrix or Object */}
-        {!['single_value', 'array', 'array_with_target', 'string', 'linked_list', 'binary_tree', 'tree', 'matrix', 'grid_and_word', 'grid', 'array_with_k', 'array_with_window', 'intervals', 'graph', 'graph_prerequisites', 'graph_edges'].includes(type) && !isMatrixType && (
+        {!['single_value', 'array', 'array_with_target', 'string', 'linked_list', 'binary_tree', 'tree', 'nary_tree', 'two_binary_trees', 'matrix', 'grid_and_word', 'grid', 'array_with_k', 'array_with_window', 'intervals', 'graph', 'graph_prerequisites', 'graph_edges'].includes(derivedType) && !isMatrixType && (
           <div className="p-3 rounded-lg bg-white dark:bg-[#0F172A] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-mono text-xs whitespace-pre-wrap">
             {formatCompactJSON(value)}
           </div>
