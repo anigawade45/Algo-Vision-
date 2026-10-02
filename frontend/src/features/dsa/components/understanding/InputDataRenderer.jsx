@@ -839,7 +839,40 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
     derivedType = 'binary_tree';
   }
 
-  const gridMatrix = Array.isArray(value?.grid)
+  const is2DMatrixStr = Boolean(strVal && (strVal.includes('[[') || strVal.match(/matrix\s*=/i) || strVal.match(/grid\s*=/i) || strVal.match(/board\s*=/i)));
+
+  let parsedGridMatrix = null;
+  if (strVal) {
+    let gridString = null;
+    if (strVal.includes('grid =') || strVal.includes('grid=')) {
+      const idx = strVal.indexOf('[');
+      if (idx !== -1) gridString = strVal.substring(idx).trim();
+    } else if (strVal.includes('board =') || strVal.includes('board=')) {
+      const idx = strVal.indexOf('[');
+      if (idx !== -1) gridString = strVal.substring(idx).trim();
+    } else if (strVal.includes('matrix =') || strVal.includes('matrix=')) {
+      const idx = strVal.indexOf('[');
+      if (idx !== -1) gridString = strVal.substring(idx).trim();
+    } else {
+      const idx = strVal.indexOf('[');
+      const lastIdx = strVal.lastIndexOf(']');
+      if (idx !== -1 && lastIdx > idx) {
+        const sub = strVal.substring(idx, lastIdx + 1).trim();
+        if (sub.startsWith('[[')) gridString = sub;
+      }
+    }
+
+    if (gridString) {
+      try {
+        const parsed = JSON.parse(gridString);
+        if (Array.isArray(parsed) && parsed.length > 0 && Array.isArray(parsed[0])) {
+          parsedGridMatrix = parsed;
+        }
+      } catch (e) {}
+    }
+  }
+
+  const gridMatrix = parsedGridMatrix || (Array.isArray(value?.grid)
     ? value.grid
     : Array.isArray(inputData?.grid)
       ? inputData.grid
@@ -847,13 +880,28 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
         ? value.board
         : Array.isArray(inputData?.board)
           ? inputData.board
-          : Array.isArray(value) && Array.isArray(value[0])
-            ? value
-            : [];
+          : Array.isArray(value?.matrix)
+            ? value.matrix
+            : Array.isArray(inputData?.matrix)
+              ? inputData.matrix
+              : Array.isArray(value) && Array.isArray(value[0])
+                ? value
+                : []);
 
   const targetWord = inputData.word || value?.word || inputData.targetWord || value?.targetWord;
-  const isMatrixType = type === 'matrix' || type === 'grid_and_word' || type === 'grid' || (gridMatrix.length > 0 && Array.isArray(gridMatrix[0]));
+  const isMatrixType = type === 'matrix' || type === 'grid_and_word' || type === 'grid' || type === 'grid_matrix' || (gridMatrix.length > 0 && Array.isArray(gridMatrix[0]));
   const isCharGrid = gridMatrix.length > 0 && Array.isArray(gridMatrix[0]) && typeof gridMatrix[0][0] === 'string' && gridMatrix[0][0].length === 1 && !['0', '1'].includes(gridMatrix[0][0]);
+
+  const isIslandProblem =
+    (inputData?.title && String(inputData.title).toLowerCase().includes('island')) ||
+    (inputData?.category && String(inputData.category).toLowerCase().includes('island')) ||
+    (inputData?.description && String(inputData.description).toLowerCase().includes('island'));
+
+  const isBinaryGrid = isIslandProblem || (gridMatrix.length > 0 && Array.isArray(gridMatrix[0]) && gridMatrix.every(row => row.every(c => ['0', '1', 0, 1].includes(c))));
+
+  if (isMatrixType && (!derivedType || derivedType === 'string' || derivedType === 'array')) {
+    derivedType = 'grid';
+  }
 
   const kVal = value?.k ?? inputData.kVal ?? inputData.k;
   const rangesList = Array.isArray(value) ? value : Array.isArray(inputData.ranges) ? inputData.ranges : value?.ranges || [];
@@ -1184,19 +1232,23 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
             ) : (
               <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono">
                 <span className="text-slate-400 dark:text-slate-500 font-bold uppercase">
-                  DIMENSIONS: <strong className="text-slate-700 dark:text-slate-300">{gridMatrix.length} × {gridMatrix[0]?.length || 0}</strong>
+                  DIMENSIONS: <strong className="text-slate-700 dark:text-slate-300">{gridMatrix.length} × {gridMatrix[0]?.length || 0} {isBinaryGrid ? 'GRID' : 'MATRIX'}</strong>
                 </span>
-                <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">•</span>
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded bg-emerald-500/20 border border-emerald-500" />
-                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">1 = Land</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded bg-slate-200 dark:bg-slate-800 border border-slate-400" />
-                    <span className="text-slate-400">0 = Water</span>
-                  </span>
-                </div>
+                {isBinaryGrid && (
+                  <>
+                    <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">•</span>
+                    <div className="flex items-center gap-3">
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 rounded bg-emerald-500/20 border border-emerald-500" />
+                        <span className="text-emerald-600 dark:text-emerald-400 font-bold">1 = Land</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 rounded bg-slate-200 dark:bg-slate-800 border border-slate-400" />
+                        <span className="text-slate-400">0 = Water</span>
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
@@ -1224,9 +1276,11 @@ export const InputDataRenderer = React.memo(function InputDataRenderer({ inputDa
                         className={`w-9 h-9 rounded-lg border font-mono text-xs font-bold flex items-center justify-center transition-colors duration-150 ${
                           isCharGrid
                             ? 'bg-indigo-50/60 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900/60 text-indigo-700 dark:text-indigo-300 shadow-xs'
-                            : cell === '1'
-                              ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                              : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'
+                            : isBinaryGrid
+                              ? cell === '1' || cell === 1
+                                ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-600 dark:text-emerald-400 shadow-xs'
+                                : 'bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400'
+                              : 'bg-white dark:bg-[#0D1322] border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 shadow-2xs'
                         }`}
                       >
                         {cell}
