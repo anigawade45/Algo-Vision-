@@ -12,11 +12,14 @@ import {
   Compass
 } from 'lucide-react';
 
+import { Code } from 'lucide-react';
+
 import {
   DiskIntro,
   DiskSimulator,
   DiskComparison
 } from '../components/disk-scheduling';
+import { CodeLab } from '../components/code-lab';
 
 export default function DiskScheduling({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('simulator');
@@ -24,7 +27,8 @@ export default function DiskScheduling({ theme, toggleTheme }) {
   const navTabs = [
     { id: 'intro', label: '1. Overview & Concepts', icon: BookOpen },
     { id: 'simulator', label: '2. Interactive Disk Simulator', icon: Compass, badge: 'Interactive' },
-    { id: 'comparison', label: '3. Multi-Algorithm Benchmark', icon: Sliders, badge: 'Benchmark' }
+    { id: 'comparison', label: '3. Multi-Algorithm Benchmark', icon: Sliders, badge: 'Benchmark' },
+    { id: 'codelab', label: '4. Code Lab & Execution Terminal', icon: Code, badge: 'IDE' }
   ];
 
   return (
@@ -153,6 +157,8 @@ export default function DiskScheduling({ theme, toggleTheme }) {
           {activeTab === 'simulator' && <DiskSimulator />}
 
           {activeTab === 'comparison' && <DiskComparison />}
+
+          {activeTab === 'codelab' && <CodeLab module="disk-scheduling" />}
         </div>
       </main>
     </div>

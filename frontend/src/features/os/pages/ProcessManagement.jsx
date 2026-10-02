@@ -18,6 +18,8 @@ import {
   ArrowRight
 } from 'lucide-react';
 
+import { Code } from 'lucide-react';
+
 import {
   ProgramVsProcessCard,
   PcbInspector,
@@ -26,6 +28,7 @@ import {
   ContextSwitchVisualizer,
   ProcessQueuesManager
 } from '../components/process';
+import { CodeLab } from '../components/code-lab';
 
 export default function ProcessManagement({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('state-diagram');
@@ -37,6 +40,7 @@ export default function ProcessManagement({ theme, toggleTheme }) {
     { id: 'creation-tree', label: '4. Process Creation & Fork Tree', icon: GitBranch },
     { id: 'context-switch', label: '5. Context Switching Visualizer', icon: Clock },
     { id: 'queues', label: '6. Process Queues (Ready/Job/Device)', icon: Layers },
+    { id: 'codelab', label: '7. Code Lab & Execution Terminal', icon: Code },
   ];
 
   return (
@@ -145,6 +149,7 @@ export default function ProcessManagement({ theme, toggleTheme }) {
           {activeTab === 'creation-tree' && <ProcessCreationTree />}
           {activeTab === 'context-switch' && <ContextSwitchVisualizer />}
           {activeTab === 'queues' && <ProcessQueuesManager />}
+          {activeTab === 'codelab' && <CodeLab module="process-management" />}
         </div>
 
         {/* Key Takeaways & Summary Section */}

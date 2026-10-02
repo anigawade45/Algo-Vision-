@@ -13,7 +13,8 @@ import {
   BookOpen,
   Sun,
   Moon,
-  Sliders
+  Sliders,
+  Code
 } from 'lucide-react';
 
 import {
@@ -22,6 +23,7 @@ import {
   SegmentationSimulator,
   PagingVsSegmentation
 } from '../components/paging-segmentation';
+import { CodeLab } from '../components/code-lab';
 
 export default function PagingSegmentation({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('paging');
@@ -30,7 +32,8 @@ export default function PagingSegmentation({ theme, toggleTheme }) {
     { id: 'intro', label: '1. Overview', icon: BookOpen },
     { id: 'paging', label: '2. Paging & Page Table', icon: Layers, badge: 'Interactive' },
     { id: 'segmentation', label: '3. Segmentation & Segment Table', icon: Box, badge: 'Interactive' },
-    { id: 'comparison', label: '4. Dual Lab & Comparison Matrix', icon: Sliders }
+    { id: 'comparison', label: '4. Dual Lab & Comparison Matrix', icon: Sliders },
+    { id: 'codelab', label: '5. Code Lab & Terminal', icon: Code }
   ];
 
   return (
@@ -157,6 +160,8 @@ export default function PagingSegmentation({ theme, toggleTheme }) {
           {activeTab === 'segmentation' && <SegmentationSimulator />}
 
           {activeTab === 'comparison' && <PagingVsSegmentation />}
+
+          {activeTab === 'codelab' && <CodeLab module="paging-segmentation" />}
         </div>
       </main>
     </div>

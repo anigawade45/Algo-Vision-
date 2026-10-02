@@ -16,6 +16,8 @@ import {
   RotateCcw
 } from 'lucide-react';
 
+import { Code } from 'lucide-react';
+
 import {
   DeadlockIntro,
   DeadlockConditions,
@@ -24,6 +26,7 @@ import {
   DeadlockDetector,
   DeadlockHandling
 } from '../components/deadlock';
+import { CodeLab } from '../components/code-lab';
 
 export default function Deadlocks({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('graph-simulator');
@@ -141,6 +144,7 @@ export default function Deadlocks({ theme, toggleTheme }) {
     { id: 'conditions', label: '2. Four Necessary Conditions', icon: Shield },
     { id: 'graph-simulator', label: '3. Resource Allocation Graph & Detector', icon: Activity },
     { id: 'handling', label: '4. Prevention, Avoidance & Recovery', icon: Layers },
+    { id: 'codelab', label: '5. Code Lab & Execution Terminal', icon: Code },
   ];
 
   return (
@@ -289,6 +293,8 @@ export default function Deadlocks({ theme, toggleTheme }) {
               onReleaseResource={handleReleaseResource}
             />
           )}
+
+          {activeTab === 'codelab' && <CodeLab module="deadlocks" />}
         </div>
 
         {/* Key Takeaways & Summary Section */}

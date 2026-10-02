@@ -14,7 +14,8 @@ import {
   Sun,
   Moon,
   Minimize2,
-  Box
+  Box,
+  Code
 } from 'lucide-react';
 
 import {
@@ -24,6 +25,7 @@ import {
   FragmentationVisualizer,
   MemorySimulator
 } from '../components/memory-management';
+import { CodeLab } from '../components/code-lab';
 
 export default function MemoryManagement({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('simulator');
@@ -34,7 +36,8 @@ export default function MemoryManagement({ theme, toggleTheme }) {
     { id: 'simulator', label: '3. Memory Simulator', icon: HardDrive, badge: 'Interactive' },
     { id: 'strategies', label: '4. Allocation Strategies', icon: Layers },
     { id: 'fragmentation', label: '5. Fragmentation & Compaction', icon: Box },
-    { id: 'summary', label: '6. Key Takeaways', icon: CheckCircle2 }
+    { id: 'summary', label: '6. Key Takeaways', icon: CheckCircle2 },
+    { id: 'codelab', label: '7. Code Lab & Terminal', icon: Code }
   ];
 
   return (
@@ -264,6 +267,8 @@ export default function MemoryManagement({ theme, toggleTheme }) {
               </div>
             </div>
           )}
+
+          {activeTab === 'codelab' && <CodeLab module="memory-management" />}
         </div>
       </main>
     </div>

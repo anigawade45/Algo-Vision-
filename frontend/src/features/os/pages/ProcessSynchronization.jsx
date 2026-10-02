@@ -15,7 +15,8 @@ import {
   CheckCircle2,
   BookOpen,
   Sun,
-  Moon
+  Moon,
+  Code
 } from 'lucide-react';
 
 import {
@@ -27,6 +28,7 @@ import {
   ProducerConsumerSimulator,
   ReadersWritersSimulator
 } from '../components/process-synchronization';
+import { CodeLab } from '../components/code-lab';
 
 export default function ProcessSynchronization({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('race-condition');
@@ -39,7 +41,8 @@ export default function ProcessSynchronization({ theme, toggleTheme }) {
     { id: 'semaphore', label: '5. Semaphore Visualizer', icon: Layers },
     { id: 'producer-consumer', label: '6. Producer-Consumer', icon: Package },
     { id: 'readers-writers', label: '7. Readers-Writers', icon: Database },
-    { id: 'summary', label: '8. Key Summary & Comparison', icon: CheckCircle2 }
+    { id: 'summary', label: '8. Key Summary & Comparison', icon: CheckCircle2 },
+    { id: 'codelab', label: '9. Code Lab & Terminal', icon: Code }
   ];
 
   return (
@@ -268,6 +271,8 @@ export default function ProcessSynchronization({ theme, toggleTheme }) {
               </div>
             </div>
           )}
+
+          {activeTab === 'codelab' && <CodeLab module="process-synchronization" />}
         </div>
       </main>
     </div>

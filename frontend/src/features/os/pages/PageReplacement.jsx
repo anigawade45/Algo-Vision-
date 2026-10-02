@@ -14,11 +14,14 @@ import {
   Sparkles
 } from 'lucide-react';
 
+import { Code } from 'lucide-react';
+
 import {
   ReplacementIntro,
   ReplacementSimulator,
   AlgorithmComparison
 } from '../components/page-replacement';
+import { CodeLab } from '../components/code-lab';
 
 export default function PageReplacement({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('simulator');
@@ -26,7 +29,8 @@ export default function PageReplacement({ theme, toggleTheme }) {
   const navTabs = [
     { id: 'intro', label: '1. Overview & Concepts', icon: BookOpen },
     { id: 'simulator', label: '2. Interactive Simulator Laboratory', icon: RefreshCw, badge: 'Interactive' },
-    { id: 'comparison', label: '3. Multi-Algorithm Comparison Matrix', icon: Sliders, badge: 'Benchmark' }
+    { id: 'comparison', label: '3. Multi-Algorithm Comparison Matrix', icon: Sliders, badge: 'Benchmark' },
+    { id: 'codelab', label: '4. Code Lab & Execution Terminal', icon: Code, badge: 'IDE' }
   ];
 
   return (
@@ -155,6 +159,8 @@ export default function PageReplacement({ theme, toggleTheme }) {
           {activeTab === 'simulator' && <ReplacementSimulator />}
 
           {activeTab === 'comparison' && <AlgorithmComparison />}
+
+          {activeTab === 'codelab' && <CodeLab module="page-replacement" />}
         </div>
       </main>
     </div>
