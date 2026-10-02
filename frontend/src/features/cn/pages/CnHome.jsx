@@ -8,8 +8,8 @@ export default function CnHome({ theme, toggleTheme }) {
       id: 'fundamentals',
       title: 'Computer Network Fundamentals',
       description: 'Master core networking principles: data communication model, transmission media, PAN/LAN/MAN/WAN scale, and essential hardware networking devices.',
-      author: 'Core Team',
-      status: 'Live & Ready',
+      //author: 'Core Team',
+      //sstatus: 'Live & Ready',
       isLive: true,
       path: '/cn/fundamentals',
       badge: 'Foundational Track',
@@ -19,8 +19,8 @@ export default function CnHome({ theme, toggleTheme }) {
       id: 'topologies',
       title: 'Network Topologies & Simulation',
       description: 'Simulate packet transmissions across Bus, Star, Ring, Mesh, Tree, and Hybrid layouts with link cuts, node fault testing, and comparative tradeoffs matrix.',
-      author: 'Core Team',
-      status: 'Live & Ready',
+      //author: 'Core Team',
+      //sstatus: 'Live & Ready',
       isLive: true,
       path: '/cn/topologies',
       badge: 'Interactive Simulator',
@@ -30,8 +30,8 @@ export default function CnHome({ theme, toggleTheme }) {
       id: 'osi-layers',
       title: 'OSI 7-Layer Model & Encapsulation',
       description: 'Step through protocol data unit (PDU) encapsulation from Application down to Physical layer with header inspection.',
-      author: 'Core Team',
-      status: 'Live & Ready',
+      //author: 'Core Team',
+      //sstatus: 'Live & Ready',
       isLive: true,
       path: '/cn/osi-layers',
       badge: 'Interactive Encapsulation',
@@ -41,8 +41,8 @@ export default function CnHome({ theme, toggleTheme }) {
       id: 'ip-subnetting',
       title: 'IPv4 Subnetting & CIDR Calculator',
       description: 'Calculate subnet masks, usable host ranges, broadcast addresses, 32-bit binary ANDing, and VLSM allocation.',
-      author: 'Core Team',
-      status: 'Live & Ready',
+      //author: 'Core Team',
+      //sstatus: 'Live & Ready',
       isLive: true,
       path: '/cn/ip-subnetting',
       badge: 'Live Calculator',
@@ -51,13 +51,46 @@ export default function CnHome({ theme, toggleTheme }) {
     {
       id: 'routing-protocols',
       title: 'Routing Algorithms (Dijkstra & Distance Vector)',
-      description: 'Simulate Link-State (OSPF) shortest path trees, dynamic link failure rerouting, and routing table convergence.',
-      author: 'Core Team',
-      status: 'Live & Ready',
+      description: 'Simulate Link-State (OSPF) shortest path trees, dynamic link failure rerouting, routing table convergence, and runnable C++, Java, & Python routing code.',
+      //author: 'Core Team',
+      //sstatus: 'Live & Ready',
       isLive: true,
       path: '/cn/routing-protocols',
-      badge: 'Interactive Graph',
+      badge: 'Interactive Graph & Code',
       badgeColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+    },
+    {
+      id: 'packet-transmission',
+      title: 'Packet & Data Transmission',
+      description: 'Trace progressive encapsulation (Data ➔ Segment ➔ Packet ➔ Frame ➔ Bits), hop-by-hop routing, TTL decrements, MAC rewriting, and clickable live packet header inspection.',
+      //sauthor: 'Core Team',
+      //status: 'Live & Ready',
+      isLive: true,
+      path: '/cn/packets',
+      badge: 'Interactive Simulator & Code',
+      badgeColor: 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
+    },
+    {
+      id: 'transport-layer',
+      title: 'Transport Layer (TCP vs UDP & Sockets)',
+      description: 'Master TCP 3-Way Handshake, byte stream sequencing, sliding window flow control, and 0-RTT UDP datagrams with live simulations and C++, Java, & Python socket code.',
+      //author: 'Core Team',
+      //status: 'Live & Ready',
+      isLive: true,
+      path: '/cn/transport',
+      badge: 'Live Handshake & Sockets',
+      badgeColor: 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+    },
+    {
+      id: 'network-protocols',
+      title: 'Network Protocols (HTTP, DNS, DHCP, ARP, ICMP...)',
+      description: 'Master 8 core protocols with interactive step-by-step packet simulations, TLS handshake encryption demo, and runnable Java algorithmic simulation code.',
+      //author: 'Core Team',
+      //sstatus: 'Live & Ready',
+      isLive: true,
+      path: '/cn/protocols',
+      badge: 'Interactive Lab & Java Code',
+      badgeColor: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
     },
   ];
 
@@ -124,10 +157,10 @@ export default function CnHome({ theme, toggleTheme }) {
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-emerald-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-emerald-300" />
-                5 Active Simulators
+                8 Active Simulators
               </span>
               <span>•</span>
-              <span>5 Interactive Tracks</span>
+              <span>8 Interactive Tracks</span>
             </div>
           </div>
         </div>
@@ -145,19 +178,15 @@ export default function CnHome({ theme, toggleTheme }) {
             {cnTopics.map((topic) => (
               <div
                 key={topic.id}
-                className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-200 ${
-                  topic.isLive
-                    ? 'border-emerald-200 dark:border-emerald-800/80 hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-lg'
-                    : 'border-slate-200/80 dark:border-slate-800/80 opacity-80'
-                }`}
+                className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-200 ${topic.isLive
+                  ? 'border-emerald-200 dark:border-emerald-800/80 hover:border-emerald-400 dark:hover:border-emerald-600 hover:shadow-lg'
+                  : 'border-slate-200/80 dark:border-slate-800/80 opacity-80'
+                  }`}
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${topic.badgeColor}`}>
                       {topic.badge}
-                    </span>
-                    <span className="text-xs font-mono text-slate-400">
-                      Module by {topic.author}
                     </span>
                   </div>
 

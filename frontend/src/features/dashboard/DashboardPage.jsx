@@ -37,6 +37,8 @@ export default function DashboardPage({ theme, toggleTheme }) {
       navigate('/os');
     } else if (moduleId === 'networks' || moduleId === 'cn') {
       navigate('/cn');
+    } else if (moduleId === 'sysdesign' || moduleId === 'systemdesign') {
+      navigate('/systemdesign');
     } else {
       navigate(`/modules/${moduleId}`);
     }
