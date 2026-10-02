@@ -46,17 +46,17 @@ ${JSON.stringify(problemContext.outputData, null, 2)}
 
 TEST CASES:
 ${JSON.stringify(
-  (problemContext.testCases || []).map((tc, idx) => ({
-    testCaseId: tc.id || idx + 1,
-    inputRaw: tc.inputRaw,
-    outputRaw: tc.outputRaw,
-    inputStructured: tc.inputStructured || null,
-    outputStructured: tc.outputStructured || null,
-    reasoning: tc.reasoning || [],
-  })),
-  null,
-  2
-)}
+    (problemContext.testCases || []).map((tc, idx) => ({
+      testCaseId: tc.id || idx + 1,
+      inputRaw: tc.inputRaw,
+      outputRaw: tc.outputRaw,
+      inputStructured: tc.inputStructured || null,
+      outputStructured: tc.outputStructured || null,
+      reasoning: tc.reasoning || [],
+    })),
+    null,
+    2
+  )}
 `.trim();
 
   const promptText = `
@@ -336,16 +336,16 @@ ${JSON.stringify(problemContext.outputData, null, 2)}
 
 TEST CASES:
 ${JSON.stringify(
-  (problemContext.testCases || []).map((tc, idx) => ({
-    testCaseId: tc.id || idx + 1,
-    inputRaw: tc.inputRaw,
-    outputRaw: tc.outputRaw,
-    inputStructured: tc.inputStructured || null,
-    outputStructured: tc.outputStructured || null,
-  })),
-  null,
-  2
-)}
+    (problemContext.testCases || []).map((tc, idx) => ({
+      testCaseId: tc.id || idx + 1,
+      inputRaw: tc.inputRaw,
+      outputRaw: tc.outputRaw,
+      inputStructured: tc.inputStructured || null,
+      outputStructured: tc.outputStructured || null,
+    })),
+    null,
+    2
+  )}
 `.trim();
 
   const promptText = `
@@ -356,14 +356,17 @@ ${problemIdentityBlock}
 
 === INSTRUCTIONS FOR STAGE 03 REAL-WORLD STORY ANALOGY ===
 1. Create a vivid, immersive, real-world story analogy for this problem.
-2. Translate the core algorithm and data structures into familiar physical objects or everyday human activities (e.g., shopping budgets, Russian nesting dolls, scavenger hunts, camera viewfinders, office room bookings, bouncers at a club, expanding water ripples, thieves with alarms, packing luggage, etc.).
+2. Translate the core problem into familiar physical objects or everyday human activities (e.g., shopping budgets, Russian nesting dolls, scavenger hunts, camera viewfinders, office room bookings, bouncers at a club, expanding water ripples, thieves with alarms, packing luggage, etc.).
 3. The story MUST consist of multiple clear paragraphs separated by double newlines ("\\n\\n").
 4. Explaining paragraph by paragraph:
    - Paragraph 1: Set up the real-world scene, main characters/objects, and goal.
    - Paragraph 2: Explain the real-world problem or bottleneck that would happen if solved naively or brute-force.
    - Paragraph 3: Explain the clever real-world trick or mechanism that solves it cleanly.
-   - Paragraph 4: Directly connect the real-world metaphor back to the algorithmic concept in plain English.
-5. NO CODE or pseudo-code in the story. Keep it 100% focused on real-world conceptual intuition.
+   - Paragraph 4: Connect the real-world metaphor back to the core concept in plain English.
+5. CRITICAL RULE - DO NOT UNLOCK OR MENTION DATA STRUCTURES OR ALGORITHMS:
+   - DO NOT mention computer science data structure names (e.g. NEVER say "Hash Set", "Hash Map", "Stack", "Queue", "Min-Heap", "Max-Heap", "Binary Search Tree", "Graph", "Matrix", "Array", "Linked List", etc.).
+   - DO NOT mention algorithm/technique names (e.g. NEVER say "BFS", "DFS", "Breadth-First Search", "Depth-First Search", "Two Pointers", "Sliding Window", "Dynamic Programming", "Backtracking", "Topological Sort", etc.).
+   - Stage 03 is PURE REAL-WORLD STORYTELLING. Technical data structures and algorithmic patterns will be unlocked in Stage 04 and Stage 05.
 6. Make the title of the scenario catchy, creative, and memorable (e.g. "The Budget Shopping Trip", "The Russian Nesting Dolls", "Consolidating Meeting Bookings").
 
 --- FEW-SHOT EXAMPLES OF DESIRED ANALOGY JSON OUTPUT ---
@@ -376,7 +379,7 @@ EXAMPLE 1 (Problem: Two Sum):
   },
   "scenario": {
     "title": "The Budget Shopping Trip",
-    "story": "Imagine you are at a supermarket with a very strict shopping list. You have a gift card worth exactly ₹900, and you want to buy exactly two items that will use up the entire balance. No more, no less.\\n\\nInstead of blindly picking up an item and walking through the entire store trying to find another item that perfectly matches the remaining balance (which would take forever), you decide to use your memory.\\n\\nAs you walk down the aisle, you pick up a ₹200 item. You mentally calculate: \\"I need a ₹700 item to finish my shopping.\\" You keep the ₹200 item in mind. Later, you spot a ₹700 item. Because you remembered the first item, you instantly know you've found your perfect pair without having to search the store twice!\\n\\nThis is exactly how the Two Sum algorithm works using a Hash Map. It walks through the array once, remembers the elements it has seen, and instantly checks if the \\"missing complement\\" has already been found."
+    "story": "Imagine you are at a supermarket with a very strict shopping list. You have a gift card worth exactly ₹900, and you want to buy exactly two items that will use up the entire balance. No more, no less.\\n\\nInstead of blindly picking up an item and walking through the entire store trying to find another item that perfectly matches the remaining balance (which would take forever), you decide to use your memory.\\n\\nAs you walk down the aisle, you pick up a ₹200 item. You mentally calculate: \\"I need a ₹700 item to finish my shopping.\\" You keep the ₹200 item in mind. Later, you spot a ₹700 item. Because you remembered the first item, you instantly know you've found your perfect pair without having to search the store twice!\\n\\nThis is exactly how this problem is solved efficiently. By checking each item once and keeping track of what you've already seen, you instantly recognize when the matching partner appears."
   }
 }
 
@@ -388,7 +391,7 @@ EXAMPLE 2 (Problem: Valid Parentheses):
   },
   "scenario": {
     "title": "The Russian Nesting Dolls",
-    "story": "Think of a set of beautiful Russian Matryoshka dolls. When you are assembling them, every time you open a bottom half of a doll (an opening bracket), you must eventually cap it with its exact matching top half (a closing bracket).\\n\\nIf you open a large red doll, then open a medium blue doll inside it, and finally a small green doll inside that... you cannot just put the large red lid on right away. You must close the small green doll first, then the medium blue doll, and finally the large red one.\\n\\nThe last doll you opened must be the first one you close. If you try to put a square lid on a round box, or close the outer box before the inner box is sealed, the whole set breaks.\\n\\nThis Last-In, First-Out (LIFO) behavior is perfectly mirrored by the Stack data structure used to solve the Valid Parentheses problem."
+    "story": "Think of a set of beautiful Russian Matryoshka dolls. When you are assembling them, every time you open a bottom half of a doll (an opening bracket), you must eventually cap it with its exact matching top half (a closing bracket).\\n\\nIf you open a large red doll, then open a medium blue doll inside it, and finally a small green doll inside that... you cannot just put the large red lid on right away. You must close the small green doll first, then the medium blue doll, and finally the large red one.\\n\\nThe last doll you opened must be the first one you close. If you try to put a square lid on a round box, or close the outer box before the inner box is sealed, the whole set breaks.\\n\\nThis strict Last-In, First-Out sequence ensures every nested container is closed in exact reverse order of how it was opened."
   }
 }
 
@@ -400,7 +403,7 @@ EXAMPLE 3 (Problem: Number of Islands):
   },
   "scenario": {
     "title": "Exploring Uncharted Archipelago",
-    "story": "Imagine you are an explorer flying over an uncharted ocean dotted with islands. You have a blank map, and your job is to count exactly how many distinct islands exist.\\n\\nYou decide to parachute down onto the first piece of land you see. To ensure you don't count this island twice, you pull out a red marker and paint the ground you are standing on. Then, you walk north, south, east, and west, painting all connected landmasses red until you hit water in every direction.\\n\\nOnce the entire island is painted, you fly back up into the sky. You scan the ocean again. If you see unpainted land, you know it must be a brand new island! You parachute down and repeat the process.\\n\\nThis methodical exploration and marking of connected land is exactly how Breadth-First Search (BFS) or Depth-First Search (DFS) counts connected components in a grid."
+    "story": "Imagine you are an explorer flying over an uncharted ocean dotted with islands. You have a blank map, and your job is to count exactly how many distinct islands exist.\\n\\nYou decide to parachute down onto the first piece of land you see. To ensure you don't count this island twice, you pull out a red marker and paint the ground you are standing on. Then, you walk north, south, east, and west, painting all connected landmasses red until you hit water in every direction.\\n\\nOnce the entire island is painted, you fly back up into the sky. You scan the ocean again. If you see unpainted land, you know it must be a brand new island! You parachute down and repeat the process.\\n\\nThis methodical exploration and marking of connected land ensures every continuous landmass is fully explored and counted exactly once."
   }
 }
 
@@ -520,10 +523,370 @@ const generateStage03AnalogyContent = async (problem) => {
   );
 };
 
+const buildPatternPrompt = (problem) => {
+  const problemContext = {
+    id: String(problem._id || problem.id || ''),
+    problemId: problem.problemId || '',
+    title: problem.title || '',
+    category: problem.category || '',
+    difficulty: problem.difficulty || '',
+    objective: problem.objective || '',
+    description: problem.description || '',
+    constraints: problem.constraints || [],
+    inputData: problem.inputData || {},
+    outputData: problem.outputData || {},
+    testCases: problem.testCases || [],
+  };
+
+  const problemIdentityBlock = `
+PROBLEM ID: ${problemContext.id}
+PROBLEM SLUG: ${problemContext.problemId}
+TITLE: ${problemContext.title}
+CATEGORY: ${problemContext.category}
+DIFFICULTY: ${problemContext.difficulty}
+
+OBJECTIVE:
+${problemContext.objective}
+
+DESCRIPTION:
+${problemContext.description}
+
+CONSTRAINTS:
+${JSON.stringify(problemContext.constraints, null, 2)}
+
+INPUT DATA:
+${JSON.stringify(problemContext.inputData, null, 2)}
+
+OUTPUT DATA:
+${JSON.stringify(problemContext.outputData, null, 2)}
+
+TEST CASES:
+${JSON.stringify(
+  (problemContext.testCases || []).map((tc, idx) => ({
+    testCaseId: tc.id || idx + 1,
+    inputRaw: tc.inputRaw,
+    outputRaw: tc.outputRaw,
+    inputStructured: tc.inputStructured || null,
+    outputStructured: tc.outputStructured || null,
+  })),
+  null,
+  2
+)}
+`.trim();
+
+  const promptText = `
+You are the Stage 04 Pattern generator for AlgoVision, an interactive Data Structures and Algorithms visual learning system.
+
+=== AUTHORITATIVE PROBLEM CONTEXT ===
+${problemIdentityBlock}
+
+=== INSTRUCTIONS FOR STAGE 04 PATTERN RECOGNITION ===
+Your task is to analyze this exact problem and produce a structured JSON object for Stage 04 Pattern Recognition.
+Focus on identifying the underlying structural pattern, problem shape, observations, abstractions, and potential solution families without writing code.
+
+--- FEW-SHOT EXAMPLE OF DESIRED PATTERN JSON OUTPUT ---
+
+EXAMPLE 1 (Problem: Two Sum):
+{
+  "intro": {
+    "eyebrow": "04 · PATTERN",
+    "title": "Recognize the structure behind the problem.",
+    "subtitle": "Before choosing an algorithm, identify the shape of the problem."
+  },
+  "structure": {
+    "title": "Look at what the problem is asking.",
+    "subtitle": "Shift attention from individual elements to the relationship between elements.",
+    "inputLabel": "ARRAY & TARGET",
+    "inputVisual": ["[ 2 ]", "[ 7 ]", "[ 11 ]", "[ 15 ]"],
+    "targetLabel": "TARGET SUM",
+    "targetValue": "9",
+    "coreRelationship": [
+      { "label": "Two values", "sub": "Input elements in array" },
+      { "label": "Must satisfy", "sub": "Required mathematical relation" },
+      { "label": "Target condition", "sub": "Sum equals Target" }
+    ]
+  },
+  "signals": {
+    "title": "What stands out?",
+    "subtitle": "Identify key structural signals from the problem description.",
+    "observations": [
+      {
+        "id": "signal_1",
+        "title": "SIGNAL 01",
+        "label": "More than one value must work together.",
+        "detail": "The objective requires selecting a pair of elements, not evaluating a single item in isolation."
+      },
+      {
+        "id": "signal_2",
+        "title": "SIGNAL 02",
+        "label": "The values are connected by an exact condition.",
+        "detail": "The two selected items cannot be arbitrary; Value A + Value B = Target defines validity."
+      },
+      {
+        "id": "signal_3",
+        "title": "SIGNAL 03",
+        "label": "The answer depends on element positions.",
+        "detail": "Output requires identifying the exact indices corresponding to the valid pair."
+      }
+    ]
+  },
+  "abstraction": {
+    "title": "Abstract the problem.",
+    "subtitle": "Specific numbers fade away; the structural relationship remains.",
+    "concrete": {
+      "items": ["2", "7", "11", "15"],
+      "target": "9"
+    },
+    "abstractFormula": {
+      "varA": "VALUE A",
+      "operator": "+",
+      "varB": "VALUE B",
+      "equals": "=",
+      "result": "TARGET"
+    },
+    "statement": "When specific values disappear, the pair relationship remains intact."
+  },
+  "pattern": {
+    "name": "Pair / Complement Relationship Pattern",
+    "tagline": "Identify two values whose relationship satisfies a required target condition.",
+    "description": "When a problem asks you to find two values that satisfy a relationship or condition, you are looking at a pair relationship pattern."
+  },
+  "fingerprint": {
+    "title": "Pattern Fingerprint",
+    "steps": [
+      { "stage": "INPUT", "value": "Array / Collection of elements" },
+      { "stage": "RELATIONSHIP", "value": "Two values working together" },
+      { "stage": "CONDITION", "value": "Sum / Relation equals Target" },
+      { "stage": "OUTPUT", "value": "Required pair indices" }
+    ]
+  },
+  "solutionFamilies": {
+    "title": "Solution Families",
+    "subtitle": "What approaches should come to mind for this pattern?",
+    "question": "Which tools or solution families are commonly associated with Pair / Relationship problems?",
+    "families": [
+      {
+        "id": "fam_1",
+        "name": "Hash Table / Complement Lookup",
+        "detail": "Fast O(1) lookup of required complement values."
+      },
+      {
+        "id": "fam_2",
+        "name": "Two-Pointer / Sorting",
+        "detail": "Shrinking search space on sorted inputs."
+      }
+    ],
+    "note": "Pattern recognition tells us which families of approaches are relevant. Algorithm (Stage 05) will decide which approach to choose and how it works."
+  },
+  "limitations": {
+    "title": "What the Pattern Does NOT Tell Us",
+    "subtitle": "Recognizing a pattern does not tell us the algorithm yet.",
+    "tellsUs": ["What structure to look for", "What relationships matter", "What signals identify the problem"],
+    "doesNotTellUs": ["Which specific data structure implementation to use", "Exact line-by-line code steps"]
+  },
+  "takeaway": {
+    "specificProblem": "Find indices of two numbers that sum to target.",
+    "generalPattern": "Identify pair elements satisfying target constraint.",
+    "finalStatement": "Focus on value relationships before choosing specific data structures."
+  }
+}
+
+--- CURRENT TARGET PROBLEM CONTEXT ---
+${JSON.stringify(problemContext, null, 2)}
+
+REQUIRED JSON OUTPUT SCHEMA:
+Return ONLY a valid JSON object for "${problem.title}" matching this exact schema:
+{
+  "intro": {
+    "eyebrow": "04 · PATTERN",
+    "title": "Recognize the structure behind the problem.",
+    "subtitle": "Before choosing an algorithm, identify the shape of the problem."
+  },
+  "structure": {
+    "title": "Look at what the problem is asking.",
+    "subtitle": "Brief subtitle on structural focus.",
+    "inputLabel": "SHORT INPUT TYPE",
+    "inputVisual": ["visual item 1", "visual item 2"],
+    "targetLabel": "TARGET LABEL",
+    "targetValue": "TARGET VALUE",
+    "coreRelationship": [
+      { "label": "Relationship Label", "sub": "Brief subtext" }
+    ]
+  },
+  "signals": {
+    "title": "What stands out?",
+    "subtitle": "Identify key structural signals from the problem description.",
+    "observations": [
+      {
+        "id": "signal_1",
+        "title": "SIGNAL 01",
+        "label": "Key Signal Headline",
+        "detail": "Detailed explanation of observation."
+      }
+    ]
+  },
+  "abstraction": {
+    "title": "Abstract the problem.",
+    "subtitle": "Abstract formula subtitle.",
+    "concrete": {
+      "items": ["Sample item 1", "Sample item 2"],
+      "target": "Target description"
+    },
+    "abstractFormula": {
+      "varA": "VAR A",
+      "operator": "➔",
+      "varB": "VAR B",
+      "equals": "=",
+      "result": "RESULT"
+    },
+    "statement": "Abstraction takeaway statement."
+  },
+  "pattern": {
+    "name": "Recognized Pattern Name",
+    "tagline": "Single sentence tagline.",
+    "description": "Clear description of when this pattern applies."
+  },
+  "fingerprint": {
+    "title": "Pattern Fingerprint",
+    "steps": [
+      { "stage": "INPUT", "value": "Input description" },
+      { "stage": "RELATIONSHIP", "value": "Relationship description" },
+      { "stage": "CONDITION", "value": "Condition description" },
+      { "stage": "OUTPUT", "value": "Output description" }
+    ]
+  },
+  "solutionFamilies": {
+    "title": "Solution Families",
+    "subtitle": "What approaches should come to mind for this pattern?",
+    "question": "Which tools or solution families are commonly associated with this problem?",
+    "families": [
+      {
+        "id": "fam_1",
+        "name": "Family Name 1",
+        "detail": "Family detail description."
+      }
+    ],
+    "note": "Pattern recognition tells us which families of approaches are relevant. Algorithm (Stage 05) will decide which approach to choose and how it works."
+  },
+  "limitations": {
+    "title": "What the Pattern Does NOT Tell Us",
+    "subtitle": "Recognizing a pattern does not tell us the algorithm yet.",
+    "tellsUs": ["Point 1", "Point 2"],
+    "doesNotTellUs": ["Point 1", "Point 2"]
+  },
+  "takeaway": {
+    "specificProblem": "Specific problem statement.",
+    "generalPattern": "General pattern concept.",
+    "finalStatement": "Concluding takeaway line."
+  }
+}
+
+Return ONLY valid raw JSON. No Markdown formatting. No \`\`\`json fences. No text before or after the JSON.
+`.trim();
+
+  return promptText;
+};
+
+const generateStage04PatternContent = async (problem) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) {
+    console.error('[Gemini Service] GEMINI_API_KEY is missing from environment variables');
+    throw new AppError('Gemini API key is not configured on the server', 500);
+  }
+
+  const candidateModels = Array.from(new Set([
+    primaryModel,
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+  ]));
+
+  const prompt = buildPatternPrompt(problem);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [
+        {
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.2,
+      },
+    };
+
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        console.log(`[Gemini Service] Calling Gemini API (Model: ${model}, Attempt: ${attempts}) for Stage 04 Pattern: "${problem.title}"`);
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const statusMessage = errorData.error?.message || res.statusText || 'Unknown Gemini error';
+          console.warn(`[Gemini Service] API HTTP ${res.status} (${model}):`, statusMessage);
+
+          if ((res.status === 503 || res.status === 429) && attempts < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500 * attempts));
+            continue;
+          }
+
+          lastError = new AppError(`Gemini API error (${model}): ${statusMessage}`, res.status >= 500 ? 502 : 400);
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!responseText) {
+          lastError = new AppError(`Gemini model ${model} returned an empty response`, 502);
+          break;
+        }
+
+        console.log(`[Gemini Service] Successfully generated Stage 04 Pattern content using model "${model}"`);
+        return {
+          rawText: responseText,
+          model,
+          promptVersion: 'pattern-v1',
+        };
+      } catch (err) {
+        console.error(`[Gemini Service] Connection error with model ${model}:`, err.message);
+        lastError = err;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+    }
+  }
+
+  throw (
+    lastError ||
+    new AppError('Gemini AI models are currently experiencing high demand. Please try again in a few moments.', 503)
+  );
+};
+
 module.exports = {
   AppError,
   buildUnderstandingPrompt,
   generateStage02Content,
   buildAnalogyPrompt,
   generateStage03AnalogyContent,
+  buildPatternPrompt,
+  generateStage04PatternContent,
 };
