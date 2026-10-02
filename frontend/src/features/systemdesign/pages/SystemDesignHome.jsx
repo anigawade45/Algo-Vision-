@@ -123,7 +123,7 @@ export default function SystemDesignHome({ theme, toggleTheme }) {
 
                                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                                     <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-                                        Status: <strong className={topic.isLive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'}>{topic.status}</strong>
+                                        <strong className={topic.isLive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'}>{topic.status}</strong>
                                     </span>
 
                                     {topic.isLive ? (
