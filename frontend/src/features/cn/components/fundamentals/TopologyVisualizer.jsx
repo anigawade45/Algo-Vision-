@@ -13,11 +13,12 @@ import {
   Info, 
   Layers, 
   AlertTriangle,
-  ArrowRight
+  ArrowRight,
+  Code2
 } from 'lucide-react';
 import { NETWORK_TOPOLOGIES_DATA } from '../../data/fundamentalsData';
 
-export function TopologyVisualizer({ onCompleteStep, isCompleted }) {
+export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) {
   const [selectedTopologyId, setSelectedTopologyId] = useState('star');
   const [sourceNodeId, setSourceNodeId] = useState('N1');
   const [targetNodeId, setTargetNodeId] = useState('N3');
@@ -358,6 +359,17 @@ export function TopologyVisualizer({ onCompleteStep, isCompleted }) {
           </div>
 
           <div className="flex items-center gap-2">
+            {onOpenCode && (
+              <button
+                onClick={() => onOpenCode(selectedTopologyId)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50 dark:bg-blue-950/60 text-xs font-mono font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                title="View Protocol Code & Algorithms for this Topology"
+              >
+                <Code2 className="w-3.5 h-3.5" />
+                <span>View Code & Algorithm</span>
+              </button>
+            )}
+
             <button
               onClick={() => {
                 setBrokenLinks([]);

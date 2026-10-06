@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { MotionConfig } from 'framer-motion';
 
@@ -35,6 +35,16 @@ import NetworkTopologies from '@/features/cn/pages/NetworkTopologies';
 import OsiLayers from '@/features/cn/pages/OsiLayers';
 import IpSubnetting from '@/features/cn/pages/IpSubnetting';
 import RoutingProtocols from '@/features/cn/pages/RoutingProtocols';
+import TransportLayer from '@/features/cn/pages/TransportLayer';
+import NetworkProtocols from '@/features/cn/pages/NetworkProtocols';
+import PacketTransmission from '@/features/cn/pages/PacketTransmission';
+import SystemDesignHome from '@/features/systemdesign/pages/SystemDesignHome';
+import SystemDesignBasics from '@/features/systemdesign/pages/SystemDesignBasics';
+import LoadBalancing from '@/features/systemdesign/pages/LoadBalancing';
+import Caching from '@/features/systemdesign/pages/Caching';
+import Scaling from '@/features/systemdesign/pages/Scaling';
+import MessageQueues from '@/features/systemdesign/pages/MessageQueues';
+import RateLimiting from '@/features/systemdesign/pages/RateLimiting';
 
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
@@ -343,8 +353,22 @@ export default function App() {
             />
 
             <Route
+              path="/cn/transport"
+              element={
+                <ProtectedRoute>
+                  <TransportLayer theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/transport-layer"
+              element={<Navigate to="/cn/transport" replace />}
+            />
+
+            <Route
               path="/cn/tcp-handshake"
-              element={<Navigate to="/cn/fundamentals" replace />}
+              element={<Navigate to="/cn/transport" replace />}
             />
 
             <Route
@@ -375,6 +399,44 @@ export default function App() {
             />
 
             <Route
+              path="/cn/protocols"
+              element={
+                <ProtectedRoute>
+                  <NetworkProtocols theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/packets"
+              element={
+                <ProtectedRoute>
+                  <PacketTransmission theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/cn/packet-transmission"
+              element={<Navigate to="/cn/packets" replace />}
+            />
+
+            <Route
+              path="/cn/packet"
+              element={<Navigate to="/cn/packets" replace />}
+            />
+
+            <Route
+              path="/cn/network-protocols"
+              element={<Navigate to="/cn/protocols" replace />}
+            />
+
+            <Route
+              path="/cn/protocol"
+              element={<Navigate to="/cn/protocols" replace />}
+            />
+
+            <Route
               path="/networks"
               element={<Navigate to="/cn" replace />}
             />
@@ -384,14 +446,213 @@ export default function App() {
               element={<Navigate to="/cn" replace />}
             />
 
+            {/* SYSTEM DESIGN MODULE ROUTES */}
+            <Route
+              path="/systemdesign"
+              element={
+                <ProtectedRoute>
+                  <SystemDesignHome theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/fundamentals"
+              element={
+                <ProtectedRoute>
+                  <SystemDesignBasics theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/load-balancing"
+              element={
+                <ProtectedRoute>
+                  <LoadBalancing theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/loadbalancing"
+              element={<Navigate to="/systemdesign/load-balancing" replace />}
+            />
+
+            <Route
+              path="/systemdesign/lb"
+              element={<Navigate to="/systemdesign/load-balancing" replace />}
+            />
+
+            <Route
+              path="/systemdesign/caching"
+              element={
+                <ProtectedRoute>
+                  <Caching theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/cache"
+              element={<Navigate to="/systemdesign/caching" replace />}
+            />
+
+            <Route
+              path="/systemdesign/redis"
+              element={<Navigate to="/systemdesign/caching" replace />}
+            />
+
+            <Route
+              path="/systemdesign/database-scaling"
+              element={
+                <ProtectedRoute>
+                  <Scaling theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/scaling"
+              element={<Navigate to="/systemdesign/database-scaling" replace />}
+            />
+
+            <Route
+              path="/systemdesign/sharding"
+              element={<Navigate to="/systemdesign/database-scaling" replace />}
+            />
+
+            <Route
+              path="/systemdesign/replication"
+              element={<Navigate to="/systemdesign/database-scaling" replace />}
+            />
+
+            <Route
+              path="/systemdesign/database"
+              element={<Navigate to="/systemdesign/database-scaling" replace />}
+            />
+
+            <Route
+              path="/systemdesign/message-queues"
+              element={
+                <ProtectedRoute>
+                  <MessageQueues theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/message-queue"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/queues"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/queue"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/kafka"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/rabbitmq"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/sqs"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/async"
+              element={<Navigate to="/systemdesign/message-queues" replace />}
+            />
+
+            <Route
+              path="/systemdesign/rate-limiting"
+              element={
+                <ProtectedRoute>
+                  <RateLimiting theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/systemdesign/ratelimiting"
+              element={<Navigate to="/systemdesign/rate-limiting" replace />}
+            />
+
+            <Route
+              path="/systemdesign/rate-limiter"
+              element={<Navigate to="/systemdesign/rate-limiting" replace />}
+            />
+
+            <Route
+              path="/systemdesign/ratelimit"
+              element={<Navigate to="/systemdesign/rate-limiting" replace />}
+            />
+
+            <Route
+              path="/systemdesign/throttling"
+              element={<Navigate to="/systemdesign/rate-limiting" replace />}
+            />
+
+            <Route
+              path="/systemdesign/token-bucket"
+              element={<Navigate to="/systemdesign/rate-limiting" replace />}
+            />
+
+            <Route
+              path="/systemdesign/leaky-bucket"
+              element={<Navigate to="/systemdesign/rate-limiting" replace />}
+            />
+
+            <Route
+              path="/systemdesign/basics-client-server"
+              element={<Navigate to="/systemdesign/fundamentals" replace />}
+            />
+
+            <Route
+              path="/systemdesign/basics"
+              element={<Navigate to="/systemdesign/fundamentals" replace />}
+            />
+
+            <Route
+              path="/systemdesign/client-server"
+              element={<Navigate to="/systemdesign/fundamentals" replace />}
+            />
+
             <Route
               path="/system-design"
-              element={<Navigate to="/modules/sysdesign" replace />}
+              element={<Navigate to="/systemdesign" replace />}
             />
 
             <Route
               path="/sysdesign"
-              element={<Navigate to="/modules/sysdesign" replace />}
+              element={<Navigate to="/systemdesign" replace />}
+            />
+
+            <Route
+              path="/sd"
+              element={<Navigate to="/systemdesign" replace />}
+            />
+
+            <Route
+              path="/modules/sysdesign"
+              element={<Navigate to="/systemdesign" replace />}
+            />
+
+            <Route
+              path="/modules/systemdesign"
+              element={<Navigate to="/systemdesign" replace />}
             />
 
             <Route

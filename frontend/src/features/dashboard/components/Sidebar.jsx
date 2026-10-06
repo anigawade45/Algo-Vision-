@@ -50,9 +50,13 @@ export function Sidebar({
     },
     {
       name: 'System Design',
-      path: '/modules/sysdesign',
+      path: '/systemdesign',
       icon: Server,
-      active: location.pathname.includes('/modules/sysdesign') || location.search.includes('module=sysdesign'),
+      active:
+        location.pathname.startsWith('/systemdesign') ||
+        location.pathname.startsWith('/sysdesign') ||
+        location.pathname.includes('/modules/sysdesign') ||
+        location.search.includes('module=sysdesign'),
     },
   ];
 

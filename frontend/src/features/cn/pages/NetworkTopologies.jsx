@@ -10,13 +10,16 @@ import {
   Scale, 
   Sparkles, 
   CheckCircle2,
-  Layers
+  Layers,
+  Code2
 } from 'lucide-react';
 import { TopologyVisualizer } from '../components/fundamentals/TopologyVisualizer';
 import { TopologyComparison } from '../components/fundamentals/TopologyComparison';
+import { TopologyCodeViewer } from '../components/fundamentals/TopologyCodeViewer';
 
 export default function NetworkTopologies({ theme, toggleTheme }) {
-  const [activeTab, setActiveTab] = useState('lab'); // 'lab' or 'compare'
+  const [activeTab, setActiveTab] = useState('lab'); // 'lab', 'code', or 'compare'
+  const [activeTopologyForCode, setActiveTopologyForCode] = useState('bus');
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-emerald-500 selection:text-white">
@@ -82,65 +85,81 @@ export default function NetworkTopologies({ theme, toggleTheme }) {
 
       {/* Main Page Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Module Header Banner */}
-        <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-teal-600 via-emerald-600 to-cyan-700 text-white p-6 sm:p-8 shadow-xl">
-          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-10 -left-10 w-60 h-60 rounded-full bg-emerald-400/20 blur-2xl pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2.5 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs border border-white/20 text-xs font-mono font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                <span>INTERACTIVE TOPOLOGY SIMULATOR</span>
-              </div>
-
-              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                Network Topologies & Traffic Simulation
-              </h1>
-
-              <p className="text-emerald-100 text-xs sm:text-sm sm:leading-relaxed max-w-2xl">
-                Simulate packet transmissions across Bus, Star, Ring, Mesh, Tree, and Hybrid network layouts. Test link cuts and node failures in real time, and analyze architecture tradeoffs side-by-side.
-              </p>
-            </div>
-
-            {/* Quick Navigation Toggle */}
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-2 flex items-center gap-1.5 self-start lg:self-center">
-              <button
-                onClick={() => setActiveTab('lab')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  activeTab === 'lab'
-                    ? 'bg-white text-emerald-800 shadow-md font-extrabold'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                <GitFork className="w-3.5 h-3.5" />
-                <span>Topologies Lab & Simulator</span>
-              </button>
-
-              <button
-                onClick={() => setActiveTab('compare')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  activeTab === 'compare'
-                    ? 'bg-white text-emerald-800 shadow-md font-extrabold'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                <Scale className="w-3.5 h-3.5" />
-                <span>Compare & Tradeoffs Matrix</span>
-              </button>
-            </div>
+        {/* Title & Badge */}
+        <div>
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 text-xs font-semibold mb-2">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Interactive Topology Simulator & Code Lab</span>
           </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Network Topologies & Traffic Simulation
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+            Simulate packet transmissions across Bus, Star, Ring, Mesh, Tree, and Hybrid network layouts. Inspect low-level protocol code (CSMA/CD, Switch CAM, Token Passing, LCA routing), test link cuts, and analyze architectural tradeoffs.
+          </p>
+        </div>
+
+        {/* Tab Navigation Controls */}
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-[#1E2638] pb-1 overflow-x-auto font-mono text-xs">
+          <button
+            onClick={() => setActiveTab('lab')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer ${
+              activeTab === 'lab'
+                ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900'
+            }`}
+          >
+            <GitFork className="w-3.5 h-3.5" />
+            <span>Topologies Simulator</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('code')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer ${
+              activeTab === 'code'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900'
+            }`}
+          >
+            <Code2 className="w-3.5 h-3.5" />
+            <span>Protocol Code & Algorithms</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('compare')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer ${
+              activeTab === 'compare'
+                ? 'bg-slate-800 text-white shadow-md'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            <span>Tradeoffs Matrix</span>
+          </button>
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'lab' ? (
+        {activeTab === 'lab' && (
           <TopologyVisualizer
-            onCompleteStep={() => setActiveTab('compare')}
+            onCompleteStep={() => setActiveTab('code')}
+            onOpenCode={(topoId) => {
+              if (topoId) setActiveTopologyForCode(topoId);
+              setActiveTab('code');
+            }}
             isCompleted={false}
           />
-        ) : (
+        )}
+
+        {activeTab === 'code' && (
+          <TopologyCodeViewer
+            defaultTopology={activeTopologyForCode}
+            onSwitchToLab={() => setActiveTab('lab')}
+          />
+        )}
+
+        {activeTab === 'compare' && (
           <TopologyComparison
-            onCompleteStep={() => setActiveTab('lab')}
+            onCompleteStep={() => setActiveTab('code')}
             isCompleted={false}
           />
         )}

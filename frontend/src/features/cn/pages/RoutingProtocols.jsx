@@ -11,6 +11,7 @@ import { RoutingControls } from '../components/routing/RoutingControls';
 import { RoutingTableViewer } from '../components/routing/RoutingTableViewer';
 import { DijkstraStepLog } from '../components/routing/DijkstraStepLog';
 import { RoutingExplanation } from '../components/routing/RoutingExplanation';
+import { RoutingCodeViewer } from '../components/routing/RoutingCodeViewer';
 
 export default function RoutingProtocols({ theme, toggleTheme }) {
   const [nodes, setNodes] = useState(DEFAULT_NODES);
@@ -206,7 +207,10 @@ export default function RoutingProtocols({ theme, toggleTheme }) {
           totalCost={simulationResult?.totalCost}
         />
 
-        {/* 5. Theory & Comparison */}
+        {/* 5. Multi-Language Routing Algorithm Code Lab (Python 3, C++, Java) */}
+        <RoutingCodeViewer initialSource={sourceId} initialDest={destId} />
+
+        {/* 6. Theory & Comparison */}
         <RoutingExplanation />
       </main>
     </div>

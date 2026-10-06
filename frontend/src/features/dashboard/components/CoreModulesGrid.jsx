@@ -63,6 +63,14 @@ export function CoreModulesGrid({ onExploreModule }) {
   const handleExplore = (moduleId, route) => {
     if (onExploreModule) {
       onExploreModule(moduleId);
+    } else if (moduleId === 'dsa') {
+      navigate('/dsa');
+    } else if (moduleId === 'os') {
+      navigate('/os');
+    } else if (moduleId === 'networks' || moduleId === 'cn') {
+      navigate('/cn');
+    } else if (moduleId === 'sysdesign' || moduleId === 'systemdesign') {
+      navigate('/systemdesign');
     } else {
       navigate(route);
     }

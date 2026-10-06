@@ -200,9 +200,6 @@ Return ONLY valid raw JSON. No Markdown formatting. No \`\`\`json fences. No tex
   return promptText;
 };
 
-/**
- * Calls Gemini REST API to generate structured Stage 02 content with model fallback & retry logic.
- */
 const generateStage02Content = async (problem) => {
   const apiKey = env.geminiApiKey;
   const primaryModel = env.geminiModel || 'gemini-2.5-flash';
