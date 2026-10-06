@@ -1323,6 +1323,438 @@ const generateStage05PseudocodeContent = async (problem, approachId, approachNam
   );
 };
 
+const buildDryRunPrompt = (problem, approachId, approachName, pseudocodeDoc, codeText, testCase) => {
+  const problemContext = {
+    id: String(problem._id || problem.id || ''),
+    problemId: problem.problemId || '',
+    title: problem.title || '',
+    category: problem.category || '',
+    difficulty: problem.difficulty || '',
+    objective: problem.objective || '',
+    description: problem.description || '',
+    constraints: problem.constraints || [],
+    inputData: problem.inputData || {},
+    outputData: problem.outputData || {},
+  };
+
+  const pseudocodeLines = (pseudocodeDoc?.lines || []).map((l) => ({
+    line: l.line,
+    text: l.text,
+    explanation: l.explanation || '',
+    type: l.type || 'instruction',
+  }));
+
+  const testCaseContext = {
+    testCaseId: testCase?.id || testCase?.testCaseId || 1,
+    inputRaw: testCase?.inputRaw || JSON.stringify(testCase?.inputStructured || {}),
+    outputRaw: testCase?.outputRaw || JSON.stringify(testCase?.outputStructured || {}),
+    inputStructured: testCase?.inputStructured || null,
+    outputStructured: testCase?.outputStructured || null,
+  };
+
+  const promptText = `
+You are the Stage 08 Dry Run execution trace generator for AlgoVision, an interactive Data Structures and Algorithms visual learning system.
+
+=== AUTHORITATIVE PROBLEM CONTEXT ===
+TITLE: ${problemContext.title}
+SLUG: ${problemContext.problemId}
+OBJECTIVE: ${problemContext.objective}
+DESCRIPTION: ${problemContext.description}
+CONSTRAINTS: ${JSON.stringify(problemContext.constraints, null, 2)}
+
+=== SELECTED PATTERN / APPROACH ===
+APPROACH ID: ${approachId}
+APPROACH NAME: ${approachName}
+
+=== STAGE 05 PSEUDOCODE (STRICT LINE NUMBER CONTRACT) ===
+The algorithm logic is defined by the following sequential pseudocode lines:
+${JSON.stringify(pseudocodeLines, null, 2)}
+
+STRICT PSEUDOCODE LINE NUMBER RULES:
+1. Every step in your execution trace MUST specify a "pseudocodeLine" integer that EXACTLY matches one of the line numbers in the pseudocode array above.
+2. The "pseudocodeText" in each step MUST match the exact text of that referenced pseudocode line.
+3. Do NOT invent new line numbers. Only reference available pseudocode lines: ${pseudocodeLines.map((l) => l.line).join(', ')}.
+
+=== STAGE 07 CODE IMPLEMENTATION ===
+${codeText || '// Implementation for ' + approachName}
+
+=== SELECTED TEST CASE FOR DRY RUN ===
+TEST CASE ID: ${testCaseContext.testCaseId}
+INPUT RAW: ${testCaseContext.inputRaw}
+EXPECTED OUTPUT: ${testCaseContext.outputRaw}
+
+=== DRY RUN GENERATION RULES ===
+1. Step through the algorithm line by line executing it on the selected test case input.
+2. Produce a step-by-step execution trace object matching the schema below.
+3. Provide initial state before step 1 execution.
+4. Each step must show:
+   - "stepNo": sequential integer starting from 1 (1, 2, 3...)
+   - "pseudocodeLine": valid integer line number from pseudocode
+   - "pseudocodeText": exact text of referenced line
+   - "operation": string (e.g. "INITIALIZE", "COMPUTE", "CHECK", "UPDATE", "RETURN")
+   - "title": short title describing this step
+   - "variables": array of current variable states [{ "name": "...", "value": "...", "label": "..." }]
+   - "before": key-value map of variable values before this step
+   - "condition": { "text": "...", "evaluation": "...", "passes": boolean }
+   - "action": { "description": "..." }
+   - "after": key-value map of variable values after this step
+   - "changes": array of variable names that changed in this step (e.g. ["hashMap", "i"])
+   - "currentResult": string representation of current result state
+   - "explanation": pedagogical explanation of why this step occurred
+5. Stop execution immediately when the algorithm returns. Do not create steps after RETURN.
+6. Make "input" summary object for the UI header matching the SELECTED test case:
+   - "title": "${problemContext.title}"
+   - "inputVisual": "${testCaseContext.inputRaw}"
+   - "items": [
+       { "label": "Input", "value": "${testCaseContext.inputRaw}" },
+       { "label": "Expected Output", "value": "${testCaseContext.outputRaw}" }
+     ]
+   - "expectedOutput": "${testCaseContext.outputRaw}"
+7. Return strict valid JSON matching the exact schema below.
+
+--- EXPECTED JSON RESPONSE SCHEMA ---
+{
+  "input": {
+    "title": "${problemContext.title}",
+    "inputVisual": "${testCaseContext.inputRaw}",
+    "items": [
+      { "label": "Input", "value": "${testCaseContext.inputRaw}" },
+      { "label": "Expected Output", "value": "${testCaseContext.outputRaw}" }
+    ],
+    "expectedOutput": "${testCaseContext.outputRaw}"
+  },
+  "initialState": {
+    "subtitle": "Initial state before step 1 execution",
+    "variables": [
+      { "name": "i", "value": "-", "label": "Current Index" },
+      { "name": "num", "value": "-", "label": "Current Number" },
+      { "name": "complement", "value": "-", "label": "Target Complement" },
+      { "name": "hashMap", "value": "{ }", "label": "Hash Map (num ➔ index)" },
+      { "name": "result", "value": "[ ]", "label": "Indices Result" }
+    ]
+  },
+  "steps": [
+    {
+      "stepNo": 1,
+      "pseudocodeLine": 2,
+      "pseudocodeText": "Create an empty hash map (value ➔ index).",
+      "operation": "INITIALIZE",
+      "title": "Initialize Hash Map",
+      "variables": [
+        { "name": "i", "value": "-", "label": "Current Index" },
+        { "name": "num", "value": "-", "label": "Current Number" },
+        { "name": "complement", "value": "-", "label": "Target Complement" },
+        { "name": "hashMap", "value": "{ }", "label": "Hash Map (num ➔ index)" },
+        { "name": "result", "value": "[ ]", "label": "Indices Result" }
+      ],
+      "before": { "i": "-", "num": "-", "complement": "-", "hashMap": "{ }", "result": "[ ]" },
+      "condition": { "text": "Execution starting", "evaluation": "START", "passes": true },
+      "action": { "description": "Create an empty hash map." },
+      "after": { "i": "-", "num": "-", "complement": "-", "hashMap": "{ }", "result": "[ ]" },
+      "changes": ["hashMap"],
+      "currentResult": "[ ]",
+      "explanation": "The hash map starts empty so previously visited values can be stored with their indices."
+    }
+  ],
+  "finalResult": "[ 0, 1 ]",
+  "executionSummary": "The algorithm finds the complement 2 for value 7 in the hash map and returns indices [0, 1]."
+}
+
+Return ONLY valid raw JSON. No Markdown formatting. No \`\`\`json fences. No text before or after the JSON.
+`.trim();
+
+  return promptText;
+};
+
+const generateStage08DryRunContent = async (problem, approachId, approachName, pseudocodeDoc, codeText, testCase) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) {
+    console.error('[Gemini Service] GEMINI_API_KEY is missing from environment variables');
+    throw new AppError('Gemini API key is not configured on the server', 500);
+  }
+
+  const candidateModels = Array.from(new Set([
+    primaryModel,
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+  ]));
+
+  const prompt = buildDryRunPrompt(problem, approachId, approachName, pseudocodeDoc, codeText, testCase);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [
+        {
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.1,
+      },
+    };
+
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        console.log(`[Gemini Service] Calling Gemini API (Model: ${model}, Attempt: ${attempts}) for Stage 08 Dry Run: "${problem.title}" [Approach: ${approachId}, TestCase: ${testCase?.id || 1}]`);
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const statusMessage = errorData.error?.message || res.statusText || 'Unknown Gemini error';
+          console.warn(`[Gemini Service] API HTTP ${res.status} (${model}):`, statusMessage);
+
+          if ((res.status === 503 || res.status === 429) && attempts < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500 * attempts));
+            continue;
+          }
+
+          lastError = new AppError(`Gemini API error (${model}): ${statusMessage}`, res.status >= 500 ? 502 : 400);
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!responseText) {
+          lastError = new AppError(`Gemini model ${model} returned an empty response`, 502);
+          break;
+        }
+
+        console.log(`[Gemini Service] Successfully generated Stage 08 Dry Run content using model "${model}"`);
+        return {
+          rawText: responseText,
+          model,
+          promptVersion: 'dry-run-v1',
+        };
+      } catch (err) {
+        console.error(`[Gemini Service] Connection error with model ${model}:`, err.message);
+        lastError = err;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+    }
+  }
+
+  throw (
+    lastError ||
+    new AppError('Gemini AI models are currently experiencing high demand. Please try again in a few moments.', 503)
+  );
+};
+
+const buildPracticePrompt = (problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText, dryRunDoc) => {
+  const problemContext = {
+    id: String(problem._id || problem.id || ''),
+    problemId: problem.problemId || '',
+    title: problem.title || '',
+    category: problem.category || '',
+    difficulty: problem.difficulty || '',
+    objective: problem.objective || '',
+    description: problem.description || '',
+    constraints: problem.constraints || [],
+    inputData: problem.inputData || {},
+    outputData: problem.outputData || {},
+  };
+
+  const patternContext = {
+    name: patternDoc?.pattern?.name || approachName,
+    tagline: patternDoc?.pattern?.tagline || '',
+    description: patternDoc?.pattern?.description || '',
+  };
+
+  const algorithmText = algorithmDoc?.rawText || '';
+  const pseudocodeLines = (pseudocodeDoc?.lines || []).map((l) => `${l.line}. ${l.text}`).join('\n');
+  const dryRunSummary = dryRunDoc?.executionSummary || 'Step-by-step trace completed.';
+
+  const promptText = `
+You are the Stage 11 Practice Knowledge Check generator for AlgoVision, an interactive Data Structures and Algorithms visual learning system.
+
+=== AUTHORITATIVE PROBLEM CONTEXT ===
+TITLE: ${problemContext.title}
+SLUG: ${problemContext.problemId}
+CATEGORY: ${problemContext.category}
+DIFFICULTY: ${problemContext.difficulty}
+OBJECTIVE: ${problemContext.objective}
+DESCRIPTION: ${problemContext.description}
+CONSTRAINTS: ${JSON.stringify(problemContext.constraints, null, 2)}
+
+=== SELECTED APPROACH & PATTERN ===
+APPROACH ID: ${approachId}
+APPROACH NAME: ${approachName}
+PATTERN NAME: ${patternContext.name}
+TAGLINE: ${patternContext.tagline}
+DESCRIPTION: ${patternContext.description}
+
+=== ALGORITHM SUMMARY ===
+${algorithmText || 'Standard ' + approachName + ' solution.'}
+
+=== PSEUDOCODE ===
+${pseudocodeLines || 'Sequential pseudocode steps.'}
+
+=== SOURCE CODE ===
+${codeText || '// Solution implementation'}
+
+=== DRY RUN SUMMARY ===
+${dryRunSummary}
+
+=== QUIZ GENERATION RULES ===
+1. Generate EXACTLY 10 problem-specific and approach-specific multiple-choice questions for "${problemContext.title}".
+2. DO NOT generate generic DSA questions like "What is Big O?" or "What is an array?".
+3. Questions MUST test the learner's understanding of this specific problem, its constraints, the selected ${approachName} approach, implementation details, edge cases, time complexity, and space complexity.
+4. The 10 questions MUST follow this exact distribution:
+   - Question 1 (type: "concept"): Primary algorithmic concept / pattern for this problem.
+   - Question 2 (type: "logic"): Specific problem understanding / core idea.
+   - Question 3 (type: "pattern"): Pattern observation / solution strategy.
+   - Question 4 (type: "logic"): Internal algorithm step or variable role.
+   - Question 5 (type: "constraint"): How problem constraints (e.g. ${JSON.stringify(problemContext.constraints)}) influence the choice of approach.
+   - Question 6 (type: "implementation"): Specific line-by-line implementation detail from the code/pseudocode.
+   - Question 7 (type: "edge-case"): Behavior on edge cases (empty input, single item, boundary values).
+   - Question 8 (type: "complexity"): Time complexity of the selected approach for this problem.
+   - Question 9 (type: "complexity"): Auxiliary Space complexity of the selected approach for this problem.
+   - Question 10 (type: "reasoning"): Algorithm correctness / why this approach works.
+5. EVERY question MUST have EXACTLY 4 options in an array of strings: ["Option A", "Option B", "Option C", "Option D"].
+6. "correctAnswer" MUST be an integer index (0 for Option A, 1 for Option B, 2 for Option C, 3 for Option D). Exactly one option must be correct.
+7. Provide a clear, pedagogical "explanation" string (1-3 sentences) explaining why the correct answer is right.
+8. Return strict valid JSON matching the exact schema below.
+
+--- EXPECTED JSON RESPONSE SCHEMA ---
+{
+  "questions": [
+    {
+      "id": 1,
+      "questionNumber": 1,
+      "type": "concept",
+      "question": "What primary algorithmic technique is used in this approach?",
+      "options": [
+        "Option A text",
+        "Option B text",
+        "Option C text",
+        "Option D text"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Detailed explanation of why Option B is correct."
+    }
+  ]
+}
+
+Return ONLY valid raw JSON. No Markdown formatting. No \`\`\`json fences. No text before or after the JSON.
+`.trim();
+
+  return promptText;
+};
+
+const generateStage11PracticeContent = async (problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText, dryRunDoc) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) {
+    console.error('[Gemini Service] GEMINI_API_KEY is missing from environment variables');
+    throw new AppError('Gemini API key is not configured on the server', 500);
+  }
+
+  const candidateModels = Array.from(new Set([
+    primaryModel,
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+  ]));
+
+  const prompt = buildPracticePrompt(problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText, dryRunDoc);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [
+        {
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.2,
+      },
+    };
+
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        console.log(`[Gemini Service] Calling Gemini API (Model: ${model}, Attempt: ${attempts}) for Stage 11 Practice: "${problem.title}" [Approach: ${approachId}]`);
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const statusMessage = errorData.error?.message || res.statusText || 'Unknown Gemini error';
+          console.warn(`[Gemini Service] API HTTP ${res.status} (${model}):`, statusMessage);
+
+          if ((res.status === 503 || res.status === 429) && attempts < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500 * attempts));
+            continue;
+          }
+
+          lastError = new AppError(`Gemini API error (${model}): ${statusMessage}`, res.status >= 500 ? 502 : 400);
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!responseText) {
+          lastError = new AppError(`Gemini model ${model} returned an empty response`, 502);
+          break;
+        }
+
+        console.log(`[Gemini Service] Successfully generated Stage 11 Practice content using model "${model}"`);
+        return {
+          rawText: responseText,
+          model,
+          promptVersion: 'practice-v1',
+        };
+      } catch (err) {
+        console.error(`[Gemini Service] Connection error with model ${model}:`, err.message);
+        lastError = err;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+    }
+  }
+
+  throw (
+    lastError ||
+    new AppError('Gemini AI models are currently experiencing high demand. Please try again in a few moments.', 503)
+  );
+};
+
 module.exports = {
   AppError,
   buildUnderstandingPrompt,
@@ -1335,4 +1767,8 @@ module.exports = {
   generateStage05AlgorithmContent,
   buildPseudocodePrompt,
   generateStage05PseudocodeContent,
+  buildDryRunPrompt,
+  generateStage08DryRunContent,
+  buildPracticePrompt,
+  generateStage11PracticeContent,
 };

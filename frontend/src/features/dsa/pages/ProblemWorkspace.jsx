@@ -572,6 +572,7 @@ export default function ProblemWorkspace({
               <DryRunStage
                 problem={problem}
                 selectedApproachId={selectedApproachId}
+                selectedApproachName={selectedApproachName}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -590,6 +591,7 @@ export default function ProblemWorkspace({
             {currentStageId === 'practice' && (
               <PracticeStage
                 problem={problem}
+                selectedApproachId={selectedApproachId}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

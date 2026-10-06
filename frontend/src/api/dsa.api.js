@@ -173,3 +173,61 @@ export const regenerateProblemPseudocode = async (problemId, approachId, approac
     approachName,
   });
 };
+
+/**
+ * Retrieve Stage 08 Dry Run execution trace data for a specific approach and testCase
+ */
+export const getProblemDryRun = async (problemId, approachId, testCaseId) => {
+  return await apiClient.get(`/problems/${problemId}/dry-run`, {
+    params: { approachId, testCaseId },
+  });
+};
+
+/**
+ * Generate Stage 08 Dry Run execution trace via Gemini AI for a specific approach and testCase
+ */
+export const generateProblemDryRun = async (problemId, { approachId, testCaseId }) => {
+  return await apiClient.post(`/problems/${problemId}/dry-run/generate`, {
+    approachId,
+    testCaseId,
+  });
+};
+
+/**
+ * Force regenerate Stage 08 Dry Run execution trace via Gemini AI for a specific approach and testCase
+ */
+export const regenerateProblemDryRun = async (problemId, { approachId, testCaseId }) => {
+  return await apiClient.post(`/problems/${problemId}/dry-run/regenerate`, {
+    approachId,
+    testCaseId,
+  });
+};
+
+/**
+ * Retrieve Stage 11 Practice Knowledge Check quiz data for a specific approach
+ */
+export const getProblemPractice = async (problemId, approachId) => {
+  return await apiClient.get(`/problems/${problemId}/practice`, {
+    params: { approachId },
+  });
+};
+
+/**
+ * Generate Stage 11 Practice Knowledge Check quiz via Gemini AI for a specific approach
+ */
+export const generateProblemPractice = async (problemId, approachId) => {
+  return await apiClient.post(`/problems/${problemId}/practice/generate`, {
+    approachId,
+  });
+};
+
+/**
+ * Force regenerate Stage 11 Practice Knowledge Check quiz via Gemini AI for a specific approach
+ */
+export const regenerateProblemPractice = async (problemId, approachId) => {
+  return await apiClient.post(`/problems/${problemId}/practice/regenerate`, {
+    approachId,
+  });
+};
+
+
