@@ -95,9 +95,21 @@ export default function ProblemWorkspace({
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [dbProblems, setDbProblems] = useState([]);
   const [selectedProblemId, setSelectedProblemId] = useState(id || 'two-sum');
-  const [selectedApproachId, setSelectedApproachId] = useState('minHeap');
+  const [selectedApproachId, setSelectedApproachId] = useState(null);
+  const [selectedApproachName, setSelectedApproachName] = useState(null);
 
   const targetProblemId = id || selectedProblemId || 'two-sum';
+
+  const handleApproachSelect = (approachId, approachName) => {
+    setSelectedApproachId(approachId);
+    if (approachName) setSelectedApproachName(approachName);
+  };
+
+  // Reset selected approach when active problem changes
+  useEffect(() => {
+    setSelectedApproachId(null);
+    setSelectedApproachName(null);
+  }, [targetProblemId]);
 
   const loadBackendProblems = async () => {
     try {
@@ -517,6 +529,8 @@ export default function ProblemWorkspace({
             {currentStageId === 'pattern' && (
               <PatternStage
                 problem={problem}
+                selectedApproachId={selectedApproachId}
+                onSelectApproach={handleApproachSelect}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -537,6 +551,7 @@ export default function ProblemWorkspace({
               <PseudocodeStage
                 problem={problem}
                 selectedApproachId={selectedApproachId}
+                selectedApproachName={selectedApproachName}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

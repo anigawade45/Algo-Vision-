@@ -82,18 +82,15 @@ export function Sidebar({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 z-50 bg-white dark:bg-[#0B0F19] border-r border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between transition-all duration-300 ease-in-out font-sans ${
-          isCollapsed ? 'w-20' : 'w-72'
-        } ${
-          mobileOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0'
-        }`}
+        className={`fixed top-0 left-0 bottom-0 z-50 bg-white dark:bg-[#0B0F19] border-r border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between transition-all duration-300 ease-in-out font-sans ${isCollapsed ? 'w-20' : 'w-72'
+          } ${mobileOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0'
+          }`}
       >
-        {/* TOP: Brand Header & Collapse Toggle */}
+        
         <div className="flex flex-col">
           <div
-            className={`h-16 flex items-center border-b border-slate-200/80 dark:border-slate-800/80 transition-all ${
-              isCollapsed && !mobileOpen ? 'justify-center px-2' : 'justify-between px-6'
-            }`}
+            className={`h-16 flex items-center border-b border-slate-200/80 dark:border-slate-800/80 transition-all ${isCollapsed && !mobileOpen ? 'justify-center px-2' : 'justify-between px-6'
+              }`}
           >
             {!isCollapsed || mobileOpen ? (
               <Link
@@ -199,23 +196,20 @@ export function Sidebar({
                       to={item.path}
                       title={isCollapsed && !mobileOpen ? item.name : undefined}
                       onClick={() => setMobileOpen(false)}
-                      className={`group flex items-center rounded-xl text-[13.5px] font-medium transition-all duration-150 ${
-                        isCollapsed && !mobileOpen
+                      className={`group flex items-center rounded-xl text-[13.5px] font-medium transition-all duration-150 ${isCollapsed && !mobileOpen
                           ? 'justify-center p-3'
                           : 'justify-between px-3 py-2.5'
-                      } ${
-                        isActive
+                        } ${isActive
                           ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25 font-semibold'
                           : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#111827] hover:text-slate-900 dark:hover:text-white'
-                      }`}
+                        }`}
                     >
                       <div className={`flex items-center gap-3 ${isCollapsed && !mobileOpen ? '' : 'min-w-0'}`}>
                         <Icon
-                          className={`w-5 h-5 shrink-0 transition-colors ${
-                            isActive
+                          className={`w-5 h-5 shrink-0 transition-colors ${isActive
                               ? 'text-white'
                               : 'text-slate-400 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                          }`}
+                            }`}
                         />
                         {(!isCollapsed || mobileOpen) && (
                           <span className="truncate">{item.name}</span>
@@ -239,9 +233,8 @@ export function Sidebar({
                 to={item.path}
                 title={isCollapsed && !mobileOpen ? item.name : undefined}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center rounded-xl text-[13px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] transition-colors ${
-                  isCollapsed && !mobileOpen ? 'justify-center p-2.5' : 'gap-3 px-3 py-2'
-                }`}
+                className={`flex items-center rounded-xl text-[13px] font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] transition-colors ${isCollapsed && !mobileOpen ? 'justify-center p-2.5' : 'gap-3 px-3 py-2'
+                  }`}
               >
                 <Icon className="w-4 h-4 text-slate-400 shrink-0" />
                 {(!isCollapsed || mobileOpen) && <span>{item.name}</span>}
@@ -256,9 +249,8 @@ export function Sidebar({
               setMobileOpen(false);
             }}
             title={isCollapsed && !mobileOpen ? 'Logout' : 'Sign out of student session'}
-            className={`flex items-center rounded-xl text-[13px] font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors ${
-              isCollapsed && !mobileOpen ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
-            }`}
+            className={`flex items-center rounded-xl text-[13px] font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors ${isCollapsed && !mobileOpen ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
+              }`}
           >
             <div className="flex items-center gap-3">
               <LogOut className="w-4 h-4 shrink-0" />

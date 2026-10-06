@@ -559,16 +559,16 @@ ${JSON.stringify(problemContext.outputData, null, 2)}
 
 TEST CASES:
 ${JSON.stringify(
-  (problemContext.testCases || []).map((tc, idx) => ({
-    testCaseId: tc.id || idx + 1,
-    inputRaw: tc.inputRaw,
-    outputRaw: tc.outputRaw,
-    inputStructured: tc.inputStructured || null,
-    outputStructured: tc.outputStructured || null,
-  })),
-  null,
-  2
-)}
+    (problemContext.testCases || []).map((tc, idx) => ({
+      testCaseId: tc.id || idx + 1,
+      inputRaw: tc.inputRaw,
+      outputRaw: tc.outputRaw,
+      inputStructured: tc.inputStructured || null,
+      outputStructured: tc.outputStructured || null,
+    })),
+    null,
+    2
+  )}
 `.trim();
 
   const promptText = `
@@ -878,6 +878,260 @@ const generateStage04PatternContent = async (problem) => {
   );
 };
 
+const buildPseudocodePrompt = (problem, approachId, approachName) => {
+  const problemContext = {
+    id: String(problem._id || problem.id || ''),
+    problemId: problem.problemId || '',
+    title: problem.title || '',
+    category: problem.category || '',
+    difficulty: problem.difficulty || '',
+    objective: problem.objective || '',
+    description: problem.description || '',
+    constraints: problem.constraints || [],
+    inputData: problem.inputData || {},
+    outputData: problem.outputData || {},
+    testCases: problem.testCases || [],
+  };
+
+  const problemIdentityBlock = `
+PROBLEM ID: ${problemContext.id}
+PROBLEM SLUG: ${problemContext.problemId}
+TITLE: ${problemContext.title}
+CATEGORY: ${problemContext.category}
+DIFFICULTY: ${problemContext.difficulty}
+
+OBJECTIVE:
+${problemContext.objective}
+
+DESCRIPTION:
+${problemContext.description}
+
+CONSTRAINTS:
+${JSON.stringify(problemContext.constraints, null, 2)}
+
+INPUT DATA:
+${JSON.stringify(problemContext.inputData, null, 2)}
+
+OUTPUT DATA:
+${JSON.stringify(problemContext.outputData, null, 2)}
+
+TEST CASES:
+${JSON.stringify(
+    (problemContext.testCases || []).map((tc, idx) => ({
+      testCaseId: tc.id || idx + 1,
+      inputRaw: tc.inputRaw,
+      outputRaw: tc.outputRaw,
+    })),
+    null,
+    2
+  )}
+`.trim();
+
+  const promptText = `
+You are the Stage 05 Pseudocode Generator for AlgoVision, an interactive Data Structures and Algorithms visual learning system.
+
+=== AUTHORITATIVE PROBLEM CONTEXT ===
+${problemIdentityBlock}
+
+=== SELECTED PATTERN & APPROACH (STRICT APPROACH LOCK) ===
+APPROACH ID: ${approachId}
+APPROACH NAME: ${approachName}
+
+STRICT APPROACH LOCK RULES:
+1. The user selected the approach "${approachName}" (ID: "${approachId}") in Stage 04 (Pattern).
+2. You MUST generate pseudocode ONLY for this selected approach.
+3. You MUST NOT select, recommend, or substitute a different pattern or algorithm approach.
+4. Do NOT substitute BFS for DFS, HashMap for Two Pointers, DP for recursion, etc.
+5. Even if another approach seems more optimal, stay strictly locked to "${approachName}".
+
+=== PSEUDOCODE GENERATION RULES ===
+1. Generate clear, language-independent pseudocode for solving the exact problem above using the selected approach.
+2. DO NOT output programming-language-specific code or syntax (NO Java, C++, Python, JavaScript syntax like 'unordered_map', 'ArrayList', 'vector<int>', 'Map()', 'function', 'heapq', 'dict()').
+3. Use language-independent control-flow keywords: START, INITIALIZE, CREATE, FOR, WHILE, IF, ELSE, RETURN, END, PUSH, POP, INSERT, REMOVE.
+4. Line numbers MUST be sequential integers starting from 1 with NO gaps or duplicates (1, 2, 3, 4, ...).
+5. Each line object must contain:
+   - "line": integer (1, 2, 3, ...)
+   - "type": string, one of ["start", "instruction", "loop", "condition", "return", "end", "comment", "initialization", "operation", "update", "call"]
+   - "text": string (pseudocode statement)
+   - "explanation": string (short pedagogical explanation of what this line does)
+   - "indent": boolean (true if indented, false otherwise)
+   - "indentLevel": integer (0 for base, 1 for inside loop/condition, 2 for nested)
+6. Include a "walkthrough" array of 2-4 key logical steps: [{ "stepNo": "01", "action": "...", "why": "..." }].
+7. Include a "decisions" array of 1-3 key branching points: [{ "condition": "...", "yes": "...", "no": "..." }].
+8. Include a "takeaway" object: { "statement": "...", "subtitle": "..." }.
+
+--- EXPECTED JSON RESPONSE SCHEMA ---
+{
+  "approachId": "${approachId}",
+  "approachName": "${approachName}",
+  "approachContext": "Pseudocode generated for the selected ${approachName} approach.",
+  "intro": {
+    "eyebrow": "06 · PSEUDOCODE",
+    "title": "Turn the chosen algorithm into clear, step-by-step logic.",
+    "subtitle": "Before writing code, describe exactly what the algorithm needs to do."
+  },
+  "lines": [
+    {
+      "line": 1,
+      "type": "start",
+      "text": "START",
+      "explanation": "Execution begins.",
+      "indent": false,
+      "indentLevel": 0
+    },
+    {
+      "line": 2,
+      "type": "instruction",
+      "text": "Initialize data structures for ${approachName}.",
+      "explanation": "Set up initial state.",
+      "indent": false,
+      "indentLevel": 0
+    },
+    {
+      "line": 3,
+      "type": "loop",
+      "text": "FOR each element in input:",
+      "explanation": "Iterate through elements.",
+      "indent": false,
+      "indentLevel": 0
+    },
+    {
+      "line": 4,
+      "type": "condition",
+      "text": "IF target condition met:",
+      "explanation": "Check terminating condition.",
+      "indent": true,
+      "indentLevel": 1
+    },
+    {
+      "line": 5,
+      "type": "return",
+      "text": "RETURN result.",
+      "explanation": "Return computed answer.",
+      "indent": true,
+      "indentLevel": 2
+    },
+    {
+      "line": 6,
+      "type": "end",
+      "text": "END",
+      "explanation": "Algorithm completes.",
+      "indent": false,
+      "indentLevel": 0
+    }
+  ],
+  "walkthrough": [
+    { "stepNo": "01", "action": "Initialize storage", "why": "Track state efficiently." }
+  ],
+  "decisions": [
+    { "condition": "Condition check?", "yes": "Return result", "no": "Continue loop" }
+  ],
+  "takeaway": {
+    "statement": "Your algorithm is now expressed as language-independent steps.",
+    "subtitle": "The algorithm defines the approach. Pseudocode turns that approach into precise steps."
+  }
+}
+
+Return ONLY valid raw JSON. No Markdown formatting. No backtick code fences. No text before or after the JSON.
+`.trim();
+
+  return promptText;
+};
+
+const generateStage05PseudocodeContent = async (problem, approachId, approachName) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) {
+    console.error('[Gemini Service] GEMINI_API_KEY is missing from environment variables');
+    throw new AppError('Gemini API key is not configured on the server', 500);
+  }
+
+  const candidateModels = Array.from(new Set([
+    primaryModel,
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+  ]));
+
+  const prompt = buildPseudocodePrompt(problem, approachId, approachName);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [
+        {
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.2,
+      },
+    };
+
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        console.log(`[Gemini Service] Calling Gemini API (Model: ${model}, Attempt: ${attempts}) for Stage 05 Pseudocode: "${problem.title}" [Approach: ${approachId}]`);
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const statusMessage = errorData.error?.message || res.statusText || 'Unknown Gemini error';
+          console.warn(`[Gemini Service] API HTTP ${res.status} (${model}):`, statusMessage);
+
+          if ((res.status === 503 || res.status === 429) && attempts < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500 * attempts));
+            continue;
+          }
+
+          lastError = new AppError(`Gemini API error (${model}): ${statusMessage}`, res.status >= 500 ? 502 : 400);
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!responseText) {
+          lastError = new AppError(`Gemini model ${model} returned an empty response`, 502);
+          break;
+        }
+
+        console.log(`[Gemini Service] Successfully generated Stage 05 Pseudocode content using model "${model}"`);
+        return {
+          rawText: responseText,
+          model,
+          promptVersion: 'pseudocode-v1',
+        };
+      } catch (err) {
+        console.error(`[Gemini Service] Connection error with model ${model}:`, err.message);
+        lastError = err;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+    }
+  }
+
+  throw (
+    lastError ||
+    new AppError('Gemini AI models are currently experiencing high demand. Please try again in a few moments.', 503)
+  );
+};
+
 module.exports = {
   AppError,
   buildUnderstandingPrompt,
@@ -886,4 +1140,6 @@ module.exports = {
   generateStage03AnalogyContent,
   buildPatternPrompt,
   generateStage04PatternContent,
+  buildPseudocodePrompt,
+  generateStage05PseudocodeContent,
 };

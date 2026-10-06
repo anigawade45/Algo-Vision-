@@ -26,6 +26,8 @@ import {
 export function PatternStage({
   problem,
   problemData,
+  selectedApproachId,
+  onSelectApproach,
   onCompleteStage,
   onNextStage,
   onOpenSpec,
@@ -272,6 +274,8 @@ export function PatternStage({
             <PatternSolutionFamilies
               patternName={pattern?.name}
               solutionFamilies={solutionFamilies}
+              selectedApproachId={selectedApproachId}
+              onSelectApproach={onSelectApproach}
               sectionNo={solutionFamiliesNo}
             />
           )}

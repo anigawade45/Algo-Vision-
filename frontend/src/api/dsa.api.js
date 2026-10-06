@@ -123,5 +123,35 @@ export const regenerateProblemPattern = async (problemId) => {
   return await apiClient.post(`/problems/${problemId}/pattern/regenerate`);
 };
 
+/**
+ * Retrieve Stage 05 Problem Pseudocode data for a specific approach
+ */
+export const getProblemPseudocode = async (problemId, approachId) => {
+  return await apiClient.get(`/problems/${problemId}/pseudocode`, {
+    params: { approachId },
+  });
+};
+
+/**
+ * Generate Stage 05 Problem Pseudocode via Gemini AI for a specific approach
+ */
+export const generateProblemPseudocode = async (problemId, approachId, approachName) => {
+  return await apiClient.post(`/problems/${problemId}/pseudocode/generate`, {
+    approachId,
+    approachName,
+  });
+};
+
+/**
+ * Force regenerate Stage 05 Problem Pseudocode via Gemini AI for a specific approach
+ */
+export const regenerateProblemPseudocode = async (problemId, approachId, approachName) => {
+  return await apiClient.post(`/problems/${problemId}/pseudocode/regenerate`, {
+    approachId,
+    approachName,
+  });
+};
+
+
 
 
