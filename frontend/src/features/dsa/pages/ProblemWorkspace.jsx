@@ -541,6 +541,7 @@ export default function ProblemWorkspace({
               <AlgorithmStage
                 problem={problem}
                 problemData={problem}
+                selectedApproachId={selectedApproachId}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

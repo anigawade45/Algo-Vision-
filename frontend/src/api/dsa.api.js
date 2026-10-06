@@ -124,7 +124,29 @@ export const regenerateProblemPattern = async (problemId) => {
 };
 
 /**
- * Retrieve Stage 05 Problem Pseudocode data for a specific approach
+ * Retrieve Stage 05 Problem Algorithm data
+ */
+export const getProblemAlgorithm = async (problemId, approachId) => {
+  const query = approachId ? `?approachId=${approachId}` : '';
+  return await apiClient.get(`/problems/${problemId}/algorithm${query}`);
+};
+
+/**
+ * Generate Stage 05 Problem Algorithm via Gemini AI
+ */
+export const generateProblemAlgorithm = async (problemId, approachId) => {
+  return await apiClient.post(`/problems/${problemId}/algorithm/generate`, { approachId });
+};
+
+/**
+ * Force regenerate Stage 05 Problem Algorithm via Gemini AI
+ */
+export const regenerateProblemAlgorithm = async (problemId, approachId) => {
+  return await apiClient.post(`/problems/${problemId}/algorithm/regenerate`, { approachId });
+};
+
+/**
+ * Retrieve Stage 06 Problem Pseudocode data for a specific approach
  */
 export const getProblemPseudocode = async (problemId, approachId) => {
   return await apiClient.get(`/problems/${problemId}/pseudocode`, {
@@ -133,7 +155,7 @@ export const getProblemPseudocode = async (problemId, approachId) => {
 };
 
 /**
- * Generate Stage 05 Problem Pseudocode via Gemini AI for a specific approach
+ * Generate Stage 06 Problem Pseudocode via Gemini AI for a specific approach
  */
 export const generateProblemPseudocode = async (problemId, approachId, approachName) => {
   return await apiClient.post(`/problems/${problemId}/pseudocode/generate`, {
@@ -143,7 +165,7 @@ export const generateProblemPseudocode = async (problemId, approachId, approachN
 };
 
 /**
- * Force regenerate Stage 05 Problem Pseudocode via Gemini AI for a specific approach
+ * Force regenerate Stage 06 Problem Pseudocode via Gemini AI for a specific approach
  */
 export const regenerateProblemPseudocode = async (problemId, approachId, approachName) => {
   return await apiClient.post(`/problems/${problemId}/pseudocode/regenerate`, {
@@ -151,7 +173,3 @@ export const regenerateProblemPseudocode = async (problemId, approachId, approac
     approachName,
   });
 };
-
-
-
-

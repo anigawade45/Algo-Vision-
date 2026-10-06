@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 /**
  * SECTION 05 — CONNECT THE PATTERN TO SOLUTION FAMILIES
  * Teaches the learner which DSA solution families and tools come to mind
- * when recognizing a structural pattern, establishing a clear handoff to Stage 05 (Pseudocode).
+ * when recognizing a structural pattern, establishing a clear handoff to Stage 05 (Algorithm / Pseudocode).
  */
 export function PatternSolutionFamilies({
   patternName,
@@ -22,14 +22,14 @@ export function PatternSolutionFamilies({
       setInternalSelectedId(selectedApproachId);
     } else if (defaultId && onSelectApproach) {
       const defaultFam = solutionFamilies.families[0];
-      onSelectApproach(defaultFam.id, defaultFam.name);
+      onSelectApproach(defaultFam.id, defaultFam.name, defaultFam.detail);
     }
-  }, [selectedApproachId, defaultId]);
+  }, [selectedApproachId, defaultId, solutionFamilies, onSelectApproach]);
 
   const toggleFamily = (fam) => {
     setInternalSelectedId(fam.id);
     if (onSelectApproach) {
-      onSelectApproach(fam.id, fam.name);
+      onSelectApproach(fam.id, fam.name, fam.detail);
     }
   };
 
@@ -48,7 +48,7 @@ export function PatternSolutionFamilies({
         What approaches should come to mind?
       </h2>
       <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-        Pattern recognition identifies which families of tools and approaches are relevant. Select your preferred approach to generate Pseudocode in Stage 05.
+        Pattern recognition identifies which families of tools and approaches are relevant. Select your preferred approach to generate the step-by-step algorithm and pseudocode.
       </p>
 
       {/* Interactive Solution Families List */}

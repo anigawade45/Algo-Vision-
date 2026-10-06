@@ -277,6 +277,8 @@ export function PatternStage({
               selectedApproachId={selectedApproachId}
               onSelectApproach={onSelectApproach}
               sectionNo={solutionFamiliesNo}
+              selectedApproachId={selectedApproachId}
+              onSelectApproach={onSelectApproach}
             />
           )}
         </>

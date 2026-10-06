@@ -878,6 +878,197 @@ const generateStage04PatternContent = async (problem) => {
   );
 };
 
+const buildAlgorithmPrompt = (problem, approachDetails) => {
+  const problemStatement = problem.description || 'No description provided.';
+  const inputDescription = problem.inputDescription || 'Standard input for this problem type.';
+  const outputDescription = problem.outputDescription || 'Standard output for this problem type.';
+  const constraints = problem.constraints || 'No explicit constraints provided.';
+
+  let approachText = '';
+  if (approachDetails) {
+    approachText = `
+SELECTED APPROACH:
+The user has selected the following approach:\nName: ${approachDetails.name}\nDetails: ${approachDetails.detail}\n\n**CRITICAL**: You MUST generate the algorithm and flowchart SPECIFICALLY for this selected approach! Do not generate a generic solution if an approach is provided.`;
+  }
+
+  return `
+You are an expert Data Structures and Algorithms instructor.
+You are working on the "Algorithm" phase of an educational DSA platform.
+
+PROBLEM STATEMENT:
+${problemStatement}
+
+INPUT:
+${inputDescription}
+
+OUTPUT:
+${outputDescription}
+
+CONSTRAINTS:
+${constraints}
+${approachText}
+
+YOUR TASK:
+Independently analyze the problem (using the selected approach if provided) and generate a formal step-by-step algorithm and an execution flowchart structure.
+You MUST output your response as strict, raw, parseable JSON without any markdown code blocks or backticks.
+
+REQUIRED JSON STRUCTURE:
+{
+  "intro": {
+    "eyebrow": "05 · ALGORITHM"
+  },
+  "steps": [
+    {
+      "stepNo": 1,
+      "title": "Title of step (Keep it under 6 words)",
+      "description": "Short, single sentence explanation of what happens in this step. DO NOT write long paragraphs. Keep it extremely simple for a beginner."
+    }
+  ],
+  "flowchart": {
+    "title": "Execution Flowchart",
+    "nodes": [
+      {
+        "id": "start",
+        "type": "start",
+        "title": "Start",
+        "description": "Start of algorithm",
+        "label": "Start"
+      },
+      {
+        "id": "dec1",
+        "type": "decision",
+        "title": "Condition (e.g. i < n)",
+        "description": "Check if loop should continue",
+        "label": "Decision"
+      },
+      {
+        "id": "op1",
+        "type": "operation",
+        "title": "Update value",
+        "description": "Operation details",
+        "label": "Operation",
+        "state": {
+          "variable1": "value",
+          "variable2": "value"
+        }
+      },
+      {
+        "id": "end",
+        "type": "end",
+        "title": "End",
+        "description": "End of algorithm",
+        "label": "End"
+      }
+    ],
+    "executionPath": ["start", "dec1", "op1", "dec1", "end"]
+  }
+}
+
+RULES FOR FLOWCHART NODES:
+- "type" must be one of: "start", "end", "decision", "operation"
+- "id" must be a unique string for the node.
+- "state" is optional but highly recommended for operations. It should be a key-value pair of strings showing hypothetical variable states at that point.
+- "executionPath" is an array of node IDs showing one linear path of execution trace (e.g., how one iteration of a loop works, or a base case vs recursive case trace).
+- SIMPLICITY IS KEY: Keep all descriptions (in both steps and flowchart nodes) extremely short, punchy, and limited to 1-2 sentences maximum. Avoid giving too much context or overwhelming the user.
+
+Remember, return ONLY valid JSON.
+`.trim();
+};
+
+const generateStage05AlgorithmContent = async (problem, approachDetails) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) {
+    console.error('[Gemini Service] GEMINI_API_KEY is missing from environment variables');
+    throw new AppError('Gemini API key is not configured on the server', 500);
+  }
+
+  const candidateModels = Array.from(new Set([
+    primaryModel,
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+  ]));
+
+  const prompt = buildAlgorithmPrompt(problem, approachDetails);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [
+        {
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.3,
+      },
+    };
+
+    let attempts = 0;
+    const maxAttempts = 2;
+
+    while (attempts < maxAttempts) {
+      attempts++;
+      try {
+        console.log(`[Gemini Service] Calling Gemini API (Model: ${model}, Attempt: ${attempts}) for Stage 05 Algorithm: "${problem.title}"`);
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          const statusMessage = errorData.error?.message || res.statusText || 'Unknown Gemini error';
+          console.warn(`[Gemini Service] API HTTP ${res.status} (${model}):`, statusMessage);
+
+          if ((res.status === 503 || res.status === 429) && attempts < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500 * attempts));
+            continue;
+          }
+
+          lastError = new AppError(`Gemini API error (${model}): ${statusMessage}`, res.status >= 500 ? 502 : 400);
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!responseText) {
+          lastError = new AppError(`Gemini model ${model} returned an empty response`, 502);
+          break;
+        }
+
+        console.log(`[Gemini Service] Successfully generated Stage 05 Algorithm content using model "${model}"`);
+        return {
+          rawText: responseText,
+          model,
+          promptVersion: 'algorithm-v1',
+        };
+      } catch (err) {
+        console.error(`[Gemini Service] Connection error with model ${model}:`, err.message);
+        lastError = err;
+        if (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
+      }
+    }
+  }
+
+  throw (
+    lastError ||
+    new AppError('Gemini AI models are currently experiencing high demand. Please try again in a few moments.', 503)
+  );
+};
+
 const buildPseudocodePrompt = (problem, approachId, approachName) => {
   const problemContext = {
     id: String(problem._id || problem.id || ''),
@@ -1140,6 +1331,8 @@ module.exports = {
   generateStage03AnalogyContent,
   buildPatternPrompt,
   generateStage04PatternContent,
+  buildAlgorithmPrompt,
+  generateStage05AlgorithmContent,
   buildPseudocodePrompt,
   generateStage05PseudocodeContent,
 };
