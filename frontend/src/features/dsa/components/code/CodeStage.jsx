@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Play, RotateCcw, CheckCircle2, XCircle, Clock, FileCode2, ArrowRight, Terminal, Check } from 'lucide-react';
-import { getStarterCode } from '../../data/code/mockCodeTemplates';
+import { Play, RotateCcw, CheckCircle2, XCircle, Clock, FileCode2, ArrowRight, Terminal, Check, Bot } from 'lucide-react';
+import api from '../../../../api/apiClient';
 
 const LANGUAGES = [
   { id: 'cpp', name: 'C++', monacoLang: 'cpp' },
   { id: 'java', name: 'Java', monacoLang: 'java' },
-  { id: 'python', name: 'Python', monacoLang: 'python' },
-  { id: 'javascript', name: 'JavaScript', monacoLang: 'javascript' },
-  { id: 'csharp', name: 'C#', monacoLang: 'csharp' }
+  { id: 'python', name: 'Python', monacoLang: 'python' }
 ];
 
 export function CodeStage({
@@ -17,11 +15,30 @@ export function CodeStage({
   onNextStage,
   onOpenSpec
 }) {
-  const [selectedLang, setSelectedLang] = useState(LANGUAGES[3]); // Default to JS
+  const [selectedLang, setSelectedLang] = useState(LANGUAGES[0]);
   const [code, setCode] = useState('');
+  
+  const [isGenerating, setIsGenerating] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionResult, setExecutionResult] = useState(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  
+  const [approachId, setApproachId] = useState('');
+  const [approachName, setApproachName] = useState('');
+  const [pseudocodeLines, setPseudocodeLines] = useState([]);
+
+  // Cache user edits independently
+  const userCodeCache = useRef({});
+  // Cache originally generated code
+  const originalCodeCache = useRef({});
+
+  // Active test mode (0 = problem test cases, 1 = custom test case)
+  const [testMode, setTestMode] = useState(0);
+  const [customInput, setCustomInput] = useState('');
+
+  useEffect(() => {
+    fetchCodeData();
+  }, [problem._id]);
 
   useEffect(() => {
     if (isCompleted && onCompleteStage) {
@@ -29,14 +46,76 @@ export function CodeStage({
     }
   }, [isCompleted, onCompleteStage]);
 
-  // Preserve user code per language using a ref
-  const userCodeCache = useRef({});
+  // When language changes, preserve current edit and load the new one
+  const handleLangChange = (e) => {
+    const newLang = LANGUAGES.find(l => l.id === e.target.value);
+    setSelectedLang(newLang);
+    setCode(userCodeCache.current[newLang.id] || '');
+  };
 
-  useEffect(() => {
-    // When language changes, save current code to cache and load new code
-    const initialCode = getStarterCode(problem.id, selectedLang.id);
-    setCode(userCodeCache.current[selectedLang.id] !== undefined ? userCodeCache.current[selectedLang.id] : initialCode);
-  }, [selectedLang, problem.id]);
+  const fetchCodeData = async () => {
+    try {
+      // Fetch pseudocode to display without hardcoding approachId to let backend auto-resolve
+      const pseudoQuery = approachId ? `?approachId=${approachId}` : '';
+      const pseudoRes = await api.get(`/problems/${problem.problemId}/pseudocode${pseudoQuery}`);
+      // apiClient returns the JSON payload directly: { success: true, data: { pseudocode: { lines: [] }, approach: { approachId: ... } } }
+      let resolvedApproachId = approachId;
+      
+      const pseudoPayload = pseudoRes.data;
+      if (pseudoPayload?.pseudocode?.lines) {
+        setPseudocodeLines(pseudoPayload.pseudocode.lines);
+        setApproachName(pseudoPayload.approach?.approachName || '');
+        resolvedApproachId = pseudoPayload.approach?.approachId || resolvedApproachId;
+        setApproachId(resolvedApproachId);
+      }
+
+      const codeQuery = resolvedApproachId ? `?approachId=${resolvedApproachId}` : '';
+      const res = await api.get(`/problems/${problem.problemId}/code${codeQuery}`);
+      if (res.data?.generated) {
+        const payload = res.data.data || res.data;
+        setApproachId(payload.approachId);
+        setApproachName(payload.approachName);
+        
+        // Setup initial caches
+        const generatedCpp = payload.cpp || '';
+        const generatedJava = payload.java || '';
+        const generatedPython = payload.python || '';
+
+        originalCodeCache.current = { cpp: generatedCpp, java: generatedJava, python: generatedPython };
+        userCodeCache.current = { cpp: generatedCpp, java: generatedJava, python: generatedPython };
+
+        setCode(userCodeCache.current[selectedLang.id] || '');
+      }
+    } catch (err) {
+      console.error('Failed to fetch code data:', err);
+    }
+  };
+
+  const handleGenerateCode = async () => {
+    if (isGenerating) return;
+    setIsGenerating(true);
+    setExecutionResult(null);
+    try {
+      const res = await api.post(`/problems/${problem.problemId}/code/generate`, {
+        approachId,
+        approachName
+      });
+      const payload = res.data?.data || res.data || {};
+      const generatedCpp = payload.cpp || '';
+      const generatedJava = payload.java || '';
+      const generatedPython = payload.python || '';
+
+      originalCodeCache.current = { cpp: generatedCpp, java: generatedJava, python: generatedPython };
+      userCodeCache.current = { cpp: generatedCpp, java: generatedJava, python: generatedPython };
+
+      setCode(userCodeCache.current[selectedLang.id] || '');
+    } catch (err) {
+      console.error('Failed to generate code:', err);
+      alert(err.response?.data?.message || 'Failed to generate code.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleEditorChange = (value) => {
     setCode(value);
@@ -44,51 +123,89 @@ export function CodeStage({
   };
 
   const handleReset = () => {
-    const initialCode = getStarterCode(problem.id, selectedLang.id);
+    const initialCode = originalCodeCache.current[selectedLang.id] || '';
     setCode(initialCode);
     userCodeCache.current[selectedLang.id] = initialCode;
     setExecutionResult(null);
   };
 
-  const handleRunCode = () => {
+  const handleRunCode = async () => {
+    if (isExecuting) return;
+    if (!code.trim()) {
+      alert("Code cannot be empty.");
+      return;
+    }
+    if (testMode === 1 && !customInput.trim()) {
+      alert("Custom input cannot be empty.");
+      return;
+    }
+
     setIsExecuting(true);
     setExecutionResult(null);
 
-    // Simulate backend execution with a timeout
-    setTimeout(() => {
-      setIsExecuting(false);
-      
-      // Simple heuristic for simulation: if code is basically empty, fail.
-      if (!code || code.trim().length < 15) {
-        setExecutionResult({
-          status: 'error',
-          message: 'Compilation Error / Blank Solution',
-          details: 'Please implement the solution before running. The code appears to be too short or empty.',
-          testCases: problem.testCases.map(tc => ({
-             ...tc,
-             passed: false,
-             actualOutput: 'N/A'
-          }))
+    let testCasesToRun = [];
+    if (testMode === 0) {
+      testCasesToRun = problem.testCases || [];
+    } else {
+      testCasesToRun = [{ inputRaw: customInput, outputRaw: null, isCustom: true }];
+    }
+
+    let overallStatus = 'success';
+    let results = [];
+
+    try {
+      for (const tc of testCasesToRun) {
+        const res = await api.post(`/problems/${problem.problemId}/code/execute`, {
+          language: selectedLang.id,
+          code: code,
+          input: tc.inputRaw
         });
-        return;
+
+        const execData = res.data || {};
+        const actualOutput = execData.output?.trim() || '';
+        const isError = execData.isError;
+        
+        let passed = false;
+        if (!isError && !tc.isCustom) {
+          const normalizedActual = actualOutput.replace(/\s+/g, '');
+          const normalizedExpected = (tc.outputRaw || '').replace(/\s+/g, '');
+          passed = normalizedActual === normalizedExpected;
+          if (!passed) overallStatus = 'error';
+        } else if (isError) {
+          overallStatus = 'error';
+        }
+
+        results.push({
+          inputRaw: tc.inputRaw,
+          expectedOutput: tc.outputRaw,
+          actualOutput: isError ? execData.error : actualOutput,
+          passed: tc.isCustom ? !isError : passed,
+          isError: isError,
+          isCustom: tc.isCustom
+        });
       }
 
-      // Simulate success since they are running the full solution (for educational platform demo purposes)
       setExecutionResult({
-        status: 'success',
-        message: 'Accepted',
-        details: 'All test cases passed successfully.',
-        testCases: problem.testCases.map(tc => ({
-          ...tc,
-          passed: true,
-          actualOutput: tc.outputRaw
-        }))
+        status: overallStatus,
+        message: overallStatus === 'success' ? 'Accepted' : 'Failed',
+        details: overallStatus === 'success' ? 'All test cases passed successfully.' : 'Some test cases failed or produced errors.',
+        testCases: results
       });
-      
-      if (onCompleteStage) onCompleteStage('code');
-      // Auto-mark as completed when tests pass for convenience
-      setIsCompleted(true);
-    }, 1500);
+
+      if (overallStatus === 'success' && onCompleteStage) {
+        setIsCompleted(true);
+      }
+    } catch (err) {
+      console.error('Failed to execute code:', err);
+      setExecutionResult({
+        status: 'error',
+        message: 'Execution Failed',
+        details: err.response?.data?.message || 'Server error during execution.',
+        testCases: []
+      });
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
   return (
@@ -115,27 +232,42 @@ export function CodeStage({
               <FileCode2 className="w-3.5 h-3.5 shrink-0" />
               <span>Problem Spec</span>
             </button>
+            <button
+              onClick={handleGenerateCode}
+              disabled={isGenerating}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 text-xs font-mono font-bold cursor-pointer border border-purple-200/80 dark:border-purple-900/60 focus-visible:outline-none transition-colors"
+            >
+              {isGenerating ? <Clock className="w-3.5 h-3.5 animate-spin" /> : <Bot className="w-3.5 h-3.5" />}
+              <span>{isGenerating ? 'Generating...' : 'Generate AI Code'}</span>
+            </button>
           </div>
         </div>
 
         <h1 className="text-2xl sm:text-3xl md:text-[38px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight mt-4">
-          Code Solution
+          {problem.title} - Code Solution
         </h1>
         <p className="text-[15px] sm:text-base text-slate-600 dark:text-slate-400 font-normal leading-relaxed max-w-2xl mt-2.5">
-          Implement your solution for {problem.title}. Choose your preferred language and run it against our test cases.
+          Execute and edit the generated code for {problem.title}. Choose your preferred language and run it against our test cases or use a custom test case.
         </p>
+
+        {/* Info panel showing Selected Approach */}
+        {approachName && (
+          <div className="mt-6 bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">Selected Approach: {approachName}</h3>
+          </div>
+        )}
       </header>
 
       <div className="flex-1 flex flex-col lg:flex-row gap-6">
         {/* Editor Area */}
-        <div className="flex-1 flex flex-col min-h-[500px] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-[#0B101D] shadow-sm">
+        <div className="flex-1 flex flex-col min-h-[600px] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-[#0B101D] shadow-sm">
           
           {/* Editor Toolbar */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]">
             <div className="flex items-center gap-3">
               <select
                 value={selectedLang.id}
-                onChange={(e) => setSelectedLang(LANGUAGES.find(l => l.id === e.target.value))}
+                onChange={handleLangChange}
                 className="bg-white dark:bg-[#1F2937] border border-slate-300 dark:border-slate-700 text-sm rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 dark:text-slate-200 font-mono cursor-pointer"
               >
                 {LANGUAGES.map(lang => (
@@ -164,11 +296,11 @@ export function CodeStage({
           </div>
 
           {/* Monaco Editor */}
-          <div className="flex-1 w-full h-[500px] relative">
+          <div className="flex-1 w-full h-[550px] relative">
              <Editor
                 height="100%"
                 language={selectedLang.monacoLang}
-                theme="vs-dark" // Matches the dark aesthetic of AlgoVision well, could switch dynamically based on global theme
+                theme="vs-dark"
                 value={code}
                 onChange={handleEditorChange}
                 options={{
@@ -188,15 +320,65 @@ export function CodeStage({
           </div>
         </div>
 
-        {/* Output Panel Area */}
+        {/* Output & Test Case Panel Area */}
         <div className="lg:w-96 flex flex-col border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-[#0B101D] shadow-sm">
-          <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827] flex items-center gap-2 text-xs font-mono font-bold text-slate-600 dark:text-slate-400">
-            <Terminal className="w-4 h-4" />
-            <span>EXECUTION OUTPUT</span>
+          <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]">
+             <button 
+                onClick={() => setTestMode(0)} 
+                className={`flex-1 py-3 text-xs font-mono font-bold text-center ${testMode === 0 ? 'bg-white dark:bg-[#0B101D] text-blue-600 dark:text-blue-400 border-b-2 border-blue-500' : 'text-slate-500 dark:text-slate-400'}`}
+             >
+                Test Cases
+             </button>
+             <button 
+                onClick={() => setTestMode(1)} 
+                className={`flex-1 py-3 text-xs font-mono font-bold text-center ${testMode === 1 ? 'bg-white dark:bg-[#0B101D] text-blue-600 dark:text-blue-400 border-b-2 border-blue-500' : 'text-slate-500 dark:text-slate-400'}`}
+             >
+                Custom Test
+             </button>
           </div>
           
           <div className="flex-1 p-4 overflow-y-auto">
-            {!executionResult && !isExecuting && (
+            {testMode === 1 && (
+               <div className="mb-6">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Custom Input</label>
+                  <textarea 
+                     value={customInput}
+                     onChange={(e) => setCustomInput(e.target.value)}
+                     className="w-full h-32 p-3 bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-mono text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                     placeholder="Enter custom input here..."
+                  />
+               </div>
+            )}
+
+            {!executionResult && !isExecuting && testMode === 0 && (
+              <div className="space-y-4">
+                <h4 className="text-xs font-bold font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Problem Test Cases</h4>
+                {problem?.testCases?.map((tc, idx) => (
+                  <div key={idx} className="border border-slate-200 dark:border-slate-800 rounded-lg p-3 space-y-2">
+                    <div className="text-xs font-bold text-slate-700 dark:text-slate-300">Case {idx + 1}</div>
+                    <div className="text-xs font-mono">
+                      <span className="text-slate-500">Input:</span>
+                      <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
+                        {tc.inputRaw}
+                      </div>
+                    </div>
+                    <div className="text-xs font-mono">
+                      <span className="text-slate-500">Expected Output:</span>
+                      <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
+                        {tc.outputRaw}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {(!problem?.testCases || problem.testCases.length === 0) && (
+                  <div className="text-center text-slate-500 mt-10 text-sm">
+                    No test cases available.
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!executionResult && !isExecuting && testMode === 1 && (
               <div className="text-center text-slate-500 mt-10 text-sm">
                 Run your code to see results here.
               </div>
@@ -205,7 +387,7 @@ export function CodeStage({
             {isExecuting && (
               <div className="flex flex-col items-center justify-center mt-10 text-slate-500 space-y-4">
                 <Clock className="w-8 h-8 animate-spin text-blue-500" />
-                <span className="text-sm font-mono animate-pulse">Running test cases...</span>
+                <span className="text-sm font-mono animate-pulse">Running code...</span>
               </div>
             )}
 
@@ -224,38 +406,40 @@ export function CodeStage({
                 </div>
 
                 <div className="space-y-4">
-                  <h4 className="text-xs font-bold font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Test Cases</h4>
+                  <h4 className="text-xs font-bold font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Output</h4>
                   {executionResult.testCases.map((tc, idx) => (
                     <div key={idx} className="border border-slate-200 dark:border-slate-800 rounded-lg p-3 space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Case {idx + 1}</span>
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{tc.isCustom ? 'Custom Test' : `Case ${idx + 1}`}</span>
                         {tc.passed ? (
                           <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-bold font-mono">PASSED</span>
                         ) : (
-                          <span className="text-[10px] bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded font-bold font-mono">FAILED</span>
+                          <span className="text-[10px] bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded font-bold font-mono">
+                            {tc.isError ? 'ERROR' : 'FAILED'}
+                          </span>
                         )}
                       </div>
                       <div className="space-y-1.5 text-xs font-mono">
                         <div>
                           <span className="text-slate-500">Input:</span>
-                          <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 break-all">
+                          <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
                             {tc.inputRaw}
                           </div>
                         </div>
-                        <div>
-                          <span className="text-slate-500">Expected:</span>
-                          <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 break-all">
-                            {tc.outputRaw}
-                          </div>
-                        </div>
-                        {tc.actualOutput && (
+                        {!tc.isCustom && (
                           <div>
-                            <span className="text-slate-500">Output:</span>
-                            <div className={`p-1.5 rounded mt-0.5 break-all ${tc.passed ? 'text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827]' : 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/30'}`}>
-                              {tc.actualOutput}
+                            <span className="text-slate-500">Expected:</span>
+                            <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
+                              {tc.expectedOutput}
                             </div>
                           </div>
                         )}
+                        <div>
+                          <span className="text-slate-500">Output:</span>
+                          <div className={`p-1.5 rounded mt-0.5 whitespace-pre-wrap ${tc.passed ? 'text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827]' : 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/30'}`}>
+                            {tc.actualOutput || 'No output'}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}

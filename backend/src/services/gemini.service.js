@@ -1560,6 +1560,171 @@ const generateStage08DryRunContent = async (problem, approachId, approachName, p
   );
 };
 
+const buildCodePrompt = (problem, approachDetails, pseudocodeDoc) => {
+  const problemContext = {
+    title: problem.title || '',
+    objective: problem.objective || '',
+    constraints: problem.constraints || [],
+  };
+
+  const pseudocodeLines = (pseudocodeDoc?.lines || []).map(l => `${l.line}. ${l.text}`).join('\n');
+
+  return `
+You are the Stage 06 Code generator for AlgoVision.
+
+=== PROBLEM CONTEXT ===
+${JSON.stringify(problemContext, null, 2)}
+
+=== SELECTED APPROACH ===
+Approach ID: ${approachDetails.id}
+Approach Name: ${approachDetails.name}
+Pattern: ${approachDetails.patternName || 'None'}
+
+=== PSEUDOCODE STEPS ===
+${pseudocodeLines}
+
+=== INSTRUCTIONS ===
+1. Generate production-ready, fully correct code in C++, Java, and Python based EXACTLY on the provided pseudocode.
+2. CRITICAL: Your code MUST be logically flawless and completely functional. Do NOT skip any steps (e.g., if using a hash map or cache, ENSURE you write the line of code that inserts/updates values in it).
+3. The code must be optimal, clean, and well-commented.
+4. For all languages, use a class named Solution containing the main algorithm method (similar to LeetCode style).
+5. Ensure the code handles edge cases gracefully and returns the correct data type as requested by the objective.
+6. CRITICAL JSON FORMATTING: The "cpp", "java", and "python" values MUST be strictly valid JSON strings. You MUST escape all newlines as \\n and all double quotes as \\" within the code. Do not use raw multi-line strings.
+7. AVOID COMMON JSON ERRORS: The output must be perfectly parsable by JSON.parse(). Absolutely NO trailing commas. Absolutely NO comments (//) outside of the string values. Every double quote inside your code MUST be escaped (e.g. \\").
+
+REQUIRED JSON OUTPUT SCHEMA:
+{
+  "intro": {
+    "eyebrow": "06 · CODE"
+  },
+  "cpp": "The complete C++ code as a string",
+  "java": "The complete Java code as a string",
+  "python": "The complete Python code as a string"
+}
+
+Return ONLY valid raw JSON. No Markdown formatting. No \\\`\\\`\\\`json fences.
+`.trim();
+};
+
+const generateStage06CodeContent = async (problem, approachDetails, pseudocodeDoc) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) throw new AppError('Gemini API key is not configured', 500);
+
+  const candidateModels = Array.from(new Set([primaryModel, 'gemini-2.5-flash', 'gemini-3.5-flash-lite']));
+  const prompt = buildCodePrompt(problem, approachDetails, pseudocodeDoc);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey;
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { 
+        responseMimeType: 'application/json', 
+        temperature: 0.1,
+        maxOutputTokens: 8192
+      }
+    };
+
+    let attempts = 0;
+    while (attempts < 2) {
+      attempts++;
+      try {
+        console.log('[Gemini] Generating Stage 06 Code (Model: ' + model + ', Attempt: ' + attempts + ')');
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          lastError = new AppError('Gemini API error: ' + (errData.error?.message || res.statusText), 502);
+          if (res.status === 429 || res.status === 503) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            continue;
+          }
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!responseText) throw new AppError('Empty response from model', 502);
+
+        return { rawText: responseText, model, promptVersion: 'code-v1' };
+      } catch (err) {
+        lastError = err;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  }
+  throw lastError || new AppError('Gemini models unavailable', 503);
+};
+
+const simulateCodeExecution = async (language, code, input) => {
+  const apiKey = env.geminiApiKey;
+  if (!apiKey) throw new AppError('Gemini API key is not configured', 500);
+
+  const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/' + (env.geminiModel || 'gemini-3.5-flash-lite') + ':generateContent?key=' + apiKey;
+  
+  const prompt = `You are a code execution engine. Simulate the execution of the following ${language} code with the provided standard input.
+
+CODE:
+${code}
+
+STDIN (Input Test Case):
+${input || ''}
+
+CRITICAL INSTRUCTIONS:
+1. If the code is just a class (e.g., Solution) or a function without a main() method or print statements, you MUST mentally invoke the main method with the provided STDIN.
+2. Format the return value of that method as a string and place it in the "stdout" field. DO NOT return an empty stdout if the method returns a value.
+3. Evaluate the code accurately. If the code has a logical bug (e.g., infinite loop, missing inserts), reflect that in the output or return an error.
+
+Return ONLY a JSON object exactly matching this format:
+{
+  "run": {
+    "code": 0,
+    "stdout": "The string representation of the return value or standard output",
+    "stderr": "Any error messages if the code fails"
+  },
+  "compile": {
+    "code": 0,
+    "stderr": "Any compilation errors"
+  }
+}
+Do not wrap the response in markdown blocks.`;
+
+  const requestBody = {
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { responseMimeType: 'application/json', temperature: 0.0 }
+  };
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('[Gemini API Error]', errorText);
+      throw new AppError('Failed to simulate execution: ' + res.statusText, 502);
+    }
+
+    const data = await res.json();
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!responseText) throw new AppError('Empty execution response', 502);
+
+    let parsed = JSON.parse(responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim());
+    return parsed;
+  } catch (err) {
+    console.error('[Gemini Service] Execution simulation failed:', err);
+    throw new AppError('Execution service failed: ' + err.message, 500);
+  }
+};
+
 const buildPracticePrompt = (problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText, dryRunDoc) => {
   const problemContext = {
     id: String(problem._id || problem.id || ''),
@@ -1767,6 +1932,9 @@ module.exports = {
   generateStage05AlgorithmContent,
   buildPseudocodePrompt,
   generateStage05PseudocodeContent,
+  buildCodePrompt,
+  generateStage06CodeContent,
+  simulateCodeExecution,
   buildDryRunPrompt,
   generateStage08DryRunContent,
   buildPracticePrompt,

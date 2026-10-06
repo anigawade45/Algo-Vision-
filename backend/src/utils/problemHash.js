@@ -7,6 +7,12 @@ const canonicalStringify = (obj) => {
   if (obj === null || obj === undefined) return String(obj);
   if (typeof obj !== 'object') return JSON.stringify(obj);
   if (obj instanceof Date) return obj.toISOString();
+  if (typeof obj.toJSON === 'function') {
+    obj = obj.toJSON();
+    // Re-check type after toJSON
+    if (obj === null || obj === undefined) return String(obj);
+    if (typeof obj !== 'object') return JSON.stringify(obj);
+  }
   if (Array.isArray(obj)) {
     return '[' + obj.map(canonicalStringify).join(',') + ']';
   }
