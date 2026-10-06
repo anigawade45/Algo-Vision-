@@ -6,6 +6,7 @@ const problemAnalogyRoutes = require('./problemAnalogy.routes');
 const problemPatternRoutes = require('./problemPattern.routes');
 const problemAlgorithmRoutes = require('./problemAlgorithm.routes');
 const problemPseudocodeRoutes = require('./problemPseudocode.routes');
+const problemCodeRoutes = require('./problemCode.routes');
 const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
@@ -27,6 +28,9 @@ router.use('/:problemId/algorithm', problemAlgorithmRoutes);
 
 // Stage 06 Pseudocode routes
 router.use('/:problemId/pseudocode', problemPseudocodeRoutes);
+
+// Stage 07 Code routes
+router.use('/:problemId/code', problemCodeRoutes);
 
 // Base problem routes
 router.get('/', problemController.getProblems);
