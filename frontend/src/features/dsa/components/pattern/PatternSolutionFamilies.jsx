@@ -5,15 +5,20 @@ import React, { useState } from 'react';
  * Teaches the learner which DSA solution families and tools come to mind
  * when recognizing a structural pattern, establishing a clear handoff to Stage 05 (Algorithm).
  */
-export function PatternSolutionFamilies({ patternName, solutionFamilies, sectionNo = '05' }) {
+export function PatternSolutionFamilies({ patternName, solutionFamilies, sectionNo = '05', selectedApproachId, onSelectApproach }) {
   if (!solutionFamilies || !solutionFamilies.families) return null;
 
-  const [selectedFamilyId, setSelectedFamilyId] = useState(
-    solutionFamilies.families.length > 0 ? solutionFamilies.families[0].id : null
-  );
+  // Initialize selectedApproachId in parent if it's not set and families exist
+  React.useEffect(() => {
+    if (!selectedApproachId && solutionFamilies.families.length > 0 && onSelectApproach) {
+      onSelectApproach(solutionFamilies.families[0].id);
+    }
+  }, [selectedApproachId, solutionFamilies, onSelectApproach]);
 
   const toggleFamily = (id) => {
-    setSelectedFamilyId(id);
+    if (onSelectApproach) {
+      onSelectApproach(id);
+    }
   };
 
   return (
@@ -40,7 +45,7 @@ export function PatternSolutionFamilies({ patternName, solutionFamilies, section
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {solutionFamilies.families.map((fam) => {
-              const isSelected = selectedFamilyId === fam.id;
+              const isSelected = selectedApproachId === fam.id;
               return (
                 <button
                   key={fam.id}

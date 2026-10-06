@@ -95,7 +95,7 @@ export default function ProblemWorkspace({
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [dbProblems, setDbProblems] = useState([]);
   const [selectedProblemId, setSelectedProblemId] = useState(id || 'two-sum');
-  const [selectedApproachId, setSelectedApproachId] = useState('minHeap');
+  const [selectedApproachId, setSelectedApproachId] = useState(null);
 
   const targetProblemId = id || selectedProblemId || 'two-sum';
 
@@ -517,6 +517,8 @@ export default function ProblemWorkspace({
             {currentStageId === 'pattern' && (
               <PatternStage
                 problem={problem}
+                selectedApproachId={selectedApproachId}
+                onSelectApproach={setSelectedApproachId}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -527,6 +529,7 @@ export default function ProblemWorkspace({
               <AlgorithmStage
                 problem={problem}
                 problemData={problem}
+                selectedApproachId={selectedApproachId}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

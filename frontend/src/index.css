@@ -99,4 +99,4 @@ code, pre, .font-mono {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #2563EB;
-}
+}@plugin "@tailwindcss/typography";

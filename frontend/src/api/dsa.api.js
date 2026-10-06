@@ -123,5 +123,24 @@ export const regenerateProblemPattern = async (problemId) => {
   return await apiClient.post(`/problems/${problemId}/pattern/regenerate`);
 };
 
+/**
+ * Retrieve Stage 05 Problem Algorithm data
+ */
+export const getProblemAlgorithm = async (problemId, approachId) => {
+  const query = approachId ? `?approachId=${approachId}` : '';
+  return await apiClient.get(`/problems/${problemId}/algorithm${query}`);
+};
 
+/**
+ * Generate Stage 05 Problem Algorithm via Gemini AI
+ */
+export const generateProblemAlgorithm = async (problemId, approachId) => {
+  return await apiClient.post(`/problems/${problemId}/algorithm/generate`, { approachId });
+};
 
+/**
+ * Force regenerate Stage 05 Problem Algorithm via Gemini AI
+ */
+export const regenerateProblemAlgorithm = async (problemId, approachId) => {
+  return await apiClient.post(`/problems/${problemId}/algorithm/regenerate`, { approachId });
+};
