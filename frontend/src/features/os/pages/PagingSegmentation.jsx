@@ -42,8 +42,8 @@ export default function PagingSegmentation({ theme, toggleTheme }) {
       <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
-            <Link to="/dashboard" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-cyan-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+            <Link to="/os" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 rounded-lg bg-cyan-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-cyan-600/20">
                 <Cpu className="w-4.5 h-4.5" />
               </div>
               <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
@@ -58,43 +58,42 @@ export default function PagingSegmentation({ theme, toggleTheme }) {
                 Dashboard
               </Link>
               <span>/</span>
-              <Link to="/os" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
-                OS
+              <Link to="/os" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors">
+                Operating Systems
               </Link>
               <span>/</span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-semibold">
+              <span className="text-cyan-600 dark:text-cyan-400 font-semibold truncate max-w-[150px] sm:max-w-none">
                 Paging & Segmentation
               </span>
             </nav>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/os"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors min-h-[38px]"
-            >
-              <Cpu className="w-3.5 h-3.5 text-cyan-500" />
-              <span className="hidden sm:inline">OS Home</span>
-            </Link>
-
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors min-h-[38px]"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5 text-blue-500" />
-              <span className="hidden sm:inline">Student Dashboard</span>
-              <span className="sm:hidden">Dashboard</span>
-            </Link>
-
             {toggleTheme && (
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white min-w-[38px] min-h-[38px] flex items-center justify-center cursor-pointer transition-colors"
-                title="Toggle theme mode"
+                className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
               </button>
             )}
+
+            <Link
+              to="/os"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to OS Home</span>
+            </Link>
+
+            <Link
+              to="/dashboard"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold shadow-xs transition-colors"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Dashboard</span>
+            </Link>
           </div>
         </div>
       </header>
