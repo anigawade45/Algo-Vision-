@@ -80,7 +80,7 @@ export function InteractiveFlowchart({ flowchartData }) {
   return (
     <section className={`transition-all duration-300 font-sans ${isFullscreen ? 'fixed inset-0 z-50 p-4 sm:p-8 bg-slate-50/95 dark:bg-[#05070E]/95 backdrop-blur-md overflow-y-auto' : 'space-y-4'}`} aria-label="Interactive Algorithm Flowchart">
       <div className={`rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] shadow-xs flex flex-col ${isFullscreen ? 'min-h-full max-w-7xl mx-auto p-6 sm:p-8 space-y-8' : 'p-5 sm:p-6 space-y-6'}`}>
-        
+
         {/* Header & Controls Bar */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-[#162032] pb-4">
           <div className="space-y-0.5">
@@ -163,7 +163,7 @@ export function InteractiveFlowchart({ flowchartData }) {
 
         {/* Visual Flowchart Canvas Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
+
           {/* Flowchart Diagram (Left 2 cols) */}
           <div className="lg:col-span-2 p-4 rounded-xl bg-slate-50 dark:bg-[#070A13] border border-slate-200/80 dark:border-[#162032] space-y-3">
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block">
@@ -185,31 +185,28 @@ export function InteractiveFlowchart({ flowchartData }) {
                       style={{
                         clipPath: isDecision ? 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' : 'none'
                       }}
-                      className={`flex flex-col items-center justify-center transition-all duration-300 cursor-pointer text-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 relative ${
-                        isStartEnd ? 'w-48 min-h-[3.5rem] rounded-full px-6 p-3' : isDecision ? 'w-[14rem] min-h-[7rem] rounded-none px-8 py-5' : 'w-48 min-h-[4rem] rounded-md shadow-sm p-3'
-                      } ${
-                        isActive
+                      className={`flex flex-col items-center justify-center transition-all duration-300 cursor-pointer text-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 relative ${isStartEnd ? 'w-48 min-h-[3.5rem] rounded-full px-6 p-3' : isDecision ? 'w-[14rem] min-h-[7rem] rounded-none px-8 py-5' : 'w-48 min-h-[4rem] rounded-md shadow-sm p-3'
+                        } ${isActive
                           ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/30 scale-110 z-10 font-bold'
                           : isStartEnd
-                          ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-100 border-2 border-emerald-500 hover:scale-105'
-                          : isDecision
-                          ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-950 dark:text-amber-100 border-0 hover:scale-105'
-                          : 'bg-white dark:bg-[#0B101D] text-slate-800 dark:text-slate-200 border-2 border-blue-400 dark:border-blue-600 hover:border-blue-500 hover:scale-105'
-                      }`}
+                            ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-900 dark:text-emerald-100 border-2 border-emerald-500 hover:scale-105'
+                            : isDecision
+                              ? 'bg-amber-100 dark:bg-amber-900/40 text-amber-950 dark:text-amber-100 border-0 hover:scale-105'
+                              : 'bg-white dark:bg-[#0B101D] text-slate-800 dark:text-slate-200 border-2 border-blue-400 dark:border-blue-600 hover:border-blue-500 hover:scale-105'
+                        }`}
                     >
                       {/* Fake border for true Diamond since clip-path clips normal borders */}
                       {isDecision && !isActive && (
-                         <div className="absolute inset-0 bg-amber-500 z-[-2]" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}>
-                            <div className="absolute inset-[2px] bg-amber-50 dark:bg-[#1A1508] z-[-1]" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
-                         </div>
+                        <div className="absolute inset-0 bg-amber-500 z-[-2]" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}>
+                          <div className="absolute inset-[2px] bg-amber-50 dark:bg-[#1A1508] z-[-1]" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
+                        </div>
                       )}
 
-                      <span className={`text-[9px] font-mono font-bold uppercase tracking-wider mb-0.5 ${
-                        isActive ? 'text-white/80' : isDecision ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500'
-                      }`}>
+                      <span className={`text-[9px] font-mono font-bold uppercase tracking-wider mb-0.5 ${isActive ? 'text-white/80' : isDecision ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500'
+                        }`}>
                         {node.label || node.type}
                       </span>
-                      
+
                       <span className={`font-bold font-sans leading-tight ${isDecision ? 'text-xs' : 'text-[13px]'}`}>
                         {node.title}
                       </span>
@@ -246,7 +243,7 @@ export function InteractiveFlowchart({ flowchartData }) {
 
           {/* Active Step Details & Live Variables Inspector (Right 1 col) */}
           <div className="space-y-4">
-            
+
             {/* Step Detail Card */}
             <div className="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-900/60 space-y-2">
               <div className="flex items-center justify-between text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase">
