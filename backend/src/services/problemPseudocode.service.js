@@ -60,14 +60,27 @@ const computePatternHash = (patternDoc, approachId, approachName) => {
  * Validates requested approachId against problem and pattern options
  */
 const validateApproach = async (problem, approachId, requestedApproachName) => {
-  if (!approachId || typeof approachId !== 'string') {
-    throw new AppError('A valid approachId string is required', 400);
-  }
-
-  const normalizedApproachId = approachId.trim();
-
   // Try fetching pattern document for problem to see valid solution families
   const patternDoc = await ProblemPattern.findOne({ problemId: problem._id });
+
+  let rawApproachId = (approachId && typeof approachId === 'string' && approachId.trim()) || '';
+  if (rawApproachId === 'null' || rawApproachId === 'undefined') {
+    rawApproachId = '';
+  }
+
+  let normalizedApproachId = rawApproachId;
+
+  if (!normalizedApproachId && patternDoc?.solutionFamilies?.families?.length > 0) {
+    normalizedApproachId = patternDoc.solutionFamilies.families[0].id;
+  }
+
+  if (!normalizedApproachId && problem.defaultApproachId) {
+    normalizedApproachId = problem.defaultApproachId;
+  }
+
+  if (!normalizedApproachId) {
+    normalizedApproachId = 'default';
+  }
 
   let approachName = requestedApproachName || normalizedApproachId;
 

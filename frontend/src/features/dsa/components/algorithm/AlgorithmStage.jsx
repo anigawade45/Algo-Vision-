@@ -18,6 +18,7 @@ export function AlgorithmStage({
   const [error, setError] = useState(null);
   
   const activeProblem = problem || problemData;
+  const problemKey = activeProblem?.problemId || activeProblem?.id || activeProblem?._id;
 
   useEffect(() => {
     if (isCompleted && onCompleteStage) {
@@ -53,12 +54,12 @@ export function AlgorithmStage({
   };
 
   const loadAlgorithm = async () => {
-    if (!activeProblem?.id) return;
+    if (!problemKey) return;
     
     setIsLoading(true);
     setError(null);
     try {
-      const res = await getProblemAlgorithm(activeProblem.id, selectedApproachId);
+      const res = await getProblemAlgorithm(problemKey, selectedApproachId);
       if (res?.success && res.data?.algorithm?.rawText) {
         parseAndSetData(res.data.algorithm.rawText);
         setIsLoading(false);
@@ -77,13 +78,13 @@ export function AlgorithmStage({
   };
 
   const handleGenerate = async (isRegenerating = false) => {
-    if (!activeProblem?.id) return;
+    if (!problemKey) return;
     
     setIsGenerating(true);
     setError(null);
     try {
       const apiCall = isRegenerating ? regenerateProblemAlgorithm : generateProblemAlgorithm;
-      const res = await apiCall(activeProblem.id, selectedApproachId);
+      const res = await apiCall(problemKey, selectedApproachId);
       if (res?.success && res.data?.algorithm?.rawText) {
         parseAndSetData(res.data.algorithm.rawText);
       } else {
@@ -98,8 +99,11 @@ export function AlgorithmStage({
   };
 
   useEffect(() => {
-    loadAlgorithm();
-  }, [activeProblem?.id, selectedApproachId]);
+    setAlgorithmData(null);
+    if (problemKey) {
+      loadAlgorithm();
+    }
+  }, [problemKey, selectedApproachId]);
 
   const { intro, steps = [], flowchart } = algorithmData || {};
 
