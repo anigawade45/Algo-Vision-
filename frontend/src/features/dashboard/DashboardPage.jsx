@@ -8,13 +8,14 @@ import { ContinueLearningCard } from './components/ContinueLearningCard';
 import { CoreModulesGrid } from './components/CoreModulesGrid';
 import { QuickActions } from './components/QuickActions';
 import { AccountSettingsPage } from './components/AccountSettingsPage';
-import { FloatingAiMentor } from './components/FloatingAiMentor';
 import { VisualizerModal } from './components/InteractiveModals';
+import { useAiMentor } from '@/features/ai-mentor';
 
 export default function DashboardPage({ theme, toggleTheme }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const { openDrawer } = useAiMentor();
   const activeTab = searchParams.get('tab');
   const isSettingsPage =
     location.pathname === '/profile/settings' ||
@@ -26,7 +27,6 @@ export default function DashboardPage({ theme, toggleTheme }) {
     return localStorage.getItem('sidebar_collapsed') === 'true';
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [isVisualizerOpen, setIsVisualizerOpen] = useState(false);
   const [visualizerInitialModule, setVisualizerInitialModule] = useState('dsa');
 
@@ -69,7 +69,7 @@ export default function DashboardPage({ theme, toggleTheme }) {
         setMobileOpen={setMobileOpen}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={handleToggleSidebar}
-        onOpenAiMentor={() => setIsAiMentorOpen(true)}
+        onOpenAiMentor={openDrawer}
         onOpenVisualizer={handleOpenVisualizer}
       />
 
@@ -86,7 +86,7 @@ export default function DashboardPage({ theme, toggleTheme }) {
           setMobileOpen={setMobileOpen}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          onOpenAiMentor={() => setIsAiMentorOpen(true)}
+          onOpenAiMentor={openDrawer}
           onSelectTopic={(topic) => {
             const mod = topic.module.toLowerCase().includes('os')
               ? 'os'
@@ -128,7 +128,7 @@ export default function DashboardPage({ theme, toggleTheme }) {
 
               {/* Section 4: Quick Actions */}
               <QuickActions
-                onOpenAiMentor={() => setIsAiMentorOpen(true)}
+                onOpenAiMentor={openDrawer}
                 onOpenVisualizer={() => handleOpenVisualizer('dsa')}
               />
             </>
@@ -136,13 +136,7 @@ export default function DashboardPage({ theme, toggleTheme }) {
         </main>
       </div>
 
-      {/* 3. Floating AI Mentor Trigger & Chat Panel */}
-      <FloatingAiMentor
-        isOpen={isAiMentorOpen}
-        setIsOpen={setIsAiMentorOpen}
-      />
-
-      {/* 4. Interactive Simulation Visualizer Modal */}
+      {/* 3. Interactive Simulation Visualizer Modal */}
       <VisualizerModal
         isOpen={isVisualizerOpen}
         onClose={() => setIsVisualizerOpen(false)}
@@ -151,3 +145,4 @@ export default function DashboardPage({ theme, toggleTheme }) {
     </div>
   );
 }
+

@@ -1,6 +1,7 @@
 const express = require('express');
 const authRoutes = require('./auth.routes');
 const problemRoutes = require('./problem.routes');
+const aiMentorRoutes = require('./aiMentor.routes');
 const { successResponse } = require('../utils/apiResponse');
 
 const router = express.Router();
@@ -15,5 +16,8 @@ router.use('/auth', authRoutes);
 
 // DSA Problems Routes
 router.use('/problems', problemRoutes);
+
+// AI Mentor Routes
+router.use('/ai-mentor', aiMentorRoutes);
 
 module.exports = router;

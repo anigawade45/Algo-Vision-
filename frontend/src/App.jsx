@@ -50,6 +50,7 @@ import Caching from '@/features/systemdesign/pages/Caching';
 import Scaling from '@/features/systemdesign/pages/Scaling';
 import MessageQueues from '@/features/systemdesign/pages/MessageQueues';
 import RateLimiting from '@/features/systemdesign/pages/RateLimiting';
+import { AiMentorProvider, AiMentorWidget, AiMentorDrawer } from '@/features/ai-mentor';
 
 function DsaHomeRoute({ theme, toggleTheme, setActiveProblem }) {
   const navigate = useNavigate();
@@ -120,8 +121,11 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <AuthProvider>
         <Router>
-          <Routes>
-            {/* PUBLIC ROUTES */}
+          <AiMentorProvider>
+            <AiMentorWidget />
+            <AiMentorDrawer />
+            <Routes>
+              {/* PUBLIC ROUTES */}
             <Route path="/" element={<LandingPage theme={theme} toggleTheme={toggleTheme} />} />
             
             <Route
@@ -755,7 +759,8 @@ export default function App() {
             {/* UNKNOWN / 404 CATCH-ALL ROUTE */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </Router>
+        </AiMentorProvider>
+      </Router>
       </AuthProvider>
     </MotionConfig>
   );

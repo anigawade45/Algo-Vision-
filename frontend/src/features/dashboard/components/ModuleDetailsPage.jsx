@@ -14,9 +14,9 @@ import {
 } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { DashboardNavbar } from './DashboardNavbar';
-import { FloatingAiMentor } from './FloatingAiMentor';
 import { VisualizerModal, QuizModal } from './InteractiveModals';
 import { coreModules } from '../data/mockDashboardData';
+import { useAiMentor } from '@/features/ai-mentor';
 
 const iconMap = {
   dsa: Binary,
@@ -28,13 +28,13 @@ const iconMap = {
 export function ModuleDetailsPage({ theme, toggleTheme }) {
   const { moduleId = 'dsa' } = useParams();
   const navigate = useNavigate();
+  const { openDrawer } = useAiMentor();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     return localStorage.getItem('sidebar_collapsed') === 'true';
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const [isAiMentorOpen, setIsAiMentorOpen] = useState(false);
   const [isVisualizerOpen, setIsVisualizerOpen] = useState(false);
   const [isQuizOpen, setIsQuizOpen] = useState(false);
 
@@ -88,7 +88,7 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
         setMobileOpen={setMobileOpen}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={handleToggleSidebar}
-        onOpenAiMentor={() => setIsAiMentorOpen(true)}
+        onOpenAiMentor={openDrawer}
         onOpenVisualizer={() => setIsVisualizerOpen(true)}
         onOpenQuiz={() => setIsQuizOpen(true)}
       />
@@ -106,7 +106,7 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
           setMobileOpen={setMobileOpen}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          onOpenAiMentor={() => setIsAiMentorOpen(true)}
+          onOpenAiMentor={openDrawer}
           onSelectTopic={() => setIsVisualizerOpen(true)}
         />
 
@@ -210,7 +210,7 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
                 </Link>
 
                 <button
-                  onClick={() => setIsAiMentorOpen(true)}
+                  onClick={openDrawer}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-xs transition-colors cursor-pointer"
                 >
                   <Bot className="w-4 h-4 text-blue-500" />
@@ -221,9 +221,6 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
           </div>
         </main>
       </div>
-
-      {/* Floating AI Mentor */}
-      <FloatingAiMentor isOpen={isAiMentorOpen} setIsOpen={setIsAiMentorOpen} />
 
       {/* Visualizer Simulation Modal */}
       <VisualizerModal
@@ -239,3 +236,4 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
 }
 
 export default ModuleDetailsPage;
+
