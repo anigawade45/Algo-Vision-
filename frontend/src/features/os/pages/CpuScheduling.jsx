@@ -11,6 +11,7 @@ import ProcessTable from '../components/scheduling/ProcessTable';
 import SchedulingMetrics from '../components/scheduling/SchedulingMetrics';
 import SchedulingExplanation from '../components/scheduling/SchedulingExplanation';
 import SchedulingComparison from '../components/scheduling/SchedulingComparison';
+import { CodeLab } from '../components/code-lab';
 import {
   Layers,
   ArrowRightLeft,
@@ -315,6 +316,9 @@ export default function CpuScheduling({ theme, toggleTheme }) {
                 processes={simulationResult?.processes || []}
                 activeStepProcessStates={currentStep?.processesState}
               />
+
+              {/* Code Lab IDE */}
+              <CodeLab module="cpu-scheduling" algorithm={selectedAlgorithm} />
             </div>
           </div>
         )}

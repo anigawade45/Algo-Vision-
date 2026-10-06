@@ -13,7 +13,8 @@ import {
   AlertTriangle,
   Activity,
   Zap,
-  RotateCcw
+  RotateCcw,
+  Code
 } from 'lucide-react';
 
 import {
@@ -23,6 +24,7 @@ import {
   AlgorithmVisualizer,
   RequestSimulator
 } from '../components/banker';
+import { CodeLab } from '../components/code-lab';
 
 export default function BankersAlgorithm({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('simulator');
@@ -212,6 +214,7 @@ export default function BankersAlgorithm({ theme, toggleTheme }) {
     { id: 'matrices', label: '3. Matrix Configurator & Need', icon: Activity },
     { id: 'simulator', label: '4. Step-by-Step Safety Simulator', icon: Zap },
     { id: 'request-sim', label: '5. Resource Request Test Bench', icon: Cpu },
+    { id: 'codelab', label: '6. Code Lab & Execution Terminal', icon: Code },
   ];
 
   return (
@@ -356,6 +359,19 @@ export default function BankersAlgorithm({ theme, toggleTheme }) {
               need={need}
               available={available}
               onGrantRequest={handleGrantRequest}
+            />
+          )}
+
+          {activeTab === 'codelab' && (
+            <CodeLab
+              module="bankers-algorithm"
+              currentInput={{
+                processes: processCount,
+                resources: resourceCount,
+                available,
+                allocation,
+                maximum
+              }}
             />
           )}
         </div>

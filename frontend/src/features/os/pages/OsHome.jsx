@@ -44,6 +44,46 @@ export default function OsHome() {
       badge: 'Safety Simulator',
       badgeColor: 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
     },
+    {
+      id: 'process-synchronization',
+      title: 'Process Synchronization',
+      description: 'Race condition simulator, critical section criteria, Mutex locks, Binary & Counting Semaphores, Bounded Buffer Producer-Consumer, and Readers-Writers database.',
+      path: '/os/process-synchronization',
+      badge: 'Concurrency Engine',
+      badgeColor: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800',
+    },
+    {
+      id: 'memory-management',
+      title: 'Memory Management & Allocation',
+      description: 'MMU relocation & address translation, logical vs physical addresses, First/Best/Worst Fit allocation strategies, internal & external fragmentation, and compaction.',
+      path: '/os/memory-management',
+      badge: 'RAM Simulator',
+      badgeColor: 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
+    },
+    {
+      id: 'paging-segmentation',
+      title: 'Paging & Segmentation',
+      description: 'Non-contiguous address translation, Page Tables, Page Size split (Page p, Offset d → Frame), Segment Tables (Segment s, Offset d → Base + Offset), bounds checking, and segmentation fault trapping.',
+      path: '/os/paging-segmentation',
+      badge: 'Address Translation Lab',
+      badgeColor: 'bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+    },
+    {
+      id: 'page-replacement',
+      title: 'Page Replacement Algorithms',
+      description: 'Virtual memory frame allocation, reference string sequence, page hit/fault tracking, FIFO, LRU, Optimal, and Second Chance (Clock) eviction policies.',
+      path: '/os/page-replacement',
+      badge: 'Page Eviction Lab',
+      badgeColor: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
+    },
+    {
+      id: 'disk-scheduling',
+      title: 'Disk Scheduling Algorithms',
+      description: 'Secondary storage read/write head movement, track seek optimization, FCFS, SSTF, SCAN, C-SCAN, LOOK, and C-LOOK seek policies.',
+      path: '/os/disk-scheduling',
+      badge: 'Disk I/O Lab',
+      badgeColor: 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
+    },
   ];
 
   return (
@@ -109,7 +149,7 @@ export default function OsHome() {
             <div className="pt-2 flex items-center gap-4 text-xs font-mono text-cyan-200">
               <span className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-cyan-300" />
-                5 Interactive OS Modules
+                10 Interactive OS Modules
               </span>
             </div>
           </div>

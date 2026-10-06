@@ -28,6 +28,11 @@ import OsFundamentals from '@/features/os/pages/OsFundamentals';
 import ProcessManagement from '@/features/os/pages/ProcessManagement';
 import Deadlocks from '@/features/os/pages/Deadlocks';
 import BankersAlgorithm from '@/features/os/pages/BankersAlgorithm';
+import ProcessSynchronization from '@/features/os/pages/ProcessSynchronization';
+import MemoryManagement from '@/features/os/pages/MemoryManagement';
+import PagingSegmentation from '@/features/os/pages/PagingSegmentation';
+import PageReplacement from '@/features/os/pages/PageReplacement';
+import DiskScheduling from '@/features/os/pages/DiskScheduling';
 
 import CnHome from '@/features/cn/pages/CnHome';
 import NetworkFundamentals from '@/features/cn/pages/NetworkFundamentals';
@@ -272,6 +277,69 @@ export default function App() {
               element={
                 <ProtectedRoute>
                   <BankersAlgorithm theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/process-synchronization"
+              element={
+                <ProtectedRoute>
+                  <ProcessSynchronization theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/memory-management"
+              element={
+                <ProtectedRoute>
+                  <MemoryManagement theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/paging-segmentation"
+              element={
+                <ProtectedRoute>
+                  <PagingSegmentation theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/page-replacement"
+              element={
+                <ProtectedRoute>
+                  <PageReplacement theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/page-replacement-algorithms"
+              element={
+                <ProtectedRoute>
+                  <PageReplacement theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/disk-scheduling"
+              element={
+                <ProtectedRoute>
+                  <DiskScheduling theme={theme} toggleTheme={toggleTheme} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/os/disk-scheduling-algorithms"
+              element={
+                <ProtectedRoute>
+                  <DiskScheduling theme={theme} toggleTheme={toggleTheme} />
                 </ProtectedRoute>
               }
             />

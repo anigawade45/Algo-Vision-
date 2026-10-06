@@ -185,11 +185,11 @@ export function ModuleDetailsPage({ theme, toggleTheme }) {
               <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                 {currentModule.id === 'os' ? (
                   <Link
-                    to="/os/cpu-scheduling"
+                    to="/os"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 hover:scale-102 transition-all"
                   >
                     <Cpu className="w-4 h-4" />
-                    <span>Launch CPU Scheduling Simulator</span>
+                    <span>Launch OS Dashboard & Simulators</span>
                   </Link>
                 ) : currentModule.id === 'dsa' ? (
                   <Link
