@@ -10,13 +10,6 @@ const getPseudocode = async (req, res, next) => {
     const { approachId } = req.query;
     const userId = req.user._id;
 
-    if (!approachId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Query parameter "approachId" is required.',
-      });
-    }
-
     const result = await problemPseudocodeService.getPseudocode(problemId, userId, approachId);
 
     return res.status(200).json({
@@ -54,13 +47,6 @@ const generatePseudocode = async (req, res, next) => {
     const { approachId, approachName } = req.body || {};
     const userId = req.user._id;
 
-    if (!approachId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Field "approachId" is required in request body.',
-      });
-    }
-
     const pseudocode = await problemPseudocodeService.generatePseudocode(
       problemId,
       userId,
@@ -90,13 +76,6 @@ const regeneratePseudocode = async (req, res, next) => {
     const { problemId } = req.params;
     const { approachId, approachName } = req.body || {};
     const userId = req.user._id;
-
-    if (!approachId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Field "approachId" is required in request body.',
-      });
-    }
 
     const pseudocode = await problemPseudocodeService.regeneratePseudocode(
       problemId,
