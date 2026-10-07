@@ -1,23 +1,71 @@
+const mongoose = require('mongoose');
 const ALGOVISION_KNOWLEDGE_BASE = require('../config/algoVisionKnowledge');
 const env = require('../config/env');
+const MentorConversation = require('../models/MentorConversation');
 const { generateContentWithRetry, classifyError } = require('../services/aiMentor.service');
 
+function generateConversationTitle(message) {
+  const cleaned = message.trim().replace(/[\r\n]+/g, ' ');
+  if (cleaned.length <= 35) {
+    return cleaned;
+  }
+  return cleaned.substring(0, 35) + '...';
+}
+
 /**
- * Controller to handle AI Mentor chat interactions.
- * Uses configurable GEMINI_MODEL via server environment settings with automatic retry & error classification.
+ * Controller to handle AI Mentor chat interactions with persistent user-specific conversations.
  */
 exports.handleMentorChat = async (req, res) => {
   try {
-    const { message, currentPath, pageContext, chatHistory = [] } = req.body;
+    const userId = req.user._id;
+    const { message, conversationId, currentPath, pageContext } = req.body;
 
-    if (!message || typeof message !== 'string') {
+    if (!message || typeof message !== 'string' || !message.trim()) {
       return res.status(400).json({
         success: false,
-        error: 'Message parameter is required and must be a string.'
+        error: 'Message parameter is required and cannot be empty.'
       });
     }
 
-    // Server-side API Key resolution
+    // 1. Resolve or Create User-Scoped Conversation
+    let conversation = null;
+
+    if (conversationId) {
+      if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+        return res.status(404).json({
+          success: false,
+          error: 'Conversation not found.'
+        });
+      }
+
+      conversation = await MentorConversation.findOne({
+        _id: conversationId,
+        userId: userId
+      });
+
+      if (!conversation) {
+        return res.status(404).json({
+          success: false,
+          error: 'Conversation not found.'
+        });
+      }
+    } else {
+      const title = generateConversationTitle(message);
+      conversation = await MentorConversation.create({
+        userId: userId,
+        title: title,
+        messages: []
+      });
+    }
+
+    // 2. Persist User Message to DB
+    conversation.messages.push({
+      role: 'user',
+      content: message.trim()
+    });
+    await conversation.save();
+
+    // 3. Resolve API Key & Model Name
     const apiKey = env.aiMentorApiKey || env.geminiApiKey;
 
     if (!apiKey) {
@@ -29,10 +77,9 @@ exports.handleMentorChat = async (req, res) => {
       });
     }
 
-    // Configurable model name with standard default
     const modelName = env.geminiModel || 'gemini-3.8-flash';
 
-    // Build comprehensive System Prompt
+    // 4. Build System Prompt & Conversation History for Gemini
     const systemInstruction = `
 You are "AI Mentor", an encouraging, world-class Computer Science Professor and Interactive Guide inside the AlgoVision learning application.
 
@@ -56,23 +103,14 @@ GUIDELINES FOR YOUR RESPONSES:
 - Keep tone friendly, supportive, academic yet accessible. Format code cleanly.
 `;
 
-    // Construct conversation payload for model
-    const contents = [];
+    // Extract recent conversation window (last 20 messages) for Gemini payload
+    const recentMessages = conversation.messages.slice(-20);
+    const contents = recentMessages.map(m => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.content }]
+    }));
 
-    if (Array.isArray(chatHistory)) {
-      chatHistory.forEach(item => {
-        if (item.sender === 'user' || item.role === 'user') {
-          contents.push({ role: 'user', parts: [{ text: item.text || item.message }] });
-        } else if (item.sender === 'ai' || item.sender === 'model' || item.role === 'model') {
-          contents.push({ role: 'model', parts: [{ text: item.text || item.message }] });
-        }
-      });
-    }
-
-    // Append current user message
-    contents.push({ role: 'user', parts: [{ text: message }] });
-
-    // Call service with exponential backoff retries & timeout
+    // 5. Call Gemini Service with Multi-Model Retry & Fallback
     const responseText = await generateContentWithRetry({
       apiKey,
       modelName,
@@ -80,10 +118,20 @@ GUIDELINES FOR YOUR RESPONSES:
       systemInstruction
     });
 
+    // 6. Persist Assistant Response to DB
+    conversation.messages.push({
+      role: 'assistant',
+      content: responseText
+    });
+    await conversation.save();
+
     return res.status(200).json({
       success: true,
+      conversationId: conversation._id.toString(),
+      title: conversation.title,
       reply: responseText
     });
+
   } catch (err) {
     const errorDetails = classifyError(err);
 
@@ -95,3 +143,133 @@ GUIDELINES FOR YOUR RESPONSES:
   }
 };
 
+/**
+ * Controller to fetch user-specific conversation history (latest 10-15 conversations).
+ */
+exports.getMentorHistory = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const limit = Math.min(parseInt(req.query.limit, 10) || 15, 50);
+    const skip = parseInt(req.query.skip, 10) || 0;
+
+    const conversations = await MentorConversation.find({ userId })
+      .sort({ updatedAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .select('_id title createdAt updatedAt messages');
+
+    const historyList = conversations.map(c => {
+      const lastMsg = c.messages.length > 0 ? c.messages[c.messages.length - 1] : null;
+      return {
+        _id: c._id.toString(),
+        title: c.title || 'New Conversation',
+        createdAt: c.createdAt,
+        updatedAt: c.updatedAt,
+        messageCount: c.messages.length,
+        preview: lastMsg ? lastMsg.content.substring(0, 60) : ''
+      };
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: historyList
+    });
+  } catch (error) {
+    console.error('[AI Mentor] Error fetching history:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to load conversation history.'
+    });
+  }
+};
+
+/**
+ * Controller to fetch an individual user-specific conversation by ID.
+ */
+exports.getConversationById = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { conversationId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+      return res.status(404).json({
+        success: false,
+        error: 'Conversation not found.'
+      });
+    }
+
+    const conversation = await MentorConversation.findOne({
+      _id: conversationId,
+      userId: userId
+    });
+
+    if (!conversation) {
+      return res.status(404).json({
+        success: false,
+        error: 'Conversation not found.'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        _id: conversation._id.toString(),
+        title: conversation.title,
+        createdAt: conversation.createdAt,
+        updatedAt: conversation.updatedAt,
+        messages: conversation.messages.map(m => ({
+          _id: m._id ? m._id.toString() : undefined,
+          role: m.role,
+          content: m.content,
+          createdAt: m.createdAt
+        }))
+      }
+    });
+  } catch (error) {
+    console.error('[AI Mentor] Error fetching conversation:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to load conversation.'
+    });
+  }
+};
+
+/**
+ * Controller to delete a user-specific conversation by ID.
+ */
+exports.deleteConversationById = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { conversationId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+      return res.status(404).json({
+        success: false,
+        error: 'Conversation not found.'
+      });
+    }
+
+    const conversation = await MentorConversation.findOneAndDelete({
+      _id: conversationId,
+      userId: userId
+    });
+
+    if (!conversation) {
+      return res.status(404).json({
+        success: false,
+        error: 'Conversation not found.'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Conversation deleted successfully.'
+    });
+  } catch (error) {
+    console.error('[AI Mentor] Error deleting conversation:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to delete conversation.'
+    });
+  }
+};
