@@ -1981,7 +1981,7 @@ For SPACE, generate exactly 3 steps.
 Every step should contain:
 - title: Short, engaging title describing the step.
 - description: Explanation of what we're looking at.
-- code: Relevant code or pseudocode snippet (leave empty string if not applicable).
+- code: Extract the EXACT relevant snippet from the provided ALGORITHM, PSEUDOCODE, or CODE that corresponds to this step. Do NOT invent new code. Leave empty string if not applicable.
 - calculation: The math/reasoning behind this step (e.g., "n iterations × O(1) hash lookup = O(n)").
 - action: Button text for the user to proceed (e.g., "Analyze inner operations").
 
