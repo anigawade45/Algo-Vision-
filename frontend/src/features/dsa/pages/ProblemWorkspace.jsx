@@ -31,6 +31,7 @@ import { AlgorithmStage } from '../components/algorithm';
 import { PseudocodeStage } from '../components/pseudocode';
 import { CodeStage } from '../components/code';
 import { DryRunStage } from '../components/dryrun';
+import { VisualizationStage } from '../components/visualization';
 import { PracticeStage } from '../components/practice';
 import { ComplexityStage } from '../components/complexity';
 import { getProblems, getProblemById, getProblemWorkspace, createProblemWorkspace, updateProblemWorkspace } from '@/api/dsa.api';
@@ -46,7 +47,7 @@ const WORKSPACE_STAGES = [
   { id: 'pseudocode', stepNo: '06', name: 'Pseudocode', icon: FileCode2, isBuilt: true },
   { id: 'code', stepNo: '07', name: 'Code', icon: Code2, isBuilt: true },
   { id: 'dryrun', stepNo: '08', name: 'Dry Run', icon: PlayCircle, isBuilt: true },
-  { id: 'visualize', stepNo: '09', name: 'Visualize', icon: Eye, isBuilt: false },
+  { id: 'visualize', stepNo: '09', name: 'Visualize', icon: Eye, isBuilt: true },
   { id: 'complexity', stepNo: '10', name: 'Complexity', icon: Gauge, isBuilt: true },
   { id: 'practice', stepNo: '11', name: 'Practice', icon: CheckCircle2, isBuilt: true },
 ];
@@ -573,6 +574,15 @@ export default function ProblemWorkspace({
                 problem={problem}
                 selectedApproachId={selectedApproachId}
                 selectedApproachName={selectedApproachName}
+                onCompleteStage={handleStageComplete}
+                onNextStage={handleNextStage}
+                onOpenSpec={() => setShowSpecDrawer(true)}
+              />
+            )}
+
+            {currentStageId === 'visualize' && (
+              <VisualizationStage
+                problem={problem}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

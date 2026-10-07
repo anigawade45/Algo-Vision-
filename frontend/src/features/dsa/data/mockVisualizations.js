@@ -1,0 +1,2386 @@
+import { VISUALIZATION_TYPES } from './visualizationTypes.js';
+
+/**
+ * Stage 09 — Mock Visualization Benchmark Problems Dataset (Phase 2 Single Source of Truth)
+ * Contains exactly 10 mock DSA problems with complete, standardized, and cross-validated state transitions.
+ */
+export const MOCK_VISUALIZATIONS = [
+  // ------------------------------------------------------------
+  // 1. TWO SUM
+  // ------------------------------------------------------------
+  {
+    problemId: 'two-sum',
+    title: 'Two Sum',
+    category: 'Array',
+    difficulty: 'Easy',
+    approachId: 'hashMap',
+    approachName: 'HashMap',
+    visualizationType: VISUALIZATION_TYPES.ARRAY_HASHMAP,
+    input: {
+      nums: [2, 7, 11, 15],
+      target: 9,
+    },
+    expectedOutput: [0, 1],
+    visualizationData: {
+      initialState: {
+        nums: [2, 7, 11, 15],
+        target: 9,
+        currentIndex: null,
+        currentNum: null,
+        complement: null,
+        hashMap: {},
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Start with an empty HashMap to map array values to their indices.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: null,
+            currentNum: null,
+            complement: null,
+            hashMap: {},
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [],
+            currentIndex: null,
+            hashMapKeys: [],
+          },
+          changed: ['hashMap'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'inspect_element',
+          description: 'Visit element 2 at index 0.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 0,
+            currentNum: 2,
+            complement: null,
+            hashMap: {},
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [0],
+            currentIndex: 0,
+            hashMapKeys: [],
+          },
+          changed: ['currentIndex', 'currentNum'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'calculate_complement',
+          description: 'Calculate complement: target (9) - nums[0] (2) = 7.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 0,
+            currentNum: 2,
+            complement: 7,
+            hashMap: {},
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [0],
+            currentIndex: 0,
+            hashMapKeys: [],
+          },
+          changed: ['complement'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'lookup_hashmap',
+          description: 'Check if complement 7 exists in HashMap. Not found.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 0,
+            currentNum: 2,
+            complement: 7,
+            hashMap: {},
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [0],
+            currentIndex: 0,
+            hashMapKeys: [],
+          },
+          changed: [],
+        },
+        {
+          stepNumber: 5,
+          operation: 'insert_hashmap',
+          description: 'Store key 2 with value 0 (index) into HashMap: 2 -> 0.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 0,
+            currentNum: 2,
+            complement: 7,
+            hashMap: { 2: 0 },
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [0],
+            currentIndex: 0,
+            hashMapKeys: [2],
+          },
+          changed: ['hashMap'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'inspect_element',
+          description: 'Visit element 7 at index 1.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 1,
+            currentNum: 7,
+            complement: null,
+            hashMap: { 2: 0 },
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [1],
+            currentIndex: 1,
+            hashMapKeys: [2],
+          },
+          changed: ['currentIndex', 'currentNum', 'complement'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'calculate_complement',
+          description: 'Calculate complement: target (9) - nums[1] (7) = 2.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 1,
+            currentNum: 7,
+            complement: 2,
+            hashMap: { 2: 0 },
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [1],
+            currentIndex: 1,
+            hashMapKeys: [2],
+          },
+          changed: ['complement'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'lookup_hashmap',
+          description: 'Check if complement 2 exists in HashMap. Found at index 0!',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 1,
+            currentNum: 7,
+            complement: 2,
+            hashMap: { 2: 0 },
+            result: null,
+          },
+          highlights: {
+            arrayIndices: [1],
+            currentIndex: 1,
+            hashMapKeys: [2],
+            matchedPair: [0, 1],
+          },
+          changed: [],
+        },
+        {
+          stepNumber: 9,
+          operation: 'match_found',
+          description: 'Match found! Indices [0, 1] sum up to target 9.',
+          state: {
+            nums: [2, 7, 11, 15],
+            target: 9,
+            currentIndex: 1,
+            currentNum: 7,
+            complement: 2,
+            hashMap: { 2: 0 },
+            result: [0, 1],
+          },
+          highlights: {
+            arrayIndices: [0, 1],
+            currentIndex: 1,
+            hashMapKeys: [2],
+            matchedPair: [0, 1],
+          },
+          changed: ['result'],
+        },
+      ],
+      finalState: {
+        nums: [2, 7, 11, 15],
+        target: 9,
+        currentIndex: 1,
+        currentNum: 7,
+        complement: 2,
+        hashMap: { 2: 0 },
+        result: [0, 1],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 2. LONGEST SUBSTRING WITHOUT REPEATING CHARACTERS
+  // ------------------------------------------------------------
+  {
+    problemId: 'longest-substring-without-repeating-characters',
+    title: 'Longest Substring Without Repeating Characters',
+    category: 'String',
+    difficulty: 'Medium',
+    approachId: 'slidingWindow',
+    approachName: 'Sliding Window',
+    visualizationType: VISUALIZATION_TYPES.SLIDING_WINDOW,
+    input: {
+      s: 'pwwkew',
+    },
+    expectedOutput: 3,
+    visualizationData: {
+      initialState: {
+        s: 'pwwkew',
+        left: 0,
+        right: 0,
+        currentChar: null,
+        windowString: '',
+        charMap: {},
+        maxLength: 0,
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initialize sliding window with left = 0, right = 0, empty character index map, and maxLength = 0.',
+          state: {
+            s: 'pwwkew',
+            left: 0,
+            right: 0,
+            currentChar: null,
+            windowString: '',
+            charMap: {},
+            maxLength: 0,
+            result: null,
+          },
+          highlights: { left: 0, right: 0, windowRange: [0, 0] },
+          changed: ['left', 'right'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'expand_window',
+          description: 'Process char "p" at index 0. Expand window: "p". Update maxLength = 1.',
+          state: {
+            s: 'pwwkew',
+            left: 0,
+            right: 0,
+            currentChar: 'p',
+            windowString: 'p',
+            charMap: { p: 0 },
+            maxLength: 1,
+            result: null,
+          },
+          highlights: { left: 0, right: 0, windowRange: [0, 0], activeCharIndex: 0 },
+          changed: ['right', 'currentChar', 'windowString', 'charMap', 'maxLength'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'expand_window',
+          description: 'Process char "w" at index 1. Expand window: "pw". Update maxLength = 2.',
+          state: {
+            s: 'pwwkew',
+            left: 0,
+            right: 1,
+            currentChar: 'w',
+            windowString: 'pw',
+            charMap: { p: 0, w: 1 },
+            maxLength: 2,
+            result: null,
+          },
+          highlights: { left: 0, right: 1, windowRange: [0, 1], activeCharIndex: 1 },
+          changed: ['right', 'currentChar', 'windowString', 'charMap', 'maxLength'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'detect_duplicate',
+          description: 'Process char "w" at index 2. Duplicate "w" detected (last seen at index 1 >= left pointer 0).',
+          state: {
+            s: 'pwwkew',
+            left: 0,
+            right: 2,
+            currentChar: 'w',
+            windowString: 'pww',
+            charMap: { p: 0, w: 1 },
+            maxLength: 2,
+            result: null,
+          },
+          highlights: { left: 0, right: 2, windowRange: [0, 2], activeCharIndex: 2, duplicateCharIndex: 1 },
+          changed: ['right', 'currentChar', 'windowString'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'shrink_window',
+          description: 'Move left pointer past previous duplicate to index 2 (1 + 1). Window shrinks to "w".',
+          state: {
+            s: 'pwwkew',
+            left: 2,
+            right: 2,
+            currentChar: 'w',
+            windowString: 'w',
+            charMap: { p: 0, w: 2 },
+            maxLength: 2,
+            result: null,
+          },
+          highlights: { left: 2, right: 2, windowRange: [2, 2], activeCharIndex: 2 },
+          changed: ['left', 'windowString', 'charMap'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'expand_window',
+          description: 'Process char "k" at index 3. Expand window: "wk". MaxLength remains 2.',
+          state: {
+            s: 'pwwkew',
+            left: 2,
+            right: 3,
+            currentChar: 'k',
+            windowString: 'wk',
+            charMap: { p: 0, w: 2, k: 3 },
+            maxLength: 2,
+            result: null,
+          },
+          highlights: { left: 2, right: 3, windowRange: [2, 3], activeCharIndex: 3 },
+          changed: ['right', 'currentChar', 'windowString', 'charMap'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'expand_window',
+          description: 'Process char "e" at index 4. Expand window: "wke". Update maxLength = 3.',
+          state: {
+            s: 'pwwkew',
+            left: 2,
+            right: 4,
+            currentChar: 'e',
+            windowString: 'wke',
+            charMap: { p: 0, w: 2, k: 3, e: 4 },
+            maxLength: 3,
+            result: null,
+          },
+          highlights: { left: 2, right: 4, windowRange: [2, 4], activeCharIndex: 4 },
+          changed: ['right', 'currentChar', 'windowString', 'charMap', 'maxLength'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'detect_duplicate',
+          description: 'Process char "w" at index 5. Duplicate "w" detected (last seen at index 2 >= left pointer 2).',
+          state: {
+            s: 'pwwkew',
+            left: 2,
+            right: 5,
+            currentChar: 'w',
+            windowString: 'wkew',
+            charMap: { p: 0, w: 2, k: 3, e: 4 },
+            maxLength: 3,
+            result: null,
+          },
+          highlights: { left: 2, right: 5, windowRange: [2, 5], activeCharIndex: 5, duplicateCharIndex: 2 },
+          changed: ['right', 'currentChar', 'windowString'],
+        },
+        {
+          stepNumber: 9,
+          operation: 'shrink_window',
+          description: 'Move left pointer past previous duplicate to index 3 (2 + 1). Window shrinks to "kew".',
+          state: {
+            s: 'pwwkew',
+            left: 3,
+            right: 5,
+            currentChar: 'w',
+            windowString: 'kew',
+            charMap: { p: 0, w: 5, k: 3, e: 4 },
+            maxLength: 3,
+            result: null,
+          },
+          highlights: { left: 3, right: 5, windowRange: [3, 5], activeCharIndex: 5 },
+          changed: ['left', 'windowString', 'charMap'],
+        },
+        {
+          stepNumber: 10,
+          operation: 'complete',
+          description: 'End of string reached. Final maximum substring length without repeating characters is 3.',
+          state: {
+            s: 'pwwkew',
+            left: 3,
+            right: 5,
+            currentChar: null,
+            windowString: 'kew',
+            charMap: { p: 0, w: 5, k: 3, e: 4 },
+            maxLength: 3,
+            result: 3,
+          },
+          highlights: { left: 3, right: 5, windowRange: [3, 5] },
+          changed: ['result'],
+        },
+      ],
+      finalState: {
+        s: 'pwwkew',
+        left: 3,
+        right: 5,
+        currentChar: null,
+        windowString: 'kew',
+        charMap: { p: 0, w: 5, k: 3, e: 4 },
+        maxLength: 3,
+        result: 3,
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 3. VALID SUDOKU
+  // ------------------------------------------------------------
+  {
+    problemId: 'valid-sudoku',
+    title: 'Valid Sudoku',
+    category: 'Matrix',
+    difficulty: 'Medium',
+    approachId: 'hashSet',
+    approachName: 'Hash Set',
+    visualizationType: VISUALIZATION_TYPES.MATRIX_HASHSET,
+    input: {
+      board: [
+        ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+        ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+        ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+        ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+        ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+        ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+        ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+        ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+        ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+      ],
+    },
+    expectedOutput: false,
+    visualizationData: {
+      initialState: {
+        board: [
+          ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+          ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+          ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+          ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+          ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+          ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+          ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+          ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+          ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+        ],
+        currentRow: null,
+        currentCol: null,
+        currentValue: null,
+        rowKey: null,
+        colKey: null,
+        boxKey: null,
+        seen: [],
+        isValid: true,
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initialize an empty HashSet to record seen row, column, and 3x3 box value entries.',
+          state: {
+            board: [
+              ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+              ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+              ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+              ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+              ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+              ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+              ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+              ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+              ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+            ],
+            currentRow: null,
+            currentCol: null,
+            currentValue: null,
+            rowKey: null,
+            colKey: null,
+            boxKey: null,
+            seen: [],
+            isValid: true,
+            result: null,
+          },
+          highlights: { cells: [] },
+          changed: ['seen'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'inspect_cell',
+          description: 'Inspect cell [0, 0] = "5". Record keys: "r0-5", "c0-5", "b0,0-5".',
+          state: {
+            board: [
+              ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+              ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+              ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+              ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+              ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+              ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+              ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+              ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+              ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+            ],
+            currentRow: 0,
+            currentCol: 0,
+            currentValue: '5',
+            rowKey: 'r0-5',
+            colKey: 'c0-5',
+            boxKey: 'b0,0-5',
+            seen: ['r0-5', 'c0-5', 'b0,0-5'],
+            isValid: true,
+            result: null,
+          },
+          highlights: { cells: [[0, 0]] },
+          changed: ['currentRow', 'currentCol', 'currentValue', 'rowKey', 'colKey', 'boxKey', 'seen'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'inspect_cell',
+          description: 'Inspect cell [0, 1] = "3". Record keys: "r0-3", "c1-3", "b0,0-3".',
+          state: {
+            board: [
+              ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+              ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+              ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+              ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+              ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+              ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+              ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+              ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+              ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+            ],
+            currentRow: 0,
+            currentCol: 1,
+            currentValue: '3',
+            rowKey: 'r0-3',
+            colKey: 'c1-3',
+            boxKey: 'b0,0-3',
+            seen: ['r0-5', 'c0-5', 'b0,0-5', 'r0-3', 'c1-3', 'b0,0-3'],
+            isValid: true,
+            result: null,
+          },
+          highlights: { cells: [[0, 1]] },
+          changed: ['currentRow', 'currentCol', 'currentValue', 'rowKey', 'colKey', 'boxKey', 'seen'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'inspect_cell',
+          description: 'Inspect cell [0, 4] = "7". Record keys: "r0-7", "c4-7", "b0,1-7".',
+          state: {
+            board: [
+              ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+              ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+              ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+              ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+              ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+              ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+              ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+              ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+              ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+            ],
+            currentRow: 0,
+            currentCol: 4,
+            currentValue: '7',
+            rowKey: 'r0-7',
+            colKey: 'c4-7',
+            boxKey: 'b0,1-7',
+            seen: ['r0-5', 'c0-5', 'b0,0-5', 'r0-3', 'c1-3', 'b0,0-3', 'r0-7', 'c4-7', 'b0,1-7'],
+            isValid: true,
+            result: null,
+          },
+          highlights: { cells: [[0, 4]] },
+          changed: ['currentRow', 'currentCol', 'currentValue', 'rowKey', 'colKey', 'boxKey', 'seen'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'inspect_cell',
+          description: 'Inspect cell [0, 8] = "5". Key "r0-5" already exists in HashSet!',
+          state: {
+            board: [
+              ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+              ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+              ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+              ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+              ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+              ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+              ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+              ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+              ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+            ],
+            currentRow: 0,
+            currentCol: 8,
+            currentValue: '5',
+            rowKey: 'r0-5',
+            colKey: 'c8-5',
+            boxKey: 'b0,2-5',
+            seen: ['r0-5', 'c0-5', 'b0,0-5', 'r0-3', 'c1-3', 'b0,0-3', 'r0-7', 'c4-7', 'b0,1-7'],
+            isValid: true,
+            result: null,
+          },
+          highlights: { cells: [[0, 8]], duplicateCell: [0, 0] },
+          changed: ['currentRow', 'currentCol', 'currentValue', 'rowKey', 'colKey', 'boxKey'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'duplicate_detected',
+          description: 'Duplicate value "5" found in row 0 at col 8. Board is invalid. Return false.',
+          state: {
+            board: [
+              ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+              ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+              ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+              ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+              ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+              ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+              ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+              ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+              ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+            ],
+            currentRow: 0,
+            currentCol: 8,
+            currentValue: '5',
+            rowKey: 'r0-5',
+            colKey: 'c8-5',
+            boxKey: 'b0,2-5',
+            seen: ['r0-5', 'c0-5', 'b0,0-5', 'r0-3', 'c1-3', 'b0,0-3', 'r0-7', 'c4-7', 'b0,1-7'],
+            isValid: false,
+            result: false,
+          },
+          highlights: { cells: [[0, 8]], conflictCells: [[0, 0], [0, 8]] },
+          changed: ['isValid', 'result'],
+        },
+      ],
+      finalState: {
+        board: [
+          ['5', '3', '.', '.', '7', '.', '.', '.', '5'],
+          ['6', '.', '.', '1', '9', '5', '.', '.', '.'],
+          ['.', '9', '8', '.', '.', '.', '.', '6', '.'],
+          ['8', '.', '.', '.', '6', '.', '.', '.', '3'],
+          ['4', '.', '.', '8', '.', '3', '.', '.', '1'],
+          ['7', '.', '.', '.', '2', '.', '.', '.', '6'],
+          ['.', '6', '.', '.', '.', '.', '2', '8', '.'],
+          ['.', '.', '.', '4', '1', '9', '.', '.', '5'],
+          ['.', '.', '.', '.', '8', '.', '.', '7', '9'],
+        ],
+        currentRow: 0,
+        currentCol: 8,
+        currentValue: '5',
+        rowKey: 'r0-5',
+        colKey: 'c8-5',
+        boxKey: 'b0,2-5',
+        seen: ['r0-5', 'c0-5', 'b0,0-5', 'r0-3', 'c1-3', 'b0,0-3', 'r0-7', 'c4-7', 'b0,1-7'],
+        isValid: false,
+        result: false,
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 4. VALID PARENTHESES
+  // ------------------------------------------------------------
+  {
+    problemId: 'valid-parentheses',
+    title: 'Valid Parentheses',
+    category: 'Stack',
+    difficulty: 'Easy',
+    approachId: 'stack',
+    approachName: 'Stack',
+    visualizationType: VISUALIZATION_TYPES.STACK,
+    input: {
+      s: '()[]{}',
+    },
+    expectedOutput: true,
+    visualizationData: {
+      initialState: {
+        s: '()[]{}',
+        currentIndex: null,
+        currentChar: null,
+        stack: [],
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initialize an empty stack for bracket tracking.',
+          state: {
+            s: '()[]{}',
+            currentIndex: null,
+            currentChar: null,
+            stack: [],
+            result: null,
+          },
+          highlights: { index: null, top: null },
+          changed: ['stack'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'push',
+          description: 'Inspect char "(" at index 0. Opening bracket. Push "(" onto stack.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 0,
+            currentChar: '(',
+            stack: ['('],
+            result: null,
+          },
+          highlights: { index: 0, top: '(' },
+          changed: ['currentIndex', 'currentChar', 'stack'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'pop_match',
+          description: 'Inspect char ")" at index 1. Closing bracket matches top "(". Pop from stack.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 1,
+            currentChar: ')',
+            stack: [],
+            result: null,
+          },
+          highlights: { index: 1, top: null },
+          changed: ['currentIndex', 'currentChar', 'stack'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'push',
+          description: 'Inspect char "[" at index 2. Opening bracket. Push "[" onto stack.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 2,
+            currentChar: '[',
+            stack: ['['],
+            result: null,
+          },
+          highlights: { index: 2, top: '[' },
+          changed: ['currentIndex', 'currentChar', 'stack'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'pop_match',
+          description: 'Inspect char "]" at index 3. Closing bracket matches top "[". Pop from stack.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 3,
+            currentChar: ']',
+            stack: [],
+            result: null,
+          },
+          highlights: { index: 3, top: null },
+          changed: ['currentIndex', 'currentChar', 'stack'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'push',
+          description: 'Inspect char "{" at index 4. Opening bracket. Push "{" onto stack.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 4,
+            currentChar: '{',
+            stack: ['{'],
+            result: null,
+          },
+          highlights: { index: 4, top: '{' },
+          changed: ['currentIndex', 'currentChar', 'stack'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'pop_match',
+          description: 'Inspect char "}" at index 5. Closing bracket matches top "{". Pop from stack.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 5,
+            currentChar: '}',
+            stack: [],
+            result: null,
+          },
+          highlights: { index: 5, top: null },
+          changed: ['currentIndex', 'currentChar', 'stack'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'complete',
+          description: 'Processed all brackets. Stack is empty. Return true.',
+          state: {
+            s: '()[]{}',
+            currentIndex: 5,
+            currentChar: null,
+            stack: [],
+            result: true,
+          },
+          highlights: { index: 5, top: null },
+          changed: ['result'],
+        },
+      ],
+      finalState: {
+        s: '()[]{}',
+        currentIndex: 5,
+        currentChar: null,
+        stack: [],
+        result: true,
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 5. NUMBER OF RECENT CALLS
+  // ------------------------------------------------------------
+  {
+    problemId: 'number-of-recent-calls',
+    title: 'Number of Recent Calls',
+    category: 'Queue',
+    difficulty: 'Easy',
+    approachId: 'queue',
+    approachName: 'Queue',
+    visualizationType: VISUALIZATION_TYPES.QUEUE,
+    input: {
+      pings: [1, 100, 3001, 3002],
+    },
+    expectedOutput: [1, 2, 3, 3],
+    visualizationData: {
+      initialState: {
+        pings: [1, 100, 3001, 3002],
+        currentPing: null,
+        timeWindow: null,
+        queue: [],
+        outputs: [],
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initialize an empty Queue to store timestamps within 3000ms window.',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: null,
+            timeWindow: null,
+            queue: [],
+            outputs: [],
+            result: null,
+          },
+          highlights: { front: null, rear: null },
+          changed: ['queue'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'ping',
+          description: 'ping(1): Window is [-2999, 1]. Enqueue 1. Queue = [1]. Return queue size 1.',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: 1,
+            timeWindow: [-2999, 1],
+            queue: [1],
+            outputs: [1],
+            result: null,
+          },
+          highlights: { front: 1, rear: 1 },
+          changed: ['currentPing', 'timeWindow', 'queue', 'outputs'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'ping',
+          description: 'ping(100): Window is [-2900, 100]. Enqueue 100. Queue = [1, 100]. Return queue size 2.',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: 100,
+            timeWindow: [-2900, 100],
+            queue: [1, 100],
+            outputs: [1, 2],
+            result: null,
+          },
+          highlights: { front: 1, rear: 100 },
+          changed: ['currentPing', 'timeWindow', 'queue', 'outputs'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'ping',
+          description: 'ping(3001): Window is [1, 3001]. Enqueue 3001. Queue = [1, 100, 3001]. Return queue size 3.',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: 3001,
+            timeWindow: [1, 3001],
+            queue: [1, 100, 3001],
+            outputs: [1, 2, 3],
+            result: null,
+          },
+          highlights: { front: 1, rear: 3001 },
+          changed: ['currentPing', 'timeWindow', 'queue', 'outputs'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'ping',
+          description: 'ping(3002): Window is [2, 3002]. Enqueue 3002. Queue = [1, 100, 3001, 3002]. Front element 1 < 2 (expired).',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: 3002,
+            timeWindow: [2, 3002],
+            queue: [1, 100, 3001, 3002],
+            outputs: [1, 2, 3],
+            result: null,
+          },
+          highlights: { front: 1, rear: 3002, expired: 1 },
+          changed: ['currentPing', 'timeWindow', 'queue'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'dequeue_expired',
+          description: 'Dequeue expired timestamp 1. Queue becomes [100, 3001, 3002]. Front 100 >= 2 is valid. Return size 3.',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: 3002,
+            timeWindow: [2, 3002],
+            queue: [100, 3001, 3002],
+            outputs: [1, 2, 3, 3],
+            result: null,
+          },
+          highlights: { front: 100, rear: 3002 },
+          changed: ['queue', 'outputs'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'complete',
+          description: 'All ping requests processed. Final outputs array: [1, 2, 3, 3].',
+          state: {
+            pings: [1, 100, 3001, 3002],
+            currentPing: null,
+            timeWindow: [2, 3002],
+            queue: [100, 3001, 3002],
+            outputs: [1, 2, 3, 3],
+            result: [1, 2, 3, 3],
+          },
+          highlights: { front: 100, rear: 3002 },
+          changed: ['result'],
+        },
+      ],
+      finalState: {
+        pings: [1, 100, 3001, 3002],
+        currentPing: null,
+        timeWindow: [2, 3002],
+        queue: [100, 3001, 3002],
+        outputs: [1, 2, 3, 3],
+        result: [1, 2, 3, 3],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 6. ROTATE IMAGE
+  // ------------------------------------------------------------
+  {
+    problemId: 'rotate-image',
+    title: 'Rotate Image',
+    category: 'Matrix',
+    difficulty: 'Medium',
+    approachId: 'transposeReverse',
+    approachName: 'Transpose + Reverse',
+    visualizationType: VISUALIZATION_TYPES.MATRIX,
+    input: {
+      matrix: [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ],
+    },
+    expectedOutput: [
+      [7, 4, 1],
+      [8, 5, 2],
+      [9, 6, 3],
+    ],
+    visualizationData: {
+      initialState: {
+        matrix: [
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9],
+        ],
+        phase: 'initial',
+        currentOperation: null,
+        swappedCells: null,
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initial 3x3 matrix before transformation.',
+          state: {
+            matrix: [
+              [1, 2, 3],
+              [4, 5, 6],
+              [7, 8, 9],
+            ],
+            phase: 'initial',
+            currentOperation: null,
+            swappedCells: null,
+            result: null,
+          },
+          highlights: { cells: [] },
+          changed: [],
+        },
+        {
+          stepNumber: 2,
+          operation: 'transpose_swap',
+          description: 'Transpose phase: Swap cell [0,1] (2) with cell [1,0] (4).',
+          state: {
+            matrix: [
+              [1, 4, 3],
+              [2, 5, 6],
+              [7, 8, 9],
+            ],
+            phase: 'transpose',
+            currentOperation: 'swap([0,1], [1,0])',
+            swappedCells: [[0, 1], [1, 0]],
+            result: null,
+          },
+          highlights: { cells: [[0, 1], [1, 0]] },
+          changed: ['matrix', 'phase', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'transpose_swap',
+          description: 'Transpose phase: Swap cell [0,2] (3) with cell [2,0] (7).',
+          state: {
+            matrix: [
+              [1, 4, 7],
+              [2, 5, 6],
+              [3, 8, 9],
+            ],
+            phase: 'transpose',
+            currentOperation: 'swap([0,2], [2,0])',
+            swappedCells: [[0, 2], [2, 0]],
+            result: null,
+          },
+          highlights: { cells: [[0, 2], [2, 0]] },
+          changed: ['matrix', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'transpose_swap',
+          description: 'Transpose phase: Swap cell [1,2] (6) with cell [2,1] (8).',
+          state: {
+            matrix: [
+              [1, 4, 7],
+              [2, 5, 8],
+              [3, 6, 9],
+            ],
+            phase: 'transpose',
+            currentOperation: 'swap([1,2], [2,1])',
+            swappedCells: [[1, 2], [2, 1]],
+            result: null,
+          },
+          highlights: { cells: [[1, 2], [2, 1]] },
+          changed: ['matrix', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'transpose_complete',
+          description: 'Transpose complete. Matrix is now transposed.',
+          state: {
+            matrix: [
+              [1, 4, 7],
+              [2, 5, 8],
+              [3, 6, 9],
+            ],
+            phase: 'transposed',
+            currentOperation: null,
+            swappedCells: null,
+            result: null,
+          },
+          highlights: { cells: [] },
+          changed: ['phase', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'reverse_row',
+          description: 'Reverse phase: Reverse row 0 [1, 4, 7] -> [7, 4, 1].',
+          state: {
+            matrix: [
+              [7, 4, 1],
+              [2, 5, 8],
+              [3, 6, 9],
+            ],
+            phase: 'reverse',
+            currentOperation: 'reverse(row 0)',
+            swappedCells: [[0, 0], [0, 2]],
+            result: null,
+          },
+          highlights: { cells: [[0, 0], [0, 1], [0, 2]] },
+          changed: ['matrix', 'phase', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'reverse_row',
+          description: 'Reverse phase: Reverse row 1 [2, 5, 8] -> [8, 5, 2].',
+          state: {
+            matrix: [
+              [7, 4, 1],
+              [8, 5, 2],
+              [3, 6, 9],
+            ],
+            phase: 'reverse',
+            currentOperation: 'reverse(row 1)',
+            swappedCells: [[1, 0], [1, 2]],
+            result: null,
+          },
+          highlights: { cells: [[1, 0], [1, 1], [1, 2]] },
+          changed: ['matrix', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'reverse_row',
+          description: 'Reverse phase: Reverse row 2 [3, 6, 9] -> [9, 6, 3].',
+          state: {
+            matrix: [
+              [7, 4, 1],
+              [8, 5, 2],
+              [9, 6, 3],
+            ],
+            phase: 'reverse',
+            currentOperation: 'reverse(row 2)',
+            swappedCells: [[2, 0], [2, 2]],
+            result: null,
+          },
+          highlights: { cells: [[2, 0], [2, 1], [2, 2]] },
+          changed: ['matrix', 'currentOperation', 'swappedCells'],
+        },
+        {
+          stepNumber: 9,
+          operation: 'complete',
+          description: '90-degree clockwise rotation complete.',
+          state: {
+            matrix: [
+              [7, 4, 1],
+              [8, 5, 2],
+              [9, 6, 3],
+            ],
+            phase: 'complete',
+            currentOperation: null,
+            swappedCells: null,
+            result: [
+              [7, 4, 1],
+              [8, 5, 2],
+              [9, 6, 3],
+            ],
+          },
+          highlights: { cells: [] },
+          changed: ['phase', 'currentOperation', 'swappedCells', 'result'],
+        },
+      ],
+      finalState: {
+        matrix: [
+          [7, 4, 1],
+          [8, 5, 2],
+          [9, 6, 3],
+        ],
+        phase: 'complete',
+        currentOperation: null,
+        swappedCells: null,
+        result: [
+          [7, 4, 1],
+          [8, 5, 2],
+          [9, 6, 3],
+        ],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 7. REVERSE LINKED LIST
+  // ------------------------------------------------------------
+  {
+    problemId: 'reverse-linked-list',
+    title: 'Reverse Linked List',
+    category: 'Linked List',
+    difficulty: 'Easy',
+    approachId: 'pointerManipulation',
+    approachName: 'Pointer Manipulation',
+    visualizationType: VISUALIZATION_TYPES.LINKED_LIST,
+    input: {
+      head: [1, 2, 3, 4],
+    },
+    expectedOutput: [4, 3, 2, 1],
+    visualizationData: {
+      initialState: {
+        nodes: [
+          { id: 1, val: 1, nextId: 2 },
+          { id: 2, val: 2, nextId: 3 },
+          { id: 3, val: 3, nextId: 4 },
+          { id: 4, val: 4, nextId: null },
+        ],
+        prev: null,
+        curr: 1,
+        next: null,
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initialize prev = null, curr = node(1). List: 1 -> 2 -> 3 -> 4 -> null.',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: 2 },
+              { id: 2, val: 2, nextId: 3 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: null,
+            curr: 1,
+            next: null,
+            result: null,
+          },
+          highlights: { prev: null, curr: 1, next: null },
+          changed: ['prev', 'curr'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'save_next',
+          description: 'Save next node: next = curr.next (node 2).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: 2 },
+              { id: 2, val: 2, nextId: 3 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: null,
+            curr: 1,
+            next: 2,
+            result: null,
+          },
+          highlights: { prev: null, curr: 1, next: 2 },
+          changed: ['next'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'reverse_pointer',
+          description: 'Reverse pointer: node(1).next = prev (null).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 3 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: null,
+            curr: 1,
+            next: 2,
+            result: null,
+          },
+          highlights: { prev: null, curr: 1, next: 2, reversedEdge: [1, null] },
+          changed: ['nodes'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'advance_pointers',
+          description: 'Advance pointers: prev = node(1), curr = node(2).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 3 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 1,
+            curr: 2,
+            next: 2,
+            result: null,
+          },
+          highlights: { prev: 1, curr: 2, next: 2 },
+          changed: ['prev', 'curr'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'save_next',
+          description: 'Save next node: next = curr.next (node 3).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 3 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 1,
+            curr: 2,
+            next: 3,
+            result: null,
+          },
+          highlights: { prev: 1, curr: 2, next: 3 },
+          changed: ['next'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'reverse_pointer',
+          description: 'Reverse pointer: node(2).next = prev (node 1).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 1,
+            curr: 2,
+            next: 3,
+            result: null,
+          },
+          highlights: { prev: 1, curr: 2, next: 3, reversedEdge: [2, 1] },
+          changed: ['nodes'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'advance_pointers',
+          description: 'Advance pointers: prev = node(2), curr = node(3).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 2,
+            curr: 3,
+            next: 3,
+            result: null,
+          },
+          highlights: { prev: 2, curr: 3, next: 3 },
+          changed: ['prev', 'curr'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'save_next',
+          description: 'Save next node: next = curr.next (node 4).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 4 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 2,
+            curr: 3,
+            next: 4,
+            result: null,
+          },
+          highlights: { prev: 2, curr: 3, next: 4 },
+          changed: ['next'],
+        },
+        {
+          stepNumber: 9,
+          operation: 'reverse_pointer',
+          description: 'Reverse pointer: node(3).next = prev (node 2).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 2 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 2,
+            curr: 3,
+            next: 4,
+            result: null,
+          },
+          highlights: { prev: 2, curr: 3, next: 4, reversedEdge: [3, 2] },
+          changed: ['nodes'],
+        },
+        {
+          stepNumber: 10,
+          operation: 'advance_pointers',
+          description: 'Advance pointers: prev = node(3), curr = node(4).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 2 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 3,
+            curr: 4,
+            next: 4,
+            result: null,
+          },
+          highlights: { prev: 3, curr: 4, next: 4 },
+          changed: ['prev', 'curr'],
+        },
+        {
+          stepNumber: 11,
+          operation: 'save_next',
+          description: 'Save next node: next = curr.next (null).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 2 },
+              { id: 4, val: 4, nextId: null },
+            ],
+            prev: 3,
+            curr: 4,
+            next: null,
+            result: null,
+          },
+          highlights: { prev: 3, curr: 4, next: null },
+          changed: ['next'],
+        },
+        {
+          stepNumber: 12,
+          operation: 'reverse_pointer',
+          description: 'Reverse pointer: node(4).next = prev (node 3).',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 2 },
+              { id: 4, val: 4, nextId: 3 },
+            ],
+            prev: 3,
+            curr: 4,
+            next: null,
+            result: null,
+          },
+          highlights: { prev: 3, curr: 4, next: null, reversedEdge: [4, 3] },
+          changed: ['nodes'],
+        },
+        {
+          stepNumber: 13,
+          operation: 'advance_pointers',
+          description: 'Advance pointers: prev = node(4), curr = null.',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 2 },
+              { id: 4, val: 4, nextId: 3 },
+            ],
+            prev: 4,
+            curr: null,
+            next: null,
+            result: null,
+          },
+          highlights: { prev: 4, curr: null, next: null },
+          changed: ['prev', 'curr'],
+        },
+        {
+          stepNumber: 14,
+          operation: 'complete',
+          description: 'curr is null. Reversal complete. New head is node(4). List: 4 -> 3 -> 2 -> 1 -> null.',
+          state: {
+            nodes: [
+              { id: 1, val: 1, nextId: null },
+              { id: 2, val: 2, nextId: 1 },
+              { id: 3, val: 3, nextId: 2 },
+              { id: 4, val: 4, nextId: 3 },
+            ],
+            prev: 4,
+            curr: null,
+            next: null,
+            result: [4, 3, 2, 1],
+          },
+          highlights: { head: 4 },
+          changed: ['result'],
+        },
+      ],
+      finalState: {
+        nodes: [
+          { id: 1, val: 1, nextId: null },
+          { id: 2, val: 2, nextId: 1 },
+          { id: 3, val: 3, nextId: 2 },
+          { id: 4, val: 4, nextId: 3 },
+        ],
+        prev: 4,
+        curr: null,
+        next: null,
+        result: [4, 3, 2, 1],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 8. BINARY TREE INORDER TRAVERSAL
+  // ------------------------------------------------------------
+  {
+    problemId: 'binary-tree-inorder',
+    title: 'Binary Tree Inorder Traversal',
+    category: 'Binary Tree',
+    difficulty: 'Easy',
+    approachId: 'dfsInorder',
+    approachName: 'DFS',
+    visualizationType: VISUALIZATION_TYPES.BINARY_TREE,
+    input: {
+      root: {
+        val: 4,
+        left: {
+          val: 2,
+          left: { val: 1, left: null, right: null },
+          right: { val: 3, left: null, right: null },
+        },
+        right: {
+          val: 6,
+          left: { val: 5, left: null, right: null },
+          right: { val: 7, left: null, right: null },
+        },
+      },
+    },
+    expectedOutput: [1, 2, 3, 4, 5, 6, 7],
+    visualizationData: {
+      initialState: {
+        currentNode: null,
+        stack: [],
+        visited: [],
+        result: [],
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Start Inorder Traversal (Left -> Root -> Right) at root node 4.',
+          state: {
+            currentNode: 4,
+            stack: [],
+            visited: [],
+            result: [],
+          },
+          highlights: { currentNode: 4, stackNodes: [] },
+          changed: ['currentNode'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'push_and_left',
+          description: 'Push node 4 onto stack, move left to node 2.',
+          state: {
+            currentNode: 2,
+            stack: [4],
+            visited: [],
+            result: [],
+          },
+          highlights: { currentNode: 2, stackNodes: [4] },
+          changed: ['currentNode', 'stack'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'push_and_left',
+          description: 'Push node 2 onto stack, move left to node 1.',
+          state: {
+            currentNode: 1,
+            stack: [4, 2],
+            visited: [],
+            result: [],
+          },
+          highlights: { currentNode: 1, stackNodes: [4, 2] },
+          changed: ['currentNode', 'stack'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'visit_node',
+          description: 'Node 1 has no left child. Visit node 1 and add to traversal output [1].',
+          state: {
+            currentNode: null,
+            stack: [4, 2],
+            visited: [1],
+            result: [1],
+          },
+          highlights: { currentNode: 1, visitedNodes: [1] },
+          changed: ['currentNode', 'visited', 'result'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'pop_and_visit',
+          description: 'Pop node 2 from stack, visit node 2. Traversal output: [1, 2]. Move to right child (node 3).',
+          state: {
+            currentNode: 3,
+            stack: [4],
+            visited: [1, 2],
+            result: [1, 2],
+          },
+          highlights: { currentNode: 3, visitedNodes: [1, 2] },
+          changed: ['currentNode', 'stack', 'visited', 'result'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'visit_node',
+          description: 'Node 3 has no left child. Visit node 3. Traversal output: [1, 2, 3]. Move to right child (null).',
+          state: {
+            currentNode: null,
+            stack: [4],
+            visited: [1, 2, 3],
+            result: [1, 2, 3],
+          },
+          highlights: { currentNode: 3, visitedNodes: [1, 2, 3] },
+          changed: ['currentNode', 'visited', 'result'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'pop_and_visit',
+          description: 'Pop node 4 from stack, visit node 4. Traversal output: [1, 2, 3, 4]. Move to right child (node 6).',
+          state: {
+            currentNode: 6,
+            stack: [],
+            visited: [1, 2, 3, 4],
+            result: [1, 2, 3, 4],
+          },
+          highlights: { currentNode: 6, visitedNodes: [1, 2, 3, 4] },
+          changed: ['currentNode', 'stack', 'visited', 'result'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'push_and_left',
+          description: 'Push node 6 onto stack, move left to node 5.',
+          state: {
+            currentNode: 5,
+            stack: [6],
+            visited: [1, 2, 3, 4],
+            result: [1, 2, 3, 4],
+          },
+          highlights: { currentNode: 5, stackNodes: [6] },
+          changed: ['currentNode', 'stack'],
+        },
+        {
+          stepNumber: 9,
+          operation: 'visit_node',
+          description: 'Node 5 has no left child. Visit node 5. Traversal output: [1, 2, 3, 4, 5]. Move to right child (null).',
+          state: {
+            currentNode: null,
+            stack: [6],
+            visited: [1, 2, 3, 4, 5],
+            result: [1, 2, 3, 4, 5],
+          },
+          highlights: { currentNode: 5, visitedNodes: [1, 2, 3, 4, 5] },
+          changed: ['currentNode', 'visited', 'result'],
+        },
+        {
+          stepNumber: 10,
+          operation: 'pop_and_visit',
+          description: 'Pop node 6 from stack, visit node 6. Traversal output: [1, 2, 3, 4, 5, 6]. Move to right child (node 7).',
+          state: {
+            currentNode: 7,
+            stack: [],
+            visited: [1, 2, 3, 4, 5, 6],
+            result: [1, 2, 3, 4, 5, 6],
+          },
+          highlights: { currentNode: 7, visitedNodes: [1, 2, 3, 4, 5, 6] },
+          changed: ['currentNode', 'stack', 'visited', 'result'],
+        },
+        {
+          stepNumber: 11,
+          operation: 'visit_node',
+          description: 'Node 7 has no left child. Visit node 7. Traversal output: [1, 2, 3, 4, 5, 6, 7].',
+          state: {
+            currentNode: null,
+            stack: [],
+            visited: [1, 2, 3, 4, 5, 6, 7],
+            result: [1, 2, 3, 4, 5, 6, 7],
+          },
+          highlights: { currentNode: 7, visitedNodes: [1, 2, 3, 4, 5, 6, 7] },
+          changed: ['currentNode', 'visited', 'result'],
+        },
+        {
+          stepNumber: 12,
+          operation: 'complete',
+          description: 'Stack empty and all nodes visited. Final Inorder Traversal result: [1, 2, 3, 4, 5, 6, 7].',
+          state: {
+            currentNode: null,
+            stack: [],
+            visited: [1, 2, 3, 4, 5, 6, 7],
+            result: [1, 2, 3, 4, 5, 6, 7],
+          },
+          highlights: { visitedNodes: [1, 2, 3, 4, 5, 6, 7] },
+          changed: [],
+        },
+      ],
+      finalState: {
+        currentNode: null,
+        stack: [],
+        visited: [1, 2, 3, 4, 5, 6, 7],
+        result: [1, 2, 3, 4, 5, 6, 7],
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 9. NUMBER OF ISLANDS
+  // ------------------------------------------------------------
+  {
+    problemId: 'number-of-islands',
+    title: 'Number of Islands',
+    category: 'Graph/Grid',
+    difficulty: 'Medium',
+    approachId: 'dfsGrid',
+    approachName: 'DFS',
+    visualizationType: VISUALIZATION_TYPES.GRID,
+    input: {
+      grid: [
+        ['1', '1', '0', '0'],
+        ['1', '0', '0', '1'],
+        ['0', '0', '1', '0'],
+        ['0', '0', '0', '0'],
+      ],
+    },
+    expectedOutput: 3,
+    visualizationData: {
+      initialState: {
+        grid: [
+          ['1', '1', '0', '0'],
+          ['1', '0', '0', '1'],
+          ['0', '0', '1', '0'],
+          ['0', '0', '0', '0'],
+        ],
+        currentCell: null,
+        visitedCells: [],
+        islandCount: 0,
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Start scanning 4x4 grid row by row from cell [0,0]. Island count = 0.',
+          state: {
+            grid: [
+              ['1', '1', '0', '0'],
+              ['1', '0', '0', '1'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: null,
+            visitedCells: [],
+            islandCount: 0,
+            result: null,
+          },
+          highlights: { currentCell: null, visited: [] },
+          changed: ['islandCount'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'discover_island',
+          description: 'Scan cell [0,0] = "1". New land discovered! Increment islandCount to 1.',
+          state: {
+            grid: [
+              ['1', '1', '0', '0'],
+              ['1', '0', '0', '1'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [0, 0],
+            visitedCells: [[0, 0]],
+            islandCount: 1,
+            result: null,
+          },
+          highlights: { currentCell: [0, 0], islandId: 1 },
+          changed: ['currentCell', 'visitedCells', 'islandCount'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'dfs_sink',
+          description: 'DFS sink connected land: Visit and sink cell [0,1].',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['1', '0', '0', '1'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [0, 1],
+            visitedCells: [[0, 0], [0, 1]],
+            islandCount: 1,
+            result: null,
+          },
+          highlights: { currentCell: [0, 1], islandId: 1 },
+          changed: ['grid', 'currentCell', 'visitedCells'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'dfs_sink',
+          description: 'DFS sink connected land: Visit and sink cell [1,0]. Island 1 DFS complete.',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '1'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [1, 0],
+            visitedCells: [[0, 0], [0, 1], [1, 0]],
+            islandCount: 1,
+            result: null,
+          },
+          highlights: { currentCell: [1, 0], islandId: 1 },
+          changed: ['grid', 'currentCell', 'visitedCells'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'scan_grid',
+          description: 'Resume grid scan. Cells [0,2], [0,3], [1,1], [1,2] are water "0".',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '1'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [1, 2],
+            visitedCells: [[0, 0], [0, 1], [1, 0]],
+            islandCount: 1,
+            result: null,
+          },
+          highlights: { currentCell: [1, 2] },
+          changed: ['currentCell'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'discover_island',
+          description: 'Scan cell [1,3] = "1". New land discovered! Increment islandCount to 2.',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '1'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [1, 3],
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3]],
+            islandCount: 2,
+            result: null,
+          },
+          highlights: { currentCell: [1, 3], islandId: 2 },
+          changed: ['currentCell', 'visitedCells', 'islandCount'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'dfs_sink',
+          description: 'DFS sink cell [1,3]. No unvisited land neighbors. Island 2 DFS complete.',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [1, 3],
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3]],
+            islandCount: 2,
+            result: null,
+          },
+          highlights: { currentCell: [1, 3], islandId: 2 },
+          changed: ['grid'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'scan_grid',
+          description: 'Resume grid scan. Cells [2,0], [2,1] are water "0".',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [2, 1],
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3]],
+            islandCount: 2,
+            result: null,
+          },
+          highlights: { currentCell: [2, 1] },
+          changed: ['currentCell'],
+        },
+        {
+          stepNumber: 9,
+          operation: 'discover_island',
+          description: 'Scan cell [2,2] = "1". New land discovered! Increment islandCount to 3.',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '1', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [2, 2],
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3], [2, 2]],
+            islandCount: 3,
+            result: null,
+          },
+          highlights: { currentCell: [2, 2], islandId: 3 },
+          changed: ['currentCell', 'visitedCells', 'islandCount'],
+        },
+        {
+          stepNumber: 10,
+          operation: 'dfs_sink',
+          description: 'DFS sink cell [2,2]. No unvisited land neighbors. Island 3 DFS complete.',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [2, 2],
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3], [2, 2]],
+            islandCount: 3,
+            result: null,
+          },
+          highlights: { currentCell: [2, 2], islandId: 3 },
+          changed: ['grid'],
+        },
+        {
+          stepNumber: 11,
+          operation: 'scan_grid',
+          description: 'Finish scanning remaining grid cells [2,3] through [3,3].',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: [3, 3],
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3], [2, 2]],
+            islandCount: 3,
+            result: null,
+          },
+          highlights: { currentCell: [3, 3] },
+          changed: ['currentCell'],
+        },
+        {
+          stepNumber: 12,
+          operation: 'complete',
+          description: 'Finished scanning entire grid. Total islands found: 3.',
+          state: {
+            grid: [
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+              ['0', '0', '0', '0'],
+            ],
+            currentCell: null,
+            visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3], [2, 2]],
+            islandCount: 3,
+            result: 3,
+          },
+          highlights: { totalIslands: 3 },
+          changed: ['currentCell', 'result'],
+        },
+      ],
+      finalState: {
+        grid: [
+          ['0', '0', '0', '0'],
+          ['0', '0', '0', '0'],
+          ['0', '0', '0', '0'],
+          ['0', '0', '0', '0'],
+        ],
+        currentCell: null,
+        visitedCells: [[0, 0], [0, 1], [1, 0], [1, 3], [2, 2]],
+        islandCount: 3,
+        result: 3,
+      },
+    },
+  },
+
+  // ------------------------------------------------------------
+  // 10. KTH LARGEST ELEMENT IN AN ARRAY
+  // ------------------------------------------------------------
+  {
+    problemId: 'kth-largest-element',
+    title: 'Kth Largest Element in an Array',
+    category: 'Heap',
+    difficulty: 'Medium',
+    approachId: 'priorityQueue',
+    approachName: 'Priority Queue',
+    visualizationType: VISUALIZATION_TYPES.HEAP,
+    input: {
+      nums: [3, 2, 1, 5, 6, 4],
+      k: 2,
+    },
+    expectedOutput: 5,
+    visualizationData: {
+      initialState: {
+        nums: [3, 2, 1, 5, 6, 4],
+        k: 2,
+        currentIndex: null,
+        currentVal: null,
+        minHeap: [],
+        poppedVal: null,
+        result: null,
+      },
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'initialize',
+          description: 'Initialize an empty Min-Heap of max size k = 2.',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: null,
+            currentVal: null,
+            minHeap: [],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: null, heap: [] },
+          changed: ['minHeap'],
+        },
+        {
+          stepNumber: 2,
+          operation: 'insert_heap',
+          description: 'Inspect element 3 at index 0. Insert 3 into Min-Heap. Heap = [3] (size 1 <= 2).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 0,
+            currentVal: 3,
+            minHeap: [3],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: 0, heap: [3], top: 3 },
+          changed: ['currentIndex', 'currentVal', 'minHeap'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'insert_heap',
+          description: 'Inspect element 2 at index 1. Insert 2 into Min-Heap. Heap = [2, 3] (size 2 <= 2).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 1,
+            currentVal: 2,
+            minHeap: [2, 3],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: 1, heap: [2, 3], top: 2 },
+          changed: ['currentIndex', 'currentVal', 'minHeap'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'insert_heap',
+          description: 'Inspect element 1 at index 2. Insert 1 into Min-Heap. Heap = [1, 3, 2] (size 3 > 2).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 2,
+            currentVal: 1,
+            minHeap: [1, 3, 2],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: 2, heap: [1, 3, 2], top: 1 },
+          changed: ['currentIndex', 'currentVal', 'minHeap'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'pop_min',
+          description: 'Heap size (3) > k (2). Pop root minimum element 1. Heap becomes [2, 3].',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 2,
+            currentVal: 1,
+            minHeap: [2, 3],
+            poppedVal: 1,
+            result: null,
+          },
+          highlights: { index: 2, heap: [2, 3], popped: 1, top: 2 },
+          changed: ['minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'insert_heap',
+          description: 'Inspect element 5 at index 3. Insert 5 into Min-Heap. Heap = [2, 3, 5] (size 3 > 2).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 3,
+            currentVal: 5,
+            minHeap: [2, 3, 5],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: 3, heap: [2, 3, 5], top: 2 },
+          changed: ['currentIndex', 'currentVal', 'minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 7,
+          operation: 'pop_min',
+          description: 'Heap size (3) > k (2). Pop root minimum element 2. Heap becomes [3, 5].',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 3,
+            currentVal: 5,
+            minHeap: [3, 5],
+            poppedVal: 2,
+            result: null,
+          },
+          highlights: { index: 3, heap: [3, 5], popped: 2, top: 3 },
+          changed: ['minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 8,
+          operation: 'insert_heap',
+          description: 'Inspect element 6 at index 4. Insert 6 into Min-Heap. Heap = [3, 5, 6] (size 3 > 2).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 4,
+            currentVal: 6,
+            minHeap: [3, 5, 6],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: 4, heap: [3, 5, 6], top: 3 },
+          changed: ['currentIndex', 'currentVal', 'minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 9,
+          operation: 'pop_min',
+          description: 'Heap size (3) > k (2). Pop root minimum element 3. Heap becomes [5, 6].',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 4,
+            currentVal: 6,
+            minHeap: [5, 6],
+            poppedVal: 3,
+            result: null,
+          },
+          highlights: { index: 4, heap: [5, 6], popped: 3, top: 5 },
+          changed: ['minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 10,
+          operation: 'insert_heap',
+          description: 'Inspect element 4 at index 5. Insert 4 into Min-Heap. Heap = [4, 6, 5] (size 3 > 2).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 5,
+            currentVal: 4,
+            minHeap: [4, 6, 5],
+            poppedVal: null,
+            result: null,
+          },
+          highlights: { index: 5, heap: [4, 6, 5], top: 4 },
+          changed: ['currentIndex', 'currentVal', 'minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 11,
+          operation: 'pop_min',
+          description: 'Heap size (3) > k (2). Pop root minimum element 4. Heap becomes [5, 6].',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 5,
+            currentVal: 4,
+            minHeap: [5, 6],
+            poppedVal: 4,
+            result: null,
+          },
+          highlights: { index: 5, heap: [5, 6], popped: 4, top: 5 },
+          changed: ['minHeap', 'poppedVal'],
+        },
+        {
+          stepNumber: 12,
+          operation: 'complete',
+          description: 'Array traversal finished. Top element of Min-Heap of size k=2 is 5 (2nd largest element).',
+          state: {
+            nums: [3, 2, 1, 5, 6, 4],
+            k: 2,
+            currentIndex: 5,
+            currentVal: null,
+            minHeap: [5, 6],
+            poppedVal: null,
+            result: 5,
+          },
+          highlights: { top: 5, heap: [5, 6] },
+          changed: ['result'],
+        },
+      ],
+      finalState: {
+        nums: [3, 2, 1, 5, 6, 4],
+        k: 2,
+        currentIndex: 5,
+        currentVal: null,
+        minHeap: [5, 6],
+        poppedVal: null,
+        result: 5,
+      },
+    },
+  },
+];
+
+/**
+ * Standardized Object Dictionary for Stage 09 Mock Visualization Dataset
+ * Maps both camelCase keys (e.g. `mockVisualizations.twoSum`) and kebab-case keys (e.g. `mockVisualizations['two-sum']`).
+ */
+export const mockVisualizations = {
+  twoSum: MOCK_VISUALIZATIONS[0],
+  longestSubstring: MOCK_VISUALIZATIONS[1],
+  validSudoku: MOCK_VISUALIZATIONS[2],
+  validParentheses: MOCK_VISUALIZATIONS[3],
+  numberOfRecentCalls: MOCK_VISUALIZATIONS[4],
+  rotateImage: MOCK_VISUALIZATIONS[5],
+  reverseLinkedList: MOCK_VISUALIZATIONS[6],
+  binaryTreeInorder: MOCK_VISUALIZATIONS[7],
+  numberOfIslands: MOCK_VISUALIZATIONS[8],
+  kthLargestElement: MOCK_VISUALIZATIONS[9],
+
+  // Direct kebab-case problem ID access
+  'two-sum': MOCK_VISUALIZATIONS[0],
+  'longest-substring-without-repeating-characters': MOCK_VISUALIZATIONS[1],
+  'valid-sudoku': MOCK_VISUALIZATIONS[2],
+  'valid-parentheses': MOCK_VISUALIZATIONS[3],
+  'number-of-recent-calls': MOCK_VISUALIZATIONS[4],
+  'rotate-image': MOCK_VISUALIZATIONS[5],
+  'reverse-linked-list': MOCK_VISUALIZATIONS[6],
+  'binary-tree-inorder': MOCK_VISUALIZATIONS[7],
+  'number-of-islands': MOCK_VISUALIZATIONS[8],
+  'kth-largest-element': MOCK_VISUALIZATIONS[9],
+};
+
+/**
+ * Helper to retrieve mock visualization by problem ID
+ * @param {string} problemId
+ * @returns {object|null}
+ */
+export const getMockVisualizationByProblemId = (problemId) => {
+  if (!problemId) return null;
+  return mockVisualizations[problemId] || MOCK_VISUALIZATIONS.find((p) => p.problemId === problemId) || null;
+};
+
+/**
+ * Utility for deep equality check in development validation
+ */
+const deepEqual = (a, b) => {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (typeof a !== typeof b) return false;
+  if (typeof a !== 'object') return false;
+
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b) || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (!deepEqual(a[i], b[i])) return false;
+    }
+    return true;
+  }
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+  if (keysA.length !== keysB.length) return false;
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(b, key) || !deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+};
+
+/**
+ * Development Validation Utility for Stage 09 Benchmark Mock Visualizations
+ * Verifies contract specifications and cross-checks expected outputs against final state execution results.
+ * @returns {{ valid: boolean, errors: string[] }}
+ */
+export const validateMockVisualizations = () => {
+  const errors = [];
+  const validTypes = new Set(Object.values(VISUALIZATION_TYPES));
+
+  if (!Array.isArray(MOCK_VISUALIZATIONS)) {
+    return { valid: false, errors: ['MOCK_VISUALIZATIONS must be an array'] };
+  }
+
+  if (MOCK_VISUALIZATIONS.length !== 10) {
+    errors.push(`Expected exactly 10 problems, found ${MOCK_VISUALIZATIONS.length}`);
+  }
+
+  const seenIds = new Set();
+
+  MOCK_VISUALIZATIONS.forEach((problem, index) => {
+    const pPrefix = `Problem #${index + 1} (${problem.problemId || 'unknown'})`;
+
+    if (!problem.problemId) {
+      errors.push(`${pPrefix}: Missing problemId`);
+    } else if (seenIds.has(problem.problemId)) {
+      errors.push(`${pPrefix}: Duplicate problemId "${problem.problemId}"`);
+    } else {
+      seenIds.add(problem.problemId);
+    }
+
+    if (!problem.title) errors.push(`${pPrefix}: Missing title`);
+    if (!problem.category) errors.push(`${pPrefix}: Missing category`);
+    if (!problem.difficulty) errors.push(`${pPrefix}: Missing difficulty`);
+    if (!problem.approachId) errors.push(`${pPrefix}: Missing approachId`);
+    if (!problem.approachName) errors.push(`${pPrefix}: Missing approachName`);
+
+    if (!problem.visualizationType) {
+      errors.push(`${pPrefix}: Missing visualizationType`);
+    } else if (!validTypes.has(problem.visualizationType)) {
+      errors.push(`${pPrefix}: Invalid visualizationType "${problem.visualizationType}"`);
+    }
+
+    if (problem.input === undefined) errors.push(`${pPrefix}: Missing input`);
+    if (problem.expectedOutput === undefined) errors.push(`${pPrefix}: Missing expectedOutput`);
+
+    if (!problem.visualizationData) {
+      errors.push(`${pPrefix}: Missing visualizationData`);
+    } else {
+      const { initialState, steps, finalState } = problem.visualizationData;
+
+      if (!initialState || typeof initialState !== 'object') {
+        errors.push(`${pPrefix}: Missing or invalid visualizationData.initialState`);
+      }
+
+      if (!finalState || typeof finalState !== 'object') {
+        errors.push(`${pPrefix}: Missing or invalid visualizationData.finalState`);
+      } else if (finalState.result !== undefined && problem.expectedOutput !== undefined) {
+        if (!deepEqual(finalState.result, problem.expectedOutput)) {
+          errors.push(
+            `${pPrefix}: Cross-check failed. finalState.result (${JSON.stringify(
+              finalState.result
+            )}) does not match expectedOutput (${JSON.stringify(problem.expectedOutput)})`
+          );
+        }
+      }
+
+      if (!Array.isArray(steps) || steps.length === 0) {
+        errors.push(`${pPrefix}: visualizationData.steps must be a non-empty array`);
+      } else {
+        steps.forEach((step, stepIdx) => {
+          const expectedStepNumber = stepIdx + 1;
+          if (step.stepNumber !== expectedStepNumber) {
+            errors.push(`${pPrefix} step [${stepIdx}]: expected stepNumber ${expectedStepNumber}, got ${step.stepNumber}`);
+          }
+          if (!step.operation) {
+            errors.push(`${pPrefix} step ${step.stepNumber}: missing operation`);
+          }
+          if (!step.description) {
+            errors.push(`${pPrefix} step ${step.stepNumber}: missing description`);
+          }
+          if (!step.state || typeof step.state !== 'object') {
+            errors.push(`${pPrefix} step ${step.stepNumber}: missing or invalid state`);
+          }
+          if (!step.highlights || typeof step.highlights !== 'object') {
+            errors.push(`${pPrefix} step ${step.stepNumber}: missing or invalid highlights`);
+          }
+          if (!Array.isArray(step.changed)) {
+            errors.push(`${pPrefix} step ${step.stepNumber}: changed must be an array`);
+          }
+        });
+      }
+    }
+  });
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+};
