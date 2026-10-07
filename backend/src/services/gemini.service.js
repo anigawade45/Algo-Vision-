@@ -1949,7 +1949,7 @@ Analyze the TIME and SPACE complexity of the ALREADY SELECTED solution.
 Do not invent a new solution.
 Do not optimize the solution.
 Do not replace the selected approach.
-Analyze exactly the selected approach, algorithm, pseudocode, and implementation.
+Analyze exactly the selected approach, algorithm, and pseudocode.
 
 PROBLEM:
 ${JSON.stringify(problem, null, 2)}
@@ -1966,9 +1966,6 @@ ${algorithmDoc ? JSON.stringify(algorithmDoc, null, 2) : 'N/A'}
 PSEUDOCODE:
 ${pseudocodeDoc ? JSON.stringify(pseudocodeDoc, null, 2) : 'N/A'}
 
-CODE:
-${codeText ? codeText : 'N/A'}
-
 Your task is to explain the complexity step-by-step in a beginner-friendly educational format.
 
 Generate:
@@ -1981,7 +1978,7 @@ For SPACE, generate exactly 3 steps.
 Every step should contain:
 - title: Short, engaging title describing the step.
 - description: Explanation of what we're looking at.
-- code: Extract the EXACT relevant snippet from the provided ALGORITHM, PSEUDOCODE, or CODE that corresponds to this step. Do NOT invent new code. Leave empty string if not applicable.
+- code: Extract the EXACT relevant snippet from the provided PSEUDOCODE that corresponds to this step. Do NOT invent new code. Leave empty string if not applicable.
 - calculation: The math/reasoning behind this step (e.g., "n iterations × O(1) hash lookup = O(n)").
 - action: Button text for the user to proceed (e.g., "Analyze inner operations").
 
