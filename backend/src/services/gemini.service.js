@@ -1940,3 +1940,175 @@ module.exports = {
   buildPracticePrompt,
   generateStage11PracticeContent,
 };
+
+const buildComplexityPrompt = (problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText) => {
+  return `
+You are an expert DSA instructor and algorithm complexity analyst.
+Analyze the TIME and SPACE complexity of the ALREADY SELECTED solution.
+
+Do not invent a new solution.
+Do not optimize the solution.
+Do not replace the selected approach.
+Analyze exactly the selected approach, algorithm, pseudocode, and implementation.
+
+PROBLEM:
+${JSON.stringify(problem, null, 2)}
+
+SELECTED PATTERN:
+${patternDoc ? JSON.stringify(patternDoc, null, 2) : 'N/A'}
+
+SELECTED APPROACH:
+${approachName} (ID: ${approachId})
+
+ALGORITHM:
+${algorithmDoc ? JSON.stringify(algorithmDoc, null, 2) : 'N/A'}
+
+PSEUDOCODE:
+${pseudocodeDoc ? JSON.stringify(pseudocodeDoc, null, 2) : 'N/A'}
+
+CODE:
+${codeText ? codeText : 'N/A'}
+
+Your task is to explain the complexity step-by-step in a beginner-friendly educational format.
+
+Generate:
+1. TIME COMPLEXITY
+2. SPACE COMPLEXITY
+
+For TIME, generate exactly 3 steps.
+For SPACE, generate exactly 3 steps.
+
+Every step should contain:
+- title: Short, engaging title describing the step.
+- description: Explanation of what we're looking at.
+- code: Relevant code or pseudocode snippet (leave empty string if not applicable).
+- calculation: The math/reasoning behind this step (e.g., "n iterations × O(1) hash lookup = O(n)").
+- action: Button text for the user to proceed (e.g., "Analyze inner operations").
+
+The third step in both MUST contain the final complexity as the "calculation" value, e.g., "O(n)".
+
+For space complexity, distinguish input memory from auxiliary memory.
+Calculate the complexity from the actual selected approach.
+
+Return ONLY valid JSON matching this schema:
+{
+  "time": {
+    "complexity": "O(...)",
+    "steps": [
+      {
+        "title": "...",
+        "description": "...",
+        "code": "...",
+        "calculation": "...",
+        "action": "..."
+      },
+      ... (exactly 3 steps)
+    ]
+  },
+  "space": {
+    "complexity": "O(...)",
+    "steps": [
+      {
+        "title": "...",
+        "description": "...",
+        "code": "...",
+        "calculation": "...",
+        "action": "..."
+      },
+      ... (exactly 3 steps)
+    ]
+  }
+}
+`.trim();
+};
+
+const generateStage10ComplexityContent = async (problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText) => {
+  const apiKey = env.geminiApiKey;
+  const primaryModel = env.geminiModel || 'gemini-2.5-flash';
+
+  if (!apiKey) {
+    throw new AppError('Gemini API key is not configured on the server', 500);
+  }
+
+  const candidateModels = Array.from(new Set([
+    primaryModel,
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-3.8-flash',
+    'gemini-3.5-flash-lite',
+  ]));
+
+  const prompt = buildComplexityPrompt(problem, approachId, approachName, patternDoc, algorithmDoc, pseudocodeDoc, codeText);
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const requestBody = {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.1,
+        maxOutputTokens: 8192
+      },
+    };
+
+    let attempts = 0;
+    while (attempts < 2) {
+      attempts++;
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}));
+          lastError = new AppError(`Gemini API error (${model}): ${errorData.error?.message || res.statusText}`, res.status >= 500 ? 502 : 400);
+          if ((res.status === 503 || res.status === 429)) {
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+            continue;
+          }
+          break;
+        }
+
+        const data = await res.json();
+        const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!responseText) {
+          lastError = new AppError(`Empty response from model ${model}`, 502);
+          break;
+        }
+
+        return { rawText: responseText, model, promptVersion: 'complexity-v1' };
+      } catch (err) {
+        lastError = err;
+      }
+    }
+  }
+
+  throw lastError || new AppError('Failed to generate complexity analysis', 503);
+};
+
+module.exports = {
+  AppError,
+  buildUnderstandingPrompt,
+  generateStage02Content,
+  buildAnalogyPrompt,
+  generateStage03AnalogyContent,
+  buildPatternPrompt,
+  generateStage04PatternContent,
+  buildAlgorithmPrompt,
+  generateStage05AlgorithmContent,
+  buildPseudocodePrompt,
+  generateStage05PseudocodeContent,
+  buildCodePrompt,
+  generateStage06CodeContent,
+  simulateCodeExecution,
+  buildDryRunPrompt,
+  generateStage08DryRunContent,
+  buildPracticePrompt,
+  generateStage11PracticeContent,
+  buildComplexityPrompt,
+  generateStage10ComplexityContent,
+};

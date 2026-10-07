@@ -284,14 +284,7 @@ export function CodeStage({
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Reset</span>
               </button>
-              <button
-                onClick={handleRunCode}
-                disabled={isExecuting}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-bold font-mono bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors cursor-pointer shadow-sm shadow-emerald-900/20"
-              >
-                {isExecuting ? <Clock className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
-                <span>{isExecuting ? 'Running...' : 'Run Code'}</span>
-              </button>
+
             </div>
           </div>
 
@@ -320,134 +313,7 @@ export function CodeStage({
           </div>
         </div>
 
-        {/* Output & Test Case Panel Area */}
-        <div className="lg:w-96 flex flex-col border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-white dark:bg-[#0B101D] shadow-sm">
-          <div className="flex border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111827]">
-             <button 
-                onClick={() => setTestMode(0)} 
-                className={`flex-1 py-3 text-xs font-mono font-bold text-center ${testMode === 0 ? 'bg-white dark:bg-[#0B101D] text-blue-600 dark:text-blue-400 border-b-2 border-blue-500' : 'text-slate-500 dark:text-slate-400'}`}
-             >
-                Test Cases
-             </button>
-             <button 
-                onClick={() => setTestMode(1)} 
-                className={`flex-1 py-3 text-xs font-mono font-bold text-center ${testMode === 1 ? 'bg-white dark:bg-[#0B101D] text-blue-600 dark:text-blue-400 border-b-2 border-blue-500' : 'text-slate-500 dark:text-slate-400'}`}
-             >
-                Custom Test
-             </button>
-          </div>
-          
-          <div className="flex-1 p-4 overflow-y-auto">
-            {testMode === 1 && (
-               <div className="mb-6">
-                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Custom Input</label>
-                  <textarea 
-                     value={customInput}
-                     onChange={(e) => setCustomInput(e.target.value)}
-                     className="w-full h-32 p-3 bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-mono text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
-                     placeholder="Enter custom input here..."
-                  />
-               </div>
-            )}
 
-            {!executionResult && !isExecuting && testMode === 0 && (
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">Problem Test Cases</h4>
-                {problem?.testCases?.map((tc, idx) => (
-                  <div key={idx} className="border border-slate-200 dark:border-slate-800 rounded-lg p-3 space-y-2">
-                    <div className="text-xs font-bold text-slate-700 dark:text-slate-300">Case {idx + 1}</div>
-                    <div className="text-xs font-mono">
-                      <span className="text-slate-500">Input:</span>
-                      <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
-                        {tc.inputRaw}
-                      </div>
-                    </div>
-                    <div className="text-xs font-mono">
-                      <span className="text-slate-500">Expected Output:</span>
-                      <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
-                        {tc.outputRaw}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {(!problem?.testCases || problem.testCases.length === 0) && (
-                  <div className="text-center text-slate-500 mt-10 text-sm">
-                    No test cases available.
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!executionResult && !isExecuting && testMode === 1 && (
-              <div className="text-center text-slate-500 mt-10 text-sm">
-                Run your code to see results here.
-              </div>
-            )}
-
-            {isExecuting && (
-              <div className="flex flex-col items-center justify-center mt-10 text-slate-500 space-y-4">
-                <Clock className="w-8 h-8 animate-spin text-blue-500" />
-                <span className="text-sm font-mono animate-pulse">Running code...</span>
-              </div>
-            )}
-
-            {executionResult && !isExecuting && (
-              <div className="space-y-6">
-                <div className={`p-4 rounded-xl border ${executionResult.status === 'success' ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900/50' : 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-900/50'}`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    {executionResult.status === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" /> : <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />}
-                    <h3 className={`font-bold ${executionResult.status === 'success' ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>
-                      {executionResult.message}
-                    </h3>
-                  </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-2 font-mono">
-                    {executionResult.details}
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <h4 className="text-xs font-bold font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider">Output</h4>
-                  {executionResult.testCases.map((tc, idx) => (
-                    <div key={idx} className="border border-slate-200 dark:border-slate-800 rounded-lg p-3 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{tc.isCustom ? 'Custom Test' : `Case ${idx + 1}`}</span>
-                        {tc.passed ? (
-                          <span className="text-[10px] bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded font-bold font-mono">PASSED</span>
-                        ) : (
-                          <span className="text-[10px] bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 px-2 py-0.5 rounded font-bold font-mono">
-                            {tc.isError ? 'ERROR' : 'FAILED'}
-                          </span>
-                        )}
-                      </div>
-                      <div className="space-y-1.5 text-xs font-mono">
-                        <div>
-                          <span className="text-slate-500">Input:</span>
-                          <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
-                            {tc.inputRaw}
-                          </div>
-                        </div>
-                        {!tc.isCustom && (
-                          <div>
-                            <span className="text-slate-500">Expected:</span>
-                            <div className="text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827] p-1.5 rounded mt-0.5 whitespace-pre-wrap">
-                              {tc.expectedOutput}
-                            </div>
-                          </div>
-                        )}
-                        <div>
-                          <span className="text-slate-500">Output:</span>
-                          <div className={`p-1.5 rounded mt-0.5 whitespace-pre-wrap ${tc.passed ? 'text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-[#111827]' : 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/30'}`}>
-                            {tc.actualOutput || 'No output'}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* Footer Action */}
