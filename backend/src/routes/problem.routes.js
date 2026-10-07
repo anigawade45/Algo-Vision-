@@ -8,6 +8,7 @@ const problemAlgorithmRoutes = require('./problemAlgorithm.routes');
 const problemPseudocodeRoutes = require('./problemPseudocode.routes');
 const problemCodeRoutes = require('./problemCode.routes');
 const problemDryRunRoutes = require('./problemDryRun.routes');
+const problemComplexityRoutes = require('./problemComplexity.routes');
 const problemPracticeRoutes = require('./problemPractice.routes');
 const { protect } = require('../middleware/auth.middleware');
 
@@ -36,6 +37,9 @@ router.use('/:problemId/code', problemCodeRoutes);
 
 // Stage 08 Dry Run routes
 router.use('/:problemId/dry-run', problemDryRunRoutes);
+
+// Stage 10 Complexity routes
+router.use('/:problemId/complexity', problemComplexityRoutes);
 
 // Stage 11 Practice / Quiz routes
 router.use('/:problemId/practice', problemPracticeRoutes);

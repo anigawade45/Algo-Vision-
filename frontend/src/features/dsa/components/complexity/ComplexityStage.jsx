@@ -10,34 +10,93 @@ import {
   Calculator,
   CheckCircle2,
   ListRestart,
-  Check
+  Check,
+  RefreshCw,
+  Loader2
 } from 'lucide-react';
-import { getComplexityData } from '../../data/complexity/mockComplexity';
+import api from '../../../../api/apiClient';
 
 export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
-  const complexityData = getComplexityData(problem.id);
+  const [complexityData, setComplexityData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState(null);
+  const [approachId, setApproachId] = useState('');
+  const [approachName, setApproachName] = useState('');
+
   const [activeSection, setActiveSection] = useState('time');
   const [timeStepIndex, setTimeStepIndex] = useState(0);
   const [spaceStepIndex, setSpaceStepIndex] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const timeSteps = complexityData.time.steps;
-  const spaceSteps = complexityData.space.steps;
+  useEffect(() => {
+    fetchComplexityData();
+  }, [problem._id]);
+
+  const fetchComplexityData = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const res = await api.get(`/problems/${problem.problemId}/complexity`);
+      const payload = res.data || res;
+      if (payload && payload.time && payload.space) {
+        setComplexityData(payload);
+        setApproachId(res.approachId || approachId);
+        setApproachName(res.approachName || approachName);
+      } else {
+        // Find current approach if complexity not generated
+        const pseudoRes = await api.get(`/problems/${problem.problemId}/pseudocode`);
+        if (pseudoRes.data?.approach?.approachId) {
+          setApproachId(pseudoRes.data.approach.approachId);
+          setApproachName(pseudoRes.data.approach.approachName);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch complexity data:', err);
+      // Don't show error if it just hasn't been generated yet (404/400)
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGenerateComplexity = async () => {
+    if (isGenerating) return;
+    setIsGenerating(true);
+    setError(null);
+    try {
+      const res = await api.post(`/problems/${problem.problemId}/complexity/generate`, {
+        approachId,
+        approachName
+      });
+      const payload = res.data || res;
+      if (payload && payload.time && payload.space) {
+        setComplexityData(payload);
+        resetProgress();
+      }
+    } catch (err) {
+      console.error('Failed to generate complexity:', err);
+      setError(err.response?.data?.message || 'Unable to analyze complexity right now. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const timeSteps = complexityData?.time?.steps || [];
+  const spaceSteps = complexityData?.space?.steps || [];
 
   // Reset progress when the problem changes
   useEffect(() => {
-    setTimeStepIndex(0);
-    setSpaceStepIndex(0);
-    setActiveSection('time');
-    setIsRevealed(false);
+    resetProgress();
     setIsCompleted(false);
   }, [problem.id]);
 
   // Mark complete when both sections are fully revealed
   useEffect(() => {
-    if (timeStepIndex === timeSteps.length - 1 && spaceStepIndex === spaceSteps.length - 1) {
-      setIsRevealed(true);
+    if (timeSteps.length > 0 && spaceSteps.length > 0) {
+      if (timeStepIndex === timeSteps.length - 1 && spaceStepIndex === spaceSteps.length - 1) {
+        setIsRevealed(true);
+      }
     }
   }, [timeStepIndex, spaceStepIndex, timeSteps.length, spaceSteps.length]);
 
@@ -63,6 +122,7 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
     setTimeStepIndex(0);
     setSpaceStepIndex(0);
     setActiveSection('time');
+    setIsRevealed(false);
   };
 
   const currentSteps = activeSection === 'time' ? timeSteps : spaceSteps;
@@ -72,7 +132,54 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
   const sectionIcon = activeSection === 'time' ? <Clock className="w-5 h-5" /> : <Database className="w-5 h-5" />;
   const sectionColor = activeSection === 'time' ? 'text-blue-500' : 'text-purple-500';
   const sectionBg = activeSection === 'time' ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-purple-50 dark:bg-purple-900/20';
-  const activeComplexity = activeSection === 'time' ? complexityData.time.complexity : complexityData.space.complexity;
+  const activeComplexity = activeSection === 'time' ? complexityData?.time?.complexity : complexityData?.space?.complexity;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl min-h-[400px]">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin mb-4" />
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Loading Complexity Data...</h3>
+      </div>
+    );
+  }
+
+  if (isGenerating) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl min-h-[400px] text-center">
+        <RefreshCw className="w-12 h-12 text-blue-500 animate-spin mb-6" />
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Analyzing your solution...</h3>
+        <p className="text-slate-500 max-w-md">Gemini is calculating time and space complexity specifically for the '{approachName}' approach.</p>
+      </div>
+    );
+  }
+
+  if (!complexityData) {
+    return (
+      <div className="flex flex-col items-center justify-center p-12 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl min-h-[400px] text-center">
+        <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
+          <Gauge className="w-8 h-8 text-blue-500" />
+        </div>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Complexity Analysis</h3>
+        <p className="text-slate-500 max-w-md mb-8">
+          Ready to see how efficient the <strong>{approachName}</strong> approach is? Generate a step-by-step mathematical breakdown of Time and Space complexity.
+        </p>
+        
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-xl text-sm">
+            {error}
+          </div>
+        )}
+
+        <button
+          onClick={handleGenerateComplexity}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-all shadow-lg hover:shadow-blue-500/25"
+        >
+          <Play className="w-4 h-4 fill-current" />
+          <span>Generate Analysis with AI</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -82,7 +189,7 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-mono font-bold text-xs uppercase tracking-wider">
             <Gauge className="w-4 h-4" />
-            <span>Complexity Analysis</span>
+            <span>Complexity Analysis • {approachName}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
             How efficient is this?
@@ -103,7 +210,7 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
            >
              <Clock className="w-8 h-8 mb-2" />
              <span className="text-xs font-mono font-bold">TIME</span>
-             {timeStepIndex === timeSteps.length - 1 && <span className="text-[10px] font-bold">{complexityData.time.complexity}</span>}
+             {timeSteps.length > 0 && timeStepIndex === timeSteps.length - 1 && <span className="text-[10px] font-bold">{complexityData?.time?.complexity}</span>}
            </button>
 
            <button
@@ -116,7 +223,7 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
            >
              <Database className="w-8 h-8 mb-2" />
              <span className="text-xs font-mono font-bold">SPACE</span>
-             {spaceStepIndex === spaceSteps.length - 1 && <span className="text-[10px] font-bold">{complexityData.space.complexity}</span>}
+             {spaceSteps.length > 0 && spaceStepIndex === spaceSteps.length - 1 && <span className="text-[10px] font-bold">{complexityData?.space?.complexity}</span>}
            </button>
         </div>
       </div>
