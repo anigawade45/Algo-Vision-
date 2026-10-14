@@ -1,13 +1,13 @@
 import { VISUALIZATION_TYPES } from './visualizationTypes.js';
+import {
+  furthestBuildingInitialState,
+  furthestBuildingEvents,
+  furthestBuildingSteps,
+} from '../events/mockVisualizationEvents.js';
+import { furthestBuildingExecutionTrace, furthestBuildingAdaptedTrace } from '../trace/mockExecutionTraces.js';
 
-/**
- * Stage 09 — Mock Visualization Benchmark Problems Dataset (Phase 2 Single Source of Truth)
- * Contains exactly 10 mock DSA problems with complete, standardized, and cross-validated state transitions.
- */
+
 export const MOCK_VISUALIZATIONS = [
-  // ------------------------------------------------------------
-  // 1. TWO SUM
-  // ------------------------------------------------------------
   {
     problemId: 'two-sum',
     title: 'Two Sum',
@@ -2218,6 +2218,120 @@ export const MOCK_VISUALIZATIONS = [
       },
     },
   },
+
+  // ------------------------------------------------------------
+  // 11. 1642. FURTHEST BUILDING YOU CAN REACH (EVENT DEMO)
+  // ------------------------------------------------------------
+  {
+    problemId: 'furthest-building-1642',
+    title: '1642. Furthest Building You Can Reach (Event Demo)',
+    category: 'Heap / Greedy',
+    difficulty: 'Medium',
+    approachId: 'minHeapResourceEvents',
+    approachName: 'Min-Heap + Greedy (Event-Driven Primitives)',
+    visualizationType: VISUALIZATION_TYPES.EVENT_SCENE,
+    input: {
+      heights: [4, 2, 7, 6, 9, 14, 12],
+      bricks: 5,
+      ladders: 1,
+    },
+    expectedOutput: 4,
+    initialState: furthestBuildingInitialState,
+    events: furthestBuildingEvents,
+    executionTrace: furthestBuildingExecutionTrace,
+    visualizationData: {
+      initialState: furthestBuildingInitialState,
+      steps: [
+        {
+          stepNumber: 1,
+          operation: 'START',
+          description: 'Start at building 0 (height = 4). Initial Bricks: 5, Ladders: 1 available.',
+          state: {
+            currentBuilding: 0,
+            currentClimb: 0,
+            minHeap: [],
+            bricks: 5,
+            ladders: 1,
+          },
+          highlights: { 0: 'active' },
+          changed: [],
+        },
+        {
+          stepNumber: 2,
+          operation: 'DOWNHILL_JUMP',
+          description: 'Move to building 1 (height 2). Downhill jump (delta: -2). No bricks or ladders needed.',
+          state: {
+            currentBuilding: 1,
+            currentClimb: -2,
+            minHeap: [],
+            bricks: 5,
+            ladders: 1,
+          },
+          highlights: { 1: 'active' },
+          changed: ['currentBuilding', 'currentClimb'],
+        },
+        {
+          stepNumber: 3,
+          operation: 'LADDER_CLIMB',
+          description: 'Move to building 2 (height 7). Climb of +5 required. Allocate 1 ladder (0 ladders left). Min-heap holds [5].',
+          state: {
+            currentBuilding: 2,
+            currentClimb: 5,
+            minHeap: [5],
+            bricks: 5,
+            ladders: 0,
+          },
+          highlights: { 2: 'active' },
+          changed: ['currentBuilding', 'currentClimb', 'climbs', 'ladders'],
+        },
+        {
+          stepNumber: 4,
+          operation: 'DOWNHILL_JUMP',
+          description: 'Move to building 3 (height 6). Downhill jump (delta: -1). No resources needed.',
+          state: {
+            currentBuilding: 3,
+            currentClimb: -1,
+            minHeap: [5],
+            bricks: 5,
+            ladders: 0,
+          },
+          highlights: { 3: 'active' },
+          changed: ['currentBuilding', 'currentClimb'],
+        },
+        {
+          stepNumber: 5,
+          operation: 'USE_BRICKS',
+          description: 'Move to building 4 (height 9). Climb of +3. Heap has [3, 5] > 1 ladder. Pop smallest climb (3) and pay with 3 bricks (Bricks left: 2). Ladder kept for climb 5.',
+          state: {
+            currentBuilding: 4,
+            currentClimb: 3,
+            minHeap: [5],
+            bricks: 2,
+            ladders: 0,
+          },
+          highlights: { 4: 'active' },
+          changed: ['currentBuilding', 'currentClimb', 'bricks'],
+        },
+        {
+          stepNumber: 6,
+          operation: 'STOP_RESULT',
+          description: 'Attempt building 5 (height 14). Climb of +5 needed. Insufficient bricks (has 2, needs 5) and 0 ladders left! Cannot proceed. Furthest reached building is index 4.',
+          state: {
+            currentBuilding: 4,
+            attemptedBuilding: 5,
+            currentClimb: 5,
+            minHeap: [5],
+            bricks: 2,
+            ladders: 0,
+            furthestBuilding: 4,
+          },
+          highlights: { 4: 'matched', 5: 'blocked' },
+          changed: ['currentClimb'],
+        },
+      ],
+      finalState: { result: 4, furthestBuilding: 4 },
+    },
+  },
 ];
 
 /**
@@ -2235,6 +2349,7 @@ export const mockVisualizations = {
   binaryTreeInorder: MOCK_VISUALIZATIONS[7],
   numberOfIslands: MOCK_VISUALIZATIONS[8],
   kthLargestElement: MOCK_VISUALIZATIONS[9],
+  furthestBuilding: MOCK_VISUALIZATIONS[10],
 
   // Direct kebab-case problem ID access
   'two-sum': MOCK_VISUALIZATIONS[0],
@@ -2247,6 +2362,7 @@ export const mockVisualizations = {
   'binary-tree-inorder': MOCK_VISUALIZATIONS[7],
   'number-of-islands': MOCK_VISUALIZATIONS[8],
   'kth-largest-element': MOCK_VISUALIZATIONS[9],
+  'furthest-building-1642': MOCK_VISUALIZATIONS[10],
 };
 
 /**
@@ -2298,8 +2414,8 @@ export const validateMockVisualizations = () => {
     return { valid: false, errors: ['MOCK_VISUALIZATIONS must be an array'] };
   }
 
-  if (MOCK_VISUALIZATIONS.length !== 10) {
-    errors.push(`Expected exactly 10 problems, found ${MOCK_VISUALIZATIONS.length}`);
+  if (MOCK_VISUALIZATIONS.length < 10) {
+    errors.push(`Expected at least 10 problems, found ${MOCK_VISUALIZATIONS.length}`);
   }
 
   const seenIds = new Set();

@@ -1,7 +1,9 @@
 import slidingWindowMaximumDryRun from './slidingWindowMaximumDryRun.js';
 import kthLargestDryRun from './kthLargestDryRun.js';
+import furthestBuildingDryRun from './furthestBuildingDryRun.js';
 
 export const MOCK_DRY_RUNS = {
+  "furthest-building-1642": furthestBuildingDryRun,
   "sliding-window-maximum": slidingWindowMaximumDryRun,
   "kth-largest-element": kthLargestDryRun,
   "two-sum": {
@@ -8916,6 +8918,8 @@ export function getDryRunByProblemAndApproach(problemId, approachId) {
     'product-of-array-except-self': 'product-except-self',
     'single-number': 'single-number',
     'word-search': 'word-search',
+    'furthest-building-1642': 'furthest-building-1642',
+    'furthest-building': 'furthest-building-1642',
   };
 
   const matchedKey = aliasMap[problemId];

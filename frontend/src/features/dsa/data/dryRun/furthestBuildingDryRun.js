@@ -1,0 +1,297 @@
+/**
+ * Stage 08 - Dry Run Execution Data for 1642. Furthest Building You Can Reach
+ * Input: heights = [4, 2, 7, 6, 9, 14, 12], bricks = 5, ladders = 1
+ * Approach: Min-Heap + Greedy
+ */
+export const furthestBuildingDryRun = {
+  problemId: "furthest-building-1642",
+  approachId: "minHeapGreedy",
+  approachName: "Min-Heap + Greedy",
+  input: {
+    title: "1642. Furthest Building You Can Reach",
+    inputVisual: "heights = [ 4, 2, 7, 6, 9, 14, 12 ], bricks = 5, ladders = 1",
+    items: [
+      {
+        label: "Building Heights",
+        value: "[ 4, 2, 7, 6, 9, 14, 12 ]",
+      },
+      {
+        label: "Bricks",
+        value: "5",
+      },
+      {
+        label: "Ladders",
+        value: "1",
+      },
+    ],
+    expectedOutput: "4",
+  },
+  initialState: {
+    variables: [
+      {
+        name: "currentIndex",
+        value: "0",
+        label: "Current Building Index",
+      },
+      {
+        name: "currentClimb",
+        value: "0",
+        label: "Current Climb Delta",
+      },
+      {
+        name: "minHeap",
+        value: "[ ]",
+        label: "Ladder Climbs Min-Heap",
+      },
+      {
+        name: "bricks",
+        value: "5",
+        label: "Bricks Remaining",
+      },
+      {
+        name: "ladders",
+        value: "1",
+        label: "Ladders Remaining",
+      },
+    ],
+  },
+  steps: [
+    {
+      stepNo: 0,
+      pseudocodeLine: 1,
+      pseudocodeText: "Initialize min-heap climbs = [], i = 0.",
+      operation: "INITIALIZE",
+      title: "Start Execution at Building 0",
+      variables: [
+        { name: "currentIndex", value: 0, label: "Current Building Index" },
+        { name: "currentClimb", value: 0, label: "Current Climb Delta" },
+        { name: "minHeap", value: [], label: "Ladder Climbs Min-Heap" },
+        { name: "bricks", value: 5, label: "Bricks Remaining" },
+        { name: "ladders", value: 1, label: "Ladders Remaining" },
+      ],
+      before: {
+        currentIndex: 0,
+        currentClimb: 0,
+        minHeap: [],
+        bricks: 5,
+        ladders: 1,
+      },
+      condition: {
+        text: "Execution starting at index 0",
+        evaluation: "START",
+        passes: true,
+      },
+      action: {
+        description: "Start at building 0 (height 4). Initial Bricks: 5, Ladders: 1.",
+      },
+      after: {
+        currentIndex: 0,
+        currentClimb: 0,
+        minHeap: [],
+        bricks: 5,
+        ladders: 1,
+      },
+      changes: [],
+      currentResult: "Not determined",
+      explanation: "Start at building 0 (height = 4). Initial Bricks: 5, Ladders: 1.",
+    },
+    {
+      stepNo: 1,
+      pseudocodeLine: 3,
+      pseudocodeText: "climb = heights[i+1] - heights[i]; if (climb <= 0) continue;",
+      operation: "DOWNHILL_JUMP",
+      title: "Move to Building 1 (Height 2)",
+      variables: [
+        { name: "currentIndex", value: 1, label: "Current Building Index" },
+        { name: "currentClimb", value: -2, label: "Current Climb Delta" },
+        { name: "minHeap", value: [], label: "Ladder Climbs Min-Heap" },
+        { name: "bricks", value: 5, label: "Bricks Remaining" },
+        { name: "ladders", value: 1, label: "Ladders Remaining" },
+      ],
+      before: {
+        currentIndex: 0,
+        currentClimb: 0,
+        minHeap: [],
+        bricks: 5,
+        ladders: 1,
+      },
+      condition: {
+        text: "heights[1] - heights[0] = 2 - 4 = -2 <= 0",
+        evaluation: "DOWNHILL",
+        passes: true,
+      },
+      action: {
+        description: "Move from building 0 to 1 without consuming resources.",
+      },
+      after: {
+        currentIndex: 1,
+        currentClimb: -2,
+        minHeap: [],
+        bricks: 5,
+        ladders: 1,
+      },
+      changes: ["currentIndex", "currentClimb"],
+      currentResult: "Not determined",
+      explanation: "Move from building 0 to 1. Height delta = 2 - 4 = -2 (no resources needed).",
+    },
+    {
+      stepNo: 2,
+      pseudocodeLine: 4,
+      pseudocodeText: "climbs.push(climb); // assume ladder for now",
+      operation: "LADDER_CLIMB",
+      title: "Move to Building 2 (Height 7)",
+      variables: [
+        { name: "currentIndex", value: 2, label: "Current Building Index" },
+        { name: "currentClimb", value: 5, label: "Current Climb Delta" },
+        { name: "minHeap", value: [5], label: "Ladder Climbs Min-Heap" },
+        { name: "bricks", value: 5, label: "Bricks Remaining" },
+        { name: "ladders", value: 0, label: "Ladders Remaining" },
+      ],
+      before: {
+        currentIndex: 1,
+        currentClimb: -2,
+        minHeap: [],
+        bricks: 5,
+        ladders: 1,
+      },
+      condition: {
+        text: "heights[2] - heights[1] = 7 - 2 = 5 > 0",
+        evaluation: "UPOHILL",
+        passes: true,
+      },
+      action: {
+        description: "Insert climb 5 into Min-Heap [5]. Uses 1 ladder tentatively (0 ladders remaining).",
+      },
+      after: {
+        currentIndex: 2,
+        currentClimb: 5,
+        minHeap: [5],
+        bricks: 5,
+        ladders: 0,
+      },
+      changes: ["currentIndex", "currentClimb", "minHeap", "ladders"],
+      currentResult: "Not determined",
+      explanation: "Move to building 2. Climb required = 7 - 2 = 5. Insert 5 into Ladder Min-Heap [5]. Allocate 1 ladder (0 ladders remaining).",
+    },
+    {
+      stepNo: 3,
+      pseudocodeLine: 3,
+      pseudocodeText: "climb = heights[i+1] - heights[i]; if (climb <= 0) continue;",
+      operation: "DOWNHILL_JUMP",
+      title: "Move to Building 3 (Height 6)",
+      variables: [
+        { name: "currentIndex", value: 3, label: "Current Building Index" },
+        { name: "currentClimb", value: -1, label: "Current Climb Delta" },
+        { name: "minHeap", value: [5], label: "Ladder Climbs Min-Heap" },
+        { name: "bricks", value: 5, label: "Bricks Remaining" },
+        { name: "ladders", value: 0, label: "Ladders Remaining" },
+      ],
+      before: {
+        currentIndex: 2,
+        currentClimb: 5,
+        minHeap: [5],
+        bricks: 5,
+        ladders: 0,
+      },
+      condition: {
+        text: "heights[3] - heights[2] = 6 - 7 = -1 <= 0",
+        evaluation: "DOWNHILL",
+        passes: true,
+      },
+      action: {
+        description: "Move from building 2 to 3 without consuming resources.",
+      },
+      after: {
+        currentIndex: 3,
+        currentClimb: -1,
+        minHeap: [5],
+        bricks: 5,
+        ladders: 0,
+      },
+      changes: ["currentIndex", "currentClimb"],
+      currentResult: "Not determined",
+      explanation: "Move to building 3. Height delta = 6 - 7 = -1 (no resources needed).",
+    },
+    {
+      stepNo: 4,
+      pseudocodeLine: 5,
+      pseudocodeText: "if (climbs.size() > ladders) { bricks -= climbs.poll(); }",
+      operation: "USE_BRICKS",
+      title: "Move to Building 4 (Height 9)",
+      variables: [
+        { name: "currentIndex", value: 4, label: "Current Building Index" },
+        { name: "currentClimb", value: 3, label: "Current Climb Delta" },
+        { name: "minHeap", value: [5], label: "Ladder Climbs Min-Heap" },
+        { name: "bricks", value: 2, label: "Bricks Remaining" },
+        { name: "ladders", value: 0, label: "Ladders Remaining" },
+      ],
+      before: {
+        currentIndex: 3,
+        currentClimb: -1,
+        minHeap: [5],
+        bricks: 5,
+        ladders: 0,
+      },
+      condition: {
+        text: "climbs.size() (2) > ladders (1) -> Extract min climb (3) and pay with bricks",
+        evaluation: "REALLOCATE",
+        passes: true,
+      },
+      action: {
+        description: "Insert climb 3 into heap [3, 5], extract smallest climb (3), deduct 3 bricks.",
+      },
+      after: {
+        currentIndex: 4,
+        currentClimb: 3,
+        minHeap: [5],
+        bricks: 2,
+        ladders: 0,
+      },
+      changes: ["currentIndex", "currentClimb", "minHeap", "bricks"],
+      currentResult: "Building 4 Reached",
+      explanation: "Move to building 4. Climb = 3. Heap size (2) > Ladders (1). Smallest climb (3) extracted from Min-Heap and paid using 3 bricks (Bricks remaining: 2).",
+    },
+    {
+      stepNo: 5,
+      pseudocodeLine: 6,
+      pseudocodeText: "if (bricks < 0) return i;",
+      operation: "STOP_RESULT",
+      title: "Attempt Building 5 (Height 14)",
+      variables: [
+        { name: "currentIndex", value: 4, label: "Current Building Index (Furthest Reached)" },
+        { name: "currentClimb", value: 5, label: "Current Climb Delta" },
+        { name: "minHeap", value: [5], label: "Ladder Climbs Min-Heap" },
+        { name: "bricks", value: 2, label: "Bricks Remaining" },
+        { name: "ladders", value: 0, label: "Ladders Remaining" },
+      ],
+      before: {
+        currentIndex: 4,
+        currentClimb: 3,
+        minHeap: [5],
+        bricks: 2,
+        ladders: 0,
+      },
+      condition: {
+        text: "Climb required = 5 > Bricks remaining = 2 -> Cannot proceed",
+        evaluation: "TERMINATE",
+        passes: false,
+      },
+      action: {
+        description: "Execution terminates. Furthest building reached is index 4.",
+      },
+      after: {
+        currentIndex: 4,
+        currentClimb: 5,
+        minHeap: [5],
+        bricks: 2,
+        ladders: 0,
+      },
+      changes: ["currentClimb"],
+      currentResult: "4",
+      explanation: "Attempt building 5. Climb required = 14 - 9 = 5. Insufficient bricks (needs 5, has 2) and 0 ladders remaining. Execution terminates. Furthest building reached is index 4.",
+    },
+  ],
+  result: 4,
+};
+
+export default furthestBuildingDryRun;

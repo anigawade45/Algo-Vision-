@@ -67,17 +67,24 @@ export function ResourcePrimitive({
         </span>
         {max !== null && (
           <span className="text-[10px] font-mono font-semibold text-slate-400">
-            Max: {max}
+            Initial Total: {max}
           </span>
         )}
       </div>
 
-      <div className="my-1.5 flex items-baseline gap-1.5 font-mono">
-        <span className={`text-xl font-bold ${colorStyles.text}`}>
-          {value}
-        </span>
-        {max !== null && <span className="text-xs text-slate-400">/ {max}</span>}
-        {unit && <span className="text-xs text-slate-400 ml-1">{unit}</span>}
+      <div className="my-1.5 flex items-baseline justify-between font-mono">
+        <div className="flex items-baseline gap-1.5">
+          <span className={`text-xl font-bold ${colorStyles.text}`}>
+            {value}
+          </span>
+          {max !== null && <span className="text-xs text-slate-400">/ {max}</span>}
+          {unit && <span className="text-xs text-slate-400 ml-1">{unit}</span>}
+        </div>
+        {max !== null && (
+          <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500">
+            {value} remaining
+          </span>
+        )}
       </div>
 
       {percent !== null && (

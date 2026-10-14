@@ -10,6 +10,7 @@ import { LinkedListVisualizer } from './LinkedListVisualizer';
 import { BinaryTreeVisualizer } from './BinaryTreeVisualizer';
 import { HeapVisualizer } from './HeapVisualizer';
 import { GridVisualizer } from './GridVisualizer';
+import { EventDrivenScene } from './EventDrivenScene';
 import { FallbackVisualizer } from './FallbackVisualizer';
 
 export function VisualizerResolver({ problem, step, state, highlights }) {
@@ -48,10 +49,17 @@ export function VisualizerResolver({ problem, step, state, highlights }) {
     case VISUALIZATION_TYPES.GRID:
       return <GridVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
 
+    case VISUALIZATION_TYPES.EVENT_SCENE:
+      return <EventDrivenScene problem={problem} step={step} state={state} highlights={highlights} />;
+
     default:
+      if (step?.events || step?.initialState || problem?.events || problem?.initialState) {
+        return <EventDrivenScene problem={problem} step={step} state={state} highlights={highlights} />;
+      }
       return <FallbackVisualizer problem={problem} step={step} state={state} />;
   }
 }
+
 
 
 

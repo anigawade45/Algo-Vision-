@@ -14,6 +14,7 @@ export const VISUALIZATION_TYPES = {
   BINARY_TREE: 'binary-tree',
   GRID: 'grid',
   HEAP: 'heap',
+  EVENT_SCENE: 'event-scene',
 };
 
 export const VISUALIZATION_TYPE_LABELS = {
@@ -27,4 +28,5 @@ export const VISUALIZATION_TYPE_LABELS = {
   [VISUALIZATION_TYPES.BINARY_TREE]: 'Binary Tree',
   [VISUALIZATION_TYPES.GRID]: 'Grid (DFS/BFS)',
   [VISUALIZATION_TYPES.HEAP]: 'Heap / Priority Queue',
+  [VISUALIZATION_TYPES.EVENT_SCENE]: 'Event-Driven Scene (Phase 11 Demo)',
 };

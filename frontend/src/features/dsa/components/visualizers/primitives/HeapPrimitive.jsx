@@ -61,9 +61,8 @@ export function HeapPrimitive({
       <div className={`grid grid-cols-1 ${showArrayBuffer ? 'md:grid-cols-3' : 'grid-cols-1'} gap-4`}>
         {/* Tree Representation Container */}
         <div
-          className={`${
-            showArrayBuffer ? 'md:col-span-2' : ''
-          } bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col items-center`}
+          className={`${showArrayBuffer ? 'md:col-span-2' : ''
+            } bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col items-center`}
         >
           <div className="w-full flex items-center justify-between mb-3 border-b border-slate-100 dark:border-slate-800/60 pb-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
@@ -150,8 +149,9 @@ export function HeapPrimitive({
           <div className="md:col-span-1 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/60 pb-2 mb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Array Buffer View
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                  {heapType.toUpperCase()}-HEAP INTERNAL ARRAY
                 </span>
                 <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
                   Size: {values.length}
@@ -162,11 +162,10 @@ export function HeapPrimitive({
                 {values.map((val, idx) => (
                   <div
                     key={idx}
-                    className={`w-full py-1.5 px-3 rounded-lg border font-mono text-xs font-bold flex items-center justify-between transition-all duration-200 ${
-                      idx === 0
+                    className={`w-full py-1.5 px-3 rounded-lg border font-mono text-xs font-bold flex items-center justify-between transition-all duration-200 ${idx === 0
                         ? 'bg-amber-500 text-white border-amber-600 shadow-xs'
                         : 'bg-white dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200'
-                    }`}
+                      }`}
                   >
                     <span>[{idx}]</span>
                     <span className="text-sm">{val}</span>

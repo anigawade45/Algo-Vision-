@@ -123,13 +123,13 @@ export function VisualizationStage({
 
   // Trigger stage completion when reaching final step
   useEffect(() => {
-    if (totalSteps > 0 && currentStepIndex === totalSteps - 1) {
+    if (!isCompleted && totalSteps > 0 && currentStepIndex === totalSteps - 1) {
       setIsCompleted(true);
       if (onCompleteStage) {
         onCompleteStage('visualize');
       }
     }
-  }, [currentStepIndex, totalSteps, onCompleteStage]);
+  }, [currentStepIndex, totalSteps, isCompleted, onCompleteStage]);
 
   // Global Keyboard Shortcuts Listener
   useEffect(() => {

@@ -15,6 +15,9 @@ export function ArrayPrimitive({
   windowRange = null,
   pointerLabels = {}, // { [index]: { label: 'i', color: 'blue', position: 'top' } }
   bottomPointerLabels = {},
+  showBarHeights = false,
+  maxBarValue = null,
+  statusBadges = {},
   className = '',
 }) {
   if (!Array.isArray(values) || values.length === 0) {
@@ -34,8 +37,16 @@ export function ArrayPrimitive({
     return idx >= windowRange[0] && idx <= windowRange[1];
   };
 
+  const maxVal = showBarHeights
+    ? maxBarValue || Math.max(...values.map((v) => (typeof v === 'number' ? v : Number(v) || 0)), 1)
+    : 1;
+
+  const containerClasses = showBarHeights
+    ? `flex items-end justify-center gap-2 sm:gap-3 overflow-x-auto pt-6 pb-3 px-2 border-b-2 border-slate-300 dark:border-slate-800/80 ${className}`
+    : `flex items-center justify-center gap-2 overflow-x-auto py-2 ${className}`;
+
   return (
-    <div aria-label="Array elements" className={`flex items-center justify-center gap-2 overflow-x-auto py-2 ${className}`}>
+    <div aria-label="Array elements" className={containerClasses}>
       {values.map((val, idx) => {
         const isActive = activeIndex === idx;
         const isMatched = matchedSet.has(idx);
@@ -45,6 +56,12 @@ export function ArrayPrimitive({
 
         const topPointer = pointerLabels[idx];
         const bottomPointer = bottomPointerLabels[idx];
+
+        const barHeight = showBarHeights
+          ? Math.max(48, Math.round(((Number(val) || 0) / maxVal) * 150))
+          : null;
+
+        const cellStatusBadge = statusBadges[idx] || (isDuplicate ? 'BLOCKED' : null);
 
         return (
           <ArrayCell
@@ -60,6 +77,9 @@ export function ArrayPrimitive({
             pointerColor={topPointer?.color || 'blue'}
             bottomPointerLabel={bottomPointer?.label}
             bottomPointerColor={bottomPointer?.color || 'emerald'}
+            showBar={showBarHeights}
+            barHeight={barHeight}
+            statusBadge={cellStatusBadge}
           />
         );
       })}
