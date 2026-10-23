@@ -354,29 +354,6 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
           </div>
         </div>
       </div>
-
-      {/* Step Completion Action */}
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className={`w-5 h-5 ${isCompleted ? 'text-purple-600 dark:text-purple-400' : 'text-purple-500'}`} />
-          <div>
-            <span className="text-xs font-bold text-purple-950 dark:text-purple-200 block">
-              Step 1: Caching Principles Completed
-            </span>
-            <span className="text-[11px] text-purple-700 dark:text-purple-400">
-              Ready to interact with the full Cache-Aside 4-tier live architecture simulator?
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={onCompleteStep}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-all hover:scale-102 cursor-pointer"
-        >
-          <span>Proceed to Cache-Aside Simulator</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
     </div>
   );
 }

@@ -19,20 +19,8 @@ import { DB_SCALING_STEPS } from '../data/dbScalingData';
 
 export function Scaling({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('sql-nosql');
-  const [completedSteps, setCompletedSteps] = useState([]);
 
   const currentStepIdx = DB_SCALING_STEPS.findIndex((s) => s.id === activeStep);
-
-  const markStepComplete = (stepId) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps((prev) => [...prev, stepId]);
-    }
-    const nextIdx = currentStepIdx + 1;
-    if (nextIdx < DB_SCALING_STEPS.length) {
-      setActiveStep(DB_SCALING_STEPS[nextIdx].id);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   const handlePrevStep = () => {
     if (currentStepIdx > 0) {
@@ -119,53 +107,37 @@ export function Scaling({ theme, toggleTheme }) {
             setActiveStep(stepId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          completedSteps={completedSteps}
         />
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
           {activeStep === 'sql-nosql' && (
             <div className="space-y-6">
-              <SqlNoSqlExplorer
-                onCompleteStep={() => markStepComplete('sql-nosql')}
-                isCompleted={completedSteps.includes('sql-nosql')}
-              />
+              <SqlNoSqlExplorer />
             </div>
           )}
 
           {activeStep === 'indexing' && (
             <div className="space-y-6">
-              <DbIndexingSimulator
-                onCompleteStep={() => markStepComplete('indexing')}
-                isCompleted={completedSteps.includes('indexing')}
-              />
+              <DbIndexingSimulator />
             </div>
           )}
 
           {activeStep === 'replication' && (
             <div className="space-y-6">
-              <ReplicationSimulator
-                onCompleteStep={() => markStepComplete('replication')}
-                isCompleted={completedSteps.includes('replication')}
-              />
+              <ReplicationSimulator />
             </div>
           )}
 
           {activeStep === 'sharding' && (
             <div className="space-y-6">
-              <DbShardingSimulator
-                onCompleteStep={() => markStepComplete('sharding')}
-                isCompleted={completedSteps.includes('sharding')}
-              />
+              <DbShardingSimulator />
             </div>
           )}
 
           {activeStep === 'matrix' && (
             <div className="space-y-6">
-              <ReadWriteScalingMatrix
-                onCompleteStep={() => markStepComplete('matrix')}
-                isCompleted={completedSteps.includes('matrix')}
-              />
+              <ReadWriteScalingMatrix />
             </div>
           )}
 
@@ -181,11 +153,10 @@ export function Scaling({ theme, toggleTheme }) {
           <button
             onClick={handlePrevStep}
             disabled={currentStepIdx === 0}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
-              currentStepIdx === 0
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${currentStepIdx === 0
                 ? 'opacity-40 cursor-not-allowed border-slate-200 dark:border-slate-800 text-slate-400'
                 : 'border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 hover:bg-slate-50 cursor-pointer'
-            }`}
+              }`}
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Previous Step</span>
@@ -198,11 +169,10 @@ export function Scaling({ theme, toggleTheme }) {
           <button
             onClick={handleNextStep}
             disabled={currentStepIdx === DB_SCALING_STEPS.length - 1}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-              currentStepIdx === DB_SCALING_STEPS.length - 1
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentStepIdx === DB_SCALING_STEPS.length - 1
                 ? 'opacity-40 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400'
                 : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-500/20 cursor-pointer'
-            }`}
+              }`}
           >
             <span>Next Step</span>
             <ArrowRight className="w-3.5 h-3.5" />
