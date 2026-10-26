@@ -1,5 +1,4 @@
-import React from 'react';
-import { Layers, RefreshCw, AlertTriangle, CheckCircle2, Zap, RotateCcw, Plus, Trash2, ArrowRight } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Zap, RotateCcw } from 'lucide-react';
 
 export default function MatrixConfigurator({
   processCount,

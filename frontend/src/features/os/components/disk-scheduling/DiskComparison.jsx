@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Sliders,
   BarChart2,
-  Disc,
-  Layers,
-  ArrowRight,
   TrendingUp,
   TrendingDown,
-  Sparkles,
-  CheckCircle2,
   AlertTriangle
 } from 'lucide-react';
 import {

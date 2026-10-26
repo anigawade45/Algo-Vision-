@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Power, Cpu, HardDrive, Disc, CheckCircle2, Play, Pause, RotateCcw, ChevronRight, Terminal } from 'lucide-react';
 

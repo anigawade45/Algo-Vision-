@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layers, Search, CheckCircle2, XCircle, ArrowRight, Play, RotateCcw, Info } from 'lucide-react';
+import { useState } from 'react';
+import { Layers, CheckCircle2, XCircle } from 'lucide-react';
 
 export function AllocationStrategies() {
   const [requestSize, setRequestSize] = useState(212);

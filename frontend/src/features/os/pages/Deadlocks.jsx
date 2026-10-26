@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import {
-  Cpu,
-  Terminal,
-  LayoutDashboard,
   Layers,
-  Shield,
   ShieldAlert,
-  Sun,
-  Moon,
   CheckCircle2,
-  AlertTriangle,
   Activity,
-  Play,
-  RotateCcw
+  Code
 } from 'lucide-react';
-
-import { Code } from 'lucide-react';
 
 import {
   DeadlockIntro,
@@ -27,6 +16,7 @@ import {
   DeadlockHandling
 } from '../components/deadlock';
 import { CodeLab } from '../components/code-lab';
+import { OsNavbar, OsTabs, OsPageHeader } from '../components/shared';
 
 export default function Deadlocks({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('graph-simulator');
@@ -140,110 +130,38 @@ export default function Deadlocks({ theme, toggleTheme }) {
   };
 
   const tabs = [
-    { id: 'intro', label: '1. What is Deadlock?', icon: ShieldAlert },
-    { id: 'conditions', label: '2. Four Necessary Conditions', icon: Shield },
-    { id: 'graph-simulator', label: '3. Resource Allocation Graph & Detector', icon: Activity },
-    { id: 'handling', label: '4. Prevention, Avoidance & Recovery', icon: Layers },
-    { id: 'codelab', label: '5. Code Lab & Execution Terminal', icon: Code },
+    { id: 'intro', label: '1. What is a Deadlock?', icon: ShieldAlert },
+    { id: 'conditions', label: '2. Four Coffman Conditions', icon: Layers },
+    { id: 'graph-simulator', label: '3. Interactive RAG Simulator', icon: Activity },
+    { id: 'handling', label: '4. Deadlock Handling Strategies', icon: CheckCircle2 },
+    { id: 'codelab', label: '5. Deadlock Code Lab', icon: Code },
   ];
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-rose-500 selection:text-white">
       {/* Top Application Navbar */}
-      <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-rose-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                <Terminal className="w-4 h-4" />
-              </div>
-              <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
-                AlgoVision
-              </span>
-            </Link>
-
-            <span className="text-slate-300 dark:text-slate-700">/</span>
-
-            <span className="text-xs font-mono font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2.5 py-0.5 rounded-full border border-rose-200 dark:border-rose-800">
-              Deadlocks & RAG
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/os"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors min-h-[38px]"
-            >
-              <Cpu className="w-3.5 h-3.5 text-cyan-500" />
-              <span>OS Home</span>
-            </Link>
-
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors min-h-[38px]"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5 text-blue-500" />
-              <span className="hidden sm:inline">Student Dashboard</span>
-              <span className="sm:hidden">Dashboard</span>
-            </Link>
-
-            {toggleTheme && (
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white min-w-[38px] min-h-[38px] flex items-center justify-center cursor-pointer"
-                title="Toggle theme mode"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+      <OsNavbar
+        badge="OS Deadlocks"
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
 
       {/* Main Page Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Module Header Banner */}
-        <div className="space-y-2">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
-                  Interactive Simulator
-                </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  Operating System Deadlocks
-                </h1>
-              </div>
-              <p className="text-slate-550 dark:text-slate-400 text-sm max-w-3xl leading-relaxed">
-                Explore circular wait conditions, build custom Resource Allocation Graphs (RAG), run automated cycle detection, and simulate Deadlock Prevention, Avoidance (Banker's Algorithm), and Recovery techniques.
-              </p>
-            </div>
-          </div>
-        </div>
+        <OsPageHeader
+          badge="Interactive Simulator"
+          badgeColor="bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800"
+          title="Operating System Deadlocks"
+          description="Explore circular wait conditions, build custom Resource Allocation Graphs (RAG), run automated cycle detection, and simulate Deadlock Prevention, Avoidance (Banker's Algorithm), and Recovery techniques."
+        />
 
         {/* Navigation Tabs Bar */}
-        <div className="border-b border-slate-200 dark:border-[#1E2638] overflow-x-auto no-scrollbar">
-          <nav className="flex space-x-2 sm:space-x-4 min-w-max pb-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-rose-600 text-white shadow-md'
-                      : 'bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
+        <OsTabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+        />
 
         {/* Active Sub-module Component Content */}
         <div className="pt-2">

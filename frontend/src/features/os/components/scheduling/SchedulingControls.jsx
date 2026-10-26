@@ -1,4 +1,3 @@
-import React from 'react';
 import { Play, Pause, SkipForward, SkipBack, RotateCcw } from 'lucide-react';
 
 export default function SchedulingControls({

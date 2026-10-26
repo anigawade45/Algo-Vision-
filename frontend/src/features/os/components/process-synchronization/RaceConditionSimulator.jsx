@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Pause, ChevronRight, RotateCcw, AlertTriangle, ShieldCheck, ShieldAlert, Zap, Activity, Check, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Play, Pause, ChevronRight, RotateCcw, AlertTriangle, ShieldCheck, ShieldAlert } from 'lucide-react';
+
+const STEP_INTERVAL_MS = 1800;
 
 export function RaceConditionSimulator() {
   const [syncMode, setSyncMode] = useState(false); // false = OFF (Unsynchronized), true = ON (Synchronized with Mutex)
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1800);
 
   // Timeline steps for Unsynchronized (Race Condition)
   const unsyncSteps = [
@@ -175,10 +176,10 @@ export function RaceConditionSimulator() {
             return prev;
           }
         });
-      }, speed);
+      }, STEP_INTERVAL_MS);
     }
     return () => clearInterval(timer);
-  }, [isPlaying, steps.length, speed]);
+  }, [isPlaying, steps.length]);
 
   return (
     <div className="space-y-8">

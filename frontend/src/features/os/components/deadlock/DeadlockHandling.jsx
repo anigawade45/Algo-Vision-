@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Shield, ShieldAlert, RotateCcw, Skull, RefreshCw, Layers, CheckCircle2, ArrowRight, Zap, Info } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, ShieldAlert, Skull, Zap } from 'lucide-react';
 
 export default function DeadlockHandling({
   processes,
   resources,
-  edges,
   onTerminateProcess,
   onReleaseResource
 }) {

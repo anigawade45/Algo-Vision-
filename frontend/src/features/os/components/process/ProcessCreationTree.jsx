@@ -1,5 +1,57 @@
-import React, { useState } from 'react';
-import { GitBranch, CornerDownRight, Skull, AlertCircle, Play, CheckCircle2, Terminal, RefreshCw, Cpu, Layers } from 'lucide-react';
+import { useState } from 'react';
+import { GitBranch, CornerDownRight, Skull, AlertCircle, CheckCircle2, Terminal } from 'lucide-react';
+
+let nextPidCounter = 401;
+const getNextPid = () => {
+  const pid = nextPidCounter;
+  nextPidCounter += 1;
+  return pid;
+};
+
+const EXEC_PROGRAMS = [
+  'grep "error" log.txt',
+  'node server.js',
+  'ffmpeg -i input.mp4',
+  'curl -O file.zip'
+];
+let programIndex = 0;
+const getNextProgram = () => {
+  const prog = EXEC_PROGRAMS[programIndex % EXEC_PROGRAMS.length];
+  programIndex += 1;
+  return prog;
+};
+
+// Helper to find process node by PID
+const findNode = (node, pid) => {
+  if (node.pid === pid) return node;
+  for (const child of node.children) {
+    const res = findNode(child, pid);
+    if (res) return res;
+  }
+  return null;
+};
+
+// Helper to add child node via fork
+const addForkChild = (node, parentPid, newChild) => {
+  if (node.pid === parentPid) {
+    return { ...node, children: [...node.children, newChild] };
+  }
+  return {
+    ...node,
+    children: node.children.map(child => addForkChild(child, parentPid, newChild))
+  };
+};
+
+// Helper to update process state or program name (exec/exit)
+const updateNode = (node, pid, updater) => {
+  if (node.pid === pid) {
+    return updater(node);
+  }
+  return {
+    ...node,
+    children: node.children.map(c => updateNode(c, pid, updater))
+  };
+};
 
 export default function ProcessCreationTree() {
   // Process Tree State starting with PID 1 systemd
@@ -36,38 +88,6 @@ export default function ProcessCreationTree() {
     { text: 'System boot completed. Root process PID 1 (systemd) initialized.', type: 'info' }
   ]);
 
-  // Helper to find process node by PID
-  const findNode = (node, pid) => {
-    if (node.pid === pid) return node;
-    for (const child of node.children) {
-      const res = findNode(child, pid);
-      if (res) return res;
-    }
-    return null;
-  };
-
-  // Helper to add child node via fork
-  const addForkChild = (node, parentPid, newChild) => {
-    if (node.pid === parentPid) {
-      return { ...node, children: [...node.children, newChild] };
-    }
-    return {
-      ...node,
-      children: node.children.map(child => addForkChild(child, parentPid, newChild))
-    };
-  };
-
-  // Helper to update process state or program name (exec/exit)
-  const updateNode = (node, pid, updater) => {
-    if (node.pid === pid) {
-      return updater(node);
-    }
-    return {
-      ...node,
-      children: node.children.map(c => updateNode(c, pid, updater))
-    };
-  };
-
   // Action 1: fork()
   const handleFork = () => {
     const parentNode = findNode(tree, selectedProcess);
@@ -77,7 +97,7 @@ export default function ProcessCreationTree() {
       return;
     }
 
-    const newPid = Math.floor(400 + Math.random() * 500);
+    const newPid = getNextPid();
     const newChild = {
       pid: newPid,
       name: `${parentNode.name}_child`,
@@ -95,8 +115,7 @@ export default function ProcessCreationTree() {
 
   // Action 2: exec()
   const handleExec = () => {
-    const programs = ['grep "error" log.txt', 'node server.js', 'ffmpeg -i input.mp4', 'curl -O file.zip'];
-    const randomProgram = programs[Math.floor(Math.random() * programs.length)];
+    const randomProgram = getNextProgram();
 
     setTree(prev =>
       updateNode(prev, selectedProcess, (node) => ({

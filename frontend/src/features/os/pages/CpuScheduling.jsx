@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { runSchedulingSimulation } from '../utils/schedulingSimulations';
 import SchedulingAlgorithmSelector from '../components/scheduling/SchedulingAlgorithmSelector';
 import SchedulingInput from '../components/scheduling/SchedulingInput';
@@ -12,18 +11,11 @@ import SchedulingMetrics from '../components/scheduling/SchedulingMetrics';
 import SchedulingExplanation from '../components/scheduling/SchedulingExplanation';
 import SchedulingComparison from '../components/scheduling/SchedulingComparison';
 import { CodeLab } from '../components/code-lab';
+import { OsNavbar, OsPageHeader } from '../components/shared';
 import {
   Layers,
   ArrowRightLeft,
-  PlayCircle,
-  HelpCircle,
-  Terminal,
-  LayoutDashboard,
-  Binary,
-  Sun,
-  Moon,
-  ArrowLeft,
-  Cpu
+  PlayCircle
 } from 'lucide-react';
 
 export default function CpuScheduling({ theme, toggleTheme }) {
@@ -39,34 +31,20 @@ export default function CpuScheduling({ theme, toggleTheme }) {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('FCFS');
   const [timeQuantum, setTimeQuantum] = useState(2);
   const [isComparisonMode, setIsComparisonMode] = useState(false);
-  
-  // Simulation execution state
-  const [simulationResult, setSimulationResult] = useState(null);
+
+  // Derive simulation result directly to avoid cascading renders
+  const simulationResult = useMemo(() => {
+    return runSchedulingSimulation(selectedAlgorithm, processes, { quantum: timeQuantum });
+  }, [selectedAlgorithm, processes, timeQuantum]);
+
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [simulationSpeed, setSimulationSpeed] = useState(1000); // 1000ms per step
 
-  // Run simulation whenever process list, algorithm, or time quantum changes
-  const handleSimulate = () => {
-    const result = runSchedulingSimulation(selectedAlgorithm, processes, { quantum: timeQuantum });
-    setSimulationResult(result);
+  const handleSimulate = useCallback(() => {
     setCurrentStepIndex(0);
     setIsPlaying(false);
-  };
-
-  // Run simulation once on initial mount
-  useEffect(() => {
-    handleSimulate();
   }, []);
-
-  // Recalculate simulation result immediately on process, algorithm, or quantum changes
-  useEffect(() => {
-    const result = runSchedulingSimulation(selectedAlgorithm, processes, { quantum: timeQuantum });
-    setSimulationResult(result);
-    // Reset to start step
-    setCurrentStepIndex(0);
-    setIsPlaying(false);
-  }, [processes, selectedAlgorithm, timeQuantum]);
 
   // Interval hook for simulation playback
   useEffect(() => {
@@ -89,7 +67,7 @@ export default function CpuScheduling({ theme, toggleTheme }) {
 
   const handleTogglePlay = () => {
     if (!simulationResult || simulationResult.steps.length === 0) return;
-    
+
     // If we're at the end, restart from step 1 on play click
     if (currentStepIndex >= simulationResult.steps.length - 1) {
       setCurrentStepIndex(0);
@@ -126,114 +104,58 @@ export default function CpuScheduling({ theme, toggleTheme }) {
     totalTime: 0
   };
 
+  const modeSwitcher = (
+    <div className="flex items-center gap-3">
+      <div className="bg-slate-100 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] p-1 rounded-xl flex items-center">
+        <button
+          onClick={() => setIsComparisonMode(false)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+            !isComparisonMode
+              ? 'bg-blue-500 text-white shadow-sm'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <PlayCircle className="w-3.5 h-3.5" />
+          <span>Single Mode</span>
+        </button>
+
+        <button
+          onClick={() => setIsComparisonMode(true)}
+          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+            isComparisonMode
+              ? 'bg-blue-500 text-white shadow-sm'
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          <ArrowRightLeft className="w-3.5 h-3.5" />
+          <span>Compare Mode</span>
+        </button>
+      </div>
+
+      <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-[#3B82F6] text-xs font-mono font-bold">
+        <Layers className="w-3.5 h-3.5" />
+        <span>ALGOVISION WORKSPACE</span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
       {/* Top Application Navbar */}
-      <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                <Terminal className="w-4 h-4" />
-              </div>
-              <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                AlgoVision
-              </span>
-            </Link>
-            <span className="text-slate-300 dark:text-slate-700">/</span>
-            <span className="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 px-2.5 py-0.5 rounded-full border border-cyan-200 dark:border-cyan-800">
-              OS CPU Scheduling
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link
-              to="/os"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] transition-colors min-h-[38px]"
-            >
-              <Cpu className="w-3.5 h-3.5 text-cyan-500" />
-              <span>OS Home</span>
-            </Link>
-
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] transition-colors min-h-[38px]"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5 text-blue-500" />
-              <span className="hidden sm:inline">Student Dashboard</span>
-              <span className="sm:hidden">Dashboard</span>
-            </Link>
-
-            <Link
-              to="/dsa"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#111827] transition-colors min-h-[38px]"
-            >
-              <Binary className="w-3.5 h-3.5 text-indigo-500" />
-              <span className="hidden sm:inline">DSA Platform</span>
-              <span className="sm:hidden">DSA</span>
-            </Link>
-
-            {toggleTheme && (
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white min-w-[38px] min-h-[38px] flex items-center justify-center cursor-pointer"
-                title="Toggle theme mode"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+      <OsNavbar
+        badge="OS CPU Scheduling"
+        theme={theme}
+        toggleTheme={toggleTheme}
+        showDsaLink={true}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Header and Breadcrumbs */}
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                CPU Scheduling Simulator
-              </h1>
-              <p className="text-slate-550 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">
-                Visualize FCFS, SJF, SRTF, Priority, Round Robin, and Multilevel Queue scheduling algorithms step-by-step or compare two algorithms side-by-side.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* Mode Switcher Tabs */}
-              <div className="bg-slate-100 dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] p-1 rounded-xl flex items-center">
-                <button
-                  onClick={() => setIsComparisonMode(false)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    !isComparisonMode
-                      ? 'bg-blue-500 text-white shadow-sm'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <PlayCircle className="w-3.5 h-3.5" />
-                  <span>Single Mode</span>
-                </button>
-
-                <button
-                  onClick={() => setIsComparisonMode(true)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                    isComparisonMode
-                      ? 'bg-blue-500 text-white shadow-sm'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <ArrowRightLeft className="w-3.5 h-3.5" />
-                  <span>Compare Mode</span>
-                </button>
-              </div>
-
-              <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-[#3B82F6] text-xs font-mono font-bold">
-                <Layers className="w-3.5 h-3.5" />
-                <span>ALGOVISION WORKSPACE</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Header and Controls */}
+        <OsPageHeader
+          title="CPU Scheduling Simulator"
+          description="Visualize FCFS, SJF, SRTF, Priority, Round Robin, and Multilevel Queue scheduling algorithms step-by-step or compare two algorithms side-by-side."
+          actions={modeSwitcher}
+        />
 
         {isComparisonMode ? (
           /* Comparison Layout */

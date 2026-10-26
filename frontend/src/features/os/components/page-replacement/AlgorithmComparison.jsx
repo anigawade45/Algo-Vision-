@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
-  Sliders,
-  Sparkles,
   BarChart2,
-  CheckCircle2,
-  XCircle,
-  AlertTriangle,
-  Layers,
-  ArrowRight,
-  ShieldCheck,
-  RefreshCw
+  Sliders,
+  Layers
 } from 'lucide-react';
 import {
   parseReferenceString,
@@ -22,22 +15,21 @@ import {
 export default function AlgorithmComparison() {
   const [refInput, setRefInput] = useState('7 0 1 2 0 3 0 4 2 3 0 3 2');
   const [frameCount, setFrameCount] = useState(3);
-  const [validationError, setValidationError] = useState('');
 
-  const parsed = parseReferenceString(refInput);
+  const parsed = useMemo(() => parseReferenceString(refInput), [refInput]);
   const isValid = parsed.length > 0 && frameCount >= 1 && frameCount <= 10;
 
-  let fifoSim = null;
-  let lruSim = null;
-  let optSim = null;
-  let scSim = null;
-
-  if (isValid) {
-    fifoSim = simulateFIFO(parsed, frameCount);
-    lruSim = simulateLRU(parsed, frameCount);
-    optSim = simulateOptimal(parsed, frameCount);
-    scSim = simulateSecondChance(parsed, frameCount);
-  }
+  const { fifoSim, lruSim, optSim, scSim } = useMemo(() => {
+    if (!isValid) {
+      return { fifoSim: null, lruSim: null, optSim: null, scSim: null };
+    }
+    return {
+      fifoSim: simulateFIFO(parsed, frameCount),
+      lruSim: simulateLRU(parsed, frameCount),
+      optSim: simulateOptimal(parsed, frameCount),
+      scSim: simulateSecondChance(parsed, frameCount)
+    };
+  }, [parsed, frameCount, isValid]);
 
   const results = [
     { name: 'FIFO', sim: fifoSim, color: 'text-blue-500', bg: 'bg-blue-500' },

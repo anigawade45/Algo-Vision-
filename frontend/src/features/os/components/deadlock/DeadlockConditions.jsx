@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Lock, Hand, ShieldAlert, Repeat, CheckCircle2, AlertTriangle, Layers, ArrowDown, Info } from 'lucide-react';
+import { useState } from 'react';
+import { Lock, Hand, ShieldAlert, Repeat, CheckCircle2, Info } from 'lucide-react';
 
 export default function DeadlockConditions() {
   const [selectedCondition, setSelectedCondition] = useState('mutual_exclusion');

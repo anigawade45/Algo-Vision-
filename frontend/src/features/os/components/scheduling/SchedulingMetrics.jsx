@@ -1,4 +1,3 @@
-import React from 'react';
 import { Clock, Hourglass, Percent, Zap } from 'lucide-react';
 
 export default function SchedulingMetrics({ metrics }) {

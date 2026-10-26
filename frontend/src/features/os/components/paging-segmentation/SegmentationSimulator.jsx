@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Cpu, ArrowRight, CheckCircle2, ShieldAlert, AlertOctagon, RotateCcw, Edit3, Info, Layers } from 'lucide-react';
+import { useState } from 'react';
+import { Box, ArrowRight, CheckCircle2, AlertOctagon } from 'lucide-react';
 
 export function SegmentationSimulator() {
   // Input: Segment Number and Offset tuple <s, d>

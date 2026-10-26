@@ -1,5 +1,4 @@
-import React from 'react';
-import { Layers, Clock, Share2, Zap, Cpu, CheckCircle2 } from 'lucide-react';
+import { Layers, Clock, Share2, Zap, Cpu } from 'lucide-react';
 
 export default function OsTypesGrid() {
   const osTypes = [

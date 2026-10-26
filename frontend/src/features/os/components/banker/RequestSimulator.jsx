@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Play, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck, ShieldAlert, Sliders } from 'lucide-react';
+import { useState } from 'react';
+import { ShieldCheck, ShieldAlert } from 'lucide-react';
 
 export default function RequestSimulator({
   processCount,
   resourceCount,
   allocation,
-  maximum,
   need,
   available,
   onGrantRequest

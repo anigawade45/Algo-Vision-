@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, ArrowRight, Activity, Zap, Clock, AlertTriangle, CheckCircle2, ChevronRight, Info, Plus } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Play, Pause, RotateCcw, Activity, ChevronRight, Info, Plus } from 'lucide-react';
+
+const STEP_INTERVAL_MS = 1500;
 
 export default function ProcessStateDiagram() {
   // Initial processes distributed across states
@@ -12,7 +14,6 @@ export default function ProcessStateDiagram() {
 
   const [activeTransition, setActiveTransition] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(1500);
   const [logs, setLogs] = useState([
     { text: 'System initialized. Process 101 dispatched to CPU (RUNNING).', time: 'Initial' }
   ]);
@@ -26,7 +27,7 @@ export default function ProcessStateDiagram() {
   ];
 
   // Manual Transition Handlers
-  const handleTransition = (pid, fromState, toState, triggerName) => {
+  const handleTransition = useCallback((pid, fromState, toState, triggerName) => {
     setActiveTransition({ pid, fromState, toState, triggerName });
 
     setProcesses(prev =>
@@ -47,7 +48,7 @@ export default function ProcessStateDiagram() {
     setTimeout(() => {
       setActiveTransition(null);
     }, 1000);
-  };
+  }, []);
 
   // Add new process
   const handleCreateProcess = () => {
@@ -67,7 +68,7 @@ export default function ProcessStateDiagram() {
   };
 
   // Step-by-step automatic simulation loop
-  const triggerAutoStep = () => {
+  const triggerAutoStep = useCallback(() => {
     // Pick candidate for state transition logic
     const runningProc = processes.find(p => p.state === 'RUNNING');
     const readyProc = processes.find(p => p.state === 'READY');
@@ -91,17 +92,17 @@ export default function ProcessStateDiagram() {
     } else if (newProc) {
       handleTransition(newProc.pid, 'NEW', 'READY', 'Admitted by Long-Term Scheduler');
     }
-  };
+  }, [processes, handleTransition]);
 
   useEffect(() => {
     let interval = null;
     if (isPlaying) {
       interval = setInterval(() => {
         triggerAutoStep();
-      }, speed);
+      }, STEP_INTERVAL_MS);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, processes, speed]);
+  }, [isPlaying, triggerAutoStep]);
 
   return (
     <div className="space-y-8">

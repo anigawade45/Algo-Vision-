@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, RefreshCw, Play, ShieldCheck, AlertTriangle, Layers, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, ShieldCheck, AlertTriangle, Layers, ArrowRight } from 'lucide-react';
 
 export default function GraphControls({
   processes,
   resources,
-  edges,
   onAddProcess,
   onAddResource,
   onAddEdge,
@@ -13,7 +12,6 @@ export default function GraphControls({
 }) {
   const [sourceNode, setSourceNode] = useState('');
   const [targetNode, setTargetNode] = useState('');
-  const [relType, setRelType] = useState('request'); // 'request' or 'allocation'
 
   // Options lists
   const allNodes = [

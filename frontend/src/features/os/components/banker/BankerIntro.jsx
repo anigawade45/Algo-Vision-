@@ -1,5 +1,4 @@
-import React from 'react';
-import { ShieldCheck, ShieldAlert, Zap, ArrowRight, HelpCircle, AlertCircle, CheckCircle2, Lock } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Zap, ArrowRight } from 'lucide-react';
 
 export default function BankerIntro() {
   return (

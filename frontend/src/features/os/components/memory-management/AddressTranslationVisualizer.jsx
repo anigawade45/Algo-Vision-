@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Cpu, ArrowRight, ShieldAlert, CheckCircle2, ShieldCheck, AlertOctagon, RotateCcw, Layers, HardDrive } from 'lucide-react';
+import { useState } from 'react';
+import { Cpu, ArrowRight, CheckCircle2, AlertOctagon, RotateCcw } from 'lucide-react';
 
 export function AddressTranslationVisualizer() {
   // MMU State

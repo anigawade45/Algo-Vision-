@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layers, Database, Cpu, CheckCircle2, ArrowRight, Zap, Info, Binary } from 'lucide-react';
+import { useState } from 'react';
+import { Info } from 'lucide-react';
 
 export default function BankerConcepts() {
   const [selectedConcept, setSelectedConcept] = useState('need');

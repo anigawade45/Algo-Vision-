@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Terminal, Code, Cpu, FileText, Share2, ShieldCheck, Check } from 'lucide-react';
+import { useState } from 'react';
+import { Terminal, Cpu, FileText, Share2, ShieldCheck } from 'lucide-react';
 
 export default function SystemCallExplorer() {
   const [selectedCat, setSelectedCat] = useState('process');

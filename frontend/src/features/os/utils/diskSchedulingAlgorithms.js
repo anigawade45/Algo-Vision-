@@ -202,13 +202,13 @@ export function simulateSSTF(requests, initialHead, diskMin = 0, diskMax = 199, 
 export function simulateSCAN(requests, initialHead, diskMin = 0, diskMax = 199, initialDir = 'up') {
   let head = initialHead;
   let cumulativeMovement = 0;
-  let dir = initialDir;
+  const isUp = initialDir === 'up';
   const serviced = [];
   let pending = [...requests];
   const events = [];
   let step = 1;
 
-  if (dir === 'up') {
+  if (isUp) {
     // Service higher requests in ascending order
     const higherReqs = pending.filter(r => r.track >= head).sort((a, b) => a.track - b.track);
     const lowerReqs = pending.filter(r => r.track < head).sort((a, b) => b.track - a.track);
@@ -267,7 +267,6 @@ export function simulateSCAN(requests, initialHead, diskMin = 0, diskMax = 199, 
       }
 
       // Reverse direction and service remaining lower requests descending
-      dir = 'down';
       lowerReqs.forEach(req => {
         const prevHead = head;
         const dist = Math.abs(req.track - prevHead);
@@ -347,7 +346,6 @@ export function simulateSCAN(requests, initialHead, diskMin = 0, diskMax = 199, 
         }));
       }
 
-      dir = 'up';
       higherReqs.forEach(req => {
         const prevHead = head;
         const dist = Math.abs(req.track - prevHead);
@@ -634,13 +632,13 @@ export function simulateCSCAN(requests, initialHead, diskMin = 0, diskMax = 199,
 export function simulateLOOK(requests, initialHead, diskMin = 0, diskMax = 199, initialDir = 'up') {
   let head = initialHead;
   let cumulativeMovement = 0;
-  let dir = initialDir;
+  const isUp = initialDir === 'up';
   const serviced = [];
   let pending = [...requests];
   const events = [];
   let step = 1;
 
-  if (dir === 'up') {
+  if (isUp) {
     const higherReqs = pending.filter(r => r.track >= head).sort((a, b) => a.track - b.track);
     const lowerReqs = pending.filter(r => r.track < head).sort((a, b) => b.track - a.track);
 
@@ -668,7 +666,6 @@ export function simulateLOOK(requests, initialHead, diskMin = 0, diskMax = 199, 
     });
 
     if (lowerReqs.length > 0) {
-      dir = 'down';
       lowerReqs.forEach(req => {
         const prevHead = head;
         const dist = Math.abs(req.track - prevHead);
@@ -721,7 +718,6 @@ export function simulateLOOK(requests, initialHead, diskMin = 0, diskMax = 199, 
     });
 
     if (higherReqs.length > 0) {
-      dir = 'up';
       higherReqs.forEach(req => {
         const prevHead = head;
         const dist = Math.abs(req.track - prevHead);

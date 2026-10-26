@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AlertTriangle, ShieldCheck, Play, RefreshCw, CheckCircle2, ChevronRight, Activity } from 'lucide-react';
+import { useState, Fragment } from 'react';
+import { AlertTriangle, ShieldCheck, Play, ChevronRight, Activity } from 'lucide-react';
 
 export default function DeadlockDetector({
   processes,
@@ -135,10 +135,10 @@ export default function DeadlockDetector({
               <span className="font-bold text-rose-400 block mb-1">Identified Circular Dependency Chain:</span>
               <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-cyan-400 flex items-center gap-2 flex-wrap font-bold">
                 {detectionResult.cycle.map((node, i) => (
-                  <React.Fragment key={i}>
+                  <Fragment key={i}>
                     <span>{node}</span>
                     <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-                  </React.Fragment>
+                  </Fragment>
                 ))}
                 <span>{detectionResult.cycle[0]}</span>
               </div>

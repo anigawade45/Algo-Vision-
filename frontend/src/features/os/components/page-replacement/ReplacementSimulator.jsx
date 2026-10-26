@@ -1,22 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Play,
   Pause,
   RotateCcw,
   ChevronRight,
   ChevronLeft,
-  Zap,
   CheckCircle2,
   XCircle,
   Sparkles,
   Layers,
   Box,
-  Clock,
-  RefreshCw,
   Sliders,
   AlertTriangle,
-  ArrowRight,
-  HelpCircle
+  ArrowRight
 } from 'lucide-react';
 import {
   parseReferenceString,
@@ -58,41 +54,40 @@ export default function ReplacementSimulator() {
   const [frameCount, setFrameCount] = useState(3);
   const [selectedAlgo, setSelectedAlgo] = useState('FIFO');
 
-  const [simulationData, setSimulationData] = useState(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1000); // ms per step
-  const [validationError, setValidationError] = useState('');
 
   const autoPlayTimerRef = useRef(null);
 
   // Recalculate simulation whenever input, frameCount, or algorithm changes
-  useEffect(() => {
-    validateAndSimulate(refInput, frameCount, selectedAlgo);
-  }, [refInput, frameCount, selectedAlgo]);
-
-  const validateAndSimulate = (rawStr, frames, algo) => {
-    setValidationError('');
-    const parsed = parseReferenceString(rawStr);
+  const { simulationData, validationError } = useMemo(() => {
+    const parsed = parseReferenceString(refInput);
 
     if (parsed.length === 0) {
-      setValidationError('Please enter a valid space or comma separated page reference string (e.g., "7 0 1 2 0 3 0 4").');
-      setSimulationData(null);
-      return;
+      return {
+        simulationData: null,
+        validationError: 'Please enter a valid space or comma separated page reference string (e.g., "7 0 1 2 0 3 0 4").'
+      };
     }
 
-    if (frames < 1 || frames > 10 || isNaN(frames)) {
-      setValidationError('Frame count must be an integer between 1 and 10.');
-      setSimulationData(null);
-      return;
+    if (frameCount < 1 || frameCount > 10 || isNaN(frameCount)) {
+      return {
+        simulationData: null,
+        validationError: 'Frame count must be an integer between 1 and 10.'
+      };
     }
 
-    const sim = runSimulation(algo, parsed, frames);
-    setSimulationData(sim);
-    setCurrentStepIndex(0);
-    setIsPlaying(false);
-  };
+    return {
+      simulationData: runSimulation(selectedAlgo, parsed, frameCount),
+      validationError: ''
+    };
+  }, [refInput, frameCount, selectedAlgo]);
+
+  const safeStepIndex = Math.min(
+    currentStepIndex,
+    Math.max(0, (simulationData?.steps?.length || 1) - 1)
+  );
 
   // Auto-play timer effect
   useEffect(() => {
@@ -120,14 +115,14 @@ export default function ReplacementSimulator() {
 
   const handleNextStep = () => {
     if (!simulationData) return;
-    if (currentStepIndex < simulationData.steps.length - 1) {
-      setCurrentStepIndex((prev) => prev + 1);
+    if (safeStepIndex < simulationData.steps.length - 1) {
+      setCurrentStepIndex(safeStepIndex + 1);
     }
   };
 
   const handlePrevStep = () => {
-    if (currentStepIndex > 0) {
-      setCurrentStepIndex((prev) => prev - 1);
+    if (safeStepIndex > 0) {
+      setCurrentStepIndex(safeStepIndex - 1);
     }
   };
 
@@ -137,18 +132,19 @@ export default function ReplacementSimulator() {
   };
 
   const handlePresetSelect = (preset) => {
+    setIsPlaying(false);
+    setCurrentStepIndex(0);
     setRefInput(preset.refString);
     setFrameCount(preset.frames);
   };
 
-  const currentStep = simulationData?.steps[currentStepIndex] || null;
+  const currentStep = simulationData?.steps[safeStepIndex] || null;
   const parsedPages = simulationData ? simulationData.steps.map((s) => s.page) : [];
 
   // Hit/Fault percentage calculations
-  const totalRefs = simulationData ? simulationData.steps.length : 0;
   const hitsSoFar = currentStep ? currentStep.hits : 0;
   const faultsSoFar = currentStep ? currentStep.faults : 0;
-  const processedSoFar = currentStepIndex + 1;
+  const processedSoFar = safeStepIndex + 1;
   const hitRatio = processedSoFar > 0 ? ((hitsSoFar / processedSoFar) * 100).toFixed(1) : 0;
   const faultRate = processedSoFar > 0 ? ((faultsSoFar / processedSoFar) * 100).toFixed(1) : 0;
 
@@ -253,7 +249,7 @@ export default function ReplacementSimulator() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handlePrevStep}
-                  disabled={currentStepIndex === 0}
+                  disabled={safeStepIndex === 0}
                   className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="w-4 h-4" /> Prev Step
@@ -280,7 +276,7 @@ export default function ReplacementSimulator() {
 
                 <button
                   onClick={handleNextStep}
-                  disabled={currentStepIndex >= simulationData.steps.length - 1}
+                  disabled={safeStepIndex >= simulationData.steps.length - 1}
                   className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-mono font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   Next Step <ChevronRight className="w-4 h-4" />
@@ -311,7 +307,7 @@ export default function ReplacementSimulator() {
                 </div>
 
                 <div className="px-3 py-1.5 rounded-lg bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 text-cyan-700 dark:text-cyan-300 font-bold">
-                  Step {currentStepIndex + 1} / {simulationData.steps.length}
+                  Step {safeStepIndex + 1} / {simulationData.steps.length}
                 </div>
               </div>
             </div>
@@ -330,8 +326,8 @@ export default function ReplacementSimulator() {
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#070A12] border border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar">
                 <div className="flex items-center gap-2 min-w-max">
                   {parsedPages.map((pg, idx) => {
-                    const isCurrent = idx === currentStepIndex;
-                    const isPast = idx < currentStepIndex;
+                    const isCurrent = idx === safeStepIndex;
+                    const isPast = idx < safeStepIndex;
                     return (
                       <div key={idx} className="flex flex-col items-center gap-1">
                         <div
@@ -587,7 +583,7 @@ export default function ReplacementSimulator() {
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                   {simulationData.steps.map((st, sIdx) => {
-                    const isActive = sIdx === currentStepIndex;
+                    const isActive = sIdx === safeStepIndex;
                     return (
                       <tr
                         key={sIdx}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShieldAlert, AlertTriangle, Layers, ArrowRight, CheckCircle2, RotateCcw, Box, Cpu } from 'lucide-react';
+import { useState } from 'react';
+import { ShieldAlert, Box } from 'lucide-react';
 
 export function FragmentationVisualizer() {
   // Internal Fragmentation State
@@ -8,7 +8,7 @@ export function FragmentationVisualizer() {
 
   // External Fragmentation & Compaction State
   const [isCompacted, setIsCompacted] = useState(false);
-  const [externalRequestSize, setExternalRequestSize] = useState(250);
+  const externalRequestSize = 250;
 
   // Internal fragmentation calculation
   const internalWasted = Math.max(0, partitionSize - processSizeInternal);

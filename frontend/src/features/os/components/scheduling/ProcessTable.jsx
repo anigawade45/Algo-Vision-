@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ProcessTable({ processes, activeStepProcessStates }) {
   // Check if a process is completed at the current step
   const getRowClass = (pId) => {

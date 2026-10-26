@@ -1,5 +1,4 @@
-import React from 'react';
-import { Cpu, ArrowRight, Layers, Database, ShieldCheck, Box, HardDrive, CheckCircle2, Sliders } from 'lucide-react';
+import { ArrowRight, Layers, Box } from 'lucide-react';
 
 export function PagingIntro() {
   return (

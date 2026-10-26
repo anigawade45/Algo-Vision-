@@ -1,5 +1,4 @@
-import React from 'react';
-import { Compass, Disc, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Compass, Disc } from 'lucide-react';
 
 export default function DiskTrackVisualizer({
   diskMin = 0,
@@ -27,9 +26,6 @@ export default function DiskTrackVisualizer({
 
   const range = Math.max(diskMax - diskMin, 1);
   const getPct = (track) => Math.min(Math.max(((track - diskMin) / range) * 100, 0), 100);
-
-  // Filter events up to currentStepIndex for history trajectory line
-  const historyEvents = allEvents.slice(0, currentStepIndex + 1);
 
   return (
     <div className="space-y-6">

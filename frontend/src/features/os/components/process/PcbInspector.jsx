@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Cpu, Terminal, Shield, HardDrive, Layers, Clock, FileText, CheckCircle2, Sliders, RefreshCw, Hash, Binary } from 'lucide-react';
+import { useState } from 'react';
+import { Cpu, Shield, Layers, Clock, FileText, Sliders, Hash, Binary } from 'lucide-react';
 
 export default function PcbInspector() {
   const [selectedPid, setSelectedPid] = useState(101);

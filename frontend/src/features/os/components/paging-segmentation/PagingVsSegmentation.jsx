@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layers, Box, ArrowRight, CheckCircle2, Cpu, Database, Sliders } from 'lucide-react';
+import { useState } from 'react';
+import { Layers, Box, CheckCircle2, Sliders } from 'lucide-react';
 
 export function PagingVsSegmentation() {
   // Shared Laboratory Input State

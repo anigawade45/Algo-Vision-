@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, ShieldAlert, Play, RotateCcw, ArrowRight, CheckCircle2, Code2, Lock, Unlock } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, ShieldAlert, Play, RotateCcw, ArrowRight, Code2, Lock, Unlock } from 'lucide-react';
 
 export default function ModeTransitionSimulator() {
   const [selectedSyscall, setSelectedSyscall] = useState('read');

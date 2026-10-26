@@ -1,5 +1,4 @@
-import React from 'react';
-import { Cpu, ArrowRight, Layers, Database, ShieldAlert, CheckCircle2, HardDrive } from 'lucide-react';
+import { Cpu, ArrowRight } from 'lucide-react';
 
 export function MemoryIntro() {
   return (

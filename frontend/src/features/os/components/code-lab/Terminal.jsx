@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Terminal as TerminalIcon,
   Trash2,
@@ -6,8 +6,7 @@ import {
   Check,
   AlertCircle,
   CheckCircle2,
-  Clock,
-  Square
+  Clock
 } from 'lucide-react';
 import { EXECUTION_STATES } from './executionService';
 

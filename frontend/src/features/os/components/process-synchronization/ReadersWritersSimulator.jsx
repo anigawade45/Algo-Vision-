@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Database, Eye, Edit3, Play, Pause, RotateCcw, Plus, UserCheck, ShieldAlert, CheckCircle2, Clock, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { Database, Eye, Edit3, RotateCcw } from 'lucide-react';
 
 export const ReadersWritersSimulator = () => {
   // Database access state
@@ -10,24 +10,16 @@ export const ReadersWritersSimulator = () => {
 
   const [dbState, setDbState] = useState('IDLE'); // IDLE, READING, WRITING
   const [readCount, setReadCount] = useState(0);
-  const [rwMutex, setRwMutex] = useState(1); // 1 = unlocked, 0 = locked by readers or writer
-  const [mutex, setMutex] = useState(1); // protects readCount variable update
 
   const [logs, setLogs] = useState(['Readers-Writers Database Simulator initialized.']);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef(null);
 
   const handleReset = () => {
-    setIsRunning(false);
-    if (timerRef.current) clearInterval(timerRef.current);
     setActiveReaders([]);
     setActiveWriter(null);
     setWaitingWriters([]);
     setWaitingReaders([]);
     setDbState('IDLE');
     setReadCount(0);
-    setRwMutex(1);
-    setMutex(1);
     setLogs(['Database cleared and mutexes reset to initial state.']);
   };
 
@@ -45,7 +37,6 @@ export const ReadersWritersSimulator = () => {
       setActiveReaders(prev => [...prev, readerId]);
       setReadCount(prev => prev + 1);
       setDbState('READING');
-      setRwMutex(0); // Lock out writers
       setLogs(prev => [`[READ GRANTED] Reader ${readerId} entered database. Active Readers = ${activeReaders.length + 1}.`, ...prev]);
     }
   };
@@ -60,7 +51,6 @@ export const ReadersWritersSimulator = () => {
 
       if (nextReaders.length === 0) {
         setDbState('IDLE');
-        setRwMutex(1); // Unlock rwMutex so writers can write
         setLogs(prev => [`[READ FINISHED] Last Reader ${readerId} exited. Database is now IDLE. rw_mutex released!`, ...prev]);
 
         if (waitingWriters.length > 0) {
@@ -68,7 +58,6 @@ export const ReadersWritersSimulator = () => {
           setWaitingWriters(restWriters);
           setActiveWriter(nextWriter);
           setDbState('WRITING');
-          setRwMutex(0);
           setLogs(prev => [`[WRITE GRANTED] Waiting Writer ${nextWriter} acquired exclusive database lock!`, ...prev]);
         }
       } else {
@@ -96,7 +85,6 @@ export const ReadersWritersSimulator = () => {
 
     setActiveWriter(writerId);
     setDbState('WRITING');
-    setRwMutex(0);
     setLogs(prev => [`[EXCLUSIVE WRITE GRANTED] Writer ${writerId} acquired database write lock! Readers & Writers blocked.`, ...prev]);
   };
 
@@ -106,14 +94,12 @@ export const ReadersWritersSimulator = () => {
       const finishedWriter = activeWriter;
       setActiveWriter(null);
       setDbState('IDLE');
-      setRwMutex(1);
       setLogs(prev => [`[WRITE FINISHED] Writer ${finishedWriter} released database lock. Database is now IDLE.`, ...prev]);
 
       if (waitingReaders.length > 0) {
         setActiveReaders(waitingReaders);
         setReadCount(waitingReaders.length);
         setDbState('READING');
-        setRwMutex(0);
         setLogs(prev => [`[READ GRANTED] Unblocked ${waitingReaders.length} waiting reader(s) into database!`, ...prev]);
         setWaitingReaders([]);
       } else if (waitingWriters.length > 0) {
@@ -121,7 +107,6 @@ export const ReadersWritersSimulator = () => {
         setWaitingWriters(restWriters);
         setActiveWriter(nextWriter);
         setDbState('WRITING');
-        setRwMutex(0);
         setLogs(prev => [`[WRITE GRANTED] Unblocked next waiting Writer ${nextWriter}!`, ...prev]);
       }
     }
