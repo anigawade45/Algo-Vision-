@@ -19,20 +19,8 @@ import { RATE_LIMIT_STEPS } from '../data/rateLimitingData';
 
 export function RateLimiting({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('algorithms');
-  const [completedSteps, setCompletedSteps] = useState([]);
 
   const currentStepIdx = RATE_LIMIT_STEPS.findIndex((s) => s.id === activeStep);
-
-  const markStepComplete = (stepId) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps((prev) => [...prev, stepId]);
-    }
-    const nextIdx = currentStepIdx + 1;
-    if (nextIdx < RATE_LIMIT_STEPS.length) {
-      setActiveStep(RATE_LIMIT_STEPS[nextIdx].id);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   const handlePrevStep = () => {
     if (currentStepIdx > 0) {
@@ -119,53 +107,37 @@ export function RateLimiting({ theme, toggleTheme }) {
             setActiveStep(stepId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          completedSteps={completedSteps}
         />
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
           {activeStep === 'algorithms' && (
             <div className="space-y-6">
-              <RateLimitAlgorithmsLab
-                onCompleteStep={() => markStepComplete('algorithms')}
-                isCompleted={completedSteps.includes('algorithms')}
-              />
+              <RateLimitAlgorithmsLab />
             </div>
           )}
 
           {activeStep === 'request-flow' && (
             <div className="space-y-6">
-              <RequestFlowPipeline
-                onCompleteStep={() => markStepComplete('request-flow')}
-                isCompleted={completedSteps.includes('request-flow')}
-              />
+              <RequestFlowPipeline />
             </div>
           )}
 
           {activeStep === 'identity-scopes' && (
             <div className="space-y-6">
-              <IdentityScopingLab
-                onCompleteStep={() => markStepComplete('identity-scopes')}
-                isCompleted={completedSteps.includes('identity-scopes')}
-              />
+              <IdentityScopingLab />
             </div>
           )}
 
           {activeStep === 'retry-policy' && (
             <div className="space-y-6">
-              <ClientRetrySimulation
-                onCompleteStep={() => markStepComplete('retry-policy')}
-                isCompleted={completedSteps.includes('retry-policy')}
-              />
+              <ClientRetrySimulation />
             </div>
           )}
 
           {activeStep === 'distributed-matrix' && (
             <div className="space-y-6">
-              <DistributedRateLimitingMatrix
-                onCompleteStep={() => markStepComplete('distributed-matrix')}
-                isCompleted={completedSteps.includes('distributed-matrix')}
-              />
+              <DistributedRateLimitingMatrix />
             </div>
           )}
 

@@ -19,21 +19,8 @@ import { BASICS_STEPS } from '../data/basicsModuleData';
 
 export default function SystemDesignBasics({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('overview');
-  const [completedSteps, setCompletedSteps] = useState([]);
 
   const currentStepIdx = BASICS_STEPS.findIndex((s) => s.id === activeStep);
-
-  const markStepComplete = (stepId) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps((prev) => [...prev, stepId]);
-    }
-    // Auto advance to next step
-    const nextIdx = currentStepIdx + 1;
-    if (nextIdx < BASICS_STEPS.length) {
-      setActiveStep(BASICS_STEPS[nextIdx].id);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   const handlePrevStep = () => {
     if (currentStepIdx > 0) {
@@ -120,52 +107,16 @@ export default function SystemDesignBasics({ theme, toggleTheme }) {
             setActiveStep(stepId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          completedSteps={completedSteps}
         />
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
-          {activeStep === 'overview' && (
-            <ConceptOverviewSection
-              onCompleteStep={() => markStepComplete('overview')}
-              isCompleted={completedSteps.includes('overview')}
-            />
-          )}
-
-          {activeStep === 'requirements' && (
-            <RequirementsExplorerSection
-              onCompleteStep={() => markStepComplete('requirements')}
-              isCompleted={completedSteps.includes('requirements')}
-            />
-          )}
-
-          {activeStep === 'client-server' && (
-            <ClientServerVisualizerSection
-              onCompleteStep={() => markStepComplete('client-server')}
-              isCompleted={completedSteps.includes('client-server')}
-            />
-          )}
-
-          {activeStep === 'stateless-stateful' && (
-            <StatelessStatefulSection
-              onCompleteStep={() => markStepComplete('stateless-stateful')}
-              isCompleted={completedSteps.includes('stateless-stateful')}
-            />
-          )}
-
-          {activeStep === 'quality-attributes' && (
-            <QualityAttributesSection
-              onCompleteStep={() => markStepComplete('quality-attributes')}
-              isCompleted={completedSteps.includes('quality-attributes')}
-            />
-          )}
-
-          {activeStep === 'quiz' && (
-            <BasicsQuizSection
-              onCompleteStep={() => markStepComplete('quiz')}
-              isCompleted={completedSteps.includes('quiz')}
-            />
-          )}
+          {activeStep === 'overview' && <ConceptOverviewSection />}
+          {activeStep === 'requirements' && <RequirementsExplorerSection />}
+          {activeStep === 'client-server' && <ClientServerVisualizerSection />}
+          {activeStep === 'stateless-stateful' && <StatelessStatefulSection />}
+          {activeStep === 'quality-attributes' && <QualityAttributesSection />}
+          {activeStep === 'quiz' && <BasicsQuizSection />}
         </div>
 
         {/* Step Navigation Bar */}

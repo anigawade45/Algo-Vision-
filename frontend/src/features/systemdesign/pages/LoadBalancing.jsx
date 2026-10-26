@@ -20,21 +20,8 @@ import { LB_STEPS } from '../data/loadBalancingData';
 
 export default function LoadBalancing({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('concepts');
-  const [completedSteps, setCompletedSteps] = useState([]);
 
   const currentStepIdx = LB_STEPS.findIndex((s) => s.id === activeStep);
-
-  const markStepComplete = (stepId) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps((prev) => [...prev, stepId]);
-    }
-    // Advance to next step
-    const nextIdx = currentStepIdx + 1;
-    if (nextIdx < LB_STEPS.length) {
-      setActiveStep(LB_STEPS[nextIdx].id);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   const handlePrevStep = () => {
     if (currentStepIdx > 0) {
@@ -121,91 +108,16 @@ export default function LoadBalancing({ theme, toggleTheme }) {
             setActiveStep(stepId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          completedSteps={completedSteps}
         />
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
-          {activeStep === 'concepts' && (
-            <div className="space-y-6">
-              <LbConceptsSection />
-              <div className="flex justify-end pt-4">
-                <button
-                  onClick={() => markStepComplete('concepts')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition-all cursor-pointer"
-                >
-                  <span>Complete & Go to Live Visualizer</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeStep === 'visualizer' && (
-            <div className="space-y-6">
-              <LbArchitectureVisualizer />
-              <div className="flex justify-end pt-4">
-                <button
-                  onClick={() => markStepComplete('visualizer')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition-all cursor-pointer"
-                >
-                  <span>Complete & Compare Algorithms</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeStep === 'algorithms' && (
-            <div className="space-y-6">
-              <LbAlgorithmComparison />
-              <div className="flex justify-end pt-4">
-                <button
-                  onClick={() => markStepComplete('algorithms')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition-all cursor-pointer"
-                >
-                  <span>Complete & Test Failover Lab</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeStep === 'failover' && (
-            <div className="space-y-6">
-              <LbFailoverLab />
-              <div className="flex justify-end pt-4">
-                <button
-                  onClick={() => markStepComplete('failover')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition-all cursor-pointer"
-                >
-                  <span>Complete & Explore Scaling Matrix</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeStep === 'scaling' && (
-            <div className="space-y-6">
-              <ScalingComparisonSection />
-              <div className="flex justify-end pt-4">
-                <button
-                  onClick={() => markStepComplete('scaling')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition-all cursor-pointer"
-                >
-                  <span>Complete & Take Mastery Quiz</span>
-                  <CheckCircle2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {activeStep === 'quiz' && (
-            <div className="space-y-6">
-              <LbQuizSection />
-            </div>
-          )}
+          {activeStep === 'concepts' && <LbConceptsSection />}
+          {activeStep === 'visualizer' && <LbArchitectureVisualizer />}
+          {activeStep === 'algorithms' && <LbAlgorithmComparison />}
+          {activeStep === 'failover' && <LbFailoverLab />}
+          {activeStep === 'scaling' && <ScalingComparisonSection />}
+          {activeStep === 'quiz' && <LbQuizSection />}
         </div>
 
         {/* Step Navigation Bar */}

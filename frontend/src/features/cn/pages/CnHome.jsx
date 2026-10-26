@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Wifi, Layers, LayoutDashboard, ArrowRight, Play, Lock, CheckCircle2, Globe, Shield, Terminal } from 'lucide-react';
+import { Wifi, Layers, LayoutDashboard, ArrowRight, Play, Lock, CheckCircle2, Globe, Shield, Terminal, Sun, Moon } from 'lucide-react';
 
 export default function CnHome({ theme, toggleTheme }) {
   const cnTopics = [
@@ -100,7 +100,7 @@ export default function CnHome({ theme, toggleTheme }) {
       <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
-            <Link to="/dashboard" className="flex items-center gap-2 group">
+            <Link to="/cn" className="flex items-center gap-2 group">
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
                 <Wifi className="w-4.5 h-4.5" />
               </div>
@@ -122,12 +122,22 @@ export default function CnHome({ theme, toggleTheme }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {toggleTheme && (
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+              </button>
+            )}
+
             <Link
               to="/dashboard"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors"
             >
-              <LayoutDashboard className="w-3.5 h-3.5 text-blue-500" />
+              <LayoutDashboard className="w-3.5 h-3.5 text-emerald-500" />
               <span>Back to Dashboard</span>
             </Link>
           </div>

@@ -19,21 +19,8 @@ import { CACHING_STEPS } from '../data/cachingData';
 
 export default function Caching({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('concepts');
-  const [completedSteps, setCompletedSteps] = useState([]);
 
   const currentStepIdx = CACHING_STEPS.findIndex((s) => s.id === activeStep);
-
-  const markStepComplete = (stepId) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps((prev) => [...prev, stepId]);
-    }
-    // Advance to next step
-    const nextIdx = currentStepIdx + 1;
-    if (nextIdx < CACHING_STEPS.length) {
-      setActiveStep(CACHING_STEPS[nextIdx].id);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   const handlePrevStep = () => {
     if (currentStepIdx > 0) {
@@ -120,61 +107,16 @@ export default function Caching({ theme, toggleTheme }) {
             setActiveStep(stepId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          completedSteps={completedSteps}
         />
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
-          {activeStep === 'concepts' && (
-            <div className="space-y-6">
-              <CachingConceptsSection
-                onCompleteStep={() => markStepComplete('concepts')}
-                isCompleted={completedSteps.includes('concepts')}
-              />
-            </div>
-          )}
-
-          {activeStep === 'visualizer' && (
-            <div className="space-y-6">
-              <CacheAsideVisualizer
-                onCompleteStep={() => markStepComplete('visualizer')}
-                isCompleted={completedSteps.includes('visualizer')}
-              />
-            </div>
-          )}
-
-          {activeStep === 'strategies' && (
-            <div className="space-y-6">
-              <CacheStrategiesSection
-                onCompleteStep={() => markStepComplete('strategies')}
-                isCompleted={completedSteps.includes('strategies')}
-              />
-            </div>
-          )}
-
-          {activeStep === 'invalidation' && (
-            <div className="space-y-6">
-              <CacheInvalidationLab
-                onCompleteStep={() => markStepComplete('invalidation')}
-                isCompleted={completedSteps.includes('invalidation')}
-              />
-            </div>
-          )}
-
-          {activeStep === 'eviction' && (
-            <div className="space-y-6">
-              <CacheEvictionSection
-                onCompleteStep={() => markStepComplete('eviction')}
-                isCompleted={completedSteps.includes('eviction')}
-              />
-            </div>
-          )}
-
-          {activeStep === 'quiz' && (
-            <div className="space-y-6">
-              <CachingQuizSection />
-            </div>
-          )}
+          {activeStep === 'concepts' && <CachingConceptsSection />}
+          {activeStep === 'visualizer' && <CacheAsideVisualizer />}
+          {activeStep === 'strategies' && <CacheStrategiesSection />}
+          {activeStep === 'invalidation' && <CacheInvalidationLab />}
+          {activeStep === 'eviction' && <CacheEvictionSection />}
+          {activeStep === 'quiz' && <CachingQuizSection />}
         </div>
 
         {/* Step Navigation Bar */}

@@ -19,20 +19,8 @@ import { MSG_QUEUE_STEPS } from '../data/msgQueueData';
 
 export function MessageQueues({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('sync-async');
-  const [completedSteps, setCompletedSteps] = useState([]);
 
   const currentStepIdx = MSG_QUEUE_STEPS.findIndex((s) => s.id === activeStep);
-
-  const markStepComplete = (stepId) => {
-    if (!completedSteps.includes(stepId)) {
-      setCompletedSteps((prev) => [...prev, stepId]);
-    }
-    const nextIdx = currentStepIdx + 1;
-    if (nextIdx < MSG_QUEUE_STEPS.length) {
-      setActiveStep(MSG_QUEUE_STEPS[nextIdx].id);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   const handlePrevStep = () => {
     if (currentStepIdx > 0) {
@@ -119,53 +107,37 @@ export function MessageQueues({ theme, toggleTheme }) {
             setActiveStep(stepId);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          completedSteps={completedSteps}
         />
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
           {activeStep === 'sync-async' && (
             <div className="space-y-6">
-              <SyncAsyncComparison
-                onCompleteStep={() => markStepComplete('sync-async')}
-                isCompleted={completedSteps.includes('sync-async')}
-              />
+              <SyncAsyncComparison />
             </div>
           )}
 
           {activeStep === 'simulator' && (
             <div className="space-y-6">
-              <QueueArchitectureSimulator
-                onCompleteStep={() => markStepComplete('simulator')}
-                isCompleted={completedSteps.includes('simulator')}
-              />
+              <QueueArchitectureSimulator />
             </div>
           )}
 
           {activeStep === 'dlq-retry' && (
             <div className="space-y-6">
-              <DlqRetryLab
-                onCompleteStep={() => markStepComplete('dlq-retry')}
-                isCompleted={completedSteps.includes('dlq-retry')}
-              />
+              <DlqRetryLab />
             </div>
           )}
 
           {activeStep === 'idempotency' && (
             <div className="space-y-6">
-              <DeliverySemanticsLab
-                onCompleteStep={() => markStepComplete('idempotency')}
-                isCompleted={completedSteps.includes('idempotency')}
-              />
+              <DeliverySemanticsLab />
             </div>
           )}
 
           {activeStep === 'matrix' && (
             <div className="space-y-6">
-              <BrokerComparisonMatrix
-                onCompleteStep={() => markStepComplete('matrix')}
-                isCompleted={completedSteps.includes('matrix')}
-              />
+              <BrokerComparisonMatrix />
             </div>
           )}
 
