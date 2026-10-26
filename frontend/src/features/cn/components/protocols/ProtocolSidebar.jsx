@@ -7,12 +7,9 @@ import {
   Folder,
   Mail,
   Activity,
-  Code2,
   ChevronRight,
   Layers,
-  Filter,
   CheckCircle2,
-  Menu,
   X
 } from 'lucide-react';
 import { PROTOCOLS_DATA } from '../../data/protocolsData';
@@ -117,9 +114,9 @@ export function ProtocolSidebar({
         <div className="flex items-center gap-1 font-mono text-[10px]">
           <button
             onClick={() => setFilterLayer('ALL')}
-            className={`px-2 py-1 rounded-lg font-bold transition-all ${
+            className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               filterLayer === 'ALL'
-                ? 'bg-emerald-600 text-white shadow-xs'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -127,9 +124,9 @@ export function ProtocolSidebar({
           </button>
           <button
             onClick={() => setFilterLayer('L7')}
-            className={`px-2 py-1 rounded-lg font-bold transition-all ${
+            className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               filterLayer === 'L7'
-                ? 'bg-emerald-600 text-white shadow-xs'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -137,9 +134,9 @@ export function ProtocolSidebar({
           </button>
           <button
             onClick={() => setFilterLayer('L3_L2')}
-            className={`px-2 py-1 rounded-lg font-bold transition-all ${
+            className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${
               filterLayer === 'L3_L2'
-                ? 'bg-emerald-600 text-white shadow-xs'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >

@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Layers,
   ArrowDown,
   ArrowUp,
-  ShieldCheck,
-  Cpu,
-  Radio,
-  FileText,
-  Server,
-  Sparkles,
   Info,
-  CheckCircle2,
-  Binary
+  FileText
 } from 'lucide-react';
 import { PACKET_TRANSMISSION_DATA } from '../../data/packetTransmissionData';
 
@@ -121,7 +113,7 @@ export function PacketPduHierarchy() {
           <button
             onClick={() => setDirection('encapsulation')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${direction === 'encapsulation'
-                ? 'bg-indigo-600 text-white shadow-xs'
+                ? 'bg-indigo-600 text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
           >
@@ -131,7 +123,7 @@ export function PacketPduHierarchy() {
           <button
             onClick={() => setDirection('deencapsulation')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${direction === 'deencapsulation'
-                ? 'bg-emerald-600 text-whSee ite shadow-xs'
+                ? 'bg-emerald-600 text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
           >

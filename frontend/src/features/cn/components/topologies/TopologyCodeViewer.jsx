@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 import {
-  Code2,
   Terminal,
   Copy,
   Check,
   Play,
-  RotateCcw,
-  Layers,
-  Cpu,
   Zap,
   Sparkles,
-  GitFork,
-  BookOpen,
   Info,
   ShieldAlert,
   Clock,
@@ -20,7 +14,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { TOPOLOGY_CODE_DATA } from '../../data/topologyCodeData';
-import { NETWORK_TOPOLOGIES_DATA } from '../../data/fundamentalsData';
+import { NETWORK_TOPOLOGIES_DATA } from '../../data/topologiesData';
 
 export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
   const [selectedTopologyId, setSelectedTopologyId] = useState(defaultTopology);
@@ -129,7 +123,7 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/60 font-mono text-xs font-bold uppercase">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900/60 font-mono text-xs font-bold uppercase">
                 <FileCode className="w-3.5 h-3.5" />
                 <span>CN TOPOLOGY ALGORITHM & CODE STACK</span>
               </span>
@@ -148,7 +142,7 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
           {onSwitchToLab && (
             <button
               onClick={onSwitchToLab}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-colors self-start shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors self-start shrink-0 cursor-pointer"
             >
               <Zap className="w-3.5 h-3.5" />
               <span>Test in Visual Simulator</span>
@@ -168,14 +162,14 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
                   setSelectedTopologyId(top.id);
                   setExecutionLogs([]);
                 }}
-                className={`px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all text-center flex flex-col items-center justify-center gap-1 border ${
+                className={`px-3.5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all text-center flex flex-col items-center justify-center gap-1 border cursor-pointer ${
                   isSelected
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/20'
-                    : 'bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-800'
+                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20'
+                    : 'bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-800'
                 }`}
               >
                 <span className="capitalize">{top.id} Topology</span>
-                <span className={`text-[10px] font-normal opacity-80 ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                <span className={`text-[10px] font-normal opacity-80 ${isSelected ? 'text-emerald-100' : 'text-slate-400'}`}>
                   {top.id === 'bus' && 'CSMA/CD'}
                   {top.id === 'star' && 'Switch CAM'}
                   {top.id === 'ring' && 'Token Ring'}
@@ -191,8 +185,8 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
 
       {/* Metrics & Theoretical Specs Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-1.5 shadow-xs">
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-1.5 shadow-sm">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
             <Clock className="w-4 h-4" />
             <span>TIME COMPLEXITY & LATENCY</span>
           </div>
@@ -204,7 +198,7 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-1.5 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-1.5 shadow-sm">
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
             <HardDrive className="w-4 h-4" />
             <span>CABLE & INFRASTRUCTURE</span>
@@ -217,7 +211,7 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-1.5 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-1.5 shadow-sm">
           <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-600 dark:text-amber-400">
             <ShieldAlert className="w-4 h-4" />
             <span>COLLISION & FAULT METRIC</span>
@@ -241,9 +235,9 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
             <div className="flex items-center gap-1.5 font-mono text-xs">
               <button
                 onClick={() => setSelectedLang('python')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
+                className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'python'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -251,9 +245,9 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
               </button>
               <button
                 onClick={() => setSelectedLang('cpp')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
+                className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'cpp'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -261,9 +255,9 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
               </button>
               <button
                 onClick={() => setSelectedLang('java')}
-                className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
+                className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'java'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -376,7 +370,7 @@ export function TopologyCodeViewer({ defaultTopology = 'bus', onSwitchToLab }) {
               </span>
               <button
                 onClick={() => setExecutionLogs([])}
-                className="hover:text-slate-300 transition-colors"
+                className="hover:text-slate-300 transition-colors cursor-pointer"
                 title="Clear console"
               >
                 Clear

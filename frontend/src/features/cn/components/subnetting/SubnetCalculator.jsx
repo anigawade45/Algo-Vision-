@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calculator, Globe, ShieldCheck, Server, Network, Sliders, ArrowRight } from 'lucide-react';
+import { Globe, Sliders } from 'lucide-react';
 
 export function SubnetCalculator({
   ipInput,
@@ -66,7 +66,7 @@ export function SubnetCalculator({
               onClick={() => onChangeCidr(p.cidr)}
               className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-semibold transition-colors cursor-pointer ${
                 cidr === p.cidr
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-emerald-600 text-white shadow-sm'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >

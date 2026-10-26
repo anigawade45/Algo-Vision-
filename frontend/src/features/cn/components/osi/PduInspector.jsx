@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, Shield, Binary, CheckCircle, FileText, Database } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { OSI_LAYERS } from '../../utils/osiSimulation';
 
 export function PduInspector({ selectedLayerNum }) {
@@ -9,12 +9,12 @@ export function PduInspector({ selectedLayerNum }) {
     <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 shadow-sm font-sans space-y-5">
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-blue-500" />
+          <FileText className="w-4 h-4 text-emerald-500" />
           <h3 className="text-base font-bold text-slate-900 dark:text-white">
             {layer.name} ({layer.shortName}) Header Inspector
           </h3>
         </div>
-        <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+        <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
           PDU: {layer.pdu}
         </span>
       </div>

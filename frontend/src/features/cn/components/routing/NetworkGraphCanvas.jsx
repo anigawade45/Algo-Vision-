@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router as RouterIcon, Wifi, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Wifi } from 'lucide-react';
 
 export function NetworkGraphCanvas({
   nodes,

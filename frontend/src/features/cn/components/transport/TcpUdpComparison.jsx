@@ -1,21 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Scale,
   ShieldCheck,
   Zap,
-  CheckCircle2,
-  XCircle,
-  FileCode,
-  Layers,
-  ArrowRight,
-  Sparkles,
-  Info,
-  Sliders,
   Play,
-  RotateCcw,
   Clock,
-  Radio,
-  Server,
   Activity
 } from 'lucide-react';
 import { TRANSPORT_LAYER_DATA } from '../../data/transportData';

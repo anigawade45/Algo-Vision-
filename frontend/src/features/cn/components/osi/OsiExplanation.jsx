@@ -1,12 +1,12 @@
 import React from 'react';
-import { BookOpen, Sparkles, Server, Cpu, Radio, Shield, Network } from 'lucide-react';
+import { BookOpen, Sparkles } from 'lucide-react';
 
 export function OsiExplanation() {
   return (
     <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm font-sans space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center shadow-sm">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
@@ -19,7 +19,7 @@ export function OsiExplanation() {
           </div>
         </div>
 
-        <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 text-xs font-semibold border border-blue-200 dark:border-blue-800">
+        <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-xs font-semibold border border-emerald-200 dark:border-emerald-800">
           <Sparkles className="w-3.5 h-3.5" />
           Core Networking Model
         </span>

@@ -2,17 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { 
   Send, 
   RefreshCw, 
-  CheckCircle2, 
-  ArrowRight, 
-  Sliders, 
-  Radio, 
   ShieldAlert, 
   Zap, 
   Clock, 
   Activity, 
-  Info,
-  Server,
-  Laptop
+  Server, 
+  Laptop,
+  CheckCircle2
 } from 'lucide-react';
 
 const SAMPLE_MESSAGES = [
@@ -22,7 +18,7 @@ const SAMPLE_MESSAGES = [
   { id: 'iot', label: 'IoT Sensor: 24.5°C', size: '16 Bytes', type: 'Telemetry MQTT' },
 ];
 
-export function IntroSection({ onCompleteStep, isCompleted }) {
+export function IntroSection() {
   const [selectedMessage, setSelectedMessage] = useState(SAMPLE_MESSAGES[0]);
   const [bandwidth, setBandwidth] = useState('100'); // 10, 100, 1000 Mbps
   const [latencyMs, setLatencyMs] = useState(30); // 10ms - 200ms
@@ -66,7 +62,7 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* 1. Definition Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100 dark:border-slate-800">
           <div className="space-y-2">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
@@ -125,7 +121,7 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Interactive Network Transmission Simulator */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-mono font-semibold mb-1">
@@ -143,7 +139,7 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
           <div className="flex items-center gap-2">
             <button
               onClick={handleReset}
-              className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
               title="Reset Sandbox"
             >
               <RefreshCw className="w-4 h-4" />
@@ -154,7 +150,7 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
               className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs shadow-md transition-all ${
                 isTransmitting
                   ? 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
-                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20 hover:scale-102'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20 hover:scale-[1.02] cursor-pointer'
               }`}
             >
               <Send className="w-3.5 h-3.5" />
@@ -187,7 +183,7 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
               {/* Wire line */}
               <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden relative border border-slate-700">
                 <div 
-                  className="h-full bg-linear-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-75"
+                  className="h-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 transition-all duration-75"
                   style={{ width: `${packetProgress}%` }}
                 />
               </div>
@@ -278,7 +274,7 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
                 <button
                   key={msg.id}
                   onClick={() => setSelectedMessage(msg)}
-                  className={`text-left px-3 py-2 rounded-xl text-xs font-mono transition-all flex items-center justify-between ${
+                  className={`text-left px-3 py-2 rounded-xl text-xs font-mono transition-all flex items-center justify-between cursor-pointer ${
                     selectedMessage.id === msg.id
                       ? 'bg-emerald-600 text-white font-bold'
                       : 'bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -308,10 +304,10 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
                 <button
                   key={bw}
                   onClick={() => setBandwidth(bw)}
-                  className={`py-2 px-2 rounded-xl text-xs font-mono font-bold transition-all text-center ${
+                  className={`py-2 px-2 rounded-xl text-xs font-mono font-bold transition-all text-center cursor-pointer ${
                     bandwidth === bw
                       ? 'bg-emerald-600 text-white'
-                      : 'bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800'
+                      : 'bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50'
                   }`}
                 >
                   {bw === '1000' ? '1 Gbps' : `${bw} Mbps`}
@@ -389,29 +385,6 @@ export function IntroSection({ onCompleteStep, isCompleted }) {
             <strong>Packet Loss</strong> occurs when buffer queues overflow or electromagnetic noise corrupts the CRC checksum. <strong>Jitter</strong> is the variance in packet arrival intervals.
           </p>
         </div>
-      </div>
-
-      {/* Step Completion Action */}
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className={`w-5 h-5 ${isCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-500'}`} />
-          <div>
-            <span className="text-xs font-bold text-emerald-950 dark:text-emerald-200 block">
-              Step 1: Network Fundamentals Completed
-            </span>
-            <span className="text-[11px] text-emerald-700 dark:text-emerald-400">
-              Ready to explore physical & logical network components?
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={onCompleteStep}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all hover:scale-102"
-        >
-          <span>Proceed to Components</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
       </div>
     </div>
   );

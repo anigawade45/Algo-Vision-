@@ -3,64 +3,105 @@ import { Link } from 'react-router-dom';
 import {
   Wifi,
   Layers,
+  ArrowLeft,
   ArrowRight,
   Sparkles,
   CheckCircle2,
   Code,
   LayoutDashboard,
   Play,
-  RotateCcw,
-  Shield,
-  FileText,
-  Activity,
   Boxes,
-  Eye,
-  Radio,
-  Share2,
-  BookOpen
+  BookOpen,
+  Sun,
+  Moon
 } from 'lucide-react';
 import PacketFlowSimulator from '../components/packets/PacketFlowSimulator';
 import PacketPduHierarchy from '../components/packets/PacketPduHierarchy';
 import PacketCodeViewer from '../components/packets/PacketCodeViewer';
 
+const PACKET_TABS = [
+  { id: 'simulator', label: '1. Packet Flow Simulator' },
+  { id: 'pdu', label: '2. PDU Structure & Hierarchy' },
+  { id: 'code', label: '3. Packet Crafting Code' },
+  { id: 'theory', label: '4. Transmission Concepts & Theory' }
+];
+
 export default function PacketTransmission({ theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('simulator'); // 'simulator', 'pdu', 'code', 'theory'
 
+  const currentStepIdx = PACKET_TABS.findIndex((t) => t.id === activeTab);
+
+  const handlePrevStep = () => {
+    if (currentStepIdx > 0) {
+      setActiveTab(PACKET_TABS[currentStepIdx - 1].id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNextStep = () => {
+    if (currentStepIdx < PACKET_TABS.length - 1) {
+      setActiveTab(PACKET_TABS[currentStepIdx + 1].id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-cyan-500 selection:text-white">
+    <div className="min-h-screen w-full overflow-x-hidden bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-emerald-500 selection:text-white">
       {/* Top Application Navbar */}
       <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <Link to="/cn" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-cyan-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <Link to="/cn" className="flex items-center gap-2 group shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
                 <Wifi className="w-4.5 h-4.5" />
               </div>
-              <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+              <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                 AlgoVision CN
               </span>
             </Link>
 
-            <span className="text-slate-300 dark:text-slate-700">/</span>
+            <span className="hidden md:inline text-slate-300 dark:text-slate-700">/</span>
 
-            <nav className="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
-              <Link to="/cn" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
-                CN Modules
+            <nav className="hidden md:flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
+              <Link to="/dashboard" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
+                Dashboard
               </Link>
               <span>/</span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-semibold">
-                Packet & Data Transmission
+              <Link to="/cn" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                Computer Networks
+              </Link>
+              <span>/</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                Packet &amp; Data Transmission
               </span>
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            {toggleTheme && (
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+              </button>
+            )}
+
             <Link
               to="/cn"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors whitespace-nowrap"
             >
-              <LayoutDashboard className="w-3.5 h-3.5 text-cyan-500" />
-              <span>Back to CN Home</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Back to </span><span>CN Home</span>
+            </Link>
+
+            <Link
+              to="/dashboard"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-colors whitespace-nowrap"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5" />
+              <span>Dashboard</span>
             </Link>
           </div>
         </div>
@@ -70,12 +111,12 @@ export default function PacketTransmission({ theme, toggleTheme }) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Title & Badge */}
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive Data Transmission & Header Encapsulation</span>
+            <span>Interactive Data Transmission &amp; Header Encapsulation</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Packet & Data Transmission Architecture
+            Packet &amp; Data Transmission Architecture
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Trace how application messages are encapsulated into Segments (L4), Packets (L3), Frames (L2), and Bits (L1), routed across multi-hop networks with TTL decrements and MAC address rewriting.
@@ -88,12 +129,12 @@ export default function PacketTransmission({ theme, toggleTheme }) {
             onClick={() => setActiveTab('simulator')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === 'simulator'
-                ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/20'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900'
             }`}
           >
             <Play className="w-3.5 h-3.5" />
-            <span>Interactive Simulator</span>
+            <span>1. Interactive Simulator</span>
           </button>
 
           <button
@@ -105,7 +146,7 @@ export default function PacketTransmission({ theme, toggleTheme }) {
             }`}
           >
             <Boxes className="w-3.5 h-3.5" />
-            <span>PDU Structure (Data ➔ Bits)</span>
+            <span>2. PDU Structure (Data ➔ Bits)</span>
           </button>
 
           <button
@@ -117,7 +158,7 @@ export default function PacketTransmission({ theme, toggleTheme }) {
             }`}
           >
             <Code className="w-3.5 h-3.5" />
-            <span>Code Lab (C++, Java, Python)</span>
+            <span>3. Code Lab (C++, Java, Python)</span>
           </button>
 
           <button
@@ -129,7 +170,7 @@ export default function PacketTransmission({ theme, toggleTheme }) {
             }`}
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Theory & Headers Guide</span>
+            <span>4. Theory &amp; Headers Guide</span>
           </button>
         </div>
 
@@ -169,7 +210,7 @@ export default function PacketTransmission({ theme, toggleTheme }) {
                   </li>
                   <li className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                     <span>L3 Network: <strong>Packet</strong></span>
-                    <span className="text-cyan-500 font-bold">+ Source/Dest IP, TTL</span>
+                    <span className="text-emerald-500 font-bold">+ Source/Dest IP, TTL</span>
                   </li>
                   <li className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                     <span>L2 Data Link: <strong>Frame</strong></span>
@@ -216,7 +257,7 @@ export default function PacketTransmission({ theme, toggleTheme }) {
             {/* Crucial Concept: What changes at each router vs What stays the same? */}
             <div className="rounded-3xl bg-slate-900 border border-slate-800 text-white p-6 sm:p-8 space-y-5 shadow-xl">
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-md bg-cyan-600 text-white font-mono text-xs font-bold">
+                <span className="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-mono text-xs font-bold">
                   EXAM ESSENTIAL
                 </span>
                 <h3 className="text-lg font-bold text-white">
@@ -232,7 +273,7 @@ export default function PacketTransmission({ theme, toggleTheme }) {
                   <ul className="space-y-1.5 text-slate-300 text-[11px]">
                     <li>• <strong>Source IP Address:</strong> Remains the original sender host IP.</li>
                     <li>• <strong>Destination IP Address:</strong> Remains the final target server IP.</li>
-                    <li>• <strong>Transport Ports:</strong> Source & Destination TCP/UDP ports are untouched.</li>
+                    <li>• <strong>Transport Ports:</strong> Source &amp; Destination TCP/UDP ports are untouched.</li>
                     <li>• <strong>Application Payload:</strong> The data content is never modified by routers.</li>
                   </ul>
                 </div>
@@ -252,6 +293,39 @@ export default function PacketTransmission({ theme, toggleTheme }) {
             </div>
           </div>
         )}
+
+        {/* Step Navigation Bar */}
+        <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
+          <button
+            onClick={handlePrevStep}
+            disabled={currentStepIdx === 0}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
+              currentStepIdx === 0
+                ? 'opacity-40 cursor-not-allowed border-slate-200 dark:border-slate-800 text-slate-400'
+                : 'border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 hover:bg-slate-50 cursor-pointer'
+            }`}
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Previous Step</span>
+          </button>
+
+          <span className="text-xs font-mono text-slate-400">
+            Step {currentStepIdx + 1} of {PACKET_TABS.length}
+          </span>
+
+          <button
+            onClick={handleNextStep}
+            disabled={currentStepIdx === PACKET_TABS.length - 1}
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+              currentStepIdx === PACKET_TABS.length - 1
+                ? 'opacity-40 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400'
+                : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/20 cursor-pointer'
+            }`}
+          >
+            <span>Next Step</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </main>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Activity, CheckCircle2, Circle } from 'lucide-react';
+import { Activity, CheckCircle2, Circle } from 'lucide-react';
 
 export function DijkstraStepLog({ nodes, currentStep }) {
   if (!currentStep) return null;

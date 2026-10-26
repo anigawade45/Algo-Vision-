@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Folder,
-  File,
   Upload,
   Download,
   Server,
@@ -10,11 +9,7 @@ import {
   ArrowLeft,
   Play,
   Pause,
-  RotateCcw,
-  CheckCircle2,
-  Lock,
-  Radio,
-  Check
+  RotateCcw
 } from 'lucide-react';
 
 export function FtpSimulation() {
@@ -116,7 +111,7 @@ export function FtpSimulation() {
               }}
               className={`py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
                 transferMode === 'download'
-                  ? 'bg-amber-600 text-white shadow-xs'
+                  ? 'bg-amber-600 text-white shadow-sm'
                   : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700'
               }`}
             >
@@ -130,7 +125,7 @@ export function FtpSimulation() {
               }}
               className={`py-2 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
                 transferMode === 'upload'
-                  ? 'bg-amber-600 text-white shadow-xs'
+                  ? 'bg-amber-600 text-white shadow-sm'
                   : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700'
               }`}
             >
@@ -181,7 +176,7 @@ export function FtpSimulation() {
       {/* Step Action Banner */}
       <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-lg bg-amber-600 text-white font-mono text-xs font-extrabold shadow-xs">
+          <span className="px-3 py-1 rounded-lg bg-amber-600 text-white font-mono text-xs font-extrabold shadow-sm">
             Step {currentStep} / {totalSteps}
           </span>
           <div>
@@ -210,7 +205,7 @@ export function FtpSimulation() {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-3 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-xs cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-white" />}
             <span>{isPlaying ? 'Pause' : 'Play'}</span>

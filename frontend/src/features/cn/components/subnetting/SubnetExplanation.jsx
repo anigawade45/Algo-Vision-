@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Sparkles, Binary, CheckCircle, Calculator } from 'lucide-react';
+import { Sparkles, Calculator } from 'lucide-react';
 
 export function SubnetExplanation() {
   const cidrTable = [
@@ -15,7 +15,7 @@ export function SubnetExplanation() {
     <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm font-sans space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center shadow-sm">
             <Calculator className="w-5 h-5" />
           </div>
           <div>

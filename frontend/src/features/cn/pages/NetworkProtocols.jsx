@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Wifi,
   ArrowLeft,
+  ArrowRight,
   LayoutDashboard,
   Sparkles,
   Sun,
@@ -19,8 +20,7 @@ import {
   BookOpen,
   Code2,
   Shield,
-  HelpCircle,
-  ChevronRight
+  HelpCircle
 } from 'lucide-react';
 import { PROTOCOLS_DATA } from '../data/protocolsData';
 import { HttpSimulation } from '../components/protocols/simulations/HttpSimulation';
@@ -37,17 +37,31 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
   const [selectedProtocolId, setSelectedProtocolId] = useState('http');
 
   const protocolsList = [
-    // Row 1 (4 protocols)
     PROTOCOLS_DATA.http,
     PROTOCOLS_DATA.https,
     PROTOCOLS_DATA.dns,
     PROTOCOLS_DATA.dhcp,
-    // Row 2 (4 protocols)
     PROTOCOLS_DATA.arp,
     PROTOCOLS_DATA.ftp,
     PROTOCOLS_DATA.smtp,
     PROTOCOLS_DATA.icmp
   ];
+
+  const currentStepIdx = protocolsList.findIndex((p) => p.id === selectedProtocolId);
+
+  const handlePrevStep = () => {
+    if (currentStepIdx > 0) {
+      setSelectedProtocolId(protocolsList[currentStepIdx - 1].id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNextStep = () => {
+    if (currentStepIdx < protocolsList.length - 1) {
+      setSelectedProtocolId(protocolsList[currentStepIdx + 1].id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const activeProtocol = PROTOCOLS_DATA[selectedProtocolId] || PROTOCOLS_DATA.http;
 
@@ -98,12 +112,12 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen w-full overflow-x-hidden bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-emerald-500 selection:text-white">
       {/* Top Application Navbar */}
       <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <Link to="/cn" className="flex items-center gap-2 group">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <Link to="/cn" className="flex items-center gap-2 group shrink-0">
               <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
                 <Wifi className="w-4.5 h-4.5" />
               </div>
@@ -112,9 +126,9 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
               </span>
             </Link>
 
-            <span className="text-slate-300 dark:text-slate-700">/</span>
+            <span className="hidden md:inline text-slate-300 dark:text-slate-700">/</span>
 
-            <nav className="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
+            <nav className="hidden md:flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
               <Link to="/dashboard" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
                 Dashboard
               </Link>
@@ -129,7 +143,7 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
             </nav>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {toggleTheme && (
               <button
                 onClick={toggleTheme}
@@ -142,15 +156,15 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
 
             <Link
               to="/cn"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors whitespace-nowrap"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to CN Home</span>
+              <span className="hidden sm:inline">Back to </span><span>CN Home</span>
             </Link>
 
             <Link
               to="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-colors whitespace-nowrap"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
               <span>Dashboard</span>
@@ -196,19 +210,17 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
                 <button
                   key={p.id}
                   onClick={() => setSelectedProtocolId(p.id)}
-                  className={`p-3.5 rounded-2xl border text-left transition-all duration-150 flex flex-col justify-between gap-2.5 cursor-pointer ${
-                    isActive
+                  className={`p-3.5 rounded-2xl border text-left transition-all duration-150 flex flex-col justify-between gap-2.5 cursor-pointer ${isActive
                       ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 dark:border-emerald-600 shadow-md shadow-emerald-500/10 ring-2 ring-emerald-500/20'
-                      : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-xs'
-                  }`}
+                      : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-sm'
+                    }`}
                 >
                   <div className="flex items-center justify-between w-full">
                     <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
-                        isActive
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${isActive
                           ? 'bg-emerald-600 text-white shadow-md'
                           : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                      }`}
+                        }`}
                     >
                       <IconComponent className="w-4 h-4" />
                     </div>
@@ -226,9 +238,8 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
 
                   <div>
                     <span
-                      className={`text-sm font-extrabold block tracking-tight ${
-                        isActive ? 'text-emerald-950 dark:text-white' : 'text-slate-900 dark:text-slate-200'
-                      }`}
+                      className={`text-sm font-extrabold block tracking-tight ${isActive ? 'text-emerald-950 dark:text-white' : 'text-slate-900 dark:text-slate-200'
+                        }`}
                     >
                       {p.name}
                     </span>
@@ -343,7 +354,7 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
           )}
 
           {/* 4. Key Takeaways Card */}
-          <div className="rounded-3xl bg-linear-to-br from-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 text-white space-y-4 shadow-lg">
+          <div className="rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-6 sm:p-8 text-white space-y-4 shadow-lg">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
@@ -366,6 +377,37 @@ export default function NetworkProtocols({ theme, toggleTheme }) {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Step Navigation Bar */}
+          <div className="flex items-center justify-between pt-6 border-t border-slate-200 dark:border-slate-800">
+            <button
+              onClick={handlePrevStep}
+              disabled={currentStepIdx === 0}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${currentStepIdx === 0
+                  ? 'opacity-40 cursor-not-allowed border-slate-200 dark:border-slate-800 text-slate-400'
+                  : 'border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 hover:bg-slate-50 cursor-pointer'
+                }`}
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Previous Step</span>
+            </button>
+
+            <span className="text-xs font-mono text-slate-400">
+              Protocol {currentStepIdx + 1} of {protocolsList.length} ({activeProtocol.name.split(' ')[0]})
+            </span>
+
+            <button
+              onClick={handleNextStep}
+              disabled={currentStepIdx === protocolsList.length - 1}
+              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentStepIdx === protocolsList.length - 1
+                  ? 'opacity-40 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-500/20 cursor-pointer'
+                }`}
+            >
+              <span>Next Step</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
       </main>

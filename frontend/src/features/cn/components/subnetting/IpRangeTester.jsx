@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, ArrowRight, ShieldCheck, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Route, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { testSameSubnet } from '../../utils/subnettingLogic';
 
 export function IpRangeTester({ sourceIp, cidr }) {

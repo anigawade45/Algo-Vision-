@@ -1,24 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Play, 
-  Pause, 
   RotateCcw, 
-  ShieldAlert, 
   CheckCircle2, 
   Activity, 
-  Laptop, 
-  Server, 
-  Cpu, 
-  Zap, 
   Info, 
   Layers, 
   AlertTriangle,
-  ArrowRight,
   Code2
 } from 'lucide-react';
-import { NETWORK_TOPOLOGIES_DATA } from '../../data/fundamentalsData';
+import { NETWORK_TOPOLOGIES_DATA } from '../../data/topologiesData';
 
-export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) {
+export function TopologyVisualizer({ onOpenCode }) {
   const [selectedTopologyId, setSelectedTopologyId] = useState('star');
   const [sourceNodeId, setSourceNodeId] = useState('N1');
   const [targetNodeId, setTargetNodeId] = useState('N3');
@@ -341,9 +334,9 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-8 animate-in fade-in duration-300 font-sans">
       {/* 1. Topology Selector Tabs */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 shadow-xs space-y-5">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 shadow-sm space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-mono font-semibold mb-1">
@@ -362,7 +355,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
             {onOpenCode && (
               <button
                 onClick={() => onOpenCode(selectedTopologyId)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50 dark:bg-blue-950/60 text-xs font-mono font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50 dark:bg-blue-950/60 text-xs font-mono font-bold text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors cursor-pointer"
                 title="View Protocol Code & Algorithms for this Topology"
               >
                 <Code2 className="w-3.5 h-3.5" />
@@ -376,7 +369,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
                 setFailedNodes([]);
                 addLog('Reset all faults. All nodes and cables operational.', 'success');
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Clear Faults</span>
@@ -392,7 +385,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
               <button
                 key={top.id}
                 onClick={() => setSelectedTopologyId(top.id)}
-                className={`py-3 px-3 rounded-2xl border text-center font-semibold text-xs transition-all ${
+                className={`py-3 px-3 rounded-2xl border text-center font-semibold text-xs transition-all cursor-pointer ${
                   isSelected
                     ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20 ring-2 ring-emerald-500/20'
                     : 'bg-slate-50 dark:bg-[#111827] border-slate-200/80 dark:border-[#1E2638] text-slate-700 dark:text-slate-300 hover:border-emerald-400'
@@ -411,7 +404,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
       {/* 2. Interactive SVG Canvas + Controls Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Interactive Canvas */}
-        <div className="lg:col-span-8 rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 shadow-xs flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-8 rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 shadow-sm flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -772,7 +765,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
         {/* Right: Simulation Controls & Event Log */}
         <div className="lg:col-span-4 space-y-4 flex flex-col justify-between">
           {/* Controls Card */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] shadow-xs space-y-4">
+          <div className="p-5 rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] shadow-sm space-y-4">
             <h4 className="text-xs font-bold uppercase font-mono text-slate-400">
               Packet Route Controls
             </h4>
@@ -785,7 +778,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
                 <select
                   value={sourceNodeId}
                   onChange={(e) => setSourceNodeId(e.target.value)}
-                  className="w-full text-xs font-mono p-2 rounded-xl bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+                  className="w-full text-xs font-mono p-2 rounded-xl bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white cursor-pointer outline-none focus:ring-1 focus:ring-emerald-500"
                 >
                   {topology.nodes.map((n) => (
                     <option key={n.id} value={n.id}>
@@ -802,7 +795,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
                 <select
                   value={targetNodeId}
                   onChange={(e) => setTargetNodeId(e.target.value)}
-                  className="w-full text-xs font-mono p-2 rounded-xl bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+                  className="w-full text-xs font-mono p-2 rounded-xl bg-slate-50 dark:bg-[#111827] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white cursor-pointer outline-none focus:ring-1 focus:ring-emerald-500"
                 >
                   {topology.nodes.map((n) => (
                     <option key={n.id} value={n.id}>
@@ -819,7 +812,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
               className={`w-full py-2.5 px-4 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 shadow-md transition-all ${
                 isSimulating
                   ? 'bg-slate-300 dark:bg-slate-700 text-slate-500 cursor-not-allowed'
-                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20 hover:scale-101'
+                  : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-500/20 hover:scale-[1.02] cursor-pointer'
               }`}
             >
               <Play className="w-3.5 h-3.5 fill-white" />
@@ -861,7 +854,7 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
       </div>
 
       {/* 3. Advantages & Disadvantages Breakdown Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
           <div>
             <span className="text-xs font-mono font-bold uppercase text-emerald-600 dark:text-emerald-400">
@@ -913,29 +906,6 @@ export function TopologyVisualizer({ onCompleteStep, onOpenCode, isCompleted }) 
             </ul>
           </div>
         </div>
-      </div>
-
-      {/* Step Completion Action */}
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className={`w-5 h-5 ${isCompleted ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-500'}`} />
-          <div>
-            <span className="text-xs font-bold text-emerald-950 dark:text-emerald-200 block">
-              Step 4: Interactive Topologies Lab Explored
-            </span>
-            <span className="text-[11px] text-emerald-700 dark:text-emerald-400">
-              Next: Side-by-side Topologies Comparative Matrix.
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={onCompleteStep}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition-all hover:scale-102"
-        >
-          <span>Compare Topologies</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
       </div>
     </div>
   );

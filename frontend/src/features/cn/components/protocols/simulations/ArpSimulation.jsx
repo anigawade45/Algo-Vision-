@@ -6,15 +6,7 @@ import {
   ArrowLeft,
   Play,
   Pause,
-  RotateCcw,
-  CheckCircle2,
-  Radio,
-  Database,
-  Search,
-  Check,
-  Sparkles,
-  Layers,
-  AlertCircle
+  RotateCcw
 } from 'lucide-react';
 
 export function ArpSimulation() {
@@ -155,7 +147,7 @@ export function ArpSimulation() {
               onClick={() => handleSelectTarget(n.ip)}
               className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                 targetIp === n.ip
-                  ? 'bg-purple-600 text-white shadow-xs'
+                  ? 'bg-purple-600 text-white shadow-sm'
                   : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
@@ -181,7 +173,7 @@ export function ArpSimulation() {
       {/* Step Action Banner */}
       <div className="rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-900/60 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-lg bg-purple-600 text-white font-mono text-xs font-extrabold shadow-xs shrink-0">
+          <span className="px-3 py-1 rounded-lg bg-purple-600 text-white font-mono text-xs font-extrabold shadow-sm shrink-0">
             Step {safeStepIndex + 1} / {totalSteps}
           </span>
           <div>
@@ -210,7 +202,7 @@ export function ArpSimulation() {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-xs cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-white" />}
             <span>{isPlaying ? 'Pause' : 'Play ARP'}</span>

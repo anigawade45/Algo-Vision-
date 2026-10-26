@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import {
-  Code2,
   Terminal,
   Copy,
   Check,
   Play,
-  RotateCcw,
-  Sparkles,
   ShieldCheck,
   Zap,
   Clock,
-  HardDrive,
-  FileCode,
-  Radio,
-  Server
+  FileCode
 } from 'lucide-react';
 import { TRANSPORT_LAYER_DATA } from '../../data/transportData';
 
@@ -153,7 +147,7 @@ export function TransportCodeViewer() {
                 onClick={() => setSelectedLang('python')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
                   selectedLang === 'python'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -163,7 +157,7 @@ export function TransportCodeViewer() {
                 onClick={() => setSelectedLang('cpp')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
                   selectedLang === 'cpp'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -173,7 +167,7 @@ export function TransportCodeViewer() {
                 onClick={() => setSelectedLang('java')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors ${
                   selectedLang === 'java'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >

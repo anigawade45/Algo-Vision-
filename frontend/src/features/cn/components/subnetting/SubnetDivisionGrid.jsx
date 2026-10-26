@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Network, Grid, Split, Layers } from 'lucide-react';
+import { Split } from 'lucide-react';
 import { generateSubnetDivisions } from '../../utils/subnettingLogic';
 
 export function SubnetDivisionGrid({ results }) {
@@ -17,7 +17,7 @@ export function SubnetDivisionGrid({ results }) {
     <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm font-sans space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 flex items-center justify-center shadow-xs">
+          <div className="w-10 h-10 rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800 flex items-center justify-center shadow-sm">
             <Split className="w-5 h-5" />
           </div>
           <div>
