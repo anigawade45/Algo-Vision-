@@ -43,7 +43,7 @@ export function ArrayPrimitive({
 
   const containerClasses = showBarHeights
     ? `flex items-end justify-center gap-2 sm:gap-3 overflow-x-auto pt-6 pb-3 px-2 border-b-2 border-slate-300 dark:border-slate-800/80 ${className}`
-    : `flex items-center justify-center gap-2 overflow-x-auto py-2 ${className}`;
+    : `flex items-center justify-center gap-3 sm:gap-4 md:gap-5 overflow-x-auto py-4 px-2 ${className}`;
 
   return (
     <div aria-label="Array elements" className={containerClasses}>

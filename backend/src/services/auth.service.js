@@ -2,77 +2,119 @@ const User = require('../models/User');
 const env = require('../config/env');
 const { generateVerificationToken, hashToken } = require('../utils/emailVerificationToken');
 const { sendVerificationEmail } = require('./email.service');
+const { logger, serializeError } = require('../utils/logger');
+
+const RESEND_COOLDOWN_MS = 60 * 1000;
+
+// Same wording whether or not the account exists (prevents email enumeration)
+const GENERIC_VERIFICATION_MESSAGE =
+  'If an account with that email exists, a verification email has been sent.';
 
 class AppError extends Error {
   constructor(message, statusCode) {
     super(message);
+    this.name = 'AppError';
     this.statusCode = statusCode;
+    this.status = statusCode;
+    this.isOperational = true; // safe to show the message to the client
   }
 }
 
 /**
- * Register a new user and generate email verification token
+ * Issues a fresh verification token and emails it.
+ *
+ * The cooldown is claimed ATOMICALLY in a single conditional update, so
+ * concurrent requests cannot bypass it and trigger several emails.
+ * Returns false when the user is already verified or is still inside the cooldown.
+ * Throws AppError(503) if the email could not be sent (the cooldown is rolled back
+ * so the user can retry immediately).
  */
-const registerUser = async ({ name, email, password }) => {
-  const normalizedEmail = email.toLowerCase();
-  const existingUser = await User.findOne({ email: normalizedEmail });
-
-  if (existingUser && existingUser.isVerified) {
-    throw new AppError('An account with this email already exists.', 400);
-  }
-
+const issueVerificationEmail = async (userId) => {
   const { rawToken, hashedToken, expiresAt } = generateVerificationToken();
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - RESEND_COOLDOWN_MS);
 
-  let user = existingUser;
-
-  if (user) {
-    // If registered before but unverified, update credentials and send new token
-    user.name = name;
-    user.password = password;
-    user.emailVerificationToken = hashedToken;
-    user.emailVerificationExpires = expiresAt;
-    user.lastVerificationResend = new Date();
-    await user.save();
-  } else {
-    // Create new unverified user
-    user = await User.create({
-      name,
-      email: normalizedEmail,
-      password,
+  const user = await User.findOneAndUpdate(
+    {
+      _id: userId,
       isVerified: false,
-      emailVerificationToken: hashedToken,
-      emailVerificationExpires: expiresAt,
-      lastVerificationResend: new Date(),
+      $or: [
+        { lastVerificationResend: { $exists: false } },
+        { lastVerificationResend: null },
+        { lastVerificationResend: { $lte: cutoff } },
+      ],
+    },
+    {
+      $set: {
+        emailVerificationToken: hashedToken,
+        emailVerificationExpires: expiresAt,
+        lastVerificationResend: now,
+      },
+    },
+    { new: true }
+  );
+
+  if (!user) return false;
+
+  try {
+    await sendVerificationEmail({
+      to: user.email,
+      name: user.name,
+      verificationUrl: `${env.clientUrl}/verify-email/${rawToken}`,
     });
+    return true;
+  } catch (error) {
+    logger.error('Failed to send verification email', {
+      userId: String(user._id),
+      error: serializeError(error),
+    });
+    await User.updateOne({ _id: user._id }, { $unset: { lastVerificationResend: 1 } }).catch(() => { });
+    throw new AppError('We could not send the verification email. Please try again in a moment.', 503);
   }
-
-  const verificationUrl = `${env.clientUrl}/verify-email/${rawToken}`;
-  await sendVerificationEmail({
-    to: user.email,
-    name: user.name,
-    verificationUrl,
-  });
-
-  return {
-    id: user._id,
-    name: user.name,
-    email: user.email,
-    isVerified: false,
-  };
 };
 
 /**
- * Verify user email using raw verification token
+ * Register a new user and send the verification email.
+ *
+ * Security notes:
+ * - An existing account is NEVER modified. Overwriting the password of an
+ *   unverified account would let an attacker register a victim's email with the
+ *   attacker's password; once the victim clicks the (legitimate) verification
+ *   link, the attacker owns a verified account.
+ * - The response is identical for new and existing emails (no enumeration).
+ *   Trade-off: someone who already has an account gets no email. Consider adding an
+ *   "you already have an account" email to email.service.
  */
-const verifyEmailToken = async (rawToken) => {
-  if (!rawToken) {
-    throw new AppError('Verification token is missing', 400);
+const registerUser = async ({ name, email, password }) => {
+  const normalizedEmail = email.toLowerCase();
+  const existing = await User.findOne({ email: normalizedEmail }).select('_id isVerified');
+
+  if (existing) {
+    if (!existing.isVerified) await issueVerificationEmail(existing._id);
+    return;
   }
 
-  const hashedToken = hashToken(rawToken);
+  let user;
+  try {
+    user = await User.create({ name, email: normalizedEmail, password, isVerified: false });
+  } catch (error) {
+    if (error.code === 11000) return; // lost a race with a concurrent registration
+    throw error;
+  }
+
+  await issueVerificationEmail(user._id);
+};
+
+/**
+ * Verify user email using the raw token from the link.
+ */
+const verifyEmailToken = async (rawToken) => {
+  if (typeof rawToken !== 'string' || !rawToken || rawToken.length > 256) {
+    throw new AppError('Verification token is missing or malformed', 400);
+  }
 
   const user = await User.findOne({
-    emailVerificationToken: hashedToken,
+    emailVerificationToken: hashToken(rawToken),
     emailVerificationExpires: { $gt: new Date() },
   }).select('+emailVerificationToken +emailVerificationExpires');
 
@@ -80,79 +122,40 @@ const verifyEmailToken = async (rawToken) => {
     throw new AppError('Invalid or expired verification link', 400);
   }
 
-  user.isVerified = true;
-  user.emailVerificationToken = null;
-  user.emailVerificationExpires = null;
+  // Unsets the token fields (null values would stay in the sparse index)
+  user.markEmailVerified();
   await user.save();
 
   return { success: true, message: 'Email verified successfully' };
 };
 
 /**
- * Resend email verification link with rate limiting
+ * Resend the verification link. Always answers with the same message.
  */
 const resendVerificationEmail = async (email) => {
-  if (!email) {
-    throw new AppError('Email address is required', 400);
-  }
+  const user = await User.findOne({ email: email.toLowerCase() }).select('_id isVerified');
 
-  const normalizedEmail = email.toLowerCase();
-  const user = await User.findOne({ email: normalizedEmail }).select(
-    '+emailVerificationToken +emailVerificationExpires +lastVerificationResend'
-  );
-
-  // Return generic response if user doesn't exist to prevent email enumeration
-  if (!user) {
-    return {
-      success: true,
-      message: 'If an account with that email exists, a verification email has been sent.',
-    };
-  }
-
-  if (user.isVerified) {
-    return {
-      success: true,
-      message: 'This account is already verified. Please log in.',
-    };
-  }
-
-  // Cooldown rate limit: 60 seconds
-  if (user.lastVerificationResend) {
-    const timeDiff = Date.now() - new Date(user.lastVerificationResend).getTime();
-    if (timeDiff < 60000) {
-      const waitSeconds = Math.ceil((60000 - timeDiff) / 1000);
-      throw new AppError(
-        `Please wait ${waitSeconds} seconds before requesting another verification email.`,
-        429
-      );
+  if (user && !user.isVerified) {
+    try {
+      await issueVerificationEmail(user._id);
+    } catch (error) {
+      // Send failures are already logged. Swallowing them keeps the response
+      // identical for existing and unknown emails.
+      if (!(error instanceof AppError)) throw error;
     }
   }
 
-  const { rawToken, hashedToken, expiresAt } = generateVerificationToken();
-  user.emailVerificationToken = hashedToken;
-  user.emailVerificationExpires = expiresAt;
-  user.lastVerificationResend = new Date();
-  await user.save();
-
-  const verificationUrl = `${env.clientUrl}/verify-email/${rawToken}`;
-  await sendVerificationEmail({
-    to: user.email,
-    name: user.name,
-    verificationUrl,
-  });
-
-  return {
-    success: true,
-    message: 'If an account with that email exists, a verification email has been sent.',
-  };
+  return { success: true, message: GENERIC_VERIFICATION_MESSAGE };
 };
 
 /**
- * Authenticate user with email and password
+ * Authenticate user with email and password.
  */
 const loginUser = async ({ email, password }) => {
   const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+
   if (!user) {
+    await User.burnPasswordCheck(password); // equalize timing with the real path
     throw new AppError('Invalid email or password', 401);
   }
 
@@ -161,7 +164,7 @@ const loginUser = async ({ email, password }) => {
     throw new AppError('Invalid email or password', 401);
   }
 
-  // Reject unverified account login attempt
+  // Checked only AFTER the password so verification status is not revealed to guessers
   if (!user.isVerified) {
     throw new AppError('Please verify your email before logging in.', 403);
   }
@@ -169,52 +172,31 @@ const loginUser = async ({ email, password }) => {
   return user;
 };
 
-/**
- * Fetch current user by ID
- */
 const getCurrentUser = async (userId) => {
   const user = await User.findById(userId);
-  if (!user) {
-    throw new AppError('User not found', 404);
-  }
+  if (!user) throw new AppError('User not found', 404);
   return user;
 };
 
-/**
- * Update user profile (name, etc.)
- */
 const updateProfile = async (userId, { name }) => {
-  if (!name || !name.trim()) {
-    throw new AppError('Name cannot be empty', 400);
-  }
-
   const user = await User.findById(userId);
-  if (!user) {
-    throw new AppError('User not found', 404);
-  }
+  if (!user) throw new AppError('User not found', 404);
 
-  user.name = name.trim();
+  user.name = name;
   await user.save();
 
   return user;
 };
 
 /**
- * Change user password
+ * Change password. Returns the user so the controller can issue a fresh token:
+ * saving the password sets passwordChangedAt, which invalidates every token issued
+ * before the change (including the caller's current one).
+ * Length and policy are enforced by the validators and the User model.
  */
 const changePassword = async (userId, { currentPassword, newPassword }) => {
-  if (!currentPassword || !newPassword) {
-    throw new AppError('Both current password and new password are required', 400);
-  }
-
-  if (newPassword.length < 6) {
-    throw new AppError('New password must be at least 6 characters long', 400);
-  }
-
   const user = await User.findById(userId).select('+password');
-  if (!user) {
-    throw new AppError('User not found', 404);
-  }
+  if (!user) throw new AppError('User not found', 404);
 
   const isMatch = await user.comparePassword(currentPassword);
   if (!isMatch) {
@@ -224,7 +206,7 @@ const changePassword = async (userId, { currentPassword, newPassword }) => {
   user.password = newPassword;
   await user.save();
 
-  return { success: true, message: 'Password updated successfully' };
+  return user;
 };
 
 module.exports = {

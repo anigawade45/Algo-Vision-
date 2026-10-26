@@ -17,8 +17,12 @@ export function validateExecutionTrace(trace) {
     };
   }
 
-  // 1. Mandatory Schema Version
-  if (trace.schemaVersion !== EXECUTION_TRACE_SCHEMA_VERSION) {
+  // 1. Mandatory Schema Version (supports numeric 1 or string '1'/'1.0.0')
+  if (
+    trace.schemaVersion !== EXECUTION_TRACE_SCHEMA_VERSION &&
+    trace.schemaVersion !== '1' &&
+    trace.schemaVersion !== '1.0.0'
+  ) {
     errors.push(
       `Invalid or unsupported trace schemaVersion: ${trace.schemaVersion}. Expected ${EXECUTION_TRACE_SCHEMA_VERSION}.`
     );

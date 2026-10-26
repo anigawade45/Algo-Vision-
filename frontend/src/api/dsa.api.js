@@ -230,4 +230,35 @@ export const regenerateProblemPractice = async (problemId, approachId) => {
   });
 };
 
+/**
+ * Retrieve Stage 09 Visualization validated execution trace data for a specific approach and testCase
+ */
+export const getProblemVisualization = async (problemId, approachId, testCaseId) => {
+  return await apiClient.get(`/problems/${problemId}/visualization`, {
+    params: { approachId, testCaseId },
+  });
+};
+
+/**
+ * Generate Stage 09 Visualization execution trace via Gemini AI for a specific approach and testCase
+ */
+export const generateProblemVisualization = async (problemId, approachId, testCaseId) => {
+  return await apiClient.post(`/problems/${problemId}/visualization/generate`, {
+    approachId,
+    testCaseId,
+  });
+};
+
+/**
+ * Retrieve or generate validated Stage 09 Generic Visualization Plan from Gemini AI
+ */
+export const getProblemVisualizationPlan = async (problemId, options = {}) => {
+  return await apiClient.get(`/problems/${problemId}/visualization/plan`, {
+    params: {
+      bypassCache: options.bypassCache || false,
+    },
+  });
+};
+
+
 

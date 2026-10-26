@@ -45,14 +45,37 @@ const computePseudocodeHash = (pseudocodeDoc) => {
   return crypto.createHash('sha256').update(canonicalStringify(payload)).digest('hex');
 };
 
-const validateApproach = async (problem, approachId, requestedApproachName) => {
+const validateApproach = async (problem, approachId, requestedApproachName, userId) => {
   const patternDoc = await ProblemPattern.findOne({ problemId: problem._id });
   let normalizedApproachId = (approachId && typeof approachId === 'string' && approachId.trim()) || '';
+  let resolvedApproachName = requestedApproachName || '';
+
+  if (userId) {
+    if (!normalizedApproachId || normalizedApproachId === 'null' || normalizedApproachId === 'undefined') {
+      const existingPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+      if (existingPseudo?.approachId) {
+        normalizedApproachId = existingPseudo.approachId;
+        resolvedApproachName = resolvedApproachName || existingPseudo.approachName;
+      }
+    } else {
+      // If approachId was specified (e.g. 'fam_1') but user has no pseudocode for it,
+      // check if user generated pseudocode under a different approach (e.g. 'fam_2')
+      const exactPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId, approachId: normalizedApproachId });
+      if (!exactPseudo) {
+        const anyPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+        if (anyPseudo?.approachId) {
+          normalizedApproachId = anyPseudo.approachId;
+          resolvedApproachName = resolvedApproachName || anyPseudo.approachName;
+        }
+      }
+    }
+  }
+
   if (!normalizedApproachId || normalizedApproachId === 'null' || normalizedApproachId === 'undefined') {
     normalizedApproachId = patternDoc?.solutionFamilies?.families?.[0]?.id || problem.defaultApproachId || 'default';
   }
 
-  let approachName = requestedApproachName || normalizedApproachId;
+  let approachName = resolvedApproachName || normalizedApproachId;
   if (patternDoc?.solutionFamilies?.families?.length > 0) {
     const matchedFamily = patternDoc.solutionFamilies.families.find(
       (f) => String(f.id).toLowerCase() === normalizedApproachId.toLowerCase()
@@ -94,7 +117,7 @@ const parseJsonSafely = (rawText) => {
 
 const getCode = async (problemIdOrSlug, userId, approachId) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId);
+  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId, null, userId);
 
   const existing = await ProblemCode.findOne({
     problemId: problem._id,
@@ -125,7 +148,7 @@ const getCode = async (problemIdOrSlug, userId, approachId) => {
 
 const generateCode = async (problemIdOrSlug, userId, approachId, requestedApproachName) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId, requestedApproachName);
+  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId, requestedApproachName, userId);
   
   const query = {
     problemId: problem._id,

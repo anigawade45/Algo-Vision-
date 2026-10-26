@@ -11,6 +11,8 @@ const LANGUAGES = [
 
 export function CodeStage({
   problem,
+  selectedApproachId,
+  selectedApproachName,
   onCompleteStage,
   onNextStage,
   onOpenSpec
@@ -23,8 +25,8 @@ export function CodeStage({
   const [executionResult, setExecutionResult] = useState(null);
   const [isCompleted, setIsCompleted] = useState(false);
   
-  const [approachId, setApproachId] = useState('');
-  const [approachName, setApproachName] = useState('');
+  const [approachId, setApproachId] = useState(selectedApproachId || '');
+  const [approachName, setApproachName] = useState(selectedApproachName || '');
   const [pseudocodeLines, setPseudocodeLines] = useState([]);
 
   // Cache user edits independently
@@ -37,8 +39,17 @@ export function CodeStage({
   const [customInput, setCustomInput] = useState('');
 
   useEffect(() => {
+    if (selectedApproachId) {
+      setApproachId(selectedApproachId);
+    }
+    if (selectedApproachName) {
+      setApproachName(selectedApproachName);
+    }
+  }, [selectedApproachId, selectedApproachName]);
+
+  useEffect(() => {
     fetchCodeData();
-  }, [problem._id]);
+  }, [problem._id, selectedApproachId]);
 
   useEffect(() => {
     if (isCompleted && onCompleteStage) {
@@ -56,25 +67,34 @@ export function CodeStage({
   const fetchCodeData = async () => {
     try {
       // Fetch pseudocode to display without hardcoding approachId to let backend auto-resolve
-      const pseudoQuery = approachId ? `?approachId=${approachId}` : '';
+      const activeApprId = approachId || selectedApproachId || '';
+      const pseudoQuery = activeApprId ? `?approachId=${activeApprId}` : '';
       const pseudoRes = await api.get(`/problems/${problem.problemId}/pseudocode${pseudoQuery}`);
       // apiClient returns the JSON payload directly: { success: true, data: { pseudocode: { lines: [] }, approach: { approachId: ... } } }
-      let resolvedApproachId = approachId;
+      let resolvedApproachId = activeApprId;
       
       const pseudoPayload = pseudoRes.data;
       if (pseudoPayload?.pseudocode?.lines) {
         setPseudocodeLines(pseudoPayload.pseudocode.lines);
-        setApproachName(pseudoPayload.approach?.approachName || '');
+        if (pseudoPayload.approach?.approachName) {
+          setApproachName(pseudoPayload.approach.approachName);
+        }
         resolvedApproachId = pseudoPayload.approach?.approachId || resolvedApproachId;
         setApproachId(resolvedApproachId);
+      } else if (pseudoPayload?.approach?.approachId) {
+        resolvedApproachId = pseudoPayload.approach.approachId;
+        setApproachId(resolvedApproachId);
+        if (pseudoPayload.approach.approachName) {
+          setApproachName(pseudoPayload.approach.approachName);
+        }
       }
 
       const codeQuery = resolvedApproachId ? `?approachId=${resolvedApproachId}` : '';
       const res = await api.get(`/problems/${problem.problemId}/code${codeQuery}`);
       if (res.data?.generated) {
         const payload = res.data.data || res.data;
-        setApproachId(payload.approachId);
-        setApproachName(payload.approachName);
+        if (payload.approachId) setApproachId(payload.approachId);
+        if (payload.approachName) setApproachName(payload.approachName);
         
         // Setup initial caches
         const generatedCpp = payload.cpp || '';
@@ -96,11 +116,15 @@ export function CodeStage({
     setIsGenerating(true);
     setExecutionResult(null);
     try {
+      const targetApproachId = approachId || selectedApproachId || '';
+      const targetApproachName = approachName || selectedApproachName || '';
       const res = await api.post(`/problems/${problem.problemId}/code/generate`, {
-        approachId,
-        approachName
+        approachId: targetApproachId,
+        approachName: targetApproachName
       });
       const payload = res.data?.data || res.data || {};
+      if (payload.approachId) setApproachId(payload.approachId);
+      if (payload.approachName) setApproachName(payload.approachName);
       const generatedCpp = payload.cpp || '';
       const generatedJava = payload.java || '';
       const generatedPython = payload.python || '';

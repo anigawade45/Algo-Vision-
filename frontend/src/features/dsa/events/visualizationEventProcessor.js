@@ -26,14 +26,82 @@ export function processVisualizationEvent(previousState = {}, event) {
 
   switch (event.type) {
     // --- ARRAY & POINTER EVENTS ---
-    case VISUALIZATION_EVENTS.ARRAY_ACCESS:
-    case VISUALIZATION_EVENTS.ARRAY_COMPARE: {
+    case VISUALIZATION_EVENTS.ARRAY_ACCESS: {
       if (!targetPrimitive) break;
       currentPrimitives[targetId] = {
         ...targetPrimitive,
         activeIndex: data.index !== undefined ? data.index : targetPrimitive.activeIndex,
         matchedIndices: data.matchedIndices || targetPrimitive.matchedIndices || [],
         changedIndices: data.changedIndices || targetPrimitive.changedIndices || [],
+      };
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.ARRAY_COMPARE: {
+      if (!targetPrimitive) break;
+      const matchedIdxs = Array.isArray(data.indices) && data.matched
+        ? [...data.indices]
+        : (data.matchedIndices || targetPrimitive.matchedIndices || []);
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        activeIndex: data.index !== undefined ? data.index : targetPrimitive.activeIndex,
+        comparingIndices: Array.isArray(data.indices) ? [...data.indices] : (targetPrimitive.comparingIndices || []),
+        matchedIndices: matchedIdxs,
+        changedIndices: data.changedIndices || targetPrimitive.changedIndices || [],
+      };
+      break;
+    }
+
+    // --- HASHMAP EVENTS ---
+    case VISUALIZATION_EVENTS.HASHMAP_SET: {
+      const prevMap = targetPrimitive?.value && typeof targetPrimitive.value === 'object'
+        ? { ...targetPrimitive.value }
+        : {};
+      if (data.key !== undefined && data.value !== undefined) {
+        prevMap[data.key] = data.value;
+      }
+      currentPrimitives[targetId] = {
+        ...(targetPrimitive || { id: targetId, type: 'variable', name: targetId, label: 'HashMap' }),
+        value: prevMap,
+        lastInsertedKey: data.key,
+        activeKey: data.key,
+        isChanged: true,
+      };
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.HASHMAP_LOOKUP: {
+      if (!targetPrimitive) break;
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        activeKey: data.key,
+        lookupFound: Boolean(data.found),
+        foundIndex: data.foundIndex ?? null,
+      };
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.HASHMAP_DELETE: {
+      if (!targetPrimitive) break;
+      const prevMap = targetPrimitive.value && typeof targetPrimitive.value === 'object'
+        ? { ...targetPrimitive.value }
+        : {};
+      if (data.key !== undefined) {
+        delete prevMap[data.key];
+      }
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        value: prevMap,
+        deletedKey: data.key,
+      };
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.HASHMAP_CLEAR: {
+      if (!targetPrimitive) break;
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        value: {},
       };
       break;
     }
@@ -102,6 +170,137 @@ export function processVisualizationEvent(previousState = {}, event) {
         targetIndex: targetIdx !== undefined ? targetIdx : targetPrimitive.targetIndex,
         pointerLabels: cleanPointerLabels,
       };
+
+      // Synchronize scalar pointer variables if present
+      if (pointerId === 'L' && currentPrimitives.left) {
+        currentPrimitives.left = { ...currentPrimitives.left, value: targetIdx };
+      } else if (pointerId === 'R' && currentPrimitives.right) {
+        currentPrimitives.right = { ...currentPrimitives.right, value: targetIdx };
+      }
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.ARRAY_COMPARE:
+    case 'ARRAY_COMPARE': {
+      if (!targetPrimitive) break;
+      const isMatched = Boolean(data.matched);
+      const matchedIdxs = isMatched && Array.isArray(data.indices) ? [...data.indices] : (targetPrimitive.matchedIndices || []);
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        activeIndex: data.indices?.[1] !== undefined ? data.indices[1] : targetPrimitive.activeIndex,
+        matchedIndices: isMatched ? matchedIdxs : (targetPrimitive.matchedIndices || []),
+        comparedIndices: data.indices || [],
+        isMatch: isMatched,
+      };
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.RETURN:
+    case 'RETURN': {
+      if (!targetPrimitive) break;
+      const resVal = data.result !== undefined ? data.result : data.value;
+      const resIndices = Array.isArray(resVal) ? [...resVal] : [];
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        matchedIndices: resIndices.length > 0 ? resIndices : targetPrimitive.matchedIndices,
+        returnResult: resVal,
+      };
+      if (data.bestWindow !== undefined && currentPrimitives.bestWindow) {
+        currentPrimitives.bestWindow = { ...currentPrimitives.bestWindow, value: data.bestWindow };
+      }
+      if (data.bestRange !== undefined) {
+        if (currentPrimitives.bestRange) {
+          currentPrimitives.bestRange = { ...currentPrimitives.bestRange, value: data.bestRange };
+        }
+        currentPrimitives[targetId].bestWindowRange = data.bestRange;
+      }
+      if (data.windowRange !== undefined) {
+        currentPrimitives[targetId].windowRange = data.windowRange;
+      }
+      if (data.value !== undefined && currentPrimitives.maxLength) {
+        currentPrimitives.maxLength = { ...currentPrimitives.maxLength, value: data.value };
+      }
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.ARRAY_RANGE_UPDATE:
+    case 'ARRAY_RANGE_UPDATE': {
+      if (!targetPrimitive) break;
+      const range = Array.isArray(data.range)
+        ? data.range
+        : [data.start !== undefined ? data.start : data.left, data.end !== undefined ? data.end : data.right];
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        windowRange: range,
+        range,
+      };
+      if (range && range.length === 2) {
+        if (range[0] !== null && range[0] !== undefined && currentPrimitives.left) {
+          currentPrimitives.left = { ...currentPrimitives.left, value: range[0] };
+        }
+        if (range[1] !== null && range[1] !== undefined && currentPrimitives.right) {
+          currentPrimitives.right = { ...currentPrimitives.right, value: range[1] };
+        }
+      }
+      break;
+    }
+
+    // --- BUCKET SORT EVENTS ---
+    case VISUALIZATION_EVENTS.BUCKET_INSERT: {
+      const prevBuckets = targetPrimitive?.value && Array.isArray(targetPrimitive.value)
+        ? targetPrimitive.value.map((b) => [...b])
+        : [];
+      if (data.frequency !== undefined && data.value !== undefined) {
+        while (prevBuckets.length <= data.frequency) {
+          prevBuckets.push([]);
+        }
+        if (!prevBuckets[data.frequency].includes(data.value)) {
+          prevBuckets[data.frequency].push(data.value);
+        }
+      }
+      currentPrimitives[targetId] = {
+        ...(targetPrimitive || { id: targetId, type: 'variable', name: targetId, label: 'Buckets' }),
+        value: prevBuckets,
+        lastInsertedValue: data.value,
+        lastInsertedFrequency: data.frequency,
+        activeFrequency: data.frequency,
+      };
+      if (currentPrimitives.currentFrequency) {
+        currentPrimitives.currentFrequency = { ...currentPrimitives.currentFrequency, value: data.frequency };
+      }
+      if (currentPrimitives.currentNum && data.value !== undefined) {
+        currentPrimitives.currentNum = { ...currentPrimitives.currentNum, value: data.value };
+      }
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.BUCKET_TRAVERSE: {
+      const freq = data.frequency;
+      currentPrimitives[targetId] = {
+        ...(targetPrimitive || { id: targetId, type: 'variable', name: targetId, label: 'Buckets' }),
+        activeFrequency: freq,
+      };
+      if (currentPrimitives.currentFrequency) {
+        currentPrimitives.currentFrequency = { ...currentPrimitives.currentFrequency, value: freq };
+      }
+      break;
+    }
+
+    case VISUALIZATION_EVENTS.RESULT_COLLECT: {
+      const prevList = targetPrimitive?.value && Array.isArray(targetPrimitive.value)
+        ? [...targetPrimitive.value]
+        : [];
+      if (data.value !== undefined && !prevList.includes(data.value)) {
+        prevList.push(data.value);
+      }
+      currentPrimitives[targetId] = {
+        ...(targetPrimitive || { id: targetId, type: 'variable', name: targetId, label: 'Top K Result' }),
+        value: prevList,
+        lastCollected: data.value,
+      };
+      if (currentPrimitives.currentNum && data.value !== undefined) {
+        currentPrimitives.currentNum = { ...currentPrimitives.currentNum, value: data.value };
+      }
       break;
     }
 
@@ -170,11 +369,10 @@ export function processVisualizationEvent(previousState = {}, event) {
     // --- VARIABLE EVENTS ---
     case VISUALIZATION_EVENTS.VARIABLE_SET:
     case VISUALIZATION_EVENTS.VARIABLE_UPDATE: {
-      if (!targetPrimitive) break;
       currentPrimitives[targetId] = {
-        ...targetPrimitive,
+        ...(targetPrimitive || { id: targetId, type: 'variable', name: targetId }),
         value: data.value,
-        previousValue: data.previousValue !== undefined ? data.previousValue : targetPrimitive.value,
+        previousValue: data.previousValue !== undefined ? data.previousValue : targetPrimitive?.value,
         isChanged: true,
       };
       break;
@@ -231,6 +429,21 @@ export function processVisualizationEvent(previousState = {}, event) {
     }
 
     // --- GRID & MATRIX EVENTS ---
+    case VISUALIZATION_EVENTS.GRID_UPDATE: {
+      if (!targetPrimitive) break;
+      const grid = Array.isArray(targetPrimitive.grid)
+        ? targetPrimitive.grid.map((r) => (Array.isArray(r) ? [...r] : r))
+        : [];
+      if (data.row !== undefined && data.col !== undefined && grid[data.row]) {
+        grid[data.row][data.col] = data.value !== undefined ? data.value : data.val;
+      }
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        grid: data.grid || grid,
+      };
+      break;
+    }
+
     case VISUALIZATION_EVENTS.GRID_VISIT:
     case VISUALIZATION_EVENTS.GRID_CURRENT_CELL: {
       if (!targetPrimitive) break;
@@ -270,17 +483,39 @@ export function processVisualizationEvent(previousState = {}, event) {
       break;
     }
 
+    case VISUALIZATION_EVENTS.LINKED_LIST_LINK_UPDATE: {
+      if (!targetPrimitive) break;
+      const nodes = Array.isArray(targetPrimitive.nodes)
+        ? targetPrimitive.nodes.map((n) => (n.id === data.nodeId ? { ...n, nextId: data.newNextId } : { ...n }))
+        : [];
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        nodes,
+      };
+      break;
+    }
+
     // --- TREE EVENTS ---
-    case VISUALIZATION_EVENTS.TREE_CURRENT:
+    case VISUALIZATION_EVENTS.TREE_CURRENT: {
+      if (!targetPrimitive) break;
+      const currentVal = data.nodeVal !== undefined ? data.nodeVal : data.nodeId;
+      currentPrimitives[targetId] = {
+        ...targetPrimitive,
+        currentNode: currentVal !== undefined ? currentVal : targetPrimitive.currentNode,
+      };
+      break;
+    }
+
     case VISUALIZATION_EVENTS.TREE_VISIT: {
       if (!targetPrimitive) break;
       const visitedNodes = Array.isArray(targetPrimitive.visitedNodes) ? [...targetPrimitive.visitedNodes] : [];
-      if (data.nodeId !== undefined && !visitedNodes.includes(data.nodeId)) {
-        visitedNodes.push(data.nodeId);
+      const valToAdd = data.nodeVal !== undefined ? data.nodeVal : data.nodeId;
+      if (valToAdd !== undefined) {
+        visitedNodes.push(valToAdd);
       }
       currentPrimitives[targetId] = {
         ...targetPrimitive,
-        currentNode: data.nodeId !== undefined ? data.nodeId : targetPrimitive.currentNode,
+        currentNode: valToAdd !== undefined ? valToAdd : targetPrimitive.currentNode,
         visitedNodes: visitedNodes,
       };
       break;
@@ -298,10 +533,117 @@ export function processVisualizationEvent(previousState = {}, event) {
     }
   }
 
+  // Derive flat projections for visualizers expecting flat properties
+  const flatUpdates = {};
+  if (currentPrimitives.nums?.values) flatUpdates.nums = currentPrimitives.nums.values;
+  if (currentPrimitives.target?.value !== undefined) flatUpdates.target = currentPrimitives.target.value;
+  if (currentPrimitives.nums?.activeIndex !== undefined) flatUpdates.currentIndex = currentPrimitives.nums.activeIndex;
+  if (currentPrimitives.num?.value !== undefined) flatUpdates.currentNum = currentPrimitives.num.value;
+  if (currentPrimitives.complement?.value !== undefined) flatUpdates.complement = currentPrimitives.complement.value;
+  if (currentPrimitives.hashMap?.value !== undefined) flatUpdates.hashMap = currentPrimitives.hashMap.value;
+  if (currentPrimitives.numSet?.value !== undefined) {
+    flatUpdates.numSet = currentPrimitives.numSet.value;
+    if (!flatUpdates.hashMap) flatUpdates.hashMap = currentPrimitives.numSet.value;
+  }
+  if (currentPrimitives.longestStreak?.value !== undefined) {
+    flatUpdates.longestStreak = currentPrimitives.longestStreak.value;
+  }
+  if (currentPrimitives.currentStreak?.value !== undefined) {
+    flatUpdates.currentStreak = currentPrimitives.currentStreak.value;
+  }
+  if (currentPrimitives.chars?.values) flatUpdates.chars = currentPrimitives.chars.values;
+  if (currentPrimitives.s?.value !== undefined) flatUpdates.s = currentPrimitives.s.value;
+  if (currentPrimitives.left?.value !== undefined) flatUpdates.left = currentPrimitives.left.value;
+  if (currentPrimitives.right?.value !== undefined) flatUpdates.right = currentPrimitives.right.value;
+  if (currentPrimitives.windowString?.value !== undefined) flatUpdates.windowString = currentPrimitives.windowString.value;
+  if (currentPrimitives.windowChars?.value !== undefined) flatUpdates.windowChars = currentPrimitives.windowChars.value;
+  if (currentPrimitives.maxLength?.value !== undefined) flatUpdates.maxLength = currentPrimitives.maxLength.value;
+  if (currentPrimitives.bestWindow?.value !== undefined) flatUpdates.bestWindow = currentPrimitives.bestWindow.value;
+  if (currentPrimitives.bestRange?.value !== undefined) {
+    flatUpdates.bestRange = currentPrimitives.bestRange.value;
+    flatUpdates.bestWindowRange = currentPrimitives.bestRange.value;
+  }
+  if (currentPrimitives.chars?.bestWindowRange) {
+    flatUpdates.bestWindowRange = currentPrimitives.chars.bestWindowRange;
+  }
+  if (currentPrimitives.chars?.windowRange) {
+    flatUpdates.windowRange = currentPrimitives.chars.windowRange;
+    if (flatUpdates.left === undefined || flatUpdates.left === null) {
+      flatUpdates.left = currentPrimitives.chars.windowRange[0];
+    }
+    if (flatUpdates.right === undefined || flatUpdates.right === null) {
+      flatUpdates.right = currentPrimitives.chars.windowRange[1];
+    }
+  }
+  if (currentPrimitives.chars?.returnResult !== undefined) {
+    flatUpdates.result = currentPrimitives.chars.returnResult;
+  }
+  if (currentPrimitives.nums?.matchedIndices?.length > 0) {
+    flatUpdates.result = currentPrimitives.nums.matchedIndices;
+    flatUpdates.matchedPair = currentPrimitives.nums.matchedIndices;
+  }
+  if (currentPrimitives.k?.value !== undefined) flatUpdates.k = currentPrimitives.k.value;
+  if (currentPrimitives.frequencyMap?.value !== undefined) flatUpdates.frequencyMap = currentPrimitives.frequencyMap.value;
+  if (currentPrimitives.buckets?.value !== undefined) flatUpdates.buckets = currentPrimitives.buckets.value;
+  if (currentPrimitives.buckets?.activeFrequency !== undefined) flatUpdates.activeFrequency = currentPrimitives.buckets.activeFrequency;
+  if (currentPrimitives.currentFrequency?.value !== undefined) flatUpdates.currentFrequency = currentPrimitives.currentFrequency.value;
+  if (currentPrimitives.topKResult?.value !== undefined) {
+    flatUpdates.topKResult = currentPrimitives.topKResult.value;
+    if (currentPrimitives.topKResult.value.length > 0) {
+      flatUpdates.result = currentPrimitives.topKResult.value;
+    }
+  }
+
+  // Stack flat projections
+  if (currentPrimitives.stack?.items) {
+    flatUpdates.stack = currentPrimitives.stack.items;
+  }
+  if (currentPrimitives.char?.value !== undefined) {
+    flatUpdates.char = currentPrimitives.char.value;
+    flatUpdates.currentChar = currentPrimitives.char.value;
+  }
+  if (currentPrimitives.isValid?.value !== undefined) {
+    flatUpdates.isValid = currentPrimitives.isValid.value;
+    flatUpdates.result = currentPrimitives.isValid.value;
+  }
+
+  // Linked List flat projections
+  if (currentPrimitives.list?.nodes) {
+    flatUpdates.nodes = currentPrimitives.list.nodes;
+  }
+  if (currentPrimitives.prev?.value !== undefined) {
+    flatUpdates.prev = currentPrimitives.prev.value;
+  } else if (currentPrimitives.list?.prevId !== undefined) {
+    flatUpdates.prev = currentPrimitives.list.prevId;
+  }
+  if (currentPrimitives.curr?.value !== undefined) {
+    flatUpdates.curr = currentPrimitives.curr.value;
+  } else if (currentPrimitives.list?.currId !== undefined) {
+    flatUpdates.curr = currentPrimitives.list.currId;
+  }
+  if (currentPrimitives.next?.value !== undefined) {
+    flatUpdates.next = currentPrimitives.next.value;
+  } else if (currentPrimitives.list?.nextId !== undefined) {
+    flatUpdates.next = currentPrimitives.list.nextId;
+  }
+
+  // Binary Tree flat projections
+  if (currentPrimitives.tree?.root !== undefined) {
+    flatUpdates.root = currentPrimitives.tree.root;
+  }
+  if (currentPrimitives.tree?.currentNode !== undefined) {
+    flatUpdates.currentNode = currentPrimitives.tree.currentNode;
+  }
+  if (currentPrimitives.tree?.visitedNodes) {
+    flatUpdates.visited = currentPrimitives.tree.visitedNodes;
+  }
+  if (currentPrimitives.result?.value !== undefined) {
+    flatUpdates.result = currentPrimitives.result.value;
+  }
+
   return {
     ...previousState,
+    ...flatUpdates,
     primitives: currentPrimitives,
-    lastProcessedEventId: event.id,
-    lastProcessedStep: event.step,
   };
 }

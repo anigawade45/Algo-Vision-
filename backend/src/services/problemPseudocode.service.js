@@ -59,7 +59,7 @@ const computePatternHash = (patternDoc, approachId, approachName) => {
 /**
  * Validates requested approachId against problem and pattern options
  */
-const validateApproach = async (problem, approachId, requestedApproachName) => {
+const validateApproach = async (problem, approachId, requestedApproachName, userId) => {
   // Try fetching pattern document for problem to see valid solution families
   const patternDoc = await ProblemPattern.findOne({ problemId: problem._id });
 
@@ -69,6 +69,15 @@ const validateApproach = async (problem, approachId, requestedApproachName) => {
   }
 
   let normalizedApproachId = rawApproachId;
+  let resolvedApproachName = requestedApproachName || '';
+
+  if (!normalizedApproachId && userId) {
+    const existingPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+    if (existingPseudo?.approachId) {
+      normalizedApproachId = existingPseudo.approachId;
+      resolvedApproachName = resolvedApproachName || existingPseudo.approachName;
+    }
+  }
 
   if (!normalizedApproachId && patternDoc?.solutionFamilies?.families?.length > 0) {
     normalizedApproachId = patternDoc.solutionFamilies.families[0].id;
@@ -82,7 +91,7 @@ const validateApproach = async (problem, approachId, requestedApproachName) => {
     normalizedApproachId = 'default';
   }
 
-  let approachName = requestedApproachName || normalizedApproachId;
+  let approachName = resolvedApproachName || normalizedApproachId;
 
   if (patternDoc?.solutionFamilies?.families?.length > 0) {
     const matchedFamily = patternDoc.solutionFamilies.families.find(
@@ -219,7 +228,7 @@ const validateAndNormalizePseudocodeData = (rawData, problem, approachId, approa
  */
 const getPseudocode = async (problemIdOrSlug, userId, approachId) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId);
+  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId, null, userId);
 
   const existing = await ProblemPseudocode.findOne({
     problemId: problem._id,
@@ -255,7 +264,8 @@ const generatePseudocode = async (problemIdOrSlug, userId, approachId, requested
   const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(
     problem,
     approachId,
-    requestedApproachName
+    requestedApproachName,
+    userId
   );
 
   const currentProblemHash = computeProblemHash(problem);
@@ -332,7 +342,8 @@ const regeneratePseudocode = async (problemIdOrSlug, userId, approachId, request
   const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(
     problem,
     approachId,
-    requestedApproachName
+    requestedApproachName,
+    userId
   );
 
   const currentProblemHash = computeProblemHash(problem);

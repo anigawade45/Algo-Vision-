@@ -130,6 +130,11 @@ const problemDryRunSchema = new mongoose.Schema(
       enum: ['generated', 'failed'],
       default: 'generated',
     },
+    isPublic: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
     generatedAt: {
       type: Date,
       default: Date.now,
@@ -152,5 +157,13 @@ problemDryRunSchema.index(
     unique: true,
   }
 );
+
+// Secondary Compound Index: Fast lookups for public shared traces
+problemDryRunSchema.index({
+  problemId: 1,
+  approachId: 1,
+  testCaseId: 1,
+  isPublic: 1,
+});
 
 module.exports = mongoose.model('ProblemDryRun', problemDryRunSchema);

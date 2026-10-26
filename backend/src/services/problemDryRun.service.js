@@ -82,7 +82,7 @@ const computeCodeHash = (codeText) => {
 /**
  * Validates requested approachId against problem and pattern options
  */
-const validateApproach = async (problem, approachId, requestedApproachName) => {
+const validateApproach = async (problem, approachId, requestedApproachName, userId) => {
   const patternDoc = await ProblemPattern.findOne({ problemId: problem._id });
 
   let rawApproachId = (approachId && typeof approachId === 'string' && approachId.trim()) || '';
@@ -91,6 +91,26 @@ const validateApproach = async (problem, approachId, requestedApproachName) => {
   }
 
   let normalizedApproachId = rawApproachId;
+  let resolvedApproachName = requestedApproachName || '';
+
+  if (userId) {
+    if (!normalizedApproachId) {
+      const existingPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+      if (existingPseudo?.approachId) {
+        normalizedApproachId = existingPseudo.approachId;
+        resolvedApproachName = resolvedApproachName || existingPseudo.approachName;
+      }
+    } else {
+      const exactPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId, approachId: normalizedApproachId });
+      if (!exactPseudo) {
+        const anyPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+        if (anyPseudo?.approachId) {
+          normalizedApproachId = anyPseudo.approachId;
+          resolvedApproachName = resolvedApproachName || anyPseudo.approachName;
+        }
+      }
+    }
+  }
 
   if (!normalizedApproachId && patternDoc?.solutionFamilies?.families?.length > 0) {
     normalizedApproachId = patternDoc.solutionFamilies.families[0].id;
@@ -104,7 +124,7 @@ const validateApproach = async (problem, approachId, requestedApproachName) => {
     normalizedApproachId = 'default';
   }
 
-  let approachName = requestedApproachName || normalizedApproachId;
+  let approachName = resolvedApproachName || normalizedApproachId;
 
   if (patternDoc?.solutionFamilies?.families?.length > 0) {
     const matchedFamily = patternDoc.solutionFamilies.families.find(
@@ -137,15 +157,39 @@ const resolveTestCase = (problem, testCaseId) => {
     };
   }
 
-  const parsedId = Number(testCaseId) || 1;
-  const matched = testCases.find((tc, idx) => (tc.id || idx + 1) === parsedId) || testCases[0];
-  const actualId = matched.id || 1;
+  // If testCaseId was explicitly provided, validate it strictly rather than silently falling back
+  if (testCaseId !== undefined && testCaseId !== null && String(testCaseId).trim() !== '') {
+    const parsedId = Number(testCaseId);
+    if (isNaN(parsedId) || parsedId <= 0 || !Number.isInteger(parsedId)) {
+      throw new AppError(`Invalid test-case ID "${testCaseId}". ID must be a positive integer.`, 400);
+    }
+
+    const matched = testCases.find((tc, idx) => (tc.id !== undefined ? tc.id : idx + 1) === parsedId);
+    if (!matched) {
+      const availableIds = testCases.map((tc, idx) => (tc.id !== undefined ? tc.id : idx + 1));
+      throw new AppError(
+        `Test case with ID ${parsedId} not found for problem "${problem.title || problem.problemId}". Available IDs: ${availableIds.join(', ')}.`,
+        404
+      );
+    }
+
+    return {
+      testCaseId: matched.id !== undefined ? matched.id : parsedId,
+      testCaseInput: matched.inputStructured || matched.inputRaw,
+      expectedOutput: matched.outputStructured || matched.outputRaw,
+      rawTestCase: matched,
+    };
+  }
+
+  // Default to the first test case when no ID query is specified
+  const firstCase = testCases[0];
+  const actualId = firstCase.id !== undefined ? firstCase.id : 1;
 
   return {
     testCaseId: actualId,
-    testCaseInput: matched.inputStructured || matched.inputRaw,
-    expectedOutput: matched.outputStructured || matched.outputRaw,
-    rawTestCase: matched,
+    testCaseInput: firstCase.inputStructured || firstCase.inputRaw,
+    expectedOutput: firstCase.outputStructured || firstCase.outputRaw,
+    rawTestCase: firstCase,
   };
 };
 
@@ -180,7 +224,7 @@ const validatePseudocodeLineReferences = (steps, validLinesMap) => {
  */
 const getDryRun = async (problemIdOrSlug, userId, approachIdQuery, testCaseIdQuery) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId, approachName, patternDoc } = await validateApproach(problem, approachIdQuery);
+  const { approachId, approachName, patternDoc } = await validateApproach(problem, approachIdQuery, null, userId);
   const testCaseInfo = resolveTestCase(problem, testCaseIdQuery);
 
   const existingDryRun = await ProblemDryRun.findOne({
@@ -240,7 +284,7 @@ const getDryRun = async (problemIdOrSlug, userId, approachIdQuery, testCaseIdQue
  */
 const generateDryRun = async (problemIdOrSlug, userId, approachIdInput, testCaseIdInput, forceRegenerate = false) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId, approachName, patternDoc } = await validateApproach(problem, approachIdInput);
+  const { approachId, approachName, patternDoc } = await validateApproach(problem, approachIdInput, null, userId);
   const testCaseInfo = resolveTestCase(problem, testCaseIdInput);
 
   // Require Stage 05/06 Pseudocode before Dry Run can be generated!

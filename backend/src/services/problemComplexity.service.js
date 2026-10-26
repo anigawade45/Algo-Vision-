@@ -42,14 +42,35 @@ const computeCodeHash = (codeDoc) => {
   return crypto.createHash('sha256').update(canonicalStringify(payload)).digest('hex');
 };
 
-const validateApproach = async (problem, approachId, requestedApproachName) => {
+const validateApproach = async (problem, approachId, requestedApproachName, userId) => {
   const patternDoc = await ProblemPattern.findOne({ problemId: problem._id });
   let normalizedApproachId = (approachId && typeof approachId === 'string' && approachId.trim()) || '';
+  let resolvedApproachName = requestedApproachName || '';
+
+  if (userId) {
+    if (!normalizedApproachId || normalizedApproachId === 'null' || normalizedApproachId === 'undefined') {
+      const existingPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+      if (existingPseudo?.approachId) {
+        normalizedApproachId = existingPseudo.approachId;
+        resolvedApproachName = resolvedApproachName || existingPseudo.approachName;
+      }
+    } else {
+      const exactPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId, approachId: normalizedApproachId });
+      if (!exactPseudo) {
+        const anyPseudo = await ProblemPseudocode.findOne({ problemId: problem._id, userId }).sort({ updatedAt: -1 });
+        if (anyPseudo?.approachId) {
+          normalizedApproachId = anyPseudo.approachId;
+          resolvedApproachName = resolvedApproachName || anyPseudo.approachName;
+        }
+      }
+    }
+  }
+
   if (!normalizedApproachId || normalizedApproachId === 'null' || normalizedApproachId === 'undefined') {
     normalizedApproachId = patternDoc?.solutionFamilies?.families?.[0]?.id || problem.defaultApproachId || 'default';
   }
 
-  let approachName = requestedApproachName || normalizedApproachId;
+  let approachName = resolvedApproachName || normalizedApproachId;
   if (patternDoc?.solutionFamilies?.families?.length > 0) {
     const matchedFamily = patternDoc.solutionFamilies.families.find(
       (f) => String(f.id).toLowerCase() === normalizedApproachId.toLowerCase()
@@ -87,7 +108,7 @@ const parseJsonSafely = (rawText) => {
 
 const getComplexity = async (problemIdOrSlug, userId, approachId, requestedApproachName) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId: validatedApproachId, approachName } = await validateApproach(problem, approachId, requestedApproachName);
+  const { approachId: validatedApproachId, approachName } = await validateApproach(problem, approachId, requestedApproachName, userId);
 
   const existing = await ProblemComplexity.findOne({
     problemId: problem._id,
@@ -101,7 +122,7 @@ const getComplexity = async (problemIdOrSlug, userId, approachId, requestedAppro
 
 const generateComplexity = async (problemIdOrSlug, userId, approachId, requestedApproachName) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
-  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId, requestedApproachName);
+  const { approachId: validatedApproachId, approachName, patternDoc } = await validateApproach(problem, approachId, requestedApproachName, userId);
   
   const query = { problemId: problem._id, userId, approachId: validatedApproachId };
   

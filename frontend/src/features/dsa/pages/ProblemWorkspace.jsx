@@ -475,6 +475,7 @@ export default function ProblemWorkspace({
                 return (
                   <button
                     key={st.id}
+                    id={`stage-nav-btn-${st.id}`}
                     type="button"
                     onClick={() => handleStageSelect(st.id)}
                     aria-current={isSelected ? 'step' : undefined}
@@ -563,6 +564,8 @@ export default function ProblemWorkspace({
             {currentStageId === 'code' && (
               <CodeStage
                 problem={problem}
+                selectedApproachId={selectedApproachId}
+                selectedApproachName={selectedApproachName}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -583,8 +586,11 @@ export default function ProblemWorkspace({
             {currentStageId === 'visualize' && (
               <VisualizationStage
                 problem={problem}
+                selectedApproachId={selectedApproachId}
+                selectedApproachName={selectedApproachName}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
+                onNavigateToStage={(stId) => handleStageSelect(stId)}
                 onOpenSpec={() => setShowSpecDrawer(true)}
               />
             )}
@@ -592,6 +598,8 @@ export default function ProblemWorkspace({
             {currentStageId === 'complexity' && (
               <ComplexityStage
                 problem={problem}
+                selectedApproachId={selectedApproachId}
+                selectedApproachName={selectedApproachName}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}

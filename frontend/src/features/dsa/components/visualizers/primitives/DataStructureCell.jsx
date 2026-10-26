@@ -49,10 +49,10 @@ export function DataStructureCell({
 
       {/* Main Cell Container */}
       <div
-        className={`px-4 py-2.5 min-w-[56px] min-h-[44px] rounded-xl border-2 flex items-center justify-center font-mono text-base font-bold transition-all duration-200 select-none ${containerStyle}`}
+        className={`px-4 py-2.5 min-w-[56px] min-h-[44px] rounded-xl border-2 flex items-center justify-center font-mono text-base sm:text-lg font-bold transition-all duration-200 select-text ${containerStyle}`}
       >
         {isExpired && <span className="mr-1 text-xs text-rose-500 dark:text-rose-400">×</span>}
-        <span>{value === null || value === undefined ? '∅' : String(value)}</span>
+        <span className="leading-none">{value === null || value === undefined ? '∅' : String(value)}</span>
       </div>
 
       {/* Optional Index or Sub-label */}

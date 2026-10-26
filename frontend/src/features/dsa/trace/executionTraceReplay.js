@@ -1,6 +1,75 @@
 import { processVisualizationEvent } from '../events/visualizationEventProcessor.js';
 import { validateExecutionTrace, normalizeExecutionTrace } from './executionTraceValidator.js';
 
+// WeakMap cache for trace checkpoints: automatically invalidates when trace reference changes
+const CHECKPOINT_CACHE = new WeakMap();
+
+/**
+ * Binary search to find the nearest preceding checkpoint with stepNumber <= targetStep.
+ * Operates in O(log M) time where M is number of checkpoints.
+ */
+function findNearestPrecedingCheckpoint(checkpoints, targetStep) {
+  let low = 0;
+  let high = checkpoints.length - 1;
+  let best = checkpoints[0];
+
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    if (checkpoints[mid].stepNumber <= targetStep) {
+      best = checkpoints[mid];
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+
+  return best;
+}
+
+/**
+ * Binary search to locate the first step index whose stepNumber > checkpointStepNumber.
+ * Operates in O(log N) time where N is total steps.
+ */
+function findFirstStepIndexAfter(steps, checkpointStepNumber) {
+  let low = 0;
+  let high = steps.length - 1;
+  let firstIdx = steps.length;
+
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    if (steps[mid].stepNumber > checkpointStepNumber) {
+      firstIdx = mid;
+      high = mid - 1;
+    } else {
+      low = mid + 1;
+    }
+  }
+
+  return firstIdx;
+}
+
+/**
+ * Binary search to locate a step by its stepNumber in O(log N) time.
+ */
+function findStepByNumber(steps, targetStepNumber) {
+  let low = 0;
+  let high = steps.length - 1;
+
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    if (steps[mid].stepNumber === targetStepNumber) {
+      return steps[mid];
+    }
+    if (steps[mid].stepNumber < targetStepNumber) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
+    }
+  }
+
+  return steps[0] || null;
+}
+
 /**
  * Pre-computes sparse frozen checkpoints every `interval` steps for optimized trace seeking.
  *
@@ -16,7 +85,7 @@ export function createExecutionTraceCheckpoints(trace, interval = 10) {
   const checkpoints = [];
   let currentState = JSON.parse(JSON.stringify(trace.initialState));
 
-  // Initial Checkpoint (before step 0)
+  // Initial Checkpoint (before step 0, genuine pre-execution input state)
   checkpoints.push({
     stepNumber: -1,
     sceneState: Object.freeze(JSON.parse(JSON.stringify(currentState))),
@@ -42,6 +111,7 @@ export function createExecutionTraceCheckpoints(trace, interval = 10) {
 /**
  * Pure, Deterministic Execution Trace Replay Engine (Phase 12).
  * Reconstructs exact scene state at `targetStepNumber` using sparse checkpoints and event processing.
+ * Seeking complexity is bounded by O(log(N/K) + K) using binary search and step range iteration.
  *
  * @param {Object} trace - Execution trace object
  * @param {number} targetStepNumber - Target step number
@@ -76,31 +146,114 @@ export function replayExecutionTrace(trace, targetStepNumber = 0) {
   const minStep = normTrace.minStep;
   const maxStep = normTrace.maxStep;
 
+  // Safeguard 1: Step 0 is always the clean initial state before any events are applied
+  if (targetStepNumber <= 0 || targetStepNumber < minStep) {
+    const initialPrims = JSON.parse(JSON.stringify(normTrace.initialState?.primitives || normTrace.initialState || {}));
+    const flatPrims = {
+      currentIndex: null,
+      currentNum: null,
+      complement: null,
+      result: null,
+      hashMap: {},
+      left: null,
+      right: null,
+      windowString: '',
+      windowChars: {},
+      maxLength: 0,
+      bestWindow: '',
+      bestRange: null,
+      bestWindowRange: null,
+      windowRange: null,
+      frequencyMap: {},
+      buckets: initialPrims.buckets?.value || Array.from({ length: (initialPrims.nums?.values?.length || 0) + 1 }, () => []),
+      topKResult: [],
+      currentFrequency: null,
+      k: initialPrims.k?.value ?? null,
+      ...(normTrace.initialState?.flatState || {}),
+    };
+    if (initialPrims.nums?.values) flatPrims.nums = initialPrims.nums.values;
+    if (initialPrims.chars?.values) flatPrims.chars = initialPrims.chars.values;
+    if (initialPrims.s?.value !== undefined) flatPrims.s = initialPrims.s.value;
+    if (initialPrims.target?.value !== undefined) flatPrims.target = initialPrims.target.value;
+    if (initialPrims.hashMap?.value !== undefined) flatPrims.hashMap = initialPrims.hashMap.value;
+    if (initialPrims.windowChars?.value !== undefined) flatPrims.windowChars = initialPrims.windowChars.value;
+    if (initialPrims.k?.value !== undefined) flatPrims.k = initialPrims.k.value;
+    if (initialPrims.frequencyMap?.value !== undefined) flatPrims.frequencyMap = initialPrims.frequencyMap.value;
+    if (initialPrims.buckets?.value !== undefined) flatPrims.buckets = initialPrims.buckets.value;
+    if (initialPrims.topKResult?.value !== undefined) flatPrims.topKResult = initialPrims.topKResult.value;
+    if (initialPrims.currentFrequency?.value !== undefined) flatPrims.currentFrequency = initialPrims.currentFrequency.value;
+
+    const pureInitialState = {
+      ...normTrace.initialState,
+      ...flatPrims,
+      primitives: initialPrims,
+    };
+
+    return {
+      sceneState: pureInitialState,
+      currentStep: {
+        stepNumber: 0,
+        operation: 'INITIAL_INPUT',
+        description: 'Initial state before algorithm execution. No comparisons or state mutations have occurred yet.',
+        changed: [],
+        state: pureInitialState,
+        highlights: {},
+        events: [],
+      },
+      currentStepNumber: 0,
+      totalSteps: steps.length,
+      isTerminal: false,
+      result: null,
+      completed: false,
+    };
+  }
+
   // Handle out-of-range seeks gracefully
   const clampedStep = Math.max(minStep, Math.min(targetStepNumber, maxStep));
 
-  // Utilize pre-computed checkpoints or compute nearest checkpoint
-  const checkpoints = normTrace._checkpoints || createExecutionTraceCheckpoints(normTrace);
-  const nearestCheckpoint = checkpoints
-    .filter((cp) => cp.stepNumber <= clampedStep)
-    .sort((a, b) => b.stepNumber - a.stepNumber)[0] || checkpoints[0];
+  // Retrieve or compute checkpoints safely with WeakMap cache invalidation
+  let checkpoints = CHECKPOINT_CACHE.get(normTrace)?.checkpoints;
+  if (!checkpoints) {
+    checkpoints = normTrace._checkpoints || createExecutionTraceCheckpoints(normTrace);
+    if (typeof normTrace === 'object' && normTrace !== null) {
+      CHECKPOINT_CACHE.set(normTrace, {
+        checkpoints,
+        traceId: normTrace.traceId,
+        schemaVersion: normTrace.schemaVersion,
+        stepCount: steps.length,
+      });
+    }
+  }
 
+  // 1. Locate nearest preceding checkpoint in O(log M) time via binary search
+  const nearestCheckpoint = findNearestPrecedingCheckpoint(checkpoints, clampedStep);
+
+  // 2. Clone frozen checkpoint state to ensure immutable isolation
   let currentState = JSON.parse(JSON.stringify(nearestCheckpoint.sceneState));
 
-  // Replay steps from nearest checkpoint up to clampedStep
-  const stepsToProcess = steps.filter(
-    (st) => st.stepNumber > nearestCheckpoint.stepNumber && st.stepNumber <= clampedStep
-  );
+  // 3. Locate start step in O(log N) and replay at most (K-1) steps up to clampedStep
+  const startIdx = findFirstStepIndexAfter(steps, nearestCheckpoint.stepNumber);
 
-  for (const stepObj of stepsToProcess) {
+  for (let i = startIdx; i < steps.length; i++) {
+    const stepObj = steps[i];
+    if (stepObj.stepNumber > clampedStep) break;
     const events = stepObj.events || [];
     for (const evt of events) {
       currentState = processVisualizationEvent(currentState, evt);
     }
   }
 
-  const currentStepObj = steps.find((st) => st.stepNumber === clampedStep) || steps[0];
+  // 4. Locate authoritative current step in O(log N) time
+  const currentStepObj = findStepByNumber(steps, clampedStep) || steps[0];
   const isTerminal = clampedStep >= maxStep;
+
+  // Harmonize currentState with authoritative step state
+  if (currentStepObj?.state) {
+    Object.assign(currentState, currentStepObj.state);
+    if (currentStepObj.state.bestRange !== undefined && currentState.bestWindowRange === undefined) {
+      currentState.bestWindowRange = currentStepObj.state.bestRange;
+    }
+  }
 
   return {
     sceneState: currentState,
@@ -131,7 +284,7 @@ export function nextTraceStep(trace, currentStepNumber) {
  */
 export function prevTraceStep(trace, currentStepNumber) {
   const norm = trace.totalSteps !== undefined ? trace : normalizeExecutionTrace(trace);
-  return replayExecutionTrace(norm, currentStepNumber - 1);
+  return replayExecutionTrace(norm, Math.max(0, currentStepNumber - 1));
 }
 
 /**
@@ -139,5 +292,5 @@ export function prevTraceStep(trace, currentStepNumber) {
  */
 export function resetTrace(trace) {
   const norm = trace.totalSteps !== undefined ? trace : normalizeExecutionTrace(trace);
-  return replayExecutionTrace(norm, norm.minStep);
+  return replayExecutionTrace(norm, 0);
 }

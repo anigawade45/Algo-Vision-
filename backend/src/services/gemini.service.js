@@ -1337,12 +1337,20 @@ const buildDryRunPrompt = (problem, approachId, approachName, pseudocodeDoc, cod
     outputData: problem.outputData || {},
   };
 
-  const pseudocodeLines = (pseudocodeDoc?.lines || []).map((l) => ({
-    line: l.line,
-    text: l.text,
-    explanation: l.explanation || '',
-    type: l.type || 'instruction',
-  }));
+  const pseudocodeLines =
+    pseudocodeDoc?.lines && pseudocodeDoc.lines.length > 0
+      ? pseudocodeDoc.lines.map((l) => ({
+          line: l.line,
+          text: l.text,
+          explanation: l.explanation || '',
+          type: l.type || 'instruction',
+        }))
+      : [
+          { line: 1, text: `Initialize ${approachName} state and data structures`, type: 'instruction' },
+          { line: 2, text: `Iterate through input elements and check conditions`, type: 'instruction' },
+          { line: 3, text: `Update data structures and intermediate results`, type: 'instruction' },
+          { line: 4, text: `Return final solution result`, type: 'instruction' },
+        ];
 
   const testCaseContext = {
     testCaseId: testCase?.id || testCase?.testCaseId || 1,

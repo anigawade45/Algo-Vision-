@@ -1,70 +1,55 @@
 const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const { successResponse } = require('./apiResponse');
+const serializeUser = require('./serializeUser');
+
+const COOKIE_NAME = 'token';
 
 /**
- * Generate JWT token for a given user ID
+ * Generate a signed JWT for a user ID.
+ * The algorithm is pinned (auth.middleware verifies with the same one).
  */
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, env.jwtSecret, {
+const generateToken = (userId) =>
+  jwt.sign({ userId: String(userId) }, env.jwtSecret, {
+    algorithm: 'HS256',
     expiresIn: env.jwtExpiresIn,
   });
-};
 
 /**
- * Helper to parse expiration string (e.g. "7d") into milliseconds
+ * Cookie attributes. Used both to SET and to CLEAR the cookie: the browser only
+ * removes a cookie when name, path and domain match the original exactly.
  */
-const parseExpiresInToMs = (expiresInStr) => {
-  if (typeof expiresInStr === 'number') return expiresInStr;
-  const match = String(expiresInStr).match(/^(\d+)([smhd])$/);
-  if (!match) return 7 * 24 * 60 * 60 * 1000; // default 7 days
-  const val = parseInt(match[1], 10);
-  const unit = match[2];
-  switch (unit) {
-    case 's': return val * 1000;
-    case 'm': return val * 60 * 1000;
-    case 'h': return val * 60 * 60 * 1000;
-    case 'd': return val * 24 * 60 * 60 * 1000;
-    default: return 7 * 24 * 60 * 60 * 1000;
-  }
-};
+const getAuthCookieOptions = () => ({
+  httpOnly: true,
+  secure: env.isProduction,
+  sameSite: env.cookieSameSite,
+  path: '/',
+  ...(env.cookieDomain ? { domain: env.cookieDomain } : {}),
+});
+
+const clearAuthCookie = (res) => res.clearCookie(COOKIE_NAME, getAuthCookieOptions());
 
 /**
- * Generate JWT and send response with HTTP-only cookie
+ * Issue a JWT in an HTTP-only cookie and respond with the safe user object.
  */
 const sendTokenResponse = (user, statusCode, res, message) => {
   const token = generateToken(user._id);
 
-  const isProduction = env.nodeEnv === 'production';
-  const cookieMaxAge = parseExpiresInToMs(env.jwtExpiresIn);
+  // Derive the cookie lifetime from the token's own "exp" claim so the two can
+  // never drift apart (the old hand-written duration parser could disagree with
+  // what jsonwebtoken actually applied).
+  const { exp } = jwt.decode(token);
+  const maxAge = Math.max(0, exp * 1000 - Date.now());
 
-  const cookieOptions = {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? 'none' : 'lax',
-    maxAge: cookieMaxAge,
-  };
+  res.cookie(COOKIE_NAME, token, { ...getAuthCookieOptions(), maxAge });
+  res.set('Cache-Control', 'no-store'); // never cache responses that set credentials
 
-  res.cookie('token', token, cookieOptions);
-
-  const userObj = typeof user.toObject === 'function' ? user.toObject() : { ...user };
-  delete userObj.password;
-  delete userObj.__v;
-
-  const safeUser = {
-    id: userObj._id,
-    name: userObj.name,
-    email: userObj.email,
-    avatar: userObj.avatar ?? null,
-    isVerified: userObj.isVerified ?? false,
-    createdAt: userObj.createdAt,
-    updatedAt: userObj.updatedAt,
-  };
-
-  return successResponse(res, statusCode, message, { user: safeUser });
+  return successResponse(res, statusCode, message, { user: serializeUser(user) });
 };
 
 module.exports = {
   generateToken,
+  getAuthCookieOptions,
+  clearAuthCookie,
   sendTokenResponse,
 };

@@ -16,4 +16,10 @@ router.use('/auth', authRoutes);
 // DSA Problems Routes
 router.use('/problems', problemRoutes);
 
+// Generic Visualization Plan Direct Route (POST /api/visualization/plan, GET /api/visualization/plan)
+const problemVisualizationController = require('../controllers/problemVisualization.controller');
+const { optionalProtect } = require('../middleware/auth.middleware');
+router.get('/visualization/plan', optionalProtect, problemVisualizationController.getVisualizationPlan);
+router.post('/visualization/plan', optionalProtect, problemVisualizationController.getVisualizationPlan);
+
 module.exports = router;

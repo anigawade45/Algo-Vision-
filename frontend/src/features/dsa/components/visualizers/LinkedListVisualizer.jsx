@@ -6,37 +6,48 @@ import { LinkedListNode } from './primitives/LinkedListNode';
  * Used for pointer-manipulation problems like Reverse Linked List.
  * Visualizes nodes, pointer variables (PREV, CURR, NEXT, HEAD), and directional pointer edges.
  */
-export function LinkedListVisualizer({ problem, step }) {
-  if (!step || !step.state) {
-    return (
-      <div className="p-8 text-center text-slate-400 font-mono text-sm">
-        Linked List data unavailable for this step.
-      </div>
-    );
+export function LinkedListVisualizer({ problem, step, state: passedState, highlights: passedHighlights }) {
+  const state = passedState || step?.state || problem?.initialState?.primitives || problem?.initialState || {};
+  const highlights = passedHighlights || step?.highlights || {};
+  const description = step?.description;
+
+  let rawNodes = Array.isArray(state.nodes)
+    ? state.nodes
+    : Array.isArray(state.list?.nodes)
+    ? state.list.nodes
+    : null;
+
+  // Only fallback if rawNodes is strictly missing (null or undefined), NEVER when it is legitimately empty []
+  if (rawNodes === null || rawNodes === undefined) {
+    const fallbackVals =
+      problem?.input?.head ||
+      problem?.inputData?.head ||
+      problem?.inputData?.nodes ||
+      [1, 2, 3, 4, 5];
+    if (Array.isArray(fallbackVals) && fallbackVals.length > 0) {
+      rawNodes = fallbackVals.map((val, idx) => ({
+        id: idx + 1,
+        val: typeof val === 'object' && val !== null ? val.val ?? val.value : val,
+        nextId: idx < fallbackVals.length - 1 ? idx + 2 : null,
+      }));
+    } else {
+      rawNodes = [];
+    }
   }
 
-  const { state = {}, highlights = {}, description } = step;
-  const nodes = Array.isArray(state.nodes) ? state.nodes : [];
+  const nodes = rawNodes || [];
   const prevId = state.prev ?? highlights.prev ?? null;
-  const currId = state.curr ?? highlights.curr ?? null;
-  const nextId = state.next ?? highlights.next ?? null;
+  const currId = state.curr ?? highlights.curr ?? (nodes.length > 0 && prevId === null ? nodes[0].id : null);
+  const nextId = state.next ?? highlights.next ?? (nodes.length > 1 && prevId === null ? nodes[1].id : null);
 
   // Determine current Head node ID (when reversal is complete or prev is new head)
-  const headId = state.result
+  const headId = state.result && state.result.length > 0
     ? state.result[0]
     : nodes.length > 0
     ? state.curr === null && state.prev !== null
       ? state.prev
       : nodes[0]?.id
     : null;
-
-  if (nodes.length === 0) {
-    return (
-      <div className="p-8 text-center text-slate-400 font-mono text-sm">
-        [ Empty Linked List: HEAD → null ]
-      </div>
-    );
-  }
 
   const firstNode = nodes[0];
   const lastNode = nodes[nodes.length - 1];
@@ -101,80 +112,93 @@ export function LinkedListVisualizer({ problem, step }) {
 
         {/* Horizontal Linked List Nodes & Directional Pointer Arrows */}
         <div className="min-h-[170px] bg-slate-50/60 dark:bg-[#070A12] border-2 border-dashed border-indigo-200 dark:border-indigo-900/40 rounded-2xl p-6 sm:p-8 flex items-center justify-start sm:justify-center overflow-x-auto gap-2 transition-all duration-300">
-          {/* Left Boundary: If first node points to null (after reversal) */}
-          {firstNode?.nextId === null && (
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-500 font-mono text-xs font-bold">
-                null
-              </div>
-              <span className="text-rose-500 font-mono text-xl font-bold">←</span>
+          {nodes.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-6 text-center">
+              <span className="text-sm font-semibold text-slate-600 dark:text-slate-300 font-mono">
+                [ Empty Linked List: HEAD → null ]
+              </span>
+              <span className="text-xs text-slate-400 mt-1">
+                The linked list contains 0 nodes. Head is null.
+              </span>
             </div>
-          )}
-
-          {/* Render Nodes and Inter-node Directed Edges */}
-          {nodes.map((node, idx) => {
-            const isPrev = prevId === node.id;
-            const isCurr = currId === node.id;
-            const isNext = nextId === node.id;
-            const isHead = headId === node.id;
-
-            const nextNode = nodes[idx + 1];
-
-            // Determine edge direction between node and nextNode
-            let edgeType = null; // 'forward' | 'reversed' | 'broken'
-            if (nextNode) {
-              if (node.nextId === nextNode.id) {
-                edgeType = 'forward';
-              } else if (nextNode.nextId === node.id) {
-                edgeType = 'reversed';
-              } else {
-                edgeType = 'broken';
-              }
-            }
-
-            return (
-              <React.Fragment key={node.id}>
-                {/* Node Component */}
-                <LinkedListNode
-                  id={node.id}
-                  val={node.val}
-                  isPrev={isPrev}
-                  isCurr={isCurr}
-                  isNext={isNext}
-                  isHead={isHead}
-                />
-
-                {/* Inter-Node Arrow Edge */}
-                {edgeType === 'forward' && (
-                  <div className="flex flex-col items-center px-1 text-slate-400 font-bold shrink-0">
-                    <span className="text-xl sm:text-2xl font-mono leading-none">→</span>
+          ) : (
+            <>
+              {/* Left Boundary: If first node points to null (after reversal) */}
+              {firstNode?.nextId === null && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <div className="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-500 font-mono text-xs font-bold">
+                    null
                   </div>
-                )}
+                  <span className="text-rose-500 font-mono text-xl font-bold">←</span>
+                </div>
+              )}
 
-                {edgeType === 'reversed' && (
-                  <div className="flex flex-col items-center px-1 text-rose-500 dark:text-rose-400 font-bold shrink-0 animate-pulse">
-                    <span className="text-xl sm:text-2xl font-mono leading-none">←</span>
-                    <span className="text-[9px] uppercase font-mono tracking-tighter">reversed</span>
+              {/* Render Nodes and Inter-node Directed Edges */}
+              {nodes.map((node, idx) => {
+                const isPrev = prevId === node.id;
+                const isCurr = currId === node.id;
+                const isNext = nextId === node.id;
+                const isHead = headId === node.id;
+
+                const nextNode = nodes[idx + 1];
+
+                // Determine edge direction between node and nextNode
+                let edgeType = null; // 'forward' | 'reversed' | 'broken'
+                if (nextNode) {
+                  if (node.nextId === nextNode.id) {
+                    edgeType = 'forward';
+                  } else if (nextNode.nextId === node.id) {
+                    edgeType = 'reversed';
+                  } else {
+                    edgeType = 'broken';
+                  }
+                }
+
+                return (
+                  <React.Fragment key={node.id}>
+                    {/* Node Component */}
+                    <LinkedListNode
+                      id={node.id}
+                      val={node.val}
+                      isPrev={isPrev}
+                      isCurr={isCurr}
+                      isNext={isNext}
+                      isHead={isHead}
+                    />
+
+                    {/* Inter-Node Arrow Edge */}
+                    {edgeType === 'forward' && (
+                      <div className="flex flex-col items-center px-1 text-slate-400 font-bold shrink-0">
+                        <span className="text-xl sm:text-2xl font-mono leading-none">→</span>
+                      </div>
+                    )}
+
+                    {edgeType === 'reversed' && (
+                      <div className="flex flex-col items-center px-1 text-rose-500 dark:text-rose-400 font-bold shrink-0 animate-pulse">
+                        <span className="text-xl sm:text-2xl font-mono leading-none">←</span>
+                        <span className="text-[9px] uppercase font-mono tracking-tighter">reversed</span>
+                      </div>
+                    )}
+
+                    {edgeType === 'broken' && (
+                      <div className="flex flex-col items-center px-1 text-amber-500 font-bold shrink-0 opacity-60">
+                        <span className="text-sm font-mono tracking-widest">···</span>
+                      </div>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+
+              {/* Right Boundary: If last node points to null (before reversal) */}
+              {lastNode?.nextId === null && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-slate-400 font-mono text-xl font-bold">→</span>
+                  <div className="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-500 font-mono text-xs font-bold">
+                    null
                   </div>
-                )}
-
-                {edgeType === 'broken' && (
-                  <div className="flex flex-col items-center px-1 text-amber-500 font-bold shrink-0 opacity-60">
-                    <span className="text-sm font-mono tracking-widest">···</span>
-                  </div>
-                )}
-              </React.Fragment>
-            );
-          })}
-
-          {/* Right Boundary: If last node points to null (before reversal) */}
-          {lastNode?.nextId === null && (
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-slate-400 font-mono text-xl font-bold">→</span>
-              <div className="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-500 font-mono text-xs font-bold">
-                null
-              </div>
-            </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

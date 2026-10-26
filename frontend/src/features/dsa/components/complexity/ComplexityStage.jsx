@@ -16,13 +16,19 @@ import {
 } from 'lucide-react';
 import api from '../../../../api/apiClient';
 
-export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
+export function ComplexityStage({
+  problem,
+  selectedApproachId,
+  selectedApproachName,
+  onCompleteStage,
+  onNextStage
+}) {
   const [complexityData, setComplexityData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
-  const [approachId, setApproachId] = useState('');
-  const [approachName, setApproachName] = useState('');
+  const [approachId, setApproachId] = useState(selectedApproachId || '');
+  const [approachName, setApproachName] = useState(selectedApproachName || '');
 
   const [activeSection, setActiveSection] = useState('time');
   const [timeStepIndex, setTimeStepIndex] = useState(0);
@@ -31,8 +37,17 @@ export function ComplexityStage({ problem, onCompleteStage, onNextStage }) {
   const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
+    if (selectedApproachId) {
+      setApproachId(selectedApproachId);
+    }
+    if (selectedApproachName) {
+      setApproachName(selectedApproachName);
+    }
+  }, [selectedApproachId, selectedApproachName]);
+
+  useEffect(() => {
     fetchComplexityData();
-  }, [problem._id]);
+  }, [problem._id, selectedApproachId]);
 
   const fetchComplexityData = async () => {
     setIsLoading(true);

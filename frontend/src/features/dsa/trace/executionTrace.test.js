@@ -50,7 +50,7 @@ export function runExecutionTraceTests() {
       results.testA_emptyTrace = 'PASS';
     }
 
-    // Test B: Single Step Trace
+    // Test B: Single Step Trace with Safeguard 1 (Step 0 is initial state, Step 1 is executed state)
     const singleStepTrace = normalizeExecutionTrace({
       schemaVersion: 1,
       traceId: 'single-test',
@@ -58,12 +58,12 @@ export function runExecutionTraceTests() {
       initialState: { primitives: { res: { id: 'res', type: 'resource', value: 5, max: 5 } } },
       steps: [
         {
-          id: 'step-0',
-          stepNumber: 0,
+          id: 'step-1',
+          stepNumber: 1,
           events: [
             {
               id: 'single-evt-1',
-              step: 0,
+              step: 1,
               type: VISUALIZATION_EVENTS.RESOURCE_CONSUME,
               target: { primitiveId: 'res' },
               data: { amount: 2, value: 3 },
@@ -73,8 +73,9 @@ export function runExecutionTraceTests() {
         },
       ],
     });
-    const singleRes = replayExecutionTrace(singleStepTrace, 0);
-    if (singleRes.sceneState.primitives.res.value === 3) {
+    const step0Res = replayExecutionTrace(singleStepTrace, 0);
+    const step1Res = replayExecutionTrace(singleStepTrace, 1);
+    if (step0Res.sceneState.primitives.res.value === 5 && step1Res.sceneState.primitives.res.value === 3) {
       results.testB_singleStepTrace = 'PASS';
     }
 

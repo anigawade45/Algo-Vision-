@@ -1,4 +1,6 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_URL) ||
+  'http://localhost:5000/api';
 
 /**
  * Handle HTTP response parsing and error throwing
@@ -30,14 +32,30 @@ const handleResponse = async (response) => {
  */
 const apiClient = {
   get: async (url, options = {}) => {
-    const res = await fetch(`${API_BASE_URL}${url}`, {
+    let finalUrl = `${API_BASE_URL}${url}`;
+    if (options.params && typeof options.params === 'object') {
+      const searchParams = new URLSearchParams();
+      Object.entries(options.params).forEach(([key, val]) => {
+        if (val !== undefined && val !== null && val !== '') {
+          searchParams.append(key, val);
+        }
+      });
+      const qs = searchParams.toString();
+      if (qs) {
+        finalUrl += (finalUrl.includes('?') ? '&' : '?') + qs;
+      }
+    }
+
+    const { params, ...fetchOptions } = options;
+
+    const res = await fetch(finalUrl, {
       method: 'GET',
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        ...options.headers,
+        ...fetchOptions.headers,
       },
-      ...options,
+      ...fetchOptions,
     });
     return handleResponse(res);
   },

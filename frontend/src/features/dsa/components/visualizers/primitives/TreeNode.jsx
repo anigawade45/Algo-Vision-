@@ -59,7 +59,7 @@ export function TreeNode({
       {/* Main Node Body */}
       <div
         aria-label={`Tree node value ${value}`}
-        className={`${sizeClasses} rounded-full border-2 flex flex-col items-center justify-center font-mono font-bold transition-all duration-300 select-none ${nodeStyle}`}
+        className={`${sizeClasses} rounded-full border-2 flex flex-col items-center justify-center font-mono font-bold transition-all duration-300 select-text ${nodeStyle}`}
       >
         <span>{value === null || value === undefined ? '∅' : String(value)}</span>
       </div>

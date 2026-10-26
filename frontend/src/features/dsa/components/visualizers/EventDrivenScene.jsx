@@ -4,25 +4,36 @@ import { replayVisualizationEvents } from '../../events/visualizationEventReplay
 import { replayExecutionTrace } from '../../trace/executionTraceReplay.js';
 import { furthestBuildingInitialState, furthestBuildingEvents } from '../../events/mockVisualizationEvents.js';
 
-export function EventDrivenScene({ problem, step }) {
-  const currentStepNumber = useMemo(() => {
-    if (step?.stepIndex !== undefined) return step.stepIndex;
-    if (step?.stepNumber !== undefined) return Math.max(0, step.stepNumber - 1);
-    return 0;
-  }, [step?.stepIndex, step?.stepNumber]);
-
+export function EventDrivenScene({ problem, step, stepIndex, state: passedState, highlights: passedHighlights }) {
   const trace = problem?.executionTrace || step?.executionTrace || null;
+  const hasCustomInitialState = Boolean(step?.initialState || problem?.initialState);
   const initialState = step?.initialState || problem?.initialState || furthestBuildingInitialState;
-  const events = step?.events || problem?.events || furthestBuildingEvents;
+  const events = step?.events || problem?.events || (hasCustomInitialState ? [] : furthestBuildingEvents);
 
-  // Replay trace or events up to currentStepNumber (Memoized for peak render speed)
+  const currentStepNumber = useMemo(() => {
+    if (stepIndex !== undefined && typeof stepIndex === 'number') {
+      return stepIndex;
+    }
+    if (step?.stepIndex !== undefined && typeof step.stepIndex === 'number') {
+      return step.stepIndex;
+    }
+    if (step?.stepNumber !== undefined && typeof step.stepNumber === 'number') {
+      return step.stepNumber;
+    }
+    return 0;
+  }, [stepIndex, step?.stepIndex, step?.stepNumber]);
+
+  // Use authoritative passedState or replay trace/events up to currentStepNumber
   const sceneState = useMemo(() => {
+    if (passedState && typeof passedState === 'object' && Object.keys(passedState).length > 0) {
+      return passedState;
+    }
     if (trace) {
       const replayRes = replayExecutionTrace(trace, currentStepNumber);
       return replayRes.sceneState || {};
     }
     return replayVisualizationEvents(initialState, events, currentStepNumber);
-  }, [trace, initialState, events, currentStepNumber]);
+  }, [passedState, trace, initialState, events, currentStepNumber]);
 
   const primitives = sceneState.primitives || {};
   const primitiveEntries = useMemo(() => Object.entries(primitives), [primitives]);
@@ -55,9 +66,13 @@ export function EventDrivenScene({ problem, step }) {
           <span className="px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono font-bold text-xs">
             EVENT-DRIVEN SCENE
           </span>
-          {trace?.source && (
+          {trace?.source ? (
             <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-400 font-mono font-semibold text-[11px] border border-purple-500/20">
               {trace.source === 'dry-run' ? 'Dry Run Trace' : 'Mock Trace'}
+            </span>
+          ) : (
+            <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-semibold text-[11px] border border-emerald-500/20">
+              Initial Input State
             </span>
           )}
           <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
@@ -66,18 +81,21 @@ export function EventDrivenScene({ problem, step }) {
         </div>
 
         <div className="text-xs font-mono text-slate-400 dark:text-slate-500">
-          Step #{currentStepNumber} Replayed
+          {trace ? `Step #${currentStepNumber} Replayed` : 'Initial State • Execution Inactive'}
         </div>
       </div>
 
-      {/* Top Resource & Variable Telemetry Grid */}
+      {/* Separate Clearly Labeled Parameter Area (e.g. target, k, resources) */}
       {resourcePrimitives.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 p-3 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 shadow-xs">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mr-1">
+            Parameters:
+          </span>
           {resourcePrimitives.map(([id, prim]) => {
             const PrimitiveComp = getPrimitiveComponent(prim.type);
             if (!PrimitiveComp) return null;
             return (
-              <div key={id} className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-3 shadow-sm flex flex-col justify-between">
+              <div key={id} className="flex items-center">
                 <PrimitiveComp {...prim} />
               </div>
             );
@@ -85,8 +103,8 @@ export function EventDrivenScene({ problem, step }) {
         </div>
       )}
 
-      {/* Main Structural Primitives Grid */}
-      <div className="flex flex-col gap-4">
+      {/* Main Structural Primitives Canvas */}
+      <div className="flex flex-col gap-5">
         {structuralPrimitives.map(([id, prim]) => {
           const PrimitiveComp = getPrimitiveComponent(prim.type);
           if (!PrimitiveComp) return null;
@@ -94,17 +112,19 @@ export function EventDrivenScene({ problem, step }) {
           return (
             <div
               key={id}
-              className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 shadow-sm flex flex-col items-center gap-3 overflow-x-auto"
+              className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col items-center gap-4 overflow-x-auto min-h-[200px] justify-center"
             >
-              <div className="w-full flex items-center justify-between border-b border-slate-100 dark:border-slate-800/60 pb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                  {prim.label || `${prim.type.toUpperCase()} Primitive (${id})`}
+              <div className="w-full flex items-center justify-between border-b border-slate-100 dark:border-slate-800/60 pb-2.5">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-xs shadow-blue-500/50"></span>
+                  {prim.label || `${prim.type.toUpperCase()} Elements`}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">id: {id}</span>
+                <span className="text-[10px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded-md">
+                  {prim.type}
+                </span>
               </div>
 
-              <div className="w-full flex justify-center py-1">
+              <div className="w-full flex justify-center py-2 overflow-x-auto">
                 <PrimitiveComp {...prim} />
               </div>
             </div>

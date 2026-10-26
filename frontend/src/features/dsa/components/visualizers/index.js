@@ -1,4 +1,5 @@
 export { VisualizerResolver } from './VisualizerResolver';
+export { GenericD3Visualization } from './GenericD3Visualization';
 export { ArrayVisualizer } from './ArrayVisualizer';
 export { SlidingWindowVisualizer } from './SlidingWindowVisualizer';
 export { HashMapVisualizer } from './HashMapVisualizer';

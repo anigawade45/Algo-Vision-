@@ -1200,6 +1200,46 @@ const INITIAL_MOCK_PROBLEMS = [
         outputStructured: { type: 'array', value: [1, 2] },
         reasoning: ['1 appears 3 times, 2 appears 2 times, 3 appears 1 time. Top 2 frequent: [1, 2].'],
       },
+      {
+        id: 2,
+        inputRaw: 'nums = [1], k = 1',
+        outputRaw: '[1]',
+        inputStructured: { type: 'array_with_k', value: { array: [1], k: 1 } },
+        outputStructured: { type: 'array', value: [1] },
+        reasoning: ['Single element 1 has frequency 1. Top 1 frequent: [1].'],
+      },
+      {
+        id: 3,
+        inputRaw: 'nums = [4,4,4,6,6,7], k = 1',
+        outputRaw: '[4]',
+        inputStructured: { type: 'array_with_k', value: { array: [4, 4, 4, 6, 6, 7], k: 1 } },
+        outputStructured: { type: 'array', value: [4] },
+        reasoning: ['4 appears 3 times, 6 appears 2 times, 7 appears 1 time. Top 1 frequent: [4].'],
+      },
+      {
+        id: 4,
+        inputRaw: 'nums = [-1,-1,2,2,2,3], k = 2',
+        outputRaw: '[2, -1]',
+        inputStructured: { type: 'array_with_k', value: { array: [-1, -1, 2, 2, 2, 3], k: 2 } },
+        outputStructured: { type: 'array', value: [2, -1] },
+        reasoning: ['2 appears 3 times, -1 appears 2 times, 3 appears 1 time. Top 2 frequent: [2, -1].'],
+      },
+      {
+        id: 5,
+        inputRaw: 'nums = [5,5,5], k = 1',
+        outputRaw: '[5]',
+        inputStructured: { type: 'array_with_k', value: { array: [5, 5, 5], k: 1 } },
+        outputStructured: { type: 'array', value: [5] },
+        reasoning: ['5 appears 3 times. Top 1 frequent: [5].'],
+      },
+      {
+        id: 6,
+        inputRaw: 'nums = [1,2], k = 1',
+        outputRaw: '[1]',
+        inputStructured: { type: 'array_with_k', value: { array: [1, 2], k: 1 } },
+        outputStructured: { type: 'array', value: [1] },
+        reasoning: ['Both 1 and 2 appear with frequency 1. Any element is a valid top 1 frequent element.'],
+      },
     ],
     observations: [
       { stepNo: '01', title: 'BUCKET SORT FREQUENCY RANKING', detail: 'Group numbers by frequency in 1..N buckets for O(N) execution.' },
@@ -1397,6 +1437,7 @@ export function normalizeProblemData(p) {
 }
 
 export const MOCK_PROBLEMS = INITIAL_MOCK_PROBLEMS.map(normalizeProblemData);
+export const mockProblems = MOCK_PROBLEMS;
 
 /**
  * Development Schema Validator

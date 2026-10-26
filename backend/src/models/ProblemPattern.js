@@ -1,124 +1,212 @@
 const mongoose = require('mongoose');
 
+const MAX_SHORT = 200;
+const MAX_MEDIUM = 1000;
+const MAX_LONG = 5000; // AI output is untrusted: always cap it
+const MAX_ITEMS = 30;
+
+// `this` is the root document for plain nested paths, but the subdocument for
+// array items, so resolve the owning document before reading generationStatus.
+const isGenerated = function () {
+  const root = typeof this.ownerDocument === 'function' ? this.ownerDocument() : this;
+  return root.generationStatus === 'generated';
+};
+
+// Required only on successful generation, so a 'failed' document can be saved empty.
+const text = (label, maxlength = MAX_MEDIUM, { required = true, defaultValue } = {}) => {
+  const field = {
+    type: String,
+    trim: true,
+    maxlength: [maxlength, `${label} cannot exceed ${maxlength} characters`],
+  };
+  if (required) field.required = [isGenerated, `${label} is required`];
+  if (defaultValue !== undefined) field.default = defaultValue;
+  return field;
+};
+
+const list = (label, maxItemLength = MAX_MEDIUM) => ({
+  type: [{ type: String, trim: true, maxlength: maxItemLength }],
+  validate: {
+    validator: (value) => !value || value.length <= MAX_ITEMS,
+    message: `${label} cannot contain more than ${MAX_ITEMS} items`,
+  },
+});
+
+// Array of subdocuments without auto-generated _id and with a size cap.
+const subList = (fields, label) => ({
+  type: [new mongoose.Schema(fields, { _id: false })],
+  validate: {
+    validator: (value) => !value || value.length <= MAX_ITEMS,
+    message: `${label} cannot contain more than ${MAX_ITEMS} items`,
+  },
+});
+
+const hasUniqueIds = (items) => {
+  const ids = (items || []).map((item) => item.id).filter(Boolean);
+  return new Set(ids).size === ids.length;
+};
+
 const problemPatternSchema = new mongoose.Schema(
   {
+    // References Problem._id (ObjectId), NOT the public slug.
     problemId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Problem',
       required: [true, 'Problem reference is required'],
-      index: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User reference is required'],
-      index: true,
     },
     intro: {
-      eyebrow: { type: String, default: '04 · PATTERN', trim: true },
-      title: { type: String, required: true, trim: true },
-      subtitle: { type: String, required: true, trim: true },
+      eyebrow: text('Intro eyebrow', MAX_SHORT, { required: false, defaultValue: '04 · PATTERN' }),
+      title: text('Intro title', MAX_SHORT),
+      subtitle: text('Intro subtitle'),
     },
     structure: {
-      title: { type: String, required: true, trim: true },
-      subtitle: { type: String, required: true, trim: true },
-      inputLabel: { type: String, required: true, trim: true },
-      inputVisual: [{ type: String, trim: true }],
-      targetLabel: { type: String, required: true, trim: true },
-      targetValue: { type: String, required: true, trim: true },
-      coreRelationship: [
+      title: text('Structure title', MAX_SHORT),
+      subtitle: text('Structure subtitle'),
+      inputLabel: text('Input label', MAX_SHORT),
+      inputVisual: list('Input visual', MAX_SHORT),
+      targetLabel: text('Target label', MAX_SHORT),
+      targetValue: text('Target value', MAX_SHORT),
+      coreRelationship: subList(
         {
-          label: { type: String, required: true, trim: true },
-          sub: { type: String, required: true, trim: true },
+          label: text('Relationship label', MAX_SHORT),
+          sub: text('Relationship detail'),
         },
-      ],
+        'Core relationships'
+      ),
     },
     signals: {
-      title: { type: String, required: true, trim: true },
-      subtitle: { type: String, required: true, trim: true },
-      observations: [
-        {
-          id: { type: String, required: true, trim: true },
-          title: { type: String, required: true, trim: true },
-          label: { type: String, required: true, trim: true },
-          detail: { type: String, required: true, trim: true },
-        },
-      ],
+      title: text('Signals title', MAX_SHORT),
+      subtitle: text('Signals subtitle'),
+      observations: {
+        ...subList(
+          {
+            id: text('Observation id', 50),
+            title: text('Observation title', MAX_SHORT),
+            label: text('Observation label', MAX_SHORT),
+            detail: text('Observation detail', MAX_LONG),
+          },
+          'Observations'
+        ),
+        validate: [
+          {
+            validator: (value) => !value || value.length <= MAX_ITEMS,
+            message: `Observations cannot contain more than ${MAX_ITEMS} items`,
+          },
+          { validator: hasUniqueIds, message: 'Observation ids must be unique' },
+        ],
+      },
     },
     abstraction: {
-      title: { type: String, required: true, trim: true },
-      subtitle: { type: String, required: true, trim: true },
+      title: text('Abstraction title', MAX_SHORT),
+      subtitle: text('Abstraction subtitle'),
       concrete: {
-        items: [{ type: String, trim: true }],
-        target: { type: String, trim: true },
+        items: list('Concrete items', MAX_SHORT),
+        target: text('Concrete target', MAX_SHORT, { required: false }),
       },
       abstractFormula: {
-        varA: { type: String, trim: true },
-        operator: { type: String, trim: true },
-        varB: { type: String, trim: true },
-        equals: { type: String, trim: true },
-        result: { type: String, trim: true },
+        varA: text('Formula varA', MAX_SHORT, { required: false }),
+        operator: text('Formula operator', 50, { required: false }),
+        varB: text('Formula varB', MAX_SHORT, { required: false }),
+        equals: text('Formula equals', 50, { required: false }),
+        result: text('Formula result', MAX_SHORT, { required: false }),
       },
-      statement: { type: String, required: true, trim: true },
+      statement: text('Abstraction statement', MAX_LONG),
     },
     pattern: {
-      name: { type: String, required: true, trim: true },
-      tagline: { type: String, required: true, trim: true },
-      description: { type: String, required: true, trim: true },
+      name: text('Pattern name', MAX_SHORT),
+      tagline: text('Pattern tagline'),
+      description: text('Pattern description', MAX_LONG),
     },
     fingerprint: {
-      title: { type: String, default: 'Pattern Fingerprint', trim: true },
-      steps: [
+      title: text('Fingerprint title', MAX_SHORT, {
+        required: false,
+        defaultValue: 'Pattern Fingerprint',
+      }),
+      steps: subList(
         {
-          stage: { type: String, required: true, trim: true },
-          value: { type: String, required: true, trim: true },
+          stage: text('Fingerprint stage', MAX_SHORT),
+          value: text('Fingerprint value'),
         },
-      ],
+        'Fingerprint steps'
+      ),
     },
     solutionFamilies: {
-      title: { type: String, required: true, trim: true },
-      subtitle: { type: String, required: true, trim: true },
-      question: { type: String, required: true, trim: true },
-      families: [
-        {
-          id: { type: String, required: true, trim: true },
-          name: { type: String, required: true, trim: true },
-          detail: { type: String, required: true, trim: true },
-        },
-      ],
-      note: { type: String, trim: true },
+      title: text('Solution families title', MAX_SHORT),
+      subtitle: text('Solution families subtitle'),
+      question: text('Solution families question'),
+      families: {
+        ...subList(
+          {
+            id: text('Family id', 50),
+            name: text('Family name', MAX_SHORT),
+            detail: text('Family detail', MAX_LONG),
+          },
+          'Solution families'
+        ),
+        validate: [
+          {
+            validator: (value) => !value || value.length <= MAX_ITEMS,
+            message: `Solution families cannot contain more than ${MAX_ITEMS} items`,
+          },
+          { validator: hasUniqueIds, message: 'Solution family ids must be unique' },
+        ],
+      },
+      note: text('Solution families note', MAX_LONG, { required: false }),
     },
     limitations: {
-      title: { type: String, default: 'What the Pattern Does NOT Tell Us', trim: true },
-      subtitle: { type: String, trim: true },
-      tellsUs: [{ type: String, trim: true }],
-      doesNotTellUs: [{ type: String, trim: true }],
+      title: text('Limitations title', MAX_SHORT, {
+        required: false,
+        defaultValue: 'What the Pattern Does NOT Tell Us',
+      }),
+      subtitle: text('Limitations subtitle', MAX_MEDIUM, { required: false }),
+      tellsUs: list('Tells us'),
+      doesNotTellUs: list('Does not tell us'),
     },
     recognitionCheck: {
-      question: { type: String, trim: true },
-      options: [
-        {
-          id: { type: String, trim: true },
-          text: { type: String, trim: true },
-          isCorrect: { type: Boolean, default: false },
-          feedback: { type: String, trim: true },
-        },
-      ],
+      question: text('Recognition question', MAX_MEDIUM, { required: false }),
+      options: {
+        ...subList(
+          {
+            id: text('Option id', 50, { required: false }),
+            text: text('Option text', MAX_MEDIUM, { required: false }),
+            isCorrect: { type: Boolean, default: false },
+            feedback: text('Option feedback', MAX_MEDIUM, { required: false }),
+          },
+          'Recognition options'
+        ),
+        validate: [
+          {
+            validator: (value) => !value || value.length <= 10,
+            message: 'Recognition check cannot have more than 10 options',
+          },
+          {
+            validator: (options) =>
+              !options || options.length === 0 || options.filter((o) => o.isCorrect).length === 1,
+            message: 'Recognition check must have exactly one correct option',
+          },
+        ],
+      },
     },
     takeaway: {
-      specificProblem: { type: String, trim: true },
-      generalPattern: { type: String, trim: true },
-      finalStatement: { type: String, trim: true },
+      specificProblem: text('Takeaway specific problem', MAX_LONG, { required: false }),
+      generalPattern: text('Takeaway general pattern', MAX_LONG, { required: false }),
+      finalStatement: text('Takeaway final statement', MAX_LONG, { required: false }),
     },
     sourceProblemVersion: {
       problemObjectId: { type: String },
       problemId: { type: String },
-      title: { type: String },
+      title: { type: String, maxlength: 200 },
       updatedAt: { type: Date },
     },
+    // Hash of the problem content used for generation; detects stale output.
     sourceProblemHash: {
       type: String,
-      index: true,
+      maxlength: 128,
     },
     generatedBy: {
       type: String,
@@ -128,15 +216,23 @@ const problemPatternSchema = new mongoose.Schema(
     model: {
       type: String,
       default: null,
+      maxlength: 100,
     },
     promptVersion: {
       type: String,
       default: 'pattern-v1',
+      maxlength: 50,
     },
     generationStatus: {
       type: String,
       enum: ['generated', 'failed'],
       default: 'generated',
+    },
+    // Short, sanitized reason for a failed generation. Never store raw API errors or keys.
+    failureReason: {
+      type: String,
+      trim: true,
+      maxlength: 300,
     },
     generatedAt: {
       type: Date,
@@ -148,23 +244,29 @@ const problemPatternSchema = new mongoose.Schema(
   }
 );
 
-// Enforce unique Stage 04 pattern document per problem per user
-problemPatternSchema.index(
-  { problemId: 1, userId: 1 },
-  { unique: true }
-);
+// One Stage 04 document per user per problem. Also serves problemId-prefix lookups.
+problemPatternSchema.index({ problemId: 1, userId: 1 }, { unique: true });
+// "My patterns" listing.
+problemPatternSchema.index({ userId: 1, updatedAt: -1 });
+
+// True if the stored output no longer matches the current problem or prompt.
+problemPatternSchema.methods.isStale = function (currentHash, currentPromptVersion) {
+  return (
+    this.generationStatus !== 'generated' ||
+    this.sourceProblemHash !== currentHash ||
+    (currentPromptVersion !== undefined && this.promptVersion !== currentPromptVersion)
+  );
+};
 
 problemPatternSchema.set('toJSON', {
   transform: (doc, ret) => {
     ret.id = ret._id;
+    delete ret._id;
     delete ret.__v;
     return ret;
   },
 });
 
-const ProblemPattern = mongoose.model(
-  'ProblemPattern',
-  problemPatternSchema
-);
-
-module.exports = ProblemPattern;
+module.exports =
+  mongoose.models.ProblemPattern ||
+  mongoose.model('ProblemPattern', problemPatternSchema);

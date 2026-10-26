@@ -7,20 +7,37 @@ import { DataStructureCell } from './primitives/DataStructureCell';
  * Used for Stack-based benchmark problems like Valid Parentheses.
  * Visualizes vertical stack operations (PUSH / POP), TOP pointer, and current input character.
  */
-export function StackVisualizer({ problem, step }) {
-  if (!step || !step.state) {
-    return (
-      <div className="p-8 text-center text-slate-400 font-mono text-sm">
-        Stack data unavailable for this step.
-      </div>
-    );
-  }
+export function StackVisualizer({ problem, step, state: passedState, highlights: passedHighlights }) {
+  const state = passedState || step?.state || problem?.initialState?.primitives || problem?.initialState || {};
+  const highlights = passedHighlights || step?.highlights || {};
+  const operation = step?.operation;
+  const description = step?.description;
 
-  const { state = {}, highlights = {}, operation, description } = step;
-  const inputStr = state.s || (problem?.input?.s ?? '');
-  const stack = Array.isArray(state.stack) ? state.stack : [];
+  const rawInput =
+    state.s ||
+    problem?.input?.s ||
+    problem?.inputData?.value ||
+    problem?.inputData?.s ||
+    (typeof problem?.input === 'string' ? problem.input : '') ||
+    (typeof problem?.inputData === 'string' ? problem.inputData : '');
+
+  const stringMatch =
+    typeof rawInput === 'string'
+      ? rawInput.match(/s\s*=\s*(?:"([^"]*)"|'([^']*)')/) || rawInput.match(/^"([^"]*)"$/)
+      : null;
+  const inputStr = stringMatch
+    ? stringMatch[1] ?? stringMatch[2] ?? rawInput
+    : typeof rawInput === 'string' && rawInput
+    ? rawInput
+    : '()[]{}';
+
+  const stack = Array.isArray(state.stack)
+    ? state.stack
+    : Array.isArray(state.stack?.items)
+    ? state.stack.items
+    : [];
   const currentIndex = state.currentIndex ?? highlights.index ?? null;
-  const currentChar = state.currentChar ?? null;
+  const currentChar = state.currentChar ?? state.char ?? null;
   const topElement = highlights.top ?? (stack.length > 0 ? stack[stack.length - 1] : null);
 
   return (
@@ -49,7 +66,7 @@ export function StackVisualizer({ problem, step }) {
 
                 <div
                   aria-label={`Character ${char} at index ${idx}`}
-                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 flex items-center justify-center font-mono font-bold text-sm sm:text-base transition-all duration-200 select-none ${
+                  className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl border-2 flex items-center justify-center font-mono font-bold text-sm sm:text-base transition-all duration-200 select-text ${
                     isCurrent
                       ? 'bg-indigo-600 text-white border-indigo-700 shadow-md ring-2 ring-indigo-400 scale-105'
                       : idx < currentIndex

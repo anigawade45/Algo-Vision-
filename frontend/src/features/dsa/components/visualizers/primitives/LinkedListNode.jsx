@@ -46,7 +46,7 @@ export function LinkedListNode({
       {/* Node Body */}
       <div
         aria-label={`Linked list node with value ${val} ID ${id}`}
-        className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-2 flex flex-col items-center justify-center font-mono transition-all duration-200 select-none ${nodeStyle}`}
+        className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-2 flex flex-col items-center justify-center font-mono transition-all duration-200 select-text ${nodeStyle}`}
       >
         <span className="text-base sm:text-lg font-bold">{val}</span>
       </div>

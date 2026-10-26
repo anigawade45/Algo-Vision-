@@ -9,6 +9,10 @@ const { successResponse } = require('../utils/apiResponse');
 const getOverview = async (req, res, next) => {
   try {
     const data = await dashboardService.getDashboardOverview(req.user);
+
+    // Per-user data must never be stored by shared caches (CDN, proxy) or replayed via ETag
+    res.set('Cache-Control', 'private, no-store');
+
     return successResponse(res, 200, 'Dashboard overview fetched successfully', data);
   } catch (error) {
     next(error);

@@ -103,7 +103,10 @@ export function ArrayCell({
   let containerStyle =
     'bg-white dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100';
 
-  if (isMatched) {
+  if (isActive && isMatched) {
+    containerStyle =
+      'bg-gradient-to-br from-blue-600 via-indigo-600 to-emerald-600 text-white border-2 border-emerald-400 shadow-xl shadow-emerald-500/30 ring-4 ring-emerald-400/50 scale-[1.04]';
+  } else if (isMatched) {
     containerStyle =
       'bg-emerald-500 text-white border-emerald-600 shadow-md shadow-emerald-500/20 ring-2 ring-emerald-400';
   } else if (isDuplicate) {
@@ -111,7 +114,7 @@ export function ArrayCell({
       'bg-rose-500 text-white border-rose-600 shadow-md shadow-rose-500/20 ring-2 ring-rose-400 animate-pulse';
   } else if (isActive) {
     containerStyle =
-      'bg-blue-600 text-white border-blue-700 shadow-md shadow-blue-500/20 ring-2 ring-blue-400';
+      'bg-blue-600 text-white border-blue-700 shadow-md shadow-blue-500/20 ring-2 ring-blue-400 scale-[1.02]';
   } else if (isInWindow) {
     containerStyle =
       'bg-blue-50 dark:bg-blue-950/60 border-blue-400 dark:border-blue-600 text-blue-900 dark:text-blue-100 ring-1 ring-blue-400/40';
@@ -132,13 +135,13 @@ export function ArrayCell({
 
       {/* Main Cell Body */}
       <div
-        className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border-2 flex items-center justify-center font-mono text-base sm:text-lg font-bold transition-all duration-200 select-none ${containerStyle}`}
+        className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl border-2 flex items-center justify-center font-mono text-lg sm:text-xl md:text-2xl font-bold transition-all duration-200 select-none shadow-sm ${containerStyle}`}
       >
         {value === null || value === undefined ? '∅' : String(value)}
       </div>
 
       {/* Index Badge Label */}
-      <span className="text-[11px] font-mono font-bold text-slate-400 dark:text-slate-500">
+      <span className="text-xs sm:text-sm font-mono font-bold text-slate-400 dark:text-slate-500 pt-1">
         [{index}]
       </span>
 
