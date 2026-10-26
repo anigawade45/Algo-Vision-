@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, ArrowRight, ArrowLeft, Cpu, Shield, Clock, Zap, CheckCircle2, ChevronRight, Activity, ArrowDown, ArrowUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Play, Pause, RotateCcw, Cpu, Zap, ArrowDown, ArrowUp } from 'lucide-react';
+
+const STEP_INTERVAL_MS = 2000;
 
 export default function ContextSwitchVisualizer() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(2000);
-  const [switchCount, setSwitchCount] = useState(1);
 
   const steps = [
     {
@@ -84,15 +84,14 @@ export default function ContextSwitchVisualizer() {
       timer = setInterval(() => {
         setCurrentStep(prev => {
           if (prev >= steps.length - 1) {
-            setSwitchCount(sc => sc + 1);
             return 0;
           }
           return prev + 1;
         });
-      }, speed);
+      }, STEP_INTERVAL_MS);
     }
     return () => clearInterval(timer);
-  }, [isPlaying, speed, steps.length]);
+  }, [isPlaying, steps.length]);
 
   return (
     <div className="space-y-8">

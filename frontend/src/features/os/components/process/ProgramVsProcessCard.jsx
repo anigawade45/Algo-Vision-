@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { HardDrive, Cpu, FileCode, Layers, Info, ArrowUp, ArrowDown, Database, CheckCircle2, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { HardDrive, Cpu, FileCode, Layers, ArrowUp, ArrowDown, CheckCircle2, Copy } from 'lucide-react';
 
 export default function ProgramVsProcessCard() {
   const [selectedSegment, setSelectedSegment] = useState('stack');

@@ -1,31 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Pause, ChevronRight, RotateCcw, CheckCircle2, ShieldCheck, ShieldAlert, Activity, ArrowRight, Zap, Check, X, Info } from 'lucide-react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
+import { Play, Pause, ChevronRight, RotateCcw, ShieldCheck, ShieldAlert, Activity, Zap, Check, X } from 'lucide-react';
 
 export default function AlgorithmVisualizer({
   processCount,
   resourceCount,
   allocation,
-  maximum,
   need,
-  available,
-  onFinish
+  available
 }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [speed, setSpeed] = useState(2000);
-
-  // Computed Trajectory Steps for Safety Check
-  const [trajectory, setTrajectory] = useState([]);
+  const speed = 2000;
 
   // Compute full step-by-step trajectory whenever matrices change
-  useEffect(() => {
+  const trajectory = useMemo(() => {
     const pCount = processCount;
     const rCount = resourceCount;
 
-    let work = [...available];
-    let finish = Array(pCount).fill(false);
-    let safeSeq = [];
-    let steps = [];
+    const work = [...available];
+    const finish = Array(pCount).fill(false);
+    const safeSeq = [];
+    const steps = [];
 
     // Step 0: Initial State
     steps.push({
@@ -53,7 +48,7 @@ export default function AlgorithmVisualizer({
 
           // Check if Need[i][j] <= Work[j] for ALL j
           let canRun = true;
-          let elementComparisons = [];
+          const elementComparisons = [];
 
           for (let j = 0; j < rCount; j++) {
             const needVal = procNeed[j] || 0;
@@ -126,10 +121,8 @@ export default function AlgorithmVisualizer({
         : `UNSAFE STATE! No remaining process satisfies Need <= Work. System cannot guarantee safe completion.`
     });
 
-    setTrajectory(steps);
-    setCurrentStepIndex(0);
-    setIsPlaying(false);
-  }, [processCount, resourceCount, allocation, maximum, need, available]);
+    return steps;
+  }, [processCount, resourceCount, allocation, need, available]);
 
   // Auto Run loop
   useEffect(() => {
@@ -145,11 +138,15 @@ export default function AlgorithmVisualizer({
         });
       }, speed);
     }
-    return () => clearInterval(timer);
+    return () => {
+      if (timer) clearInterval(timer);
+    };
   }, [isPlaying, speed, trajectory.length]);
 
-  const currentStepData = trajectory[currentStepIndex] || {};
-  const isFinalStep = currentStepIndex === trajectory.length - 1;
+  // Safe clamped index
+  const safeStepIndex = Math.min(currentStepIndex, Math.max(0, trajectory.length - 1));
+  const currentStepData = trajectory[safeStepIndex] || {};
+  const isFinalStep = safeStepIndex === trajectory.length - 1;
 
   return (
     <div className="space-y-8">
@@ -227,12 +224,12 @@ export default function AlgorithmVisualizer({
         <div className="flex items-center gap-2 overflow-x-auto py-2 font-mono text-sm">
           {currentStepData.safeSeq && currentStepData.safeSeq.length > 0 ? (
             currentStepData.safeSeq.map((procLabel, idx) => (
-              <React.Fragment key={idx}>
+              <Fragment key={idx}>
                 {idx > 0 && <span className="text-slate-500 font-bold">→</span>}
                 <span className="px-3 py-1.5 rounded-xl bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 font-extrabold shadow-sm animate-pulse">
                   {procLabel}
                 </span>
-              </React.Fragment>
+              </Fragment>
             ))
           ) : (
             <span className="text-slate-500 italic text-xs">

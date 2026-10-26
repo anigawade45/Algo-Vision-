@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Cpu, Check, AlertCircle, Shield, Zap, Layers } from 'lucide-react';
+import { useState } from 'react';
+import { Check, AlertCircle } from 'lucide-react';
 
 export default function KernelComparisonTable() {
   const [activeTab, setActiveTab] = useState('monolithic');

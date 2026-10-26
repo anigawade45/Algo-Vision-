@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, AppWindow, Terminal, Cpu, HardDrive, Play, CheckCircle2, ArrowDown, Info } from 'lucide-react';
+import { User, AppWindow, Terminal, Cpu, HardDrive, Play, CheckCircle2, ArrowDown } from 'lucide-react';
 
 export default function OsArchitectureViewer() {
   const [activeLayerId, setActiveLayerId] = useState('kernel');
@@ -152,7 +152,7 @@ export default function OsArchitectureViewer() {
             const isSimActive = isSimulating && simStep === idx;
 
             return (
-              <React.Fragment key={layer.id}>
+              <Fragment key={layer.id}>
                 <motion.div
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
@@ -201,7 +201,7 @@ export default function OsArchitectureViewer() {
                     <ArrowDown className={`w-4 h-4 ${isSimulating && simStep === idx ? 'text-cyan-500 animate-bounce' : ''}`} />
                   </div>
                 )}
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </div>

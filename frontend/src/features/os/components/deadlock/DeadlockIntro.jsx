@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Cpu, HardDrive, Play, Pause, RotateCcw, ArrowRight, AlertTriangle, CheckCircle2, Lock, HelpCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Play, Pause, RotateCcw, AlertTriangle } from 'lucide-react';
 
 export default function DeadlockIntro() {
   const [step, setStep] = useState(0);

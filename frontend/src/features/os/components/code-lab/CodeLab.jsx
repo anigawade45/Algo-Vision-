@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Code,
-  Terminal as TerminalIcon,
   Play,
   RotateCcw,
   Maximize2,
   Minimize2,
   Sparkles,
-  Zap,
   Globe,
-  Sliders,
-  HelpCircle
+  Sliders
 } from 'lucide-react';
 
 import CodeEditor from './CodeEditor';
@@ -25,33 +22,48 @@ export default function CodeLab({
   currentVisualizerInput = null
 }) {
   const moduleConfig = codeExamples[module] || codeExamples['page-replacement'];
-  const [selectedAlgo, setSelectedAlgo] = useState(algorithm || moduleConfig.defaultAlgorithm);
+  const initialAlgo = (algorithm && moduleConfig.algorithms.includes(algorithm))
+    ? algorithm
+    : moduleConfig.defaultAlgorithm;
+
+  const [selectedAlgo, setSelectedAlgo] = useState(initialAlgo);
   const [selectedLang, setSelectedLang] = useState('javascript');
   const [inputValues, setInputValues] = useState(moduleConfig.defaultInputs);
 
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(() => {
+    return moduleConfig.code?.[initialAlgo]?.['javascript'] || '';
+  });
+
+  const [prevAlgoProp, setPrevAlgoProp] = useState(algorithm);
+  if (algorithm && algorithm !== prevAlgoProp && moduleConfig.algorithms.includes(algorithm)) {
+    setPrevAlgoProp(algorithm);
+    setSelectedAlgo(algorithm);
+    if (moduleConfig.code?.[algorithm]?.[selectedLang]) {
+      setCode(moduleConfig.code[algorithm][selectedLang]);
+    }
+  }
+
   const [executionState, setExecutionState] = useState(EXECUTION_STATES.IDLE);
   const [executionResult, setExecutionResult] = useState(null);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mobileTab, setMobileTab] = useState('editor'); // 'editor' | 'terminal'
 
-  // Update starter code whenever algorithm or language changes
-  useEffect(() => {
-    const algoKey = selectedAlgo || moduleConfig.defaultAlgorithm;
-    const langKey = selectedLang || 'javascript';
-
-    if (moduleConfig.code[algoKey] && moduleConfig.code[algoKey][langKey]) {
-      setCode(moduleConfig.code[algoKey][langKey]);
+  const handleLanguageChange = (newLang) => {
+    setSelectedLang(newLang);
+    const starter = moduleConfig.code?.[selectedAlgo]?.[newLang];
+    if (starter) {
+      setCode(starter);
     }
-  }, [selectedAlgo, selectedLang, module]);
+  };
 
-  // Update algorithm state if prop algorithm changes
-  useEffect(() => {
-    if (algorithm && moduleConfig.algorithms.includes(algorithm)) {
-      setSelectedAlgo(algorithm);
+  const handleAlgorithmChange = (newAlgo) => {
+    setSelectedAlgo(newAlgo);
+    const starter = moduleConfig.code?.[newAlgo]?.[selectedLang];
+    if (starter) {
+      setCode(starter);
     }
-  }, [algorithm, moduleConfig]);
+  };
 
   // Handle Run Code Execution
   const handleRun = async () => {
@@ -76,7 +88,9 @@ export default function CodeLab({
   const handleReset = () => {
     const algoKey = selectedAlgo || moduleConfig.defaultAlgorithm;
     const langKey = selectedLang || 'javascript';
-    setCode(moduleConfig.code[algoKey][langKey]);
+    if (moduleConfig.code?.[algoKey]?.[langKey]) {
+      setCode(moduleConfig.code[algoKey][langKey]);
+    }
     setExecutionState(EXECUTION_STATES.IDLE);
     setExecutionResult(null);
   };
@@ -125,7 +139,7 @@ export default function CodeLab({
               <Globe className="w-3.5 h-3.5 text-slate-400 ml-1.5" />
               <select
                 value={selectedLang}
-                onChange={(e) => setSelectedLang(e.target.value)}
+                onChange={(e) => handleLanguageChange(e.target.value)}
                 className="bg-transparent text-slate-900 dark:text-white font-bold font-mono focus:outline-none cursor-pointer pr-1"
               >
                 <option value="javascript" className="bg-[#0b101d] text-white">JavaScript (Native)</option>
@@ -140,7 +154,7 @@ export default function CodeLab({
               <Sliders className="w-3.5 h-3.5 text-slate-400 ml-1.5" />
               <select
                 value={selectedAlgo}
-                onChange={(e) => setSelectedAlgo(e.target.value)}
+                onChange={(e) => handleAlgorithmChange(e.target.value)}
                 className="bg-transparent text-slate-900 dark:text-white font-bold font-mono focus:outline-none cursor-pointer pr-1"
               >
                 {moduleConfig.algorithms.map((algo) => (

@@ -1,16 +1,12 @@
-import React from 'react';
-
 export default function ResourceAllocationGraph({
   processes,
   resources,
   edges,
   highlightedCycle = [],
   onNodeClick,
-  onRemoveNode,
   onRemoveEdge
 }) {
   const nodePositions = {};
-  const centerX = 320;
   const centerY = 240;
 
   // 2-Column Bipartite Layout: Processes on Left (x=160), Resources on Right (x=480)

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Package, Play, Pause, RotateCcw, ArrowRight, ShieldCheck, Plus, Minus, AlertTriangle, CheckCircle, Info, Box } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Package, Play, Pause, RotateCcw, Plus, Minus, Box } from 'lucide-react';
 
 export const ProducerConsumerSimulator = () => {
   const [bufferSize, setBufferSize] = useState(5);
@@ -39,7 +39,7 @@ export const ProducerConsumerSimulator = () => {
   };
 
   // Produce Operation
-  const handleProduce = () => {
+  const handleProduce = useCallback(() => {
     if (buffer.length >= bufferSize) {
       setProducerState('WAITING_FULL');
       setLogs(prev => ['[BUFFER FULL] Producer attempted wait(empty) -> empty = 0! Producer is BLOCKED until consumer removes an item.', ...prev]);
@@ -66,10 +66,10 @@ export const ProducerConsumerSimulator = () => {
     }, 300);
 
     return true;
-  };
+  }, [buffer.length, bufferSize, mutex, itemsProducedCount]);
 
   // Consume Operation
-  const handleConsume = () => {
+  const handleConsume = useCallback(() => {
     if (buffer.length === 0) {
       setConsumerState('WAITING_EMPTY');
       setLogs(prev => ['[BUFFER EMPTY] Consumer attempted wait(full) -> full = 0! Consumer is BLOCKED until producer inserts an item.', ...prev]);
@@ -87,7 +87,7 @@ export const ProducerConsumerSimulator = () => {
 
     setTimeout(() => {
       setBuffer(prev => {
-        const [consumed, ...remaining] = prev;
+        const [, ...remaining] = prev;
         return remaining;
       });
       setItemsConsumedCount(prev => prev + 1);
@@ -97,7 +97,7 @@ export const ProducerConsumerSimulator = () => {
     }, 300);
 
     return true;
-  };
+  }, [buffer.length, bufferSize, mutex]);
 
   // Auto Run loop
   useEffect(() => {
@@ -121,7 +121,7 @@ export const ProducerConsumerSimulator = () => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isRunning, buffer, mutex, bufferSize, autoMode, itemsProducedCount, itemsConsumedCount]);
+  }, [isRunning, autoMode, handleProduce, handleConsume]);
 
   return (
     <div className="space-y-8">

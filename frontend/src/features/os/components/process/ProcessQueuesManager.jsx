@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { HardDrive, Cpu, ArrowRight, Layers, RefreshCw, Plus, Play, Pause, CheckCircle2, Sliders, AlertCircle, Wifi, Printer } from 'lucide-react';
+import { useState } from 'react';
+import { HardDrive, Cpu, Layers, Plus, Sliders, Wifi } from 'lucide-react';
 
 export default function ProcessQueuesManager() {
   // State for 4 distinct OS Queues

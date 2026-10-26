@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { HardDrive, Plus, Trash2, Minimize2, RotateCcw, CheckCircle2, AlertOctagon, Info, ArrowRight, Layers, RefreshCw, Cpu, ShieldAlert, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { HardDrive, Plus, Trash2, Minimize2, RotateCcw, CheckCircle2, AlertOctagon, Cpu } from 'lucide-react';
 
 export function MemorySimulator() {
   // Configuration State
-  const [totalMemory, setTotalMemory] = useState(1024);
-  const [osReserved, setOsReserved] = useState(128);
+  const totalMemory = 1024;
+  const osReserved = 128;
   const [strategy, setStrategy] = useState('first_fit'); // first_fit, best_fit, worst_fit
 
   // New Process Creation Form

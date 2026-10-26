@@ -1,16 +1,13 @@
-import React from 'react';
 import {
   Disc,
   Layers,
   Zap,
-  ArrowRight,
   Clock,
   RotateCw,
   Gauge,
   TrendingDown,
   RefreshCw,
-  Compass,
-  CheckCircle2
+  Compass
 } from 'lucide-react';
 
 export default function DiskIntro() {

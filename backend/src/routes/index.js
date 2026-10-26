@@ -1,6 +1,7 @@
 const express = require('express');
 const authRoutes = require('./auth.routes');
 const problemRoutes = require('./problem.routes');
+const aiMentorRoutes = require('./aiMentor.routes');
 const { successResponse } = require('../utils/apiResponse');
 
 const router = express.Router();
@@ -21,5 +22,8 @@ const problemVisualizationController = require('../controllers/problemVisualizat
 const { optionalProtect } = require('../middleware/auth.middleware');
 router.get('/visualization/plan', optionalProtect, problemVisualizationController.getVisualizationPlan);
 router.post('/visualization/plan', optionalProtect, problemVisualizationController.getVisualizationPlan);
+
+// AI Mentor Routes
+router.use('/ai-mentor', aiMentorRoutes);
 
 module.exports = router;

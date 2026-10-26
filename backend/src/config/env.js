@@ -235,6 +235,7 @@ const env = Object.freeze({
 
   geminiApiKey,
   geminiModel: readString('GEMINI_MODEL', 'gemini-2.5-flash'),
+  aiMentorApiKey: readString('AI_MENTOR_API_KEY'),
   aiEnabled,
 });
 

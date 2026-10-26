@@ -1,4 +1,3 @@
-import React from 'react';
 import { Sliders, Zap } from 'lucide-react';
 
 export default function InputPanel({

@@ -1,5 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Layers, Play, Pause, SkipForward, RotateCcw, Plus, Minus, ShieldCheck, Clock, UserCheck, CheckCircle2, AlertCircle, Info } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { Layers, Play, Pause, SkipForward, RotateCcw, Plus, Minus } from 'lucide-react';
+
+const STEP_INTERVAL_MS = 1500;
+
+// Pre-configured sequence of operations for P1, P2, P3, P4
+const generateSteps = (initVal) => {
+  if (initVal === 1) {
+    // Binary Semaphore S = 1
+    return [
+      { proc: 'P1', op: 'wait(S)', desc: 'P1 calls wait(S) -> S becomes 0 -> Permit acquired! P1 enters CS.' },
+      { proc: 'P2', op: 'wait(S)', desc: 'P2 calls wait(S) -> S becomes -1 -> No permits left. P2 BLOCKED & Queued.' },
+      { proc: 'P3', op: 'wait(S)', desc: 'P3 calls wait(S) -> S becomes -2 -> P3 BLOCKED & Queued.' },
+      { proc: 'P1', op: 'signal(S)', desc: 'P1 calls signal(S) -> S becomes -1 -> P1 releases CS. P2 unblocked & enters CS.' },
+      { proc: 'P2', op: 'signal(S)', desc: 'P2 calls signal(S) -> S becomes 0 -> P2 releases CS. P3 unblocked & enters CS.' },
+      { proc: 'P3', op: 'signal(S)', desc: 'P3 calls signal(S) -> S becomes 1 -> P3 releases CS. All permits returned.' }
+    ];
+  }
+  // Counting Semaphore S >= 2
+  return [
+    { proc: 'P1', op: 'wait(S)', desc: 'P1 calls wait(S) -> S decremented -> Permit granted! P1 enters CS.' },
+    { proc: 'P2', op: 'wait(S)', desc: 'P2 calls wait(S) -> S decremented -> Permit granted! P2 enters CS (2 processes in CS).' },
+    { proc: 'P3', op: 'wait(S)', desc: 'P3 calls wait(S) -> S = 0 -> All permits allocated! P3 BLOCKED & Queued.' },
+    { proc: 'P4', op: 'wait(S)', desc: 'P4 calls wait(S) -> S = -1 -> P4 BLOCKED & Queued behind P3.' },
+    { proc: 'P1', op: 'signal(S)', desc: 'P1 calls signal(S) -> S incremented -> P1 exits CS. P3 unblocked & enters CS.' },
+    { proc: 'P2', op: 'signal(S)', desc: 'P2 calls signal(S) -> S incremented -> P2 exits CS. P4 unblocked & enters CS.' },
+    { proc: 'P3', op: 'signal(S)', desc: 'P3 calls signal(S) -> S incremented -> P3 exits CS.' },
+    { proc: 'P4', op: 'signal(S)', desc: 'P4 calls signal(S) -> S = initial -> P4 exits CS. All permits restored.' }
+  ];
+};
 
 export const SemaphoreSimulator = () => {
   const [initialS, setInitialS] = useState(2); // Default to Counting Semaphore S = 2
@@ -8,67 +36,30 @@ export const SemaphoreSimulator = () => {
   const [waitingQueue, setWaitingQueue] = useState([]);
   const [stepIndex, setStepIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [speed, setSpeed] = useState(1500);
-
-  const [procStates, setProcStates] = useState({
-    P1: 'READY',
-    P2: 'READY',
-    P3: 'READY',
-    P4: 'READY'
-  });
 
   const [logs, setLogs] = useState([]);
   const timerRef = useRef(null);
 
-  // Pre-configured sequence of operations for P1, P2, P3, P4
-  const generateSteps = (initVal) => {
-    if (initVal === 1) {
-      // Binary Semaphore S = 1
-      return [
-        { proc: 'P1', op: 'wait(S)', desc: 'P1 calls wait(S) -> S becomes 0 -> Permit acquired! P1 enters CS.' },
-        { proc: 'P2', op: 'wait(S)', desc: 'P2 calls wait(S) -> S becomes -1 -> No permits left. P2 BLOCKED & Queued.' },
-        { proc: 'P3', op: 'wait(S)', desc: 'P3 calls wait(S) -> S becomes -2 -> P3 BLOCKED & Queued.' },
-        { proc: 'P1', op: 'signal(S)', desc: 'P1 calls signal(S) -> S becomes -1 -> P1 releases CS. P2 unblocked & enters CS.' },
-        { proc: 'P2', op: 'signal(S)', desc: 'P2 calls signal(S) -> S becomes 0 -> P2 releases CS. P3 unblocked & enters CS.' },
-        { proc: 'P3', op: 'signal(S)', desc: 'P3 calls signal(S) -> S becomes 1 -> P3 releases CS. All permits returned.' }
-      ];
-    } else {
-      // Counting Semaphore S >= 2
-      return [
-        { proc: 'P1', op: 'wait(S)', desc: 'P1 calls wait(S) -> S decremented -> Permit granted! P1 enters CS.' },
-        { proc: 'P2', op: 'wait(S)', desc: 'P2 calls wait(S) -> S decremented -> Permit granted! P2 enters CS (2 processes in CS).' },
-        { proc: 'P3', op: 'wait(S)', desc: 'P3 calls wait(S) -> S = 0 -> All permits allocated! P3 BLOCKED & Queued.' },
-        { proc: 'P4', op: 'wait(S)', desc: 'P4 calls wait(S) -> S = -1 -> P4 BLOCKED & Queued behind P3.' },
-        { proc: 'P1', op: 'signal(S)', desc: 'P1 calls signal(S) -> S incremented -> P1 exits CS. P3 unblocked & enters CS.' },
-        { proc: 'P2', op: 'signal(S)', desc: 'P2 calls signal(S) -> S incremented -> P2 exits CS. P4 unblocked & enters CS.' },
-        { proc: 'P3', op: 'signal(S)', desc: 'P3 calls signal(S) -> S incremented -> P3 exits CS.' },
-        { proc: 'P4', op: 'signal(S)', desc: 'P4 calls signal(S) -> S = initial -> P4 exits CS. All permits restored.' }
-      ];
-    }
-  };
+  const steps = useMemo(() => generateSteps(initialS), [initialS]);
 
-  const [steps, setSteps] = useState(generateSteps(2));
-
-  const handleInitChange = (val) => {
-    const newVal = Math.max(1, Math.min(5, val));
-    setInitialS(newVal);
-    setCurrentS(newVal);
-    setSteps(generateSteps(newVal));
-    handleReset(newVal);
-  };
-
-  const handleReset = (initVal = initialS) => {
+  const handleReset = useCallback((initVal = initialS) => {
     setIsRunning(false);
     if (timerRef.current) clearInterval(timerRef.current);
     setCurrentS(initVal);
     setActiveProcesses([]);
     setWaitingQueue([]);
     setStepIndex(0);
-    setProcStates({ P1: 'READY', P2: 'READY', P3: 'READY', P4: 'READY' });
     setLogs([`Semaphore initialized with S = ${initVal} (${initVal === 1 ? 'Binary Semaphore' : 'Counting Semaphore'}).`]);
+  }, [initialS]);
+
+  const handleInitChange = (val) => {
+    const newVal = Math.max(1, Math.min(5, val));
+    setInitialS(newVal);
+    setCurrentS(newVal);
+    handleReset(newVal);
   };
 
-  const executeStep = (idx) => {
+  const executeStep = useCallback((idx) => {
     if (idx < 0 || idx >= steps.length) return;
     const step = steps[idx];
     const { proc, op, desc } = step;
@@ -78,10 +69,8 @@ export const SemaphoreSimulator = () => {
         const nextS = prevS - 1;
         if (prevS > 0) {
           setActiveProcesses(prev => [...prev, proc]);
-          setProcStates(prev => ({ ...prev, [proc]: 'CRITICAL SECTION' }));
         } else {
           setWaitingQueue(prev => [...prev, proc]);
-          setProcStates(prev => ({ ...prev, [proc]: 'BLOCKED' }));
         }
         return nextS;
       });
@@ -89,13 +78,11 @@ export const SemaphoreSimulator = () => {
       setCurrentS(prevS => {
         const nextS = prevS + 1;
         setActiveProcesses(prev => prev.filter(p => p !== proc));
-        setProcStates(prev => ({ ...prev, [proc]: 'COMPLETED' }));
 
         setWaitingQueue(prevQueue => {
           if (prevQueue.length > 0) {
             const [unblockedProc, ...rest] = prevQueue;
             setActiveProcesses(prevActive => [...prevActive, unblockedProc]);
-            setProcStates(prevStates => ({ ...prevStates, [unblockedProc]: 'CRITICAL SECTION' }));
             return rest;
           }
           return prevQueue;
@@ -106,7 +93,7 @@ export const SemaphoreSimulator = () => {
     }
 
     setLogs(prev => [`[STEP ${idx + 1}] ${proc} executed ${op}: ${desc}`, ...prev]);
-  };
+  }, [steps]);
 
   const handleNextStep = () => {
     if (stepIndex < steps.length) {
@@ -129,7 +116,7 @@ export const SemaphoreSimulator = () => {
             return prevIdx;
           }
         });
-      }, speed);
+      }, STEP_INTERVAL_MS);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
@@ -137,7 +124,7 @@ export const SemaphoreSimulator = () => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isRunning, steps, speed]);
+  }, [isRunning, steps.length, executeStep]);
 
   return (
     <div className="space-y-8">

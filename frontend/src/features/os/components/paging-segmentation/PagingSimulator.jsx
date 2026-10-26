@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Cpu, ArrowRight, Play, Pause, SkipForward, SkipBack, RotateCcw, CheckCircle2, ShieldCheck, Layers, Edit3, Info, Check, X } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Play, Pause, SkipForward, SkipBack, CheckCircle2, Layers } from 'lucide-react';
 
 export function PagingSimulator() {
   // Inputs
@@ -22,7 +22,6 @@ export function PagingSimulator() {
   // Step-by-Step Translation Controller State
   const [currentStep, setCurrentStep] = useState(0); // 0 to 6
   const [isRunning, setIsRunning] = useState(false);
-  const [speed, setSpeed] = useState(1500);
   const timerRef = useRef(null);
 
   // Computed values
@@ -116,7 +115,7 @@ export function PagingSimulator() {
             return prev;
           }
         });
-      }, speed);
+      }, 1500);
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
     }
@@ -124,7 +123,7 @@ export function PagingSimulator() {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isRunning, speed]);
+  }, [isRunning, steps.length]);
 
   return (
     <div className="space-y-8">

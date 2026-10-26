@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Inbox } from 'lucide-react';
 
@@ -24,7 +24,7 @@ export default function ReadyQueue({ queue }) {
           ) : (
             <div className="flex items-center gap-1">
               {queue.map((proc, index) => (
-                <React.Fragment key={proc.id}>
+                <Fragment key={proc.id}>
                   {/* Process Card */}
                   <motion.div
                     layout
@@ -51,7 +51,7 @@ export default function ReadyQueue({ queue }) {
                       <ArrowRight className="w-4 h-4" />
                     </motion.div>
                   )}
-                </React.Fragment>
+                </Fragment>
               ))}
             </div>
           )}

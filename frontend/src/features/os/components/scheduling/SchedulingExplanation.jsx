@@ -1,4 +1,3 @@
-import React from 'react';
 import { HelpCircle, Check, AlertTriangle, Lightbulb } from 'lucide-react';
 
 export default function SchedulingExplanation({ step, selectedAlgorithm = 'FCFS' }) {

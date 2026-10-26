@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Lock, Unlock, Play, Pause, SkipForward, RotateCcw, ShieldCheck, ShieldAlert, ArrowRight, UserCheck, Clock, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Lock, Unlock, Play, Pause, SkipForward, RotateCcw, ShieldCheck, UserCheck, Clock } from 'lucide-react';
+
+const STEP_INTERVAL_MS = 1500;
 
 export const MutexSimulator = () => {
   const [syncEnabled, setSyncEnabled] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [speed, setSpeed] = useState(1500); // ms per step
 
   // State derived from step
   const [lockStatus, setLockStatus] = useState('UNLOCKED'); // UNLOCKED, LOCKED
@@ -185,7 +186,7 @@ export const MutexSimulator = () => {
 
   const steps = syncEnabled ? syncSteps : unsyncSteps;
 
-  const applyStep = (stepIdx) => {
+  const applyStep = useCallback((stepIdx) => {
     if (stepIdx < 0 || stepIdx >= steps.length) return;
     const step = steps[stepIdx];
     setLockStatus(step.lock);
@@ -201,7 +202,7 @@ export const MutexSimulator = () => {
     setSharedCounter(counterVal);
 
     setLogs(prev => [step.log, ...prev]);
-  };
+  }, [steps]);
 
   const handleNextStep = () => {
     if (currentStep < steps.length - 1) {
@@ -244,7 +245,7 @@ export const MutexSimulator = () => {
             return prev;
           }
         });
-      }, speed);
+      }, STEP_INTERVAL_MS);
     } else {
       if (autoRunTimerRef.current) clearInterval(autoRunTimerRef.current);
     }
@@ -252,7 +253,7 @@ export const MutexSimulator = () => {
     return () => {
       if (autoRunTimerRef.current) clearInterval(autoRunTimerRef.current);
     };
-  }, [isRunning, steps, speed]);
+  }, [isRunning, steps.length, applyStep]);
 
   return (
     <div className="space-y-8">

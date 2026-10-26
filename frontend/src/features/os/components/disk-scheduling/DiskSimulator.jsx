@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Play,
   Pause,
@@ -6,13 +6,10 @@ import {
   ChevronRight,
   ChevronLeft,
   Zap,
-  CheckCircle2,
   AlertTriangle,
   Sliders,
   Disc,
   ArrowRight,
-  Compass,
-  Layers,
   Box,
   TrendingUp,
   TrendingDown
@@ -76,54 +73,49 @@ export default function DiskSimulator() {
   const [diskMax, setDiskMax] = useState(199);
   const [direction, setDirection] = useState('up');
   const [selectedAlgo, setSelectedAlgo] = useState('SCAN');
-
-  const [simulationData, setSimulationData] = useState(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1000);
-  const [validationError, setValidationError] = useState('');
 
   const autoPlayTimerRef = useRef(null);
 
-  // Recalculate simulation on configuration change
-  useEffect(() => {
-    validateAndSimulate(reqInput, headInput, diskMin, diskMax, direction, selectedAlgo);
-  }, [reqInput, headInput, diskMin, diskMax, direction, selectedAlgo]);
-
-  const validateAndSimulate = (rawReqs, head, min, max, dir, algo) => {
-    setValidationError('');
-
-    if (min < 0 || max <= min || isNaN(min) || isNaN(max)) {
-      setValidationError('Invalid track range configuration.');
-      setSimulationData(null);
-      return;
+  const { simulationData, validationError } = useMemo(() => {
+    if (diskMin < 0 || diskMax <= diskMin || isNaN(diskMin) || isNaN(diskMax)) {
+      return {
+        simulationData: null,
+        validationError: 'Invalid track range configuration.'
+      };
     }
 
-    if (head < min || head > max || isNaN(head)) {
-      setValidationError(`Initial head position must be between ${min} and ${max}.`);
-      setSimulationData(null);
-      return;
+    if (headInput < diskMin || headInput > diskMax || isNaN(headInput)) {
+      return {
+        simulationData: null,
+        validationError: `Initial head position must be between ${diskMin} and ${diskMax}.`
+      };
     }
 
-    const { requests, error } = parseRequestQueue(rawReqs, min, max);
+    const { requests, error } = parseRequestQueue(reqInput, diskMin, diskMax);
     if (error) {
-      setValidationError(error);
-      setSimulationData(null);
-      return;
+      return {
+        simulationData: null,
+        validationError: error
+      };
     }
 
     if (requests.length === 0) {
-      setValidationError('Please enter at least one valid track request.');
-      setSimulationData(null);
-      return;
+      return {
+        simulationData: null,
+        validationError: 'Please enter at least one valid track request.'
+      };
     }
 
-    const sim = runDiskSimulation(algo, requests, head, min, max, dir);
-    setSimulationData(sim);
-    setCurrentStepIndex(0);
-    setIsPlaying(false);
-  };
+    const sim = runDiskSimulation(selectedAlgo, requests, headInput, diskMin, diskMax, direction);
+    return {
+      simulationData: sim,
+      validationError: ''
+    };
+  }, [reqInput, headInput, diskMin, diskMax, direction, selectedAlgo]);
 
   // Auto Play Timer Loop
   useEffect(() => {

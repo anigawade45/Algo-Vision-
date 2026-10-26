@@ -35,8 +35,8 @@ export function simulateFIFO(refString, frameCount) {
   refString.forEach((page, idx) => {
     const isHit = frames.includes(page);
     let replacedPage = null;
-    let targetFrameIndex = -1;
-    let explanation = '';
+    let targetFrameIndex;
+    let explanation;
 
     if (isHit) {
       hits++;
@@ -89,8 +89,8 @@ export function simulateLRU(refString, frameCount) {
   refString.forEach((page, idx) => {
     const isHit = frames.includes(page);
     let replacedPage = null;
-    let targetFrameIndex = -1;
-    let explanation = '';
+    let targetFrameIndex;
+    let explanation;
 
     if (isHit) {
       hits++;
@@ -155,8 +155,8 @@ export function simulateOptimal(refString, frameCount) {
   refString.forEach((page, idx) => {
     const isHit = frames.includes(page);
     let replacedPage = null;
-    let targetFrameIndex = -1;
-    let explanation = '';
+    let targetFrameIndex;
+    let explanation;
     const futureDistances = {};
 
     if (isHit) {
@@ -232,8 +232,8 @@ export function simulateSecondChance(refString, frameCount) {
   refString.forEach((page, idx) => {
     const isHit = frames.includes(page);
     let replacedPage = null;
-    let targetFrameIndex = -1;
-    let explanation = '';
+    let targetFrameIndex;
+    let explanation;
     const secondChanceLog = [];
 
     if (isHit) {

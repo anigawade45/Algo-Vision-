@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { runSchedulingSimulation } from '../../utils/schedulingSimulations';
 import GanttChart from './GanttChart';
 import ProcessTable from './ProcessTable';
@@ -17,8 +17,14 @@ export default function SchedulingComparison({ processes, timeQuantum }) {
     { id: 'MLQ', name: 'Multilevel Queue (MLQ)' }
   ];
 
-  const resultA = runSchedulingSimulation(algoA, processes, { quantum: timeQuantum });
-  const resultB = runSchedulingSimulation(algoB, processes, { quantum: timeQuantum });
+  const resultA = useMemo(
+    () => runSchedulingSimulation(algoA, processes, { quantum: timeQuantum }),
+    [algoA, processes, timeQuantum]
+  );
+  const resultB = useMemo(
+    () => runSchedulingSimulation(algoB, processes, { quantum: timeQuantum }),
+    [algoB, processes, timeQuantum]
+  );
 
   const metricsA = resultA.metrics;
   const metricsB = resultB.metrics;
@@ -36,8 +42,6 @@ export default function SchedulingComparison({ processes, timeQuantum }) {
   const tatWinner = getWinner(metricsA.avgTurnaroundTime, metricsB.avgTurnaroundTime, true);
   const rtWinner = getWinner(metricsA.avgResponseTime, metricsB.avgResponseTime, true);
   const cpuWinner = getWinner(metricsA.cpuUtilization, metricsB.cpuUtilization, false);
-
-  const getAlgoName = (id) => algorithmsList.find(a => a.id === id)?.name || id;
 
   return (
     <div className="space-y-6">

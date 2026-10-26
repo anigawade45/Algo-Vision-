@@ -1,4 +1,3 @@
-import React from 'react';
 import { Plus, Trash2, Play } from 'lucide-react';
 
 export default function SchedulingInput({ processes, setProcesses, onSimulate, selectedAlgorithm, timeQuantum = 2, setTimeQuantum }) {

@@ -1,5 +1,4 @@
-import React from 'react';
-import { ShieldCheck, ShieldAlert, Zap, ArrowRight, Activity, Users, Lock, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export function SyncIntro() {
   return (

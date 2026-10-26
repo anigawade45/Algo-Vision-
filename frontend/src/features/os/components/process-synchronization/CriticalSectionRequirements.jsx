@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShieldCheck, ShieldAlert, Zap, Clock, Cpu, ArrowRight, Play, RefreshCw, CheckCircle, XCircle, Info } from 'lucide-react';
+import { useState } from 'react';
+import { ShieldCheck, Zap, Clock, Cpu, ArrowRight, Play, RefreshCw, CheckCircle, XCircle, Info } from 'lucide-react';
 
 export const CriticalSectionRequirements = () => {
   // Lifecycle simulator state

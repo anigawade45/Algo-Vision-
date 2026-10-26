@@ -1,6 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Cpu, Terminal, LayoutDashboard, ArrowRight, Play, Layers, CheckCircle2, Sun, Moon } from 'lucide-react';
+import { ArrowRight, Play, Layers, CheckCircle2 } from 'lucide-react';
+import { OsNavbar } from '../components/shared';
 
 export default function OsHome({ theme, toggleTheme }) {
   const osTopics = [
@@ -89,52 +89,15 @@ export default function OsHome({ theme, toggleTheme }) {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#05070E] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 selection:bg-cyan-500 selection:text-white">
       {/* Top Application Navbar */}
-      <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <Link to="/os" className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-cyan-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                <Cpu className="w-4.5 h-4.5" />
-              </div>
-              <span className="font-bold text-slate-900 dark:text-white text-base tracking-tight group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
-                AlgoVision OS
-              </span>
-            </Link>
-
-            <span className="text-slate-300 dark:text-slate-700">/</span>
-
-            <nav className="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
-              <Link to="/dashboard" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
-                Dashboard
-              </Link>
-              <span>/</span>
-              <span className="text-cyan-600 dark:text-cyan-400 font-semibold">
-                Operating Systems
-              </span>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3">
-            {toggleTheme && (
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
-                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
-              </button>
-            )}
-
-            <Link
-              to="/dashboard"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors"
-            >
-              <LayoutDashboard className="w-3.5 h-3.5 text-cyan-500" />
-              <span>Back to Dashboard</span>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <OsNavbar
+        breadcrumbs={[
+          { label: 'Dashboard', path: '/dashboard' },
+          { label: 'Operating Systems' }
+        ]}
+        theme={theme}
+        toggleTheme={toggleTheme}
+        showDsaLink={true}
+      />
 
       {/* Main Page Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
@@ -199,7 +162,7 @@ export default function OsHome({ theme, toggleTheme }) {
                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-end">
                   <Link
                     to={topic.path}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 hover:scale-102 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 hover:scale-102 transition-all cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-white" />
                     <span>Launch Simulator</span>

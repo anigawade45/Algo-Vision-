@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route } from 'react-router-dom';
 import OsHome from './pages/OsHome';
 import CpuScheduling from './pages/CpuScheduling';
