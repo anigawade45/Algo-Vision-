@@ -2,20 +2,12 @@ import React, { useState } from 'react';
 import { 
   Server, 
   Share2, 
-  CheckCircle2, 
-  ArrowRight, 
   Play, 
-  AlertTriangle, 
-  RefreshCw, 
-  Laptop, 
-  ShieldCheck, 
-  Database,
-  Layers,
-  Sparkles
+  Laptop
 } from 'lucide-react';
 import { CLIENT_SERVER_VS_P2P_DATA } from '../../data/fundamentalsData';
 
-export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
+export function ClientServerVsP2p() {
   const [activeArch, setActiveArch] = useState('clientServer'); // 'clientServer' or 'p2p'
   const [isSimulating, setIsSimulating] = useState(false);
   const [isServerCrashed, setIsServerCrashed] = useState(false);
@@ -55,7 +47,7 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* 1. Architecture Selector Tabs */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-mono font-semibold mb-1">
@@ -77,9 +69,9 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
                 setActiveArch('clientServer');
                 setSimLog('Switched to Client-Server Architecture mode.');
               }}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeArch === 'clientServer'
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
@@ -92,9 +84,9 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
                 setActiveArch('p2p');
                 setSimLog('Switched to Peer-to-Peer (P2P) Swarm mode.');
               }}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeArch === 'p2p'
-                  ? 'bg-indigo-600 text-white shadow-xs'
+                  ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
@@ -124,7 +116,7 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
                       setIsServerCrashed(!isServerCrashed);
                       setSimLog(isServerCrashed ? 'Central Server restored and rebooted.' : 'ALERT: Central Server crashed! Single point of failure triggered.');
                     }}
-                    className={`px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all cursor-pointer ${
                       isServerCrashed
                         ? 'bg-rose-600 text-white border-rose-500'
                         : 'bg-slate-900 text-rose-400 border-rose-900/60 hover:bg-rose-950/40'
@@ -135,7 +127,7 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
                   <button
                     onClick={handleSimulateCs}
                     disabled={isSimulating}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-md transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
                   >
                     <Play className="w-3.5 h-3.5 fill-white" />
                     <span>{isSimulating ? 'Requesting...' : 'Send HTTP Request'}</span>
@@ -148,14 +140,14 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
                       setFailedPeerId(failedPeerId ? null : 'P2');
                       setSimLog(failedPeerId ? 'Peer 2 reconnected to swarm.' : 'Peer 2 disconnected. Swarm seamlessly re-adjusts.');
                     }}
-                    className="px-3 py-1.5 rounded-xl bg-slate-900 text-indigo-300 border border-indigo-900/60 text-xs font-mono font-bold hover:bg-indigo-950/40 transition-all"
+                    className="px-3 py-1.5 rounded-xl bg-slate-900 text-indigo-300 border border-indigo-900/60 text-xs font-mono font-bold hover:bg-indigo-950/40 transition-all cursor-pointer"
                   >
                     {failedPeerId ? 'Reconnect Peer 2' : 'Disconnect Peer 2'}
                   </button>
                   <button
                     onClick={handleSimulateP2p}
                     disabled={isSimulating}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-md transition-all"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
                   >
                     <Share2 className="w-3.5 h-3.5" />
                     <span>{isSimulating ? 'Swarm Exchanging...' : 'Distribute Swarm Chunks'}</span>
@@ -322,29 +314,6 @@ export function ClientServerVsP2p({ onCompleteStep, isCompleted }) {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Step Completion Action */}
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className={`w-5 h-5 ${isCompleted ? 'text-indigo-600 dark:text-indigo-400' : 'text-indigo-500'}`} />
-          <div>
-            <span className="text-xs font-bold text-indigo-950 dark:text-indigo-200 block">
-              Step 7: Network Architectures Mastered
-            </span>
-            <span className="text-[11px] text-indigo-700 dark:text-indigo-400">
-              Next: Test your knowledge with the Interactive Assessment Quiz.
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={onCompleteStep}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-sm transition-all hover:scale-102"
-        >
-          <span>Take Knowledge Quiz</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
       </div>
     </div>
   );

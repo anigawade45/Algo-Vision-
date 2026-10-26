@@ -9,11 +9,7 @@ import {
   Play,
   Pause,
   RotateCcw,
-  CheckCircle2,
-  Inbox,
-  Globe,
-  Sparkles,
-  Check
+  Inbox
 } from 'lucide-react';
 
 export function SmtpSimulation() {
@@ -140,7 +136,7 @@ export function SmtpSimulation() {
       {/* Step Action Banner */}
       <div className="rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-lg bg-rose-600 text-white font-mono text-xs font-extrabold shadow-xs">
+          <span className="px-3 py-1 rounded-lg bg-rose-600 text-white font-mono text-xs font-extrabold shadow-sm">
             Step {currentStep} / {totalSteps}
           </span>
           <div>
@@ -169,7 +165,7 @@ export function SmtpSimulation() {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-xs cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-white" />}
             <span>{isPlaying ? 'Pause' : 'Play Relay'}</span>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Server, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Table } from 'lucide-react';
 
 export function RoutingTableViewer({ sourceId, destId, routingTable, finalPath, totalCost }) {
   return (

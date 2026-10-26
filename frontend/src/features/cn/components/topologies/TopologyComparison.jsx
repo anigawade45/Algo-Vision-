@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
 import { 
   Scale, 
-  CheckCircle2, 
-  ArrowRight, 
   ShieldCheck, 
   DollarSign, 
   Maximize2, 
   Wrench, 
-  Zap, 
-  HelpCircle,
   GitCompare
 } from 'lucide-react';
-import { NETWORK_TOPOLOGIES_DATA } from '../../data/fundamentalsData';
+import { NETWORK_TOPOLOGIES_DATA } from '../../data/topologiesData';
 
-export function TopologyComparison({ onCompleteStep, isCompleted }) {
+export function TopologyComparison() {
   const [topoAId, setTopoAId] = useState('star');
   const [topoBId, setTopoBId] = useState('mesh');
 
@@ -28,13 +24,13 @@ export function TopologyComparison({ onCompleteStep, isCompleted }) {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-8 animate-in fade-in duration-300 font-sans">
       {/* 1. Side-by-Side Comparer Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-[11px] font-mono font-semibold mb-1">
-              <Scale className="w-3 h-3 text-purple-500" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[11px] font-mono font-semibold mb-1">
+              <Scale className="w-3 h-3 text-emerald-500" />
               <span>DECISION MATRIX & TRADEOFF ANALYSIS</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
@@ -56,7 +52,7 @@ export function TopologyComparison({ onCompleteStep, isCompleted }) {
             <select
               value={topoAId}
               onChange={(e) => setTopoAId(e.target.value)}
-              className="w-full text-xs font-bold p-2.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+              className="w-full text-xs font-bold p-2.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white cursor-pointer outline-none focus:ring-1 focus:ring-emerald-500"
             >
               {Object.values(NETWORK_TOPOLOGIES_DATA).map((t) => (
                 <option key={t.id} value={t.id}>
@@ -74,7 +70,7 @@ export function TopologyComparison({ onCompleteStep, isCompleted }) {
             <select
               value={topoBId}
               onChange={(e) => setTopoBId(e.target.value)}
-              className="w-full text-xs font-bold p-2.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white"
+              className="w-full text-xs font-bold p-2.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white cursor-pointer outline-none focus:ring-1 focus:ring-emerald-500"
             >
               {Object.values(NETWORK_TOPOLOGIES_DATA).map((t) => (
                 <option key={t.id} value={t.id}>
@@ -88,7 +84,7 @@ export function TopologyComparison({ onCompleteStep, isCompleted }) {
         {/* Dynamic Metric Comparison Bars */}
         <div className="space-y-4 pt-2">
           <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <GitCompare className="w-4 h-4 text-purple-500" />
+            <GitCompare className="w-4 h-4 text-emerald-500" />
             <span>Side-by-Side Metric Scores (0–100 Benchmark)</span>
           </h3>
 
@@ -155,7 +151,7 @@ export function TopologyComparison({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Full 6-Topology Master Comparison Table */}
-      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#0B101D] border border-slate-200/80 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-4">
         <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <span>Master Topologies Comparison Table</span>
         </h3>
@@ -214,29 +210,8 @@ export function TopologyComparison({ onCompleteStep, isCompleted }) {
           </table>
         </div>
       </div>
-
-      {/* Step Completion Action */}
-      <div className="flex items-center justify-between p-4 rounded-2xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
-        <div className="flex items-center gap-3">
-          <CheckCircle2 className={`w-5 h-5 ${isCompleted ? 'text-purple-600 dark:text-purple-400' : 'text-purple-500'}`} />
-          <div>
-            <span className="text-xs font-bold text-purple-950 dark:text-purple-200 block">
-              Step 5: Topology Tradeoffs Mastered
-            </span>
-            <span className="text-[11px] text-purple-700 dark:text-purple-400">
-              Next: Network Hardware Devices Lab (Hub, Switch, Router, Bridge, Repeater, Gateway, Modem).
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={onCompleteStep}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-all hover:scale-102"
-        >
-          <span>Explore Network Devices</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
     </div>
   );
 }
+
+export default TopologyComparison;

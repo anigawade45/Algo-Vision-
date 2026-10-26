@@ -5,20 +5,9 @@ import {
   RotateCcw,
   SkipForward,
   SkipBack,
-  CheckCircle2,
   ShieldCheck,
-  AlertTriangle,
-  Layers,
-  ArrowRight,
-  Zap,
-  Info,
-  Sliders,
   Server,
-  Laptop,
-  Check,
-  RefreshCw,
-  Clock,
-  Radio
+  Laptop
 } from 'lucide-react';
 
 export function TcpThreeWayHandshake() {
@@ -380,7 +369,7 @@ export function TcpThreeWayHandshake() {
             <div className="flex items-center gap-1.5 font-mono text-xs">
               <button
                 onClick={handleReset}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
                 title="Reset simulation"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -388,14 +377,14 @@ export function TcpThreeWayHandshake() {
               <button
                 onClick={handlePrev}
                 disabled={stepIndex === 0}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 transition-colors"
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 title="Previous step"
               >
                 <SkipBack className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-colors shadow-xs"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition-colors shadow-sm cursor-pointer"
               >
                 {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                 <span>{isPlaying ? 'Pause' : 'Auto Play'}</span>
@@ -403,7 +392,7 @@ export function TcpThreeWayHandshake() {
               <button
                 onClick={handleNext}
                 disabled={stepIndex === maxSteps - 1}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 transition-colors"
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
                 title="Next step"
               >
                 <SkipForward className="w-3.5 h-3.5" />

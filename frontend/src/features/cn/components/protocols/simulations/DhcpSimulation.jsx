@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Wifi,
   Server,
   Laptop,
   ArrowRight,
@@ -8,12 +7,7 @@ import {
   Play,
   Pause,
   RotateCcw,
-  CheckCircle2,
-  Database,
-  Radio,
-  Clock,
-  Layers,
-  Check
+  Radio
 } from 'lucide-react';
 
 export function DhcpSimulation() {
@@ -104,7 +98,7 @@ export function DhcpSimulation() {
       {/* Step Prominent Action Banner */}
       <div className="rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-900/60 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-lg bg-cyan-600 text-white font-mono text-xs font-extrabold shadow-xs">
+          <span className="px-3 py-1 rounded-lg bg-cyan-600 text-white font-mono text-xs font-extrabold shadow-sm">
             Step {currentStep} / {totalSteps}
           </span>
           <div>
@@ -133,7 +127,7 @@ export function DhcpSimulation() {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-xs cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-white" />}
             <span>{isPlaying ? 'Pause' : 'Play DORA'}</span>

@@ -3,17 +3,8 @@ import {
   Activity,
   Server,
   Laptop,
-  ArrowRight,
-  ArrowLeft,
   Play,
-  Pause,
-  RotateCcw,
-  CheckCircle2,
-  AlertTriangle,
-  Clock,
-  Radio,
-  Sparkles,
-  Check
+  RotateCcw
 } from 'lucide-react';
 
 export function IcmpSimulation() {
@@ -173,9 +164,9 @@ export function IcmpSimulation() {
               setTargetIp(s.ip);
               handleReset();
             }}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
+            className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
               targetIp === s.ip
-                ? 'bg-blue-600 text-white font-bold shadow-xs'
+                ? 'bg-blue-600 text-white font-bold shadow-sm'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -187,7 +178,7 @@ export function IcmpSimulation() {
       {/* Step Action Banner */}
       <div className="rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-lg bg-blue-600 text-white font-mono text-xs font-extrabold shadow-xs">
+          <span className="px-3 py-1 rounded-lg bg-blue-600 text-white font-mono text-xs font-extrabold shadow-sm">
             Packet {currentPacketIdx} of {packetCount}
           </span>
           <div>

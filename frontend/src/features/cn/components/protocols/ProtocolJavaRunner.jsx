@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Code2,
   Terminal,
   Copy,
   Check,
   Play,
   RotateCcw,
-  Sparkles,
   FileCode,
-  Clock,
-  Globe,
-  Search,
-  Radio,
-  Layers,
-  Activity,
-  Zap,
-  Server
+  Clock
 } from 'lucide-react';
 
 export function ProtocolJavaRunner({ protocolData }) {
@@ -219,7 +210,7 @@ export function ProtocolJavaRunner({ protocolData }) {
                 onClick={() => setSelectedLang('python')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'python'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -229,7 +220,7 @@ export function ProtocolJavaRunner({ protocolData }) {
                 onClick={() => setSelectedLang('cpp')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'cpp'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -239,7 +230,7 @@ export function ProtocolJavaRunner({ protocolData }) {
                 onClick={() => setSelectedLang('java')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'java'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >

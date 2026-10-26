@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Code2,
   Terminal,
   Copy,
   Check,
   Play,
   RotateCcw,
-  Sparkles,
   Network,
-  Clock,
-  HardDrive,
   FileCode,
-  Zap,
-  Activity,
   GitFork
 } from 'lucide-react';
 import { ROUTING_CODE_DATA } from '../../data/routingCodeData';
@@ -175,7 +169,7 @@ export function RoutingCodeViewer({ initialSource = 'A', initialDest = 'F' }) {
                 onClick={() => setSelectedLang('python')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'python'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -185,7 +179,7 @@ export function RoutingCodeViewer({ initialSource = 'A', initialDest = 'F' }) {
                 onClick={() => setSelectedLang('cpp')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'cpp'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
@@ -195,7 +189,7 @@ export function RoutingCodeViewer({ initialSource = 'A', initialDest = 'F' }) {
                 onClick={() => setSelectedLang('java')}
                 className={`px-3 py-1.5 rounded-lg font-bold transition-colors cursor-pointer ${
                   selectedLang === 'java'
-                    ? 'bg-blue-600 text-white shadow-xs'
+                    ? 'bg-blue-600 text-white shadow-sm'
                     : 'text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >

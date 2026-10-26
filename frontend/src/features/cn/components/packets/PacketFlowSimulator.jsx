@@ -9,16 +9,7 @@ import {
   Play,
   Pause,
   RotateCcw,
-  CheckCircle2,
-  Send,
-  Eye,
-  Info,
-  Shield,
-  Clock,
-  Sparkles,
-  Check,
-  Radio,
-  HardDrive
+  Eye
 } from 'lucide-react';
 import { PACKET_TRANSMISSION_DATA } from '../../data/packetTransmissionData';
 
@@ -246,7 +237,7 @@ export function PacketFlowSimulator() {
       {/* Step Action Banner */}
       <div className="rounded-2xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-900/60 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="px-3 py-1 rounded-lg bg-cyan-600 text-white font-mono text-xs font-extrabold shadow-xs shrink-0">
+          <span className="px-3 py-1 rounded-lg bg-cyan-600 text-white font-mono text-xs font-extrabold shadow-sm shrink-0">
             Hop {currentHopIndex + 1} / {hops.length}
           </span>
           <div>
@@ -272,7 +263,7 @@ export function PacketFlowSimulator() {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-xs cursor-pointer"
+            className="px-3 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold font-mono flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-white" />}
             <span>{isPlaying ? 'Pause' : 'Play Flow'}</span>
