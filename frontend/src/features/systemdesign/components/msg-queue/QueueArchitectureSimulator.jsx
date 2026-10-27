@@ -8,14 +8,8 @@ import {
   Trash2,
   RefreshCw,
   Cpu,
-  CheckCircle2,
-  Sparkles,
   Zap,
-  Activity,
-  ArrowRight,
-  Clock,
-  Server,
-  AlertTriangle
+  Activity
 } from 'lucide-react';
 import { SAMPLE_MESSAGE_TEMPLATES } from '../../data/msgQueueData';
 
@@ -223,9 +217,9 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
   const workerUtilization = Math.round((activeWorkerCount / workers.length) * 100);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -248,11 +242,10 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setIsProcessing(!isProcessing)}
-              className={`text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
-                isProcessing
+              className={`text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${isProcessing
                   ? 'bg-amber-600 hover:bg-amber-700 text-white'
                   : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-              }`}
+                }`}
             >
               {isProcessing ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
               {isProcessing ? 'Pause Dispatcher' : 'Resume Dispatcher'}
@@ -269,7 +262,7 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Producer Control Bar */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -294,14 +287,14 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
 
             <button
               onClick={() => handleProduceOne(selectedTemplate)}
-              className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Publish 1 Msg
             </button>
 
             <button
               onClick={handleProduceBatch}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Zap className="w-3.5 h-3.5" /> Burst Traffic (+5)
             </button>
@@ -314,11 +307,10 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
             <button
               key={tpl.type}
               onClick={() => setSelectedTemplate(tpl.type)}
-              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
-                selectedTemplate === tpl.type
-                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 text-purple-900 dark:text-purple-100 shadow-xs'
+              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${selectedTemplate === tpl.type
+                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 text-purple-900 dark:text-purple-100 shadow-sm'
                   : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
-              }`}
+                }`}
             >
               <div className="font-bold text-xs truncate">{tpl.name}</div>
               <div className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between mt-1 font-mono">
@@ -335,7 +327,7 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
       {/* 3. Main Stage: FIFO Queue Buffer (Left) + Consumer Worker Pool (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: FIFO Buffer (5 Cols) */}
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -350,9 +342,8 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
           <div className="space-y-1">
             <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all duration-300 ${
-                  queue.length > 15 ? 'bg-rose-500' : queue.length > 8 ? 'bg-amber-500' : 'bg-purple-600'
-                }`}
+                className={`h-full rounded-full transition-all duration-300 ${queue.length > 15 ? 'bg-rose-500' : queue.length > 8 ? 'bg-amber-500' : 'bg-purple-600'
+                  }`}
                 style={{ width: `${(queue.length / queueCapacity) * 100}%` }}
               />
             </div>
@@ -368,11 +359,10 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
               queue.map((msg, idx) => (
                 <div
                   key={msg.id}
-                  className={`p-3 rounded-2xl border flex items-center justify-between transition-all ${
-                    idx === 0
+                  className={`p-3 rounded-2xl border flex items-center justify-between transition-all ${idx === 0
                       ? 'bg-purple-50 dark:bg-purple-950/50 border-purple-300 dark:border-purple-800 text-purple-950 dark:text-purple-100 font-semibold'
                       : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
                     <span className="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 flex items-center justify-center text-[10px] font-bold shrink-0">
@@ -398,7 +388,7 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Worker Pool (7 Cols) */}
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -410,7 +400,7 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
             <button
               onClick={handleAddWorker}
               disabled={workers.length >= 6}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-all disabled:opacity-50 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Scale Worker (+1)
             </button>
@@ -424,19 +414,17 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
               return (
                 <div
                   key={w.id}
-                  className={`p-4 rounded-2xl border transition-all shadow-xs space-y-2.5 ${
-                    isBusy
+                  className={`p-4 rounded-2xl border transition-all shadow-sm space-y-2.5 ${isBusy
                       ? 'bg-purple-50/40 dark:bg-purple-950/20 border-purple-300 dark:border-purple-800/80'
                       : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${
-                        isBusy
-                          ? 'bg-purple-600 text-white shadow-xs'
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${isBusy
+                          ? 'bg-purple-600 text-white shadow-sm'
                           : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                      }`}>
+                        }`}>
                         <Cpu className="w-4 h-4" />
                       </div>
                       <div>
@@ -448,11 +436,10 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${
-                        isBusy
+                      <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${isBusy
                           ? 'bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-300 animate-pulse'
                           : 'bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-200 dark:border-slate-700'
-                      }`}>
+                        }`}>
                         {isBusy ? 'PROCESSING' : 'IDLE'}
                       </span>
 
@@ -497,7 +484,7 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
       {/* 4. Live Metrics & Activity Log */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Performance Metrics (5 Cols) */}
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5 pb-2 border-b border-slate-100 dark:border-slate-800">
             <Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             Queue Performance Telemetry
@@ -529,7 +516,7 @@ export function QueueArchitectureSimulator({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Live Broker Event Log (7 Cols) */}
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <RefreshCw className="w-4 h-4 text-purple-600 dark:text-purple-400" />

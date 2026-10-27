@@ -1,14 +1,9 @@
 import { useState } from 'react';
 import {
   RotateCcw,
-  Sparkles,
   Play,
-  CheckCircle2,
-  XCircle,
   Clock,
-  ArrowRight,
   Zap,
-  AlertTriangle,
   Server
 } from 'lucide-react';
 
@@ -77,9 +72,9 @@ export function ClientRetrySimulation({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -109,7 +104,7 @@ export function ClientRetrySimulation({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Retry Strategy Switcher */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
         <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
           Select Client Retry Policy:
         </div>
@@ -140,7 +135,7 @@ export function ClientRetrySimulation({ onCompleteStep, isCompleted }) {
               onClick={() => setRetryStrategy(s.id)}
               className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                 retryStrategy === s.id
-                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 shadow-xs ring-1 ring-purple-500/20'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 shadow-sm ring-1 ring-purple-500/20'
                   : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
               }`}
             >
@@ -161,7 +156,7 @@ export function ClientRetrySimulation({ onCompleteStep, isCompleted }) {
       {/* 3. Interactive Retry Simulation Pipeline */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Simulation Execution & Code Snippet (6 Cols) */}
-        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Zap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -182,7 +177,7 @@ export function ClientRetrySimulation({ onCompleteStep, isCompleted }) {
           <button
             onClick={handleStartRetrySimulation}
             disabled={isRetrying}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50 cursor-pointer"
           >
             <Play className="w-4 h-4" />
             <span>{isRetrying ? 'Simulating Client Retry Cycle...' : 'Simulate 429 ➔ Client Retry Cycle'}</span>
@@ -190,7 +185,7 @@ export function ClientRetrySimulation({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Live Retry Trace (6 Cols) */}
-        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />

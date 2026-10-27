@@ -1,5 +1,16 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Server, Layers, LayoutDashboard, ArrowRight, Play, Lock, CheckCircle2, Sun, Moon } from 'lucide-react';
+import {
+    Server,
+    Layers,
+    LayoutDashboard,
+    ArrowRight,
+    Play,
+    Lock,
+    CheckCircle2,
+    Sun,
+    Moon
+} from 'lucide-react';
 import { SYSTEM_DESIGN_TOPICS } from '../data/systemDesignData';
 
 export default function SystemDesignHome({ theme, toggleTheme }) {
@@ -38,7 +49,7 @@ export default function SystemDesignHome({ theme, toggleTheme }) {
                                 className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                             >
-                                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
                             </button>
                         )}
 
@@ -56,17 +67,17 @@ export default function SystemDesignHome({ theme, toggleTheme }) {
             {/* Main Page Content */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
                 {/* Module Header Banner */}
-                <div className="rounded-3xl bg-linear-to-r from-purple-600 via-indigo-600 to-violet-700 text-white p-8 sm:p-10 shadow-xl relative overflow-hidden">
+                <div className="rounded-3xl bg-gradient-to-r from-purple-600 via-indigo-600 to-violet-700 text-white p-8 sm:p-10 shadow-xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none" />
 
                     <div className="relative z-10 space-y-3 max-w-3xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-xs border border-white/20 text-xs font-mono font-semibold">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 text-xs font-mono font-semibold">
                             <Layers className="w-3.5 h-3.5" />
                             <span>CORE DISTRIBUTED ARCHITECTURE DISCIPLINE</span>
                         </div>
 
                         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                            System Design & Distributed Architectures
+                            System Design &amp; Distributed Architectures
                         </h1>
 
                         <p className="text-purple-100 text-sm sm:text-base leading-relaxed">
@@ -97,7 +108,7 @@ export default function SystemDesignHome({ theme, toggleTheme }) {
                         {SYSTEM_DESIGN_TOPICS.map((topic) => (
                             <div
                                 key={topic.id}
-                                className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 shadow-xs flex flex-col justify-between space-y-5 transition-all duration-200 ${topic.isLive
+                                className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 shadow-sm flex flex-col justify-between space-y-5 transition-all duration-200 ${topic.isLive
                                         ? 'border-purple-200 dark:border-purple-800/80 hover:border-purple-400 dark:hover:border-purple-600 hover:shadow-lg'
                                         : 'border-slate-200/80 dark:border-slate-800/80 opacity-80'
                                     }`}
@@ -107,9 +118,6 @@ export default function SystemDesignHome({ theme, toggleTheme }) {
                                         <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${topic.badgeColor}`}>
                                             {topic.badge}
                                         </span>
-                                        {/* <span className="text-xs font-mono text-slate-400">
-                      Module by {topic.author}
-                    </span> */}
                                     </div>
 
                                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -123,7 +131,9 @@ export default function SystemDesignHome({ theme, toggleTheme }) {
 
                                 <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                                     <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-                                        <strong className={topic.isLive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'}>{topic.status}</strong>
+                                        <strong className={topic.isLive ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'}>
+                                            {topic.status}
+                                        </strong>
                                     </span>
 
                                     {topic.isLive ? (

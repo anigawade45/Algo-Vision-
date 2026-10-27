@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { 
-  BookOpen, 
-  ShieldCheck, 
-  ArrowRight, 
-  CheckCircle2, 
-  Sparkles, 
+import {
+  BookOpen,
+  ShieldCheck,
+  Sparkles,
   Activity,
   Calculator,
   Globe
@@ -27,7 +25,7 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Introduction Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
             <BookOpen className="w-5 h-5" />
@@ -54,11 +52,10 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
               <button
                 key={concept.id}
                 onClick={() => setSelectedConcept(concept.id)}
-                className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 ${
-                  isSelected
+                className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 ${isSelected
                     ? 'bg-purple-50/80 dark:bg-purple-950/40 border-purple-500 ring-2 ring-purple-500/20 shadow-md'
-                    : 'bg-slate-50/70 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-xs'
-                }`}
+                    : 'bg-slate-50/70 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-sm'
+                  }`}
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${concept.badgeColor}`}>
@@ -81,7 +78,7 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* Deep-Dive Active Concept Card */}
-      <div className="rounded-3xl bg-linear-to-br from-white via-purple-50/30 to-indigo-50/20 dark:from-[#111827] dark:via-[#111827] dark:to-purple-950/20 border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-md">
+      <div className="rounded-3xl bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/20 dark:from-[#111827] dark:via-[#111827] dark:to-purple-950/20 border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-md">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="space-y-1">
             <span className={`text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full border ${activeConceptData.badgeColor}`}>
@@ -109,7 +106,7 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
               {activeConceptData.keyPoints.map((point, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 flex items-start gap-3 shadow-xs"
+                  className="p-3 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 flex items-start gap-3 shadow-sm"
                 >
                   <span className="w-5 h-5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                     {idx + 1}
@@ -147,7 +144,7 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
               </div>
               <div className="space-y-0.5 text-right">
                 <span className="text-slate-400">Bottleneck Zone:</span>
-                <p className="font-bold text-purple-600 dark:text-purple-400">Database Disk I/O & Network</p>
+                <p className="font-bold text-purple-600 dark:text-purple-400">Database Disk I/O &amp; Network</p>
               </div>
             </div>
           </div>
@@ -155,13 +152,13 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* Interactive SLA Availability & "Nines" Calculator Widget */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Calculator className="w-5 h-5 text-purple-500" />
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                Interactive High Availability & SLA "Nines" Explorer
+                Interactive High Availability &amp; SLA "Nines" Explorer
               </h3>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -175,11 +172,10 @@ export function ConceptOverviewSection({ onCompleteStep, isCompleted }) {
               <button
                 key={nineKey}
                 onClick={() => setActiveNines(nineKey)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-                  activeNines === nineKey
-                    ? 'bg-purple-600 text-white shadow-xs'
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${activeNines === nineKey
+                    ? 'bg-purple-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                  }`}
               >
                 {nineKey}%
               </button>

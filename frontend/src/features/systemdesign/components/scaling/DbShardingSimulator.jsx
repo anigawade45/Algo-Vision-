@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import {
   Grid,
   Server,
-  Plus,
   Zap,
   Flame,
   Globe,
@@ -10,46 +9,14 @@ import {
   ListFilter,
   CheckCircle2,
   RefreshCcw,
-  Sparkles,
   Search,
   Activity,
   Cpu,
-  ArrowRight,
   Database,
   AlertTriangle
 } from 'lucide-react';
 import { INITIAL_SHARD_RECORDS } from '../../data/dbScalingData';
-
-// Simple deterministic string hash
-function simpleHash(str) {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash << 5) - hash + str.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
-
-// Compute shard assignment for any record given strategy
-function getShardForRecord(record, strategy) {
-  if (strategy === 'hash') {
-    const h = simpleHash(record.id);
-    const shardIndex = (h % 3) + 1; // 1, 2, or 3
-    return `shard${shardIndex}`;
-  } else if (strategy === 'range') {
-    // Range by first letter of Name (A-H -> 1, I-P -> 2, Q-Z -> 3)
-    const firstChar = (record.name || 'A')[0].toUpperCase();
-    if (firstChar <= 'H') return 'shard1';
-    if (firstChar <= 'P') return 'shard2';
-    return 'shard3';
-  } else if (strategy === 'geo') {
-    // Geo by Country code
-    if (record.country === 'US') return 'shard1';
-    if (record.country === 'EU') return 'shard2';
-    return 'shard3'; // APAC & MEA
-  }
-  return 'shard1';
-}
+import { simpleHash, getShardForRecord } from '../../utils/hashingUtils';
 
 export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
   const [shardingStrategy, setShardingStrategy] = useState('hash'); // 'hash', 'range', 'geo'
@@ -216,9 +183,9 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
   const isHotSpotPresent = skewPercentage > 30 || maxCount >= 7;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -241,20 +208,20 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => handleSingleShardLookup('usr_104')}
-              className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Zap className="w-3.5 h-3.5" /> Single Shard Query (O(1))
             </button>
             <button
               onClick={handleScatterGatherQuery}
               disabled={isCrossShardActive}
-              className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs disabled:opacity-50 cursor-pointer"
+              className="bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
             >
               <Search className="w-3.5 h-3.5" /> Cross-Shard Query
             </button>
             <button
               onClick={handleTriggerHotShardSurge}
-              className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Flame className="w-3.5 h-3.5" /> Trigger Hot Shard Surge
             </button>
@@ -263,7 +230,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Sharding Strategy Selector & Skew Metric Bar */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -288,7 +255,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
                   onClick={() => setShardingStrategy(s.id)}
                   className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                     shardingStrategy === s.id
-                      ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
+                      ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
                       : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
                   }`}
                 >
@@ -356,7 +323,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
           return (
             <div
               key={key}
-              className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 transition-all shadow-xs flex flex-col justify-between space-y-4 ${cardBorder}`}
+              className={`rounded-3xl bg-white dark:bg-[#111827] border p-6 transition-all shadow-sm flex flex-col justify-between space-y-4 ${cardBorder}`}
             >
               <div>
                 {/* Card Header */}
@@ -446,7 +413,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
 
       {/* 4. Live Routing Activity Card */}
       {lastRoutingAction && (
-        <div className="p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2 animate-in fade-in">
+        <div className="p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2 animate-in fade-in">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -473,7 +440,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
 
       {/* 5. Sharding Architectural Takeaways */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
             Shard Key Selection is Permanent
@@ -483,7 +450,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
             <AlertTriangle className="w-4 h-4" />
             Cross-Shard JOINs are Forbidden
@@ -493,7 +460,7 @@ export function DbShardingSimulator({ onCompleteStep, isCompleted }) {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-purple-600 dark:text-purple-400">
             <Grid className="w-4 h-4" />
             Consistent Hashing Minimizes Movement

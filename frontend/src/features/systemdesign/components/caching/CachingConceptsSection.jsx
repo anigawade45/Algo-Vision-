@@ -63,14 +63,14 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* 1. Concepts Introduction Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-              Caching Principles & Memory Hierarchy
+              Caching Principles &amp; Memory Hierarchy
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Understand nanosecond in-memory speed versus millisecond database disk I/O.
@@ -93,7 +93,7 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
                 className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 ${
                   isSelected
                     ? 'bg-purple-50/80 dark:bg-purple-950/40 border-purple-500 ring-2 ring-purple-500/20 shadow-md'
-                    : 'bg-slate-50/70 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-xs'
+                    : 'bg-slate-50/70 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-sm'
                 }`}
               >
                 <div>
@@ -115,7 +115,7 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Active Selected Concept Deep-Dive Panel */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
           <div>
             <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
 
           <div className="space-y-3">
             <h4 className="text-xs font-mono uppercase font-bold text-slate-400 tracking-wider">
-              Industry Pattern & Mathematical Rule
+              Industry Pattern &amp; Mathematical Rule
             </h4>
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#070A12] border border-slate-200 dark:border-slate-800 space-y-3">
               <div className="flex items-start gap-2">
@@ -173,7 +173,7 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. The Memory & Storage Latency Scale */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -203,7 +203,7 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
                 key={idx}
                 className={`p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                   isRam
-                    ? 'bg-rose-50/70 dark:bg-rose-950/40 border-rose-500 ring-2 ring-rose-500/20 shadow-xs'
+                    ? 'bg-rose-50/70 dark:bg-rose-950/40 border-rose-500 ring-2 ring-rose-500/20 shadow-sm'
                     : isDb
                     ? 'bg-amber-50/50 dark:bg-amber-950/30 border-amber-400'
                     : 'bg-slate-50/50 dark:bg-[#070A12] border-slate-200 dark:border-slate-800'
@@ -273,7 +273,7 @@ export function CachingConceptsSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 4. Interactive Hit vs Miss Mini-Simulator */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-5 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">

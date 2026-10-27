@@ -9,8 +9,6 @@ import {
   RotateCcw, 
   Trash2, 
   Edit3, 
-  CheckCircle2, 
-  ArrowRight, 
   Clock, 
   ShieldCheck, 
   Sparkles, 
@@ -354,9 +352,9 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Interactive Visualizer Control Bar */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-6 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
@@ -615,12 +613,12 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
                   ) : currentFlight.step <= 2 ? (
                     <><strong>Cache MISS Detected:</strong> Key <code>{currentFlight.key}</code> not found in Redis RAM. Falling back to SQL Database...</>
                   ) : currentFlight.step <= 4 ? (
-                    <><strong>Database Query & Populate:</strong> Fetched row from PostgreSQL (~80ms). Writing record into Redis with {customTtl}s TTL...</>
+                    <><strong>Database Query &amp; Populate:</strong> Fetched row from PostgreSQL (~80ms). Writing record into Redis with {customTtl}s TTL...</>
                   ) : (
                     <><strong>Complete:</strong> Returned fresh data to client and cache is now warm!</>
                   )
                 ) : (
-                  <><strong>Write & Invalidate Path:</strong> Updated PostgreSQL record and evicted <code>{currentFlight.key}</code> from Redis cache to prevent stale reads.</>
+                  <><strong>Write &amp; Invalidate Path:</strong> Updated PostgreSQL record and evicted <code>{currentFlight.key}</code> from Redis cache to prevent stale reads.</>
                 )}
               </span>
             </div>
@@ -634,7 +632,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
       {/* 3. Live Metrics Dashboard & Performance Scorecard */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         {/* Metric 1: Total Requests */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm">
           <span className="text-[11px] font-mono text-slate-500 uppercase">Total Requests</span>
           <div className="text-xl font-bold text-slate-900 dark:text-white font-mono mt-1">
             {totalRequests}
@@ -642,7 +640,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Metric 2: Cache Hits */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/20 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/20 shadow-sm">
           <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 uppercase font-semibold">Cache Hits</span>
           <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono mt-1">
             {cacheHits}
@@ -650,7 +648,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Metric 3: Cache Misses */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-amber-200 dark:border-amber-900/50 bg-amber-50/20 shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-amber-200 dark:border-amber-900/50 bg-amber-50/20 shadow-sm">
           <span className="text-[11px] font-mono text-amber-600 dark:text-amber-400 uppercase font-semibold">Cache Misses</span>
           <div className="text-xl font-bold text-amber-600 dark:text-amber-400 font-mono mt-1">
             {cacheMisses}
@@ -658,7 +656,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Metric 4: Hit Ratio */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm">
           <span className="text-[11px] font-mono text-slate-500 uppercase">Hit Ratio</span>
           <div className="text-xl font-bold text-rose-600 dark:text-rose-400 font-mono mt-1">
             {hitRatio}%
@@ -666,7 +664,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Metric 5: DB Reads */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm">
           <span className="text-[11px] font-mono text-slate-500 uppercase">DB Reads</span>
           <div className="text-xl font-bold text-slate-900 dark:text-white font-mono mt-1">
             {dbReads}
@@ -674,7 +672,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Metric 6: Avg Latency */}
-        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm">
           <span className="text-[11px] font-mono text-slate-500 uppercase">Avg Latency</span>
           <div className="text-xl font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">
             {avgLatency}ms
@@ -699,7 +697,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
       {/* 4. Side-by-Side Live Data Tier Inspection: Redis vs PostgreSQL */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Redis In-Memory Store */}
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-xs">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Zap className="w-5 h-5 text-rose-500" />
@@ -732,7 +730,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
                         <span className="text-slate-400">TTL: <strong>{item.ttl}s</strong></span>
                         <button
                           onClick={() => handleEvictKey(k)}
-                          className="p-1 rounded text-slate-400 hover:text-rose-500 transition-colors"
+                          className="p-1 rounded text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
                           title="Evict (DEL key)"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -759,7 +757,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: PostgreSQL Relational Database */}
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-xs">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-sm">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Database className="w-5 h-5 text-amber-500" />
@@ -795,7 +793,7 @@ export function CacheAsideVisualizer({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 5. Request Event Log Table */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
           <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Clock className="w-4 h-4 text-slate-400" />

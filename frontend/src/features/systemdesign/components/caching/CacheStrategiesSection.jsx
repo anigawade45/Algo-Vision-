@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { 
   Layers, 
-  ArrowRight, 
   CheckCircle2, 
   XCircle, 
   Zap, 
@@ -43,9 +42,9 @@ export function CacheStrategiesSection({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-semibold mb-2">
@@ -71,7 +70,7 @@ export function CacheStrategiesSection({ onCompleteStep, isCompleted }) {
                 }}
                 className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                   selectedStrategyId === strat.id
-                    ? 'bg-purple-600 text-white shadow-xs'
+                    ? 'bg-purple-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
@@ -108,7 +107,7 @@ export function CacheStrategiesSection({ onCompleteStep, isCompleted }) {
                 </button>
                 <button
                   onClick={handleResetWrite}
-                  className="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-colors"
+                  className="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                 </button>
@@ -227,7 +226,7 @@ export function CacheStrategiesSection({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Pros & Cons Scorecard (5 Cols) */}
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-6 shadow-sm flex flex-col justify-between">
           <div className="space-y-4">
             <div>
               <span className={`text-xs font-mono px-2.5 py-0.5 rounded-full border ${currentStrategy.badgeColor}`}>
@@ -272,7 +271,7 @@ export function CacheStrategiesSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Master Strategies Comparison Matrix */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-sm">
         <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <Layers className="w-4 h-4 text-purple-500" />
           <span>4-Strategy Architectural Decision Matrix</span>

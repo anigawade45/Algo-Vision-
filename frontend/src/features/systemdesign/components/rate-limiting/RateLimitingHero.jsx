@@ -5,7 +5,6 @@ import {
   RotateCcw,
   Layers,
   Award,
-  CheckCircle,
   Sparkles
 } from 'lucide-react';
 import { RATE_LIMIT_STEPS } from '../../data/rateLimitingData';
@@ -21,7 +20,7 @@ const ICONS_MAP = {
 
 export function RateLimitingHero({ activeStep, onSelectStep }) {
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* Title & Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -39,7 +38,7 @@ export function RateLimitingHero({ activeStep, onSelectStep }) {
       </div>
 
       {/* Stepwise Navigation Track */}
-      <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-2 shadow-xs">
+      <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-2 shadow-sm">
         <div className="flex items-center gap-2 overflow-x-auto py-1 px-1 custom-scrollbar">
           {RATE_LIMIT_STEPS.map((step) => {
             const Icon = ICONS_MAP[step.icon] || Sliders;

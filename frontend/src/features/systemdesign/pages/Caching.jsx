@@ -89,7 +89,7 @@ export default function Caching({ theme, toggleTheme }) {
 
             <Link
               to="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
               <span>Dashboard</span>
@@ -124,11 +124,10 @@ export default function Caching({ theme, toggleTheme }) {
           <button
             onClick={handlePrevStep}
             disabled={currentStepIdx === 0}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
-              currentStepIdx === 0
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${currentStepIdx === 0
                 ? 'opacity-40 cursor-not-allowed border-slate-200 dark:border-slate-800 text-slate-400'
                 : 'border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 hover:bg-slate-50 cursor-pointer'
-            }`}
+              }`}
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Previous Step</span>
@@ -141,11 +140,10 @@ export default function Caching({ theme, toggleTheme }) {
           <button
             onClick={handleNextStep}
             disabled={currentStepIdx === CACHING_STEPS.length - 1}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-              currentStepIdx === CACHING_STEPS.length - 1
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentStepIdx === CACHING_STEPS.length - 1
                 ? 'opacity-40 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400'
                 : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-500/20 cursor-pointer'
-            }`}
+              }`}
           >
             <span>Next Step</span>
             <ArrowRight className="w-3.5 h-3.5" />

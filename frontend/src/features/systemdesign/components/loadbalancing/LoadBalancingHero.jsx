@@ -5,7 +5,6 @@ import {
   ShieldAlert, 
   Layers, 
   Award,
-  CheckCircle,
   Sparkles
 } from 'lucide-react';
 import { LB_STEPS } from '../../data/loadBalancingData';
@@ -21,16 +20,16 @@ const ICONS_MAP = {
 
 export function LoadBalancingHero({ activeStep, onSelectStep }) {
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* Title & Badge */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-semibold mb-2">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Module 2 • Traffic & Routing Track</span>
+            <span>Module 2 • Traffic &amp; Routing Track</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Load Balancing, Routing & Horizontal Scalability
+            Load Balancing, Routing &amp; Horizontal Scalability
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Master traffic distribution algorithms (Round Robin, Least Connections), Layer 4 vs Layer 7 reverse proxies, health check heartbeats, and redundant failover clusters.
@@ -39,7 +38,7 @@ export function LoadBalancingHero({ activeStep, onSelectStep }) {
       </div>
 
       {/* Stepwise Navigation Track */}
-      <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-2 shadow-xs">
+      <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-2 shadow-sm">
         <div className="flex items-center gap-2 overflow-x-auto py-1 px-1 custom-scrollbar">
           {LB_STEPS.map((step) => {
             const Icon = ICONS_MAP[step.icon] || BookOpen;

@@ -73,7 +73,7 @@ export default function ScalingComparisonSection() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* Section Header */}
       <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-[#1E2638] shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -94,7 +94,7 @@ export default function ScalingComparisonSection() {
           <div className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/60 shrink-0">
             <button
               onClick={() => setActiveTab('horizontal')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === 'horizontal'
                   ? 'bg-white dark:bg-[#1E2638] text-purple-600 dark:text-purple-400 shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -105,7 +105,7 @@ export default function ScalingComparisonSection() {
             </button>
             <button
               onClick={() => setActiveTab('vertical')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === 'vertical'
                   ? 'bg-white dark:bg-[#1E2638] text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -116,7 +116,7 @@ export default function ScalingComparisonSection() {
             </button>
             <button
               onClick={() => setActiveTab('matrix')}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === 'matrix'
                   ? 'bg-white dark:bg-[#1E2638] text-emerald-600 dark:text-emerald-400 shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -172,11 +172,11 @@ export default function ScalingComparisonSection() {
 
               {/* Simulation Actions */}
               <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Chaos & Deploy Test</p>
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Chaos &amp; Deploy Test</p>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => handleHorizontalCrashNode(0)}
-                    className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                    className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                       deadNodeId === 0
                         ? 'bg-emerald-500 text-white border-emerald-600'
                         : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/50 hover:bg-rose-100'
@@ -189,7 +189,7 @@ export default function ScalingComparisonSection() {
                   <button
                     onClick={handleRollingDeploy}
                     disabled={rollingDeploying}
-                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50 hover:bg-purple-100 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
+                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-purple-50 dark:bg-purple-950/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-900/50 hover:bg-purple-100 flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${rollingDeploying ? 'animate-spin' : ''}`} />
                     <span>Rolling Deploy</span>
@@ -344,7 +344,7 @@ export default function ScalingComparisonSection() {
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Elastic auto-scaling up & down</span>
+                <span>Elastic auto-scaling up &amp; down</span>
               </span>
             </div>
           </div>
@@ -406,7 +406,7 @@ export default function ScalingComparisonSection() {
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={handleVerticalCrash}
-                    className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all ${
+                    className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                       isVerticalDown
                         ? 'bg-emerald-500 text-white border-emerald-600'
                         : 'bg-rose-50 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/50 hover:bg-rose-100'
@@ -419,7 +419,7 @@ export default function ScalingComparisonSection() {
                   <button
                     onClick={handleVerticalUpgrade}
                     disabled={verticalUpgrading || verticalTierIndex >= VERTICAL_TIERS.length - 1}
-                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 hover:bg-blue-100 flex items-center justify-center gap-1.5 transition-all disabled:opacity-50"
+                    className="px-3 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900/50 hover:bg-blue-100 flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${verticalUpgrading ? 'animate-spin' : ''}`} />
                     <span>Upgrade RAM</span>
@@ -460,7 +460,7 @@ export default function ScalingComparisonSection() {
             <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-xs text-amber-900 dark:text-amber-300 flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
               <div>
-                <p className="font-semibold mb-0.5">The Hardware Ceiling & SPOF</p>
+                <p className="font-semibold mb-0.5">The Hardware Ceiling &amp; SPOF</p>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                   Vertical scaling eventually hits physical limits (motherboard sockets). Furthermore, because all traffic routes to this one giant server, a single power supply failure causes a 100% total outage for all clients.
                 </p>
@@ -600,7 +600,7 @@ export default function ScalingComparisonSection() {
             {/* Cons */}
             <div className="space-y-2">
               <p className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
-                <XCircle className="w-3.5 h-3.5" /> Drawbacks & Limits
+                <XCircle className="w-3.5 h-3.5" /> Drawbacks &amp; Limits
               </p>
               <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                 {SCALING_COMPARISON_DATA.vertical.cons.map((con, i) => (
@@ -647,7 +647,7 @@ export default function ScalingComparisonSection() {
             {/* Cons */}
             <div className="space-y-2">
               <p className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
-                <XCircle className="w-3.5 h-3.5" /> Drawbacks & Limits
+                <XCircle className="w-3.5 h-3.5" /> Drawbacks &amp; Limits
               </p>
               <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                 {SCALING_COMPARISON_DATA.horizontal.cons.map((con, i) => (

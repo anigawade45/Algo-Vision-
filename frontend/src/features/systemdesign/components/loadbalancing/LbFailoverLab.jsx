@@ -6,8 +6,7 @@ import {
   GitFork, 
   Power, 
   RotateCcw, 
-  CheckCircle2, 
-  ArrowRight
+  CheckCircle2
 } from 'lucide-react';
 
 export function LbFailoverLab({ onCompleteStep, isCompleted }) {
@@ -75,9 +74,9 @@ export function LbFailoverLab({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Header Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
@@ -85,7 +84,7 @@ export function LbFailoverLab({ onCompleteStep, isCompleted }) {
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-                Health Checks, Quarantine & Failover Redundancy Lab
+                Health Checks, Quarantine &amp; Failover Redundancy Lab
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                 Interactive playground to test active heartbeat probes, node quarantine thresholds, and VRRP load balancer failover.
@@ -108,14 +107,14 @@ export function LbFailoverLab({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Experiment A: Backend Health Check & Automatic Quarantine */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
           <div>
             <span className="text-xs font-mono font-bold text-purple-600 dark:text-purple-400 uppercase">
               Experiment A
             </span>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Backend Server Heartbeat & Active Health Probing
+              Backend Server Heartbeat &amp; Active Health Probing
             </h3>
           </div>
 
@@ -134,7 +133,7 @@ export function LbFailoverLab({ onCompleteStep, isCompleted }) {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Recover & Restart Server A</span>
+                <span>Recover &amp; Restart Server A</span>
               </button>
             )}
           </div>
@@ -187,7 +186,7 @@ export function LbFailoverLab({ onCompleteStep, isCompleted }) {
                 <span className="text-emerald-600 dark:text-emerald-400 font-bold">✔ Active in Load Balancer Pool</span>
               )}
               {server1Health === 'probing-fail' && (
-                <span className="text-amber-500 font-bold">⚠ Suspect flapping; testing probe 2 & 3...</span>
+                <span className="text-amber-500 font-bold">⚠ Suspect flapping; testing probe 2 &amp; 3...</span>
               )}
               {server1Health === 'quarantined' && (
                 <span className="text-rose-400 font-bold">⛔ REMOVED FROM POOL — 0 new traffic routed</span>
@@ -246,14 +245,14 @@ export function LbFailoverLab({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Experiment B: Redundant Load Balancers & Virtual IP Failover */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
           <div>
             <span className="text-xs font-mono font-bold text-purple-600 dark:text-purple-400 uppercase">
               Experiment B
             </span>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Active-Passive Load Balancers (VRRP & Virtual IP Failover)
+              Active-Passive Load Balancers (VRRP &amp; Virtual IP Failover)
             </h3>
           </div>
 

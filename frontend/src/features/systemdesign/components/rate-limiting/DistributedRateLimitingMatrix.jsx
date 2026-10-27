@@ -5,10 +5,7 @@ import {
   Database,
   Sparkles,
   Play,
-  CheckCircle2,
-  ArrowRight,
-  Zap,
-  Activity
+  Zap
 } from 'lucide-react';
 import { RATE_LIMIT_ALGORITHMS } from '../../data/rateLimitingData';
 
@@ -33,9 +30,9 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -57,7 +54,7 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
 
           <button
             onClick={handleRunTrafficShootout}
-            className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+            className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
           >
             <Play className="w-3.5 h-3.5" />
             <span>Run Traffic Shootout (12 Requests)</span>
@@ -66,7 +63,7 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Distributed Architecture: Local vs Centralized Redis */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <Server className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -80,7 +77,7 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
               onClick={() => setArchitectureMode('local')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                 architectureMode === 'local'
-                  ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-400 font-bold shadow-xs'
+                  ? 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-400 font-bold shadow-sm'
                   : 'bg-slate-50 dark:bg-[#0B101D] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'
               }`}
             >
@@ -90,7 +87,7 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
               onClick={() => setArchitectureMode('distributed-redis')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                 architectureMode === 'distributed-redis'
-                  ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-400 font-bold shadow-xs'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border-purple-400 font-bold shadow-sm'
                   : 'bg-slate-50 dark:bg-[#0B101D] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800'
               }`}
             >
@@ -124,7 +121,7 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Algorithm Comparison Table */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
         <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
           <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           5 Algorithm Comprehensive Comparison Matrix
@@ -161,7 +158,7 @@ export function DistributedRateLimitingMatrix({ onCompleteStep, isCompleted }) {
 
       {/* 4. Traffic Shootout Benchmark Card */}
       {shootoutResults && (
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4 animate-in fade-in">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4 animate-in fade-in">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Zap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
