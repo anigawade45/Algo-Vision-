@@ -14,6 +14,10 @@ router.get('/health', (req, res) => {
 // Auth Routes
 router.use('/auth', authRoutes);
 
+// Dashboard Routes
+const dashboardRoutes = require('./dashboard.routes');
+router.use('/dashboard', dashboardRoutes);
+
 // DSA Problems Routes
 router.use('/problems', problemRoutes);
 

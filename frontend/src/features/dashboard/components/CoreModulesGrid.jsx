@@ -47,7 +47,7 @@ const coreModulesList = [
     name: 'System Design',
     description: 'Learn system design concepts through interactive architecture visualizations.',
     icon: Server,
-    route: '/modules/sysdesign',
+    route: '/systemdesign',
     colorTheme: {
       iconBg: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
       border: 'border-slate-200/80 dark:border-slate-800/80',
@@ -57,7 +57,7 @@ const coreModulesList = [
   },
 ];
 
-export function CoreModulesGrid({ onExploreModule }) {
+export function CoreModulesGrid({ onExploreModule, modules = [] }) {
   const navigate = useNavigate();
 
   const handleExplore = (moduleId, route) => {
@@ -96,6 +96,7 @@ export function CoreModulesGrid({ onExploreModule }) {
         {coreModulesList.map((module) => {
           const Icon = module.icon;
           const theme = module.colorTheme;
+          const modData = Array.isArray(modules) ? modules.find((m) => m.id === module.id) : null;
 
           return (
             <div
@@ -105,16 +106,25 @@ export function CoreModulesGrid({ onExploreModule }) {
             >
               <div className="space-y-3 relative z-10">
                 {/* Header: Icon + Title */}
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-12 h-12 rounded-2xl ${theme.iconBg} flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200`}
-                  >
-                    <Icon className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {module.name}
-                    </h3>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-12 h-12 rounded-2xl ${theme.iconBg} flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200`}
+                    >
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {module.name}
+                      </h3>
+                      {modData?.total > 0 && (
+                        <p className="text-[11px] font-mono text-slate-400 dark:text-slate-500">
+                          {modData.completed > 0
+                            ? `${modData.completed}/${modData.total} Solved • ${modData.progress}%`
+                            : `${modData.total} Problems Available`}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
 

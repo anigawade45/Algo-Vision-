@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Terminal, CheckCircle2, XCircle, Loader2, ArrowRight, RefreshCw, Mail } from 'lucide-react';
@@ -13,42 +13,37 @@ export default function VerifyEmailPage() {
   const [resendStatus, setResendStatus] = useState('');
   const [isResending, setIsResending] = useState(false);
 
+  const verificationStartedRef = useRef(false);
+
   useEffect(() => {
-    let isMounted = true;
+    if (!token) {
+      setStatus('error');
+      setMessage('Verification token is missing.');
+      return;
+    }
+
+    // In React StrictMode (development), effects run twice on mount.
+    // Guard against firing the one-time token verification twice.
+    if (verificationStartedRef.current) return;
+    verificationStartedRef.current = true;
 
     const performVerification = async () => {
-      if (!token) {
-        if (isMounted) {
-          setStatus('error');
-          setMessage('Verification token is missing.');
-        }
-        return;
-      }
-
       try {
         const res = await verifyAccountEmail(token);
-        if (isMounted) {
-          if (res.success) {
-            setStatus('success');
-            setMessage(res.message || 'Email verified successfully!');
-          } else {
-            setStatus('error');
-            setMessage(res.message || 'Invalid or expired verification link.');
-          }
+        if (res.success) {
+          setStatus('success');
+          setMessage(res.message || 'Email verified successfully!');
+        } else {
+          setStatus('error');
+          setMessage(res.message || 'Invalid or expired verification link.');
         }
       } catch (err) {
-        if (isMounted) {
-          setStatus('error');
-          setMessage('Invalid or expired verification link.');
-        }
+        setStatus('error');
+        setMessage('Invalid or expired verification link.');
       }
     };
 
     performVerification();
-
-    return () => {
-      isMounted = false;
-    };
   }, [token]);
 
   const handleResendSubmit = async (e) => {

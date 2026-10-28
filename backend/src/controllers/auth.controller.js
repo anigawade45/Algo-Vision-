@@ -1,5 +1,5 @@
 const authService = require('../services/auth.service');
-const { sendTokenResponse } = require('../utils/generateToken');
+const { sendTokenResponse, clearAuthCookie } = require('../utils/generateToken');
 const { successResponse } = require('../utils/apiResponse');
 const env = require('../config/env');
 
@@ -25,13 +25,12 @@ const serializeUser = (user) => {
 const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    await authService.registerUser({ name, email, password });
+    const result = await authService.registerUser({ name, email, password });
 
-    // Same response for new and existing emails (no account enumeration)
     return successResponse(
       res,
       201,
-      'Registration successful. Please check your email to verify your account.'
+      result?.message || 'Registration successful. Please check your email to verify your account.'
     );
   } catch (error) {
     next(error);
@@ -92,11 +91,7 @@ const login = async (req, res, next) => {
  */
 const logout = (req, res, next) => {
   try {
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: env.isProduction,
-      sameSite: env.isProduction ? 'none' : 'lax',
-    });
+    clearAuthCookie(res);
     return successResponse(res, 200, 'Logged out successfully');
   } catch (error) {
     next(error);

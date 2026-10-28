@@ -4,9 +4,9 @@ import { Clock, CheckCircle2, Code2, Flame } from 'lucide-react';
 export function StatsCards({ stats }) {
   const currentStats = stats || {
     problemsSolved: 0,
-    topicsCompleted: 59,
-    learningStreak: 14,
-    learningHours: 48.5,
+    topicsCompleted: 0,
+    learningStreak: 0,
+    learningHours: 0,
   };
 
   const statItems = [
@@ -21,8 +21,8 @@ export function StatsCards({ stats }) {
     },
     {
       id: 'topics',
-      label: 'Topics Completed',
-      value: currentStats.topicsCompleted ?? 59,
+      label: 'Stages Completed',
+      value: currentStats.topicsCompleted ?? 0,
       unit: '',
       icon: CheckCircle2,
       color: 'text-emerald-600 dark:text-emerald-400',
@@ -31,7 +31,7 @@ export function StatsCards({ stats }) {
     {
       id: 'streak',
       label: 'Learning Streak',
-      value: currentStats.learningStreak ?? 14,
+      value: currentStats.learningStreak ?? 0,
       unit: 'Days',
       icon: Flame,
       color: 'text-amber-600 dark:text-amber-400',
@@ -39,8 +39,8 @@ export function StatsCards({ stats }) {
     },
     {
       id: 'hours',
-      label: 'Learning Hours',
-      value: currentStats.learningHours ?? 48.5,
+      label: 'Study Time',
+      value: currentStats.learningHours ?? 0,
       unit: 'hrs',
       icon: Clock,
       color: 'text-blue-600 dark:text-blue-400',

@@ -57,6 +57,13 @@ export function AuthProvider({ children }) {
   const register = async (name, email, password) => {
     try {
       const res = await registerUser({ name, email, password });
+      if (res?.success === false) {
+        return {
+          success: false,
+          message: res?.message || 'Registration failed',
+          errors: res?.errors || null,
+        };
+      }
       return {
         success: true,
         message: res?.message || 'Registration successful. Please verify your email.',
@@ -72,6 +79,9 @@ export function AuthProvider({ children }) {
   const verifyAccountEmail = async (token) => {
     try {
       const res = await verifyEmailApi(token);
+      if (res?.success === false) {
+        return { success: false, message: res?.message || 'Verification failed' };
+      }
       return { success: true, message: res?.message || 'Email verified successfully' };
     } catch (error) {
       const message = error.response?.data?.message || error.message || 'Invalid or expired verification link';
@@ -83,6 +93,9 @@ export function AuthProvider({ children }) {
   const resendVerificationLink = async (email) => {
     try {
       const res = await resendVerificationApi(email);
+      if (res?.success === false) {
+        return { success: false, message: res?.message || 'Failed to resend verification email' };
+      }
       return { success: true, message: res?.message || 'Verification email sent.' };
     } catch (error) {
       const message = error.response?.data?.message || error.message || 'Failed to resend email';
@@ -94,8 +107,10 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await logoutUser();
+      return { success: true };
     } catch (error) {
       console.error('Logout error:', error.message);
+      return { success: false, message: error.message };
     } finally {
       setUser(null);
     }

@@ -90,19 +90,31 @@ const registerUser = async ({ name, email, password }) => {
   const existing = await User.findOne({ email: normalizedEmail }).select('_id isVerified');
 
   if (existing) {
-    if (!existing.isVerified) await issueVerificationEmail(existing._id);
-    return;
+    if (existing.isVerified) {
+      throw new AppError('An account with this email already exists. Please sign in.', 409);
+    }
+
+    // Existing but unverified account: resend verification email
+    await issueVerificationEmail(existing._id);
+    return {
+      message: 'An unverified account with this email already exists. A fresh verification email has been sent.',
+    };
   }
 
   let user;
   try {
     user = await User.create({ name, email: normalizedEmail, password, isVerified: false });
   } catch (error) {
-    if (error.code === 11000) return; // lost a race with a concurrent registration
+    if (error.code === 11000) {
+      throw new AppError('An account with this email already exists. Please sign in.', 409);
+    }
     throw error;
   }
 
   await issueVerificationEmail(user._id);
+  return {
+    message: 'Registration successful. Please check your email to verify your account.',
+  };
 };
 
 /**
@@ -113,17 +125,28 @@ const verifyEmailToken = async (rawToken) => {
     throw new AppError('Verification token is missing or malformed', 400);
   }
 
+  const hashed = hashToken(rawToken);
+
   const user = await User.findOne({
-    emailVerificationToken: hashToken(rawToken),
+    emailVerificationToken: hashed,
     emailVerificationExpires: { $gt: new Date() },
   }).select('+emailVerificationToken +emailVerificationExpires');
 
   if (!user) {
+    // If the token was already consumed recently, treat as success idempotently
+    const alreadyVerifiedUser = await User.findOne({
+      lastVerifiedToken: hashed,
+      isVerified: true,
+    });
+    if (alreadyVerifiedUser) {
+      return { success: true, message: 'Email is already verified. You can sign in.' };
+    }
+
     throw new AppError('Invalid or expired verification link', 400);
   }
 
-  // Unsets the token fields (null values would stay in the sparse index)
-  user.markEmailVerified();
+  // Unsets the token fields and records the consumed token for idempotency
+  user.markEmailVerified(hashed);
   await user.save();
 
   return { success: true, message: 'Email verified successfully' };

@@ -5,7 +5,8 @@ const bcrypt = require('bcryptjs'); // see note: native `bcrypt` is a drop-in, f
 const BCRYPT_ROUNDS = 12;
 // bcrypt only uses the first 72 BYTES (not characters) of the input.
 const BCRYPT_MAX_BYTES = 72;
-const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const { VERIFICATION_TOKEN_TTL_MINUTES } = require('../utils/emailVerificationToken');
+const EMAIL_VERIFICATION_TTL_MS = VERIFICATION_TOKEN_TTL_MINUTES * 60 * 1000; // 30 minutes
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const hashToken = (token) =>
@@ -76,6 +77,11 @@ const userSchema = new mongoose.Schema(
     },
     lastVerificationResend: {
       type: Date,
+      select: false,
+    },
+    // Stores the hash of the last successfully consumed verification token (for idempotency)
+    lastVerifiedToken: {
+      type: String,
       select: false,
     },
     // Lets you invalidate JWTs issued before a password change.
@@ -162,23 +168,35 @@ userSchema.methods.createEmailVerificationToken = function () {
 };
 
 // Call after a successful verification, then save.
-userSchema.methods.markEmailVerified = function () {
+userSchema.methods.markEmailVerified = function (hashedToken) {
   this.isVerified = true;
+  if (hashedToken) {
+    this.lastVerifiedToken = hashedToken;
+  }
   this.emailVerificationToken = undefined;
   this.emailVerificationExpires = undefined;
   this.lastVerificationResend = undefined;
 };
 
-// jwtIssuedAt is the JWT "iat" claim, in seconds.
-// Requires the document to be loaded with .select('+passwordChangedAt').
-// Granularity is one second, so a token issued in the same second as the change
-// is still accepted.
 userSchema.methods.changedPasswordAfter = function (jwtIssuedAt) {
   if (!this.passwordChangedAt) return false;
   return Math.floor(this.passwordChangedAt.getTime() / 1000) > jwtIssuedAt;
 };
 
-// ---------- Static helpers ----------
+const DUMMY_HASH = '$2a$12$e8uq0W2Yc8o5aU9QWf/6CeQJgD9w0FvZ3Y7D8g6Ue6o5aU9QWf/6C';
+
+/**
+ * Equalizes timing between existing and non-existing accounts during login
+ * to defeat account enumeration via side-channel response-time analysis.
+ */
+userSchema.statics.burnPasswordCheck = async function (candidatePassword) {
+  if (typeof candidatePassword !== 'string') return false;
+  try {
+    return await bcrypt.compare(candidatePassword, DUMMY_HASH);
+  } catch (_) {
+    return false;
+  }
+};
 
 // Look up a user by the raw token from the email link.
 userSchema.statics.findByVerificationToken = function (rawToken) {
@@ -197,6 +215,7 @@ const sanitize = (doc, ret) => {
   delete ret.emailVerificationToken;
   delete ret.emailVerificationExpires;
   delete ret.lastVerificationResend;
+  delete ret.lastVerifiedToken;
   delete ret.passwordChangedAt;
   return ret;
 };

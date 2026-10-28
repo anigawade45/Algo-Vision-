@@ -10,6 +10,7 @@ import { QuickActions } from './components/QuickActions';
 import { AccountSettingsPage } from './components/AccountSettingsPage';
 import { VisualizerModal } from './components/InteractiveModals';
 import { useAiMentor } from '@/features/ai-mentor';
+import { getDashboardOverview } from '@/api/dashboard.api';
 
 export default function DashboardPage({ theme, toggleTheme }) {
   const navigate = useNavigate();
@@ -29,10 +30,33 @@ export default function DashboardPage({ theme, toggleTheme }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isVisualizerOpen, setIsVisualizerOpen] = useState(false);
   const [visualizerInitialModule, setVisualizerInitialModule] = useState('dsa');
+  const [dashboardData, setDashboardData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname, activeTab]);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchOverview = async () => {
+      try {
+        const res = await getDashboardOverview();
+        if (isMounted && res?.data) {
+          setDashboardData(res.data);
+        }
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+
+    fetchOverview();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleToggleSidebar = () => {
     setIsSidebarCollapsed((prev) => {
@@ -75,9 +99,8 @@ export default function DashboardPage({ theme, toggleTheme }) {
 
       {/* 2. Main Body Container */}
       <div
-        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
-          isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
-        }`}
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
+          }`}
       >
         {/* Top Navbar Header */}
         <DashboardNavbar
@@ -91,10 +114,10 @@ export default function DashboardPage({ theme, toggleTheme }) {
             const mod = topic.module.toLowerCase().includes('os')
               ? 'os'
               : topic.module.toLowerCase().includes('network')
-              ? 'networks'
-              : topic.module.toLowerCase().includes('design')
-              ? 'sysdesign'
-              : 'dsa';
+                ? 'networks'
+                : topic.module.toLowerCase().includes('design')
+                  ? 'sysdesign'
+                  : 'dsa';
             handleOpenVisualizer(mod);
           }}
         />
@@ -120,11 +143,19 @@ export default function DashboardPage({ theme, toggleTheme }) {
               {/* Section 1: Welcome Banner */}
               <WelcomeBanner />
 
-              {/* Section 2: Featured / Continue Learning Card */}
-              <ContinueLearningCard onContinue={handleExploreModule} />
+              {/* Section 2: Continue Learning Card (Only rendered if user has an active learning workspace) */}
+              {dashboardData?.continueLearning && (
+                <ContinueLearningCard
+                  continueData={dashboardData.continueLearning}
+                  onContinue={(slug) => navigate(`/dsa/workspace/${slug}`)}
+                />
+              )}
 
-              {/* Section 3: Four Core Module Cards */}
-              <CoreModulesGrid onExploreModule={handleExploreModule} />
+              {/* Section 3: Four Core Module Cards with Real Catalog Progress */}
+              <CoreModulesGrid
+                modules={dashboardData?.modules}
+                onExploreModule={handleExploreModule}
+              />
 
               {/* Section 4: Quick Actions */}
               <QuickActions
@@ -145,4 +176,3 @@ export default function DashboardPage({ theme, toggleTheme }) {
     </div>
   );
 }
-

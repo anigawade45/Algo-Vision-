@@ -1,21 +1,14 @@
 const path = require('path');
 const dotenv = require('dotenv');
 
-// In production, variables come from the platform (Render, Railway, Docker, etc.).
-// dotenv never overrides existing variables and silently ignores a missing file.
 dotenv.config({
-  path: path.resolve(__dirname, '../../.env'), // adjust if your .env is in the backend root
+  path: path.resolve(__dirname, '../../.env'),
 });
 
-// Required AFTER dotenv so LOG_LEVEL from .env is honoured
 const { logger } = require('../utils/logger');
 
 const errors = [];
 
-// ---------------------------------------------------------------
-// Parsing helpers (strict: a value that is SET but invalid is an error,
-// never silently replaced by the fallback)
-// ---------------------------------------------------------------
 const readString = (name, fallback = '') => {
   const raw = process.env[name];
   return raw === undefined ? fallback : raw.trim();
@@ -51,12 +44,8 @@ const parseTrustProxy = (raw) => {
     return undefined;
   }
   if (/^\d+$/.test(value)) return Number(value);
-  return value; // "loopback", "uniquelocal", CIDR list
+  return value;
 };
-
-// ---------------------------------------------------------------
-// Environment
-// ---------------------------------------------------------------
 const NODE_ENVS = ['development', 'test', 'production'];
 const nodeEnv = readString('NODE_ENV', 'development').toLowerCase();
 const isProduction = nodeEnv === 'production';
@@ -65,13 +54,9 @@ if (!NODE_ENVS.includes(nodeEnv)) {
   errors.push(`NODE_ENV must be one of: ${NODE_ENVS.join(', ')} (got "${nodeEnv}")`);
 }
 
-// ---------------------------------------------------------------
-// Server
-// ---------------------------------------------------------------
 const port = readInt('PORT', 5000, { min: 1, max: 65535 });
 const trustProxy = parseTrustProxy(process.env.TRUST_PROXY);
 const shutdownTimeoutMs = readInt('SHUTDOWN_TIMEOUT_MS', 10_000, { min: 1_000, max: 120_000 });
-// Must exceed your load balancer's idle timeout (AWS ALB: 60s)
 const keepAliveTimeoutMs = readInt('KEEP_ALIVE_TIMEOUT_MS', 65_000, { min: 1_000, max: 600_000 });
 const requestTimeoutMs = readInt('REQUEST_TIMEOUT_MS', 30_000, { min: 1_000, max: 600_000 });
 
@@ -80,9 +65,6 @@ if (!/^\d+(b|kb|mb)$/i.test(jsonBodyLimit)) {
   errors.push(`JSON_BODY_LIMIT must look like "100kb" or "1mb" (got "${jsonBodyLimit}")`);
 }
 
-// ---------------------------------------------------------------
-// MongoDB
-// ---------------------------------------------------------------
 const mongoUri = readString('MONGO_URI');
 if (!mongoUri) {
   errors.push('MONGO_URI is required');
@@ -93,15 +75,12 @@ if (!mongoUri) {
 const mongoMaxPoolSize = readInt('MONGO_MAX_POOL_SIZE', 10, { min: 1, max: 500 });
 const mongoMaxRetries = readInt('MONGO_MAX_RETRIES', 5, { min: 1, max: 20 });
 const mongoRetryDelayMs = readInt('MONGO_RETRY_DELAY_MS', 3000, { min: 0, max: 60_000 });
-// Only set this if your network has IPv6 DNS problems with Atlas (then use 4)
+
 const mongoIpFamily = readInt('MONGO_IP_FAMILY', undefined);
 if (mongoIpFamily !== undefined && ![4, 6].includes(mongoIpFamily)) {
   errors.push('MONGO_IP_FAMILY must be 4 or 6');
 }
 
-// ---------------------------------------------------------------
-// Auth
-// ---------------------------------------------------------------
 const WEAK_SECRETS = new Set([
   'secret',
   'changeme',
@@ -130,14 +109,14 @@ if (!/^\d+(\s*[a-z]+)?$/i.test(jwtExpiresIn)) {
   errors.push(`JWT_EXPIRES_IN must look like "15m", "12h" or "7d" (got "${jwtExpiresIn}")`);
 }
 
-const cookieSecret = readString('COOKIE_SECRET') || undefined; // only needed for signed cookies
+const cookieSecret = readString('COOKIE_SECRET') || undefined;
 if (cookieSecret && isProduction && cookieSecret.length < 32) {
   errors.push('COOKIE_SECRET must be at least 32 characters in production');
 }
 
-// ---------------------------------------------------------------
-// Client / CORS (each entry must be a bare origin)
-// ---------------------------------------------------------------
+const cookieDomain = readString('COOKIE_DOMAIN') || undefined;
+const cookieSameSite = readString('COOKIE_SAMESITE', isProduction ? 'none' : 'lax');
+
 const clientUrls = readString('CLIENT_URL', isProduction ? '' : 'http://localhost:5173')
   .split(',')
   .map((item) => item.trim().replace(/\/+$/, ''))
@@ -168,11 +147,8 @@ for (const url of clientUrls) {
   }
 }
 
-// ---------------------------------------------------------------
-// Email (SMTP): all-or-nothing, required in production
-// ---------------------------------------------------------------
 const smtpUser = readString('SMTP_USER');
-const smtpPassword = process.env.SMTP_PASSWORD || ''; // never trimmed: may contain spaces
+const smtpPassword = process.env.SMTP_PASSWORD || '';
 const smtpPort = readInt('SMTP_PORT', 587, { min: 1, max: 65535 });
 const emailEnabled = Boolean(smtpUser && smtpPassword);
 
@@ -185,15 +161,9 @@ if (isProduction && emailEnabled && !readString('EMAIL_FROM')) {
   errors.push('EMAIL_FROM is required in production (must be an address your SMTP provider allows)');
 }
 
-// ---------------------------------------------------------------
-// AI (Gemini): optional feature, the app works without it
-// ---------------------------------------------------------------
 const geminiApiKey = readString('GEMINI_API_KEY');
 const aiEnabled = Boolean(geminiApiKey);
 
-// ---------------------------------------------------------------
-// Fail fast with ONE readable message. Secret values are never included.
-// ---------------------------------------------------------------
 if (errors.length > 0) {
   throw new Error(`Invalid environment configuration:\n - ${errors.join('\n - ')}`);
 }
@@ -221,9 +191,11 @@ const env = Object.freeze({
   jwtSecret,
   jwtExpiresIn,
   cookieSecret,
+  cookieDomain,
+  cookieSameSite,
 
   clientUrl: clientUrls[0],
-  clientUrls: Object.freeze(clientUrls), // use this for the CORS allowlist
+  clientUrls: Object.freeze(clientUrls),
 
   smtpHost: readString('SMTP_HOST', 'smtp.gmail.com'),
   smtpPort,
