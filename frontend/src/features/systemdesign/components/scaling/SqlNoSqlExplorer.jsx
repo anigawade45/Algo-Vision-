@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { 
   Database, 
   Layers, 
-  ArrowRight, 
-  CheckCircle2, 
   Sparkles, 
   FileCode, 
   Table, 
@@ -59,9 +57,9 @@ export function SqlNoSqlExplorer({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-semibold mb-2">
@@ -85,7 +83,7 @@ export function SqlNoSqlExplorer({ onCompleteStep, isCompleted }) {
               }}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeModel === 'sql'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -99,7 +97,7 @@ export function SqlNoSqlExplorer({ onCompleteStep, isCompleted }) {
               }}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeModel === 'nosql'
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-emerald-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -182,7 +180,7 @@ export function SqlNoSqlExplorer({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Architectural Property Matrix (5 Cols) */}
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-sm flex flex-col justify-between">
           <div className="space-y-4">
             <div>
               <span className={`text-xs font-mono px-2.5 py-0.5 rounded-full border ${modelData.badgeColor}`}>
@@ -224,7 +222,7 @@ export function SqlNoSqlExplorer({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Master Decision Matrix */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-sm">
         <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <Layers className="w-4 h-4 text-blue-500" />
           <span>Comprehensive SQL vs. NoSQL Feature Matrix</span>

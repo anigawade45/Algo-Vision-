@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Award, 
-  CheckCircle2, 
-  XCircle, 
-  RotateCcw, 
-  Sparkles, 
-  Layers, 
+import {
+  Award,
+  CheckCircle2,
+  XCircle,
+  RotateCcw,
+  Sparkles,
+  Layers,
   Server
 } from 'lucide-react';
 import { QUIZ_QUESTIONS } from '../../data/basicsModuleData';
@@ -42,7 +42,7 @@ export function BasicsQuizSection({ onCompleteStep }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Quiz Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
@@ -76,13 +76,12 @@ export function BasicsQuizSection({ onCompleteStep }) {
           return (
             <div
               key={q.id}
-              className={`p-6 sm:p-7 rounded-3xl border transition-all space-y-4 ${
-                submitted
+              className={`p-6 sm:p-7 rounded-3xl border transition-all space-y-4 ${submitted
                   ? isCorrect
-                    ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/80 shadow-xs'
-                    : 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800/80 shadow-xs'
-                  : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-[#1E2638] shadow-xs'
-              }`}
+                    ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/80 shadow-sm'
+                    : 'bg-rose-50/50 dark:bg-rose-950/20 border-rose-300 dark:border-rose-800/80 shadow-sm'
+                  : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-[#1E2638] shadow-sm'
+                }`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
@@ -167,7 +166,7 @@ export function BasicsQuizSection({ onCompleteStep }) {
       </div>
 
       {/* Quiz Actions Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm">
         <div>
           {!submitted ? (
             <p className="text-xs text-slate-500 font-mono">
@@ -196,14 +195,14 @@ export function BasicsQuizSection({ onCompleteStep }) {
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <CheckCircle2 className="w-4 h-4" />
-              <span>Submit & Check Answers</span>
+              <span>Submit &amp; Check Answers</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Module Mastered Summary Recap */}
-      <div className="p-8 rounded-3xl bg-linear-to-r from-purple-900 via-indigo-900 to-slate-900 text-white space-y-6 shadow-xl relative overflow-hidden">
+      <div className="p-8 rounded-3xl bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white space-y-6 shadow-xl relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10 border-b border-white/15 pb-4">
           <div className="space-y-1">
             <span className="text-xs font-mono font-bold text-purple-300 uppercase tracking-wider flex items-center gap-1.5">

@@ -7,7 +7,6 @@ import {
   Trash2,
   AlertTriangle,
   CheckCircle2,
-  ArrowRight,
   Sliders,
   Send,
   Sparkles,
@@ -277,9 +276,9 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -302,14 +301,14 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => handleWriteRequest(100)}
-              className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
               Send Write ($+100)
             </button>
             <button
               onClick={handleReadRequest}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
             >
               <Database className="w-3.5 h-3.5" />
               Send Read Query
@@ -327,7 +326,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Control Panel: Replication Mode & Routing Policies */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm">
         {/* Replication Lag Mode */}
         <div className="md:col-span-6 space-y-2">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
@@ -346,7 +345,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
                 onClick={() => setLagSetting(p.id)}
                 className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                   lagSetting === p.id
-                    ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 text-purple-700 dark:text-purple-300 font-bold shadow-xs'
+                    ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 text-purple-700 dark:text-purple-300 font-bold shadow-sm'
                     : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
                 }`}
               >
@@ -374,7 +373,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
                 onClick={() => setRoutingStrategy(r.id)}
                 className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
                   routingStrategy === r.id
-                    ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-700 dark:text-emerald-300 font-bold shadow-xs'
+                    ? 'bg-emerald-50 dark:bg-emerald-950/60 border-emerald-500 text-emerald-700 dark:text-emerald-300 font-bold shadow-sm'
                     : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
                 }`}
               >
@@ -444,7 +443,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Read Replicas (8 Cols) */}
-        <div className="lg:col-span-8 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-8 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <GitBranch className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -456,7 +455,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
             <button
               onClick={handleAddReplica}
               disabled={replicas.length >= 5}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-all disabled:opacity-50 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               Add Follower Node
@@ -487,7 +486,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
               return (
                 <div
                   key={rep.id}
-                  className={`rounded-2xl border p-4 transition-all shadow-xs space-y-3 bg-slate-50 dark:bg-[#0B101D] ${cardBorder}`}
+                  className={`rounded-2xl border p-4 transition-all shadow-sm space-y-3 bg-slate-50 dark:bg-[#0B101D] ${cardBorder}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -562,7 +561,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
       {/* 4. Live Read Result Alert & Event Log */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Last Query Result Card */}
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -638,7 +637,7 @@ export function ReplicationSimulator({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Live Event Stream & Replication Binlog */}
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <RefreshCw className="w-4 h-4 text-purple-600 dark:text-purple-400" />

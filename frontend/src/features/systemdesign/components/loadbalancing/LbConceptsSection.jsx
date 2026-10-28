@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { 
   BookOpen, 
   ShieldCheck, 
-  ArrowRight, 
   CheckCircle2, 
   Sparkles, 
   GitFork, 
@@ -17,16 +16,16 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
   const activeConceptData = LB_CONCEPTS.find((c) => c.id === selectedConcept) || LB_CONCEPTS[0];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Concepts Introduction Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
             <BookOpen className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-              Load Balancing & Traffic Routing Foundations
+              Load Balancing &amp; Traffic Routing Foundations
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Explore reverse proxies, OSI layer routing, health checking heartbeats, and high-availability failover.
@@ -49,7 +48,7 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
                 className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-3 ${
                   isSelected
                     ? 'bg-purple-50/80 dark:bg-purple-950/40 border-purple-500 ring-2 ring-purple-500/20 shadow-md'
-                    : 'bg-slate-50/70 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-xs'
+                    : 'bg-slate-50/70 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 hover:border-purple-300 dark:hover:border-purple-800 hover:shadow-sm'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
@@ -73,7 +72,7 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Deep-Dive Active Concept Card */}
-      <div className="rounded-3xl bg-linear-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-[#111827] dark:via-[#111827] dark:to-blue-950/20 border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-md">
+      <div className="rounded-3xl bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/20 dark:from-[#111827] dark:via-[#111827] dark:to-blue-950/20 border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-md">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="space-y-1">
             <span className={`text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full border ${activeConceptData.badgeColor}`}>
@@ -101,7 +100,7 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
               {activeConceptData.keyPoints.map((point, idx) => (
                 <div
                   key={idx}
-                  className="p-3.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 flex items-start gap-3 shadow-xs"
+                  className="p-3.5 rounded-xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800/80 flex items-start gap-3 shadow-sm"
                 >
                   <span className="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                     {idx + 1}
@@ -147,7 +146,7 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Layer 4 vs Layer 7 Interactive Comparison Playground */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -166,7 +165,7 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
               onClick={() => setL4L7Mode('l4')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                 l4L7Mode === 'l4'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -176,7 +175,7 @@ export function LbConceptsSection({ onCompleteStep, isCompleted }) {
               onClick={() => setL4L7Mode('l7')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                 l4L7Mode === 'l7'
-                  ? 'bg-purple-600 text-white shadow-xs'
+                  ? 'bg-purple-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >

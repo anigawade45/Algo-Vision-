@@ -17,7 +17,7 @@ import BrokerComparisonMatrix from '../components/msg-queue/BrokerComparisonMatr
 import MsgQueueQuizSection from '../components/msg-queue/MsgQueueQuizSection';
 import { MSG_QUEUE_STEPS } from '../data/msgQueueData';
 
-export function MessageQueues({ theme, toggleTheme }) {
+export default function MessageQueues({ theme, toggleTheme }) {
   const [activeStep, setActiveStep] = useState('sync-async');
 
   const currentStepIdx = MSG_QUEUE_STEPS.findIndex((s) => s.id === activeStep);
@@ -89,7 +89,7 @@ export function MessageQueues({ theme, toggleTheme }) {
 
             <Link
               to="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
               <span>Dashboard</span>
@@ -111,41 +111,12 @@ export function MessageQueues({ theme, toggleTheme }) {
 
         {/* Dynamic Section Renderer based on Active Step */}
         <div className="pt-2">
-          {activeStep === 'sync-async' && (
-            <div className="space-y-6">
-              <SyncAsyncComparison />
-            </div>
-          )}
-
-          {activeStep === 'simulator' && (
-            <div className="space-y-6">
-              <QueueArchitectureSimulator />
-            </div>
-          )}
-
-          {activeStep === 'dlq-retry' && (
-            <div className="space-y-6">
-              <DlqRetryLab />
-            </div>
-          )}
-
-          {activeStep === 'idempotency' && (
-            <div className="space-y-6">
-              <DeliverySemanticsLab />
-            </div>
-          )}
-
-          {activeStep === 'matrix' && (
-            <div className="space-y-6">
-              <BrokerComparisonMatrix />
-            </div>
-          )}
-
-          {activeStep === 'quiz' && (
-            <div className="space-y-6">
-              <MsgQueueQuizSection />
-            </div>
-          )}
+          {activeStep === 'sync-async' && <SyncAsyncComparison />}
+          {activeStep === 'simulator' && <QueueArchitectureSimulator />}
+          {activeStep === 'dlq-retry' && <DlqRetryLab />}
+          {activeStep === 'idempotency' && <DeliverySemanticsLab />}
+          {activeStep === 'matrix' && <BrokerComparisonMatrix />}
+          {activeStep === 'quiz' && <MsgQueueQuizSection />}
         </div>
 
         {/* Step Navigation Bar */}
@@ -153,11 +124,10 @@ export function MessageQueues({ theme, toggleTheme }) {
           <button
             onClick={handlePrevStep}
             disabled={currentStepIdx === 0}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
-              currentStepIdx === 0
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all ${currentStepIdx === 0
                 ? 'opacity-40 cursor-not-allowed border-slate-200 dark:border-slate-800 text-slate-400'
                 : 'border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] text-slate-700 dark:text-slate-300 hover:bg-slate-50 cursor-pointer'
-            }`}
+              }`}
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Previous Step</span>
@@ -170,11 +140,10 @@ export function MessageQueues({ theme, toggleTheme }) {
           <button
             onClick={handleNextStep}
             disabled={currentStepIdx === MSG_QUEUE_STEPS.length - 1}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-              currentStepIdx === MSG_QUEUE_STEPS.length - 1
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all ${currentStepIdx === MSG_QUEUE_STEPS.length - 1
                 ? 'opacity-40 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-400'
                 : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md shadow-purple-500/20 cursor-pointer'
-            }`}
+              }`}
           >
             <span>Next Step</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -184,5 +153,3 @@ export function MessageQueues({ theme, toggleTheme }) {
     </div>
   );
 }
-
-export default MessageQueues;

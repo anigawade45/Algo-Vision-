@@ -10,8 +10,6 @@ import {
   Server,
   Database,
   Laptop,
-  CheckCircle2,
-  ArrowRight,
   Activity,
   ShieldAlert,
   ShieldCheck,
@@ -295,9 +293,9 @@ export function LbArchitectureVisualizer({ onCompleteStep, isCompleted }) {
   const eligibleCount = getEligibleServers().length;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Interactive Control Dashboard */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-5 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-5 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950/70 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
@@ -305,7 +303,7 @@ export function LbArchitectureVisualizer({ onCompleteStep, isCompleted }) {
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-                Live Load Balancer & Server Pool Simulation
+                Live Load Balancer &amp; Server Pool Simulation
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                 Dispatch traffic, switch balancing algorithms, simulate server crashes, and test failover recovery.
@@ -318,7 +316,7 @@ export function LbArchitectureVisualizer({ onCompleteStep, isCompleted }) {
             <button
               onClick={() => setAlgorithm('round-robin')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${algorithm === 'round-robin'
-                ? 'bg-blue-600 text-white shadow-xs'
+                ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
             >
@@ -328,7 +326,7 @@ export function LbArchitectureVisualizer({ onCompleteStep, isCompleted }) {
             <button
               onClick={() => setAlgorithm('least-connections')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${algorithm === 'least-connections'
-                ? 'bg-blue-600 text-white shadow-xs'
+                ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
             >
@@ -403,7 +401,7 @@ export function LbArchitectureVisualizer({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Main Animated Topology Flow Stage */}
-      <div className="rounded-3xl bg-linear-to-b from-slate-900 via-slate-950 to-[#0B101D] border border-slate-800 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden">
+      <div className="rounded-3xl bg-gradient-to-b from-slate-900 via-slate-950 to-[#0B101D] border border-slate-800 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden">
         {/* Glow grid background */}
         <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none" />
 
@@ -667,7 +665,7 @@ export function LbArchitectureVisualizer({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Live Protocol Request Log Table */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span>Live Routed Request Event Log</span>

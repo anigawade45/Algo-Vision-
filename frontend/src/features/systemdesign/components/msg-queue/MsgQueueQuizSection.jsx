@@ -5,10 +5,8 @@ import {
   CheckCircle2,
   XCircle,
   RefreshCw,
-  BookOpen,
   Sparkles,
-  ArrowRight,
-  Server
+  ArrowRight
 } from 'lucide-react';
 import { MSG_QUEUE_QUIZ_QUESTIONS } from '../../data/msgQueueData';
 
@@ -45,9 +43,9 @@ export function MsgQueueQuizSection() {
   const percentage = Math.round((score / totalQuestions) * 100);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -96,7 +94,7 @@ export function MsgQueueQuizSection() {
                     ? 'border-emerald-300 dark:border-emerald-900/60 bg-emerald-50/10'
                     : 'border-rose-300 dark:border-rose-900/60 bg-rose-50/10'
                   : 'border-slate-200 dark:border-[#1E2638]'
-              } shadow-xs`}
+              } shadow-sm`}
             >
               <div className="flex items-start gap-3.5">
                 <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 font-mono">
@@ -122,7 +120,7 @@ export function MsgQueueQuizSection() {
                           optionStyle = 'bg-slate-50/40 dark:bg-[#0B101D]/40 border-slate-100 dark:border-slate-800/60 text-slate-400';
                         }
                       } else if (isSelected) {
-                        optionStyle = 'bg-purple-100/60 dark:bg-purple-950/50 border-purple-600 text-purple-900 dark:text-purple-200 font-semibold shadow-xs';
+                        optionStyle = 'bg-purple-100/60 dark:bg-purple-950/50 border-purple-600 text-purple-900 dark:text-purple-200 font-semibold shadow-sm';
                       }
 
                       return (
@@ -173,7 +171,7 @@ export function MsgQueueQuizSection() {
 
       {/* 3. Bottom Submit / Score Recap */}
       {!submitted ? (
-        <div className="flex items-center justify-between p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs">
+        <div className="flex items-center justify-between p-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm">
           <div className="text-xs text-slate-500 dark:text-slate-400">
             Answered {Object.keys(selectedAnswers).length} of {totalQuestions} questions
           </div>

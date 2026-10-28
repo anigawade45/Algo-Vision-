@@ -1,11 +1,10 @@
-import { 
-  BookOpen, 
-  Database, 
-  Layers, 
-  Clock, 
-  Cpu, 
+import {
+  BookOpen,
+  Database,
+  Layers,
+  Clock,
+  Cpu,
   Award,
-  CheckCircle,
   Sparkles
 } from 'lucide-react';
 import { CACHING_STEPS } from '../../data/cachingData';
@@ -30,7 +29,7 @@ export function CachingHero({ activeStep, onSelectStep }) {
             <span>Module 3 • High-Speed Data Tier</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-            Distributed Caching & Cache-Aside Architecture
+            Distributed Caching &amp; Cache-Aside Architecture
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-3xl">
             Master in-memory caching systems (Redis/Memcached), the Cache-Aside read/write lifecycle, TTL expiration, cache invalidation, write strategies, and LRU/LFU eviction algorithms.
@@ -39,8 +38,8 @@ export function CachingHero({ activeStep, onSelectStep }) {
       </div>
 
       {/* Stepwise Navigation Track */}
-      <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-2 shadow-xs">
-        <div className="flex items-center gap-2 overflow-x-auto py-1 px-1 custom-scrollbar">
+      <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-2 shadow-sm w-full max-w-full overflow-hidden">
+        <div className="flex items-center gap-2 overflow-x-auto py-1 px-1 custom-scrollbar min-w-0">
           {CACHING_STEPS.map((step) => {
             const Icon = ICONS_MAP[step.icon] || BookOpen;
             const isActive = activeStep === step.id;

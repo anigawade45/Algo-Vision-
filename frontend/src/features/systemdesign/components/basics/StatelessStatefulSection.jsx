@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { 
-  Server, 
-  Database, 
-  RotateCcw, 
-  AlertTriangle, 
-  CheckCircle2, 
-  ArrowRight, 
+import {
+  Server,
+  Database,
+  RotateCcw,
+  AlertTriangle,
+  CheckCircle2,
   Lock
 } from 'lucide-react';
 
@@ -40,7 +39,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Header Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
@@ -61,21 +60,19 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
             <span className="text-[11px] font-mono text-slate-400 px-2">Stateless Mode:</span>
             <button
               onClick={() => setStatelessMode('jwt')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                statelessMode === 'jwt'
-                  ? 'bg-purple-600 text-white shadow-xs'
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${statelessMode === 'jwt'
+                  ? 'bg-purple-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               JWT Client Token
             </button>
             <button
               onClick={() => setStatelessMode('redis')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                statelessMode === 'redis'
-                  ? 'bg-purple-600 text-white shadow-xs'
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${statelessMode === 'redis'
+                  ? 'bg-purple-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
+                }`}
             >
               Shared Redis Cache
             </button>
@@ -92,7 +89,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
             onClick={handleSimulateLogin}
             className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md shadow-purple-600/20 transition-all cursor-pointer"
           >
-            1. Login & Add Item to Cart
+            1. Login &amp; Add Item to Cart
           </button>
 
           <button
@@ -124,7 +121,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
       {/* Side-by-Side Live Interactive Comparison Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Side: Stateful Cluster */}
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-xs flex flex-col justify-between">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-sm flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -146,13 +143,12 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
             <div className="grid grid-cols-2 gap-3 pt-2">
               {/* Stateful Server 1 */}
               <div
-                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${
-                  statefulStep === 3
+                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${statefulStep === 3
                     ? 'bg-rose-950/20 border-rose-500 opacity-60'
                     : statefulStep >= 1
-                    ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-500 shadow-md'
-                    : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
-                }`}
+                      ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-500 shadow-md'
+                      : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
+                  }`}
               >
                 <Server className={`w-6 h-6 mx-auto ${statefulStep === 3 ? 'text-rose-500' : 'text-amber-500'}`} />
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -181,11 +177,10 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
 
               {/* Stateful Server 2 */}
               <div
-                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${
-                  statefulStep === 2 || statefulStep === 3
+                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${statefulStep === 2 || statefulStep === 3
                     ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-500 ring-2 ring-rose-500/20 shadow-md'
                     : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
-                }`}
+                  }`}
               >
                 <Server className="w-6 h-6 text-slate-400 mx-auto" />
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -207,7 +202,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
             <div className="pt-2">
               {statefulStep === 0 && (
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 text-xs text-slate-500 text-center">
-                  Click "1. Login & Add Item" above to begin simulation.
+                  Click "1. Login &amp; Add Item" above to begin simulation.
                 </div>
               )}
 
@@ -252,7 +247,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right Side: Stateless Cluster */}
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-xs flex flex-col justify-between">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-sm flex flex-col justify-between">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -274,13 +269,12 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
             <div className="grid grid-cols-2 gap-3 pt-2">
               {/* Stateless Server 1 */}
               <div
-                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${
-                  statelessStep === 3
+                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${statelessStep === 3
                     ? 'bg-slate-200/50 dark:bg-slate-900/50 border-slate-400 opacity-60'
                     : statelessStep >= 1
-                    ? 'bg-purple-50 dark:bg-purple-950/30 border-purple-500'
-                    : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
-                }`}
+                      ? 'bg-purple-50 dark:bg-purple-950/30 border-purple-500'
+                      : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
+                  }`}
               >
                 <Server className={`w-6 h-6 mx-auto ${statelessStep === 3 ? 'text-slate-400' : 'text-purple-500'}`} />
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -294,11 +288,10 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
 
               {/* Stateless Server 2 */}
               <div
-                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${
-                  statelessStep === 2 || statelessStep === 3
+                className={`p-4 rounded-2xl border-2 transition-all space-y-2 text-center ${statelessStep === 2 || statelessStep === 3
                     ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/20 shadow-md'
                     : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800'
-                }`}
+                  }`}
               >
                 <Server className={`w-6 h-6 mx-auto ${statelessStep >= 2 ? 'text-emerald-500' : 'text-slate-400'}`} />
                 <div className="text-xs font-bold text-slate-900 dark:text-white">
@@ -331,7 +324,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
             <div className="pt-2">
               {statelessStep === 0 && (
                 <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 text-xs text-slate-500 text-center">
-                  Click "1. Login & Add Item" above to begin simulation.
+                  Click "1. Login &amp; Add Item" above to begin simulation.
                 </div>
               )}
 
@@ -349,7 +342,7 @@ export function StatelessStatefulSection({ onCompleteStep, isCompleted }) {
                 <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 text-xs text-emerald-900 dark:text-emerald-200 space-y-1">
                   <div className="font-bold flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    <span>200 OK • Seamless Server Switch & Failover!</span>
+                    <span>200 OK • Seamless Server Switch &amp; Failover!</span>
                   </div>
                   <p>Server 2 handled the request seamlessly with zero session loss! The client experienced zero errors or interruptions.</p>
                 </div>

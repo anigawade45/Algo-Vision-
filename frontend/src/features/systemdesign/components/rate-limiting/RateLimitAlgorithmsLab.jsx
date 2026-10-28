@@ -7,13 +7,9 @@ import {
   Zap,
   RefreshCw,
   Clock,
-  Sparkles,
-  ShieldCheck,
   CheckCircle2,
   XCircle,
-  ArrowRight,
-  Activity,
-  Layers
+  Activity
 } from 'lucide-react';
 import { RATE_LIMIT_ALGORITHMS } from '../../data/rateLimitingData';
 
@@ -218,9 +214,9 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
   const currentAlgo = RATE_LIMIT_ALGORITHMS.find((a) => a.id === selectedAlgoId) || RATE_LIMIT_ALGORITHMS[0];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -243,7 +239,7 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setIsAutoTraffic(!isAutoTraffic)}
-              className={`text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-xs cursor-pointer ${
+              className={`text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${
                 isAutoTraffic
                   ? 'bg-amber-600 hover:bg-amber-700 text-white'
                   : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
@@ -267,7 +263,7 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
               onClick={() => handleSelectAlgorithm(algo.id)}
               className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                 isSelected
-                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 shadow-xs ring-1 ring-purple-500/20'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 shadow-sm ring-1 ring-purple-500/20'
                   : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-[#1E2638] hover:bg-slate-50 dark:hover:bg-[#131B2E]'
               }`}
             >
@@ -295,7 +291,7 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
       {/* 3. Main Stage: Request Controls + Live Visualizer + Telemetry */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Request Dispatcher & Algorithm Controls (5 Cols) */}
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Zap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -309,14 +305,14 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
           <div className="grid grid-cols-2 gap-2.5">
             <button
               onClick={() => handleSendRequest(1)}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" /> Send 1 Request
             </button>
 
             <button
               onClick={() => handleSendRequest(5)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"
             >
               <Zap className="w-4 h-4" /> Burst (+5 Requests)
             </button>
@@ -430,7 +426,7 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Real-time Algorithm State Visualization (7 Cols) */}
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-5">
+        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-5">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
               <h3 className="text-sm font-bold text-slate-900 dark:text-white">{currentAlgo.name} Live Visualizer</h3>
@@ -578,7 +574,7 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
 
       {/* 4. Live Telemetry & Event Stream */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5 pb-2 border-b border-slate-100 dark:border-slate-800">
             <Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             Gateway Telemetry Counters
@@ -602,7 +598,7 @@ export function RateLimitAlgorithmsLab({ onCompleteStep, isCompleted }) {
           </div>
         </div>
 
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <RefreshCw className="w-4 h-4 text-purple-600 dark:text-purple-400" />

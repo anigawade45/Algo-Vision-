@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { 
   Clock, 
   RotateCcw, 
-  CheckCircle2, 
-  ArrowRight, 
   Database, 
   Zap, 
   AlertTriangle, 
@@ -132,9 +130,9 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-xs font-semibold mb-2">
@@ -155,7 +153,7 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
               onClick={() => setActiveTab('stale-data')}
               className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'stale-data'
-                  ? 'bg-amber-600 text-white shadow-xs'
+                  ? 'bg-amber-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -165,7 +163,7 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
               onClick={() => setActiveTab('stampede')}
               className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'stampede'
-                  ? 'bg-rose-600 text-white shadow-xs'
+                  ? 'bg-rose-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -175,7 +173,7 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
               onClick={() => setActiveTab('ttl-clock')}
               className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'ttl-clock'
-                  ? 'bg-blue-600 text-white shadow-xs'
+                  ? 'bg-blue-600 text-white shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -189,7 +187,7 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
       {activeTab === 'stale-data' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Controls & Actions (5 Cols) */}
-          <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-xs">
+          <div className="lg:col-span-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-5 shadow-sm">
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Zap className="w-5 h-5 text-amber-500" />
               <span>Simulate DB Update &amp; Read</span>
@@ -301,7 +299,7 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
       {activeTab === 'stampede' && (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-xs">
+          <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 space-y-4 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -389,7 +387,7 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
 
       {/* TAB 3: TTL EXPIRATION CLOCK */}
       {activeTab === 'ttl-clock' && (
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -404,19 +402,19 @@ export function CacheInvalidationLab({ onCompleteStep, isCompleted }) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleAdvanceTtlClock(5)}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-mono shadow-xs transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-mono shadow-sm transition-colors cursor-pointer"
               >
                 +5 Seconds
               </button>
               <button
                 onClick={() => handleAdvanceTtlClock(15)}
-                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-mono shadow-xs transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-mono shadow-sm transition-colors cursor-pointer"
               >
                 +15 Seconds
               </button>
               <button
                 onClick={handleResetTtl}
-                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                 title="Reset Clock"
               >
                 <RotateCcw className="w-3.5 h-3.5" />

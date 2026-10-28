@@ -1,16 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { 
-  Network, 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  ChevronRight, 
-  Server, 
-  Database, 
-  Laptop, 
-  CheckCircle2, 
-  ArrowRight, 
-  Clock, 
+import {
+  Network,
+  Play,
+  Pause,
+  RotateCcw,
+  ChevronRight,
+  Server,
+  Database,
+  Laptop,
+  Clock,
   Code
 } from 'lucide-react';
 import { CLIENT_SERVER_PRESETS } from '../../data/basicsModuleData';
@@ -137,7 +135,7 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Visualizer Control Toolbar */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-5 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-5 shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
@@ -161,11 +159,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
                 <button
                   key={preset.id}
                   onClick={() => handlePresetChange(preset.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
-                    selectedPresetId === preset.id
-                      ? 'bg-purple-600 text-white shadow-xs'
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${selectedPresetId === preset.id
+                      ? 'bg-purple-600 text-white shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
+                    }`}
                 >
                   {preset.name.split(' ')[1]} ({preset.method})
                 </button>
@@ -225,11 +222,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
                 <button
                   key={spd}
                   onClick={() => setPlaybackSpeed(spd)}
-                  className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${
-                    playbackSpeed === spd
+                  className={`px-2 py-1 rounded-lg font-bold transition-all cursor-pointer ${playbackSpeed === spd
                       ? 'bg-purple-600 text-white'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
+                    }`}
                 >
                   {spd}x
                 </button>
@@ -239,11 +235,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
             {/* Request Details Inspector Toggle */}
             <button
               onClick={() => setShowPayloadInspector(!showPayloadInspector)}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                showPayloadInspector
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${showPayloadInspector
                   ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-400 text-purple-700 dark:text-purple-300'
                   : 'bg-white dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-purple-300'
-              }`}
+                }`}
             >
               <Code className="w-3.5 h-3.5 text-purple-500" />
               <span>Inspector Panel</span>
@@ -253,7 +248,7 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* Main Animated Topology Stage */}
-      <div className="rounded-3xl bg-linear-to-b from-slate-900 via-slate-950 to-[#0B101D] border border-slate-800 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden">
+      <div className="rounded-3xl bg-gradient-to-b from-slate-900 via-slate-950 to-[#0B101D] border border-slate-800 p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden">
         {/* Glow grid background */}
         <div className="absolute inset-0 bg-[radial-gradient(#a855f7_1px,transparent_1px)] [background-size:24px_24px] opacity-15 pointer-events-none" />
 
@@ -283,11 +278,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 items-center relative">
             {/* Component 1: Client Browser / App */}
             <div
-              className={`p-6 rounded-3xl border-2 transition-all duration-300 text-center space-y-3 relative ${
-                currentStage === 1 || currentStage === 6
+              className={`p-6 rounded-3xl border-2 transition-all duration-300 text-center space-y-3 relative ${currentStage === 1 || currentStage === 6
                   ? 'bg-purple-950/60 border-purple-400 shadow-xl shadow-purple-500/20 ring-4 ring-purple-500/20 scale-105'
                   : 'bg-slate-900/90 border-slate-800 text-slate-400 opacity-90'
-              }`}
+                }`}
             >
               <div className="w-14 h-14 rounded-2xl bg-purple-600 text-white flex items-center justify-center mx-auto shadow-md shadow-purple-600/30">
                 <Laptop className="w-7 h-7" />
@@ -318,10 +312,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
             <div className="hidden md:flex flex-col items-center justify-center absolute left-[28%] w-[11%] z-20">
               <div className="w-full h-1 bg-slate-800 relative rounded-full overflow-hidden">
                 {currentStage === 1 && (
-                  <div className="w-6 h-full bg-linear-to-r from-transparent via-purple-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-purple-400" />
+                  <div className="w-6 h-full bg-gradient-to-r from-transparent via-purple-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-purple-400" />
                 )}
                 {currentStage === 5 && (
-                  <div className="w-6 h-full bg-linear-to-l from-transparent via-emerald-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-emerald-400" />
+                  <div className="w-6 h-full bg-gradient-to-l from-transparent via-emerald-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-emerald-400" />
                 )}
               </div>
               <span className="text-[10px] font-mono text-slate-400 mt-1">
@@ -331,11 +325,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
 
             {/* Component 2: Application Server */}
             <div
-              className={`p-6 rounded-3xl border-2 transition-all duration-300 text-center space-y-3 relative ${
-                currentStage === 2 || currentStage === 4 || currentStage === 5
+              className={`p-6 rounded-3xl border-2 transition-all duration-300 text-center space-y-3 relative ${currentStage === 2 || currentStage === 4 || currentStage === 5
                   ? 'bg-indigo-950/60 border-indigo-400 shadow-xl shadow-indigo-500/20 ring-4 ring-indigo-500/20 scale-105'
                   : 'bg-slate-900/90 border-slate-800 text-slate-400 opacity-90'
-              }`}
+                }`}
             >
               <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center mx-auto shadow-md shadow-indigo-600/30">
                 <Server className="w-7 h-7" />
@@ -352,7 +345,7 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
 
               {currentStage === 2 && (
                 <div className="text-[11px] font-mono font-bold text-indigo-300 animate-pulse">
-                  ⚙ Validating JWT & Routing
+                  ⚙ Validating JWT &amp; Routing
                 </div>
               )}
               {currentStage === 5 && (
@@ -366,10 +359,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
             <div className="hidden md:flex flex-col items-center justify-center absolute left-[62%] w-[11%] z-20">
               <div className="w-full h-1 bg-slate-800 relative rounded-full overflow-hidden">
                 {currentStage === 3 && (
-                  <div className="w-6 h-full bg-linear-to-r from-transparent via-amber-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-amber-400" />
+                  <div className="w-6 h-full bg-gradient-to-r from-transparent via-amber-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-amber-400" />
                 )}
                 {currentStage === 4 && (
-                  <div className="w-6 h-full bg-linear-to-l from-transparent via-emerald-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-emerald-400" />
+                  <div className="w-6 h-full bg-gradient-to-l from-transparent via-emerald-400 to-white rounded-full animate-[ping_1.5s_infinite] shadow-lg shadow-emerald-400" />
                 )}
               </div>
               <span className="text-[10px] font-mono text-slate-400 mt-1">
@@ -379,11 +372,10 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
 
             {/* Component 3: Database Engine */}
             <div
-              className={`p-6 rounded-3xl border-2 transition-all duration-300 text-center space-y-3 relative ${
-                currentStage === 3 || currentStage === 4
+              className={`p-6 rounded-3xl border-2 transition-all duration-300 text-center space-y-3 relative ${currentStage === 3 || currentStage === 4
                   ? 'bg-amber-950/60 border-amber-400 shadow-xl shadow-amber-500/20 ring-4 ring-amber-500/20 scale-105'
                   : 'bg-slate-900/90 border-slate-800 text-slate-400 opacity-90'
-              }`}
+                }`}
             >
               <div className="w-14 h-14 rounded-2xl bg-amber-600 text-white flex items-center justify-center mx-auto shadow-md shadow-amber-600/30">
                 <Database className="w-7 h-7" />
@@ -444,44 +436,40 @@ export function ClientServerVisualizerSection({ onCompleteStep, isCompleted }) {
             <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 rounded-xl">
               <button
                 onClick={() => setActiveInspectionTab('summary')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  activeInspectionTab === 'summary'
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${activeInspectionTab === 'summary'
                     ? 'bg-purple-600 text-white'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                  }`}
               >
-                Summary & Latency
+                Summary &amp; Latency
               </button>
 
               <button
                 onClick={() => setActiveInspectionTab('request')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  activeInspectionTab === 'request'
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${activeInspectionTab === 'request'
                     ? 'bg-purple-600 text-white'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                  }`}
               >
                 HTTP Request
               </button>
 
               <button
                 onClick={() => setActiveInspectionTab('database')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  activeInspectionTab === 'database'
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${activeInspectionTab === 'database'
                     ? 'bg-purple-600 text-white'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                  }`}
               >
-                SQL & DB I/O
+                SQL &amp; DB I/O
               </button>
 
               <button
                 onClick={() => setActiveInspectionTab('response')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  activeInspectionTab === 'response'
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${activeInspectionTab === 'response'
                     ? 'bg-purple-600 text-white'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                }`}
+                  }`}
               >
                 HTTP Response
               </button>

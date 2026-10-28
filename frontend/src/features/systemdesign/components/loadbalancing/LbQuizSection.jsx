@@ -43,7 +43,7 @@ export default function LbQuizSection() {
   const allAnswered = LB_QUIZ_QUESTIONS.every(q => selectedAnswers[q.id] !== undefined);
 
   return (
-    <div className="space-y-8">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* Section Header */}
       <div className="bg-white dark:bg-[#111827] rounded-2xl p-6 sm:p-8 border border-slate-200 dark:border-[#1E2638] shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -122,7 +122,7 @@ export default function LbQuizSection() {
                         <button
                           key={optIdx}
                           onClick={() => handleSelectOption(q.id, optIdx)}
-                          className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm flex items-center justify-between transition-all ${optionStyle}`}
+                          className={`w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm flex items-center justify-between transition-all cursor-pointer ${optionStyle}`}
                         >
                           <div className="flex items-center gap-3">
                             <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-[10px] shrink-0">
@@ -177,7 +177,7 @@ export default function LbQuizSection() {
           {submitted ? (
             <button
               onClick={handleReset}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Retake Quiz</span>
@@ -186,7 +186,7 @@ export default function LbQuizSection() {
             <button
               onClick={() => setSubmitted(true)}
               disabled={!allAnswered}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-purple-600 text-white hover:bg-purple-700 shadow-md shadow-purple-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-purple-600 text-white hover:bg-purple-700 shadow-md shadow-purple-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               <span>Submit Assessment</span>
               <ArrowRight className="w-4 h-4" />
@@ -214,7 +214,7 @@ export default function LbQuizSection() {
 
           <div className="bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10 space-y-1">
             <p className="font-bold text-white flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-300" /> Health Probes & Failover
+              <ShieldCheck className="w-4 h-4 text-emerald-300" /> Health Probes &amp; Failover
             </p>
             <p className="text-purple-200 text-xs">
               Health checks must use a 2-3 strike threshold to avoid route thrashing. Pair load balancers with <strong>VRRP (Keepalived)</strong> or <strong>DNS Anycast</strong> to eliminate single points of failure.

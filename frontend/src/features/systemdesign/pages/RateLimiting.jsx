@@ -42,7 +42,7 @@ export function RateLimiting({ theme, toggleTheme }) {
       <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
-            <Link to="/systemdesign" className="flex items-center gap-2 group">
+            <Link to="/systemdesign" className="flex items-center gap-2 group cursor-pointer">
               <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-md shadow-purple-600/20">
                 <Sliders className="w-4.5 h-4.5" />
               </div>
@@ -54,11 +54,11 @@ export function RateLimiting({ theme, toggleTheme }) {
             <span className="text-slate-300 dark:text-slate-700">/</span>
 
             <nav className="flex items-center gap-1.5 text-xs font-mono text-slate-500 dark:text-slate-400">
-              <Link to="/dashboard" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors">
+              <Link to="/dashboard" className="hover:text-slate-900 dark:hover:text-slate-200 transition-colors cursor-pointer">
                 Dashboard
               </Link>
               <span>/</span>
-              <Link to="/systemdesign" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+              <Link to="/systemdesign" className="hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">
                 System Design
               </Link>
               <span>/</span>
@@ -81,7 +81,7 @@ export function RateLimiting({ theme, toggleTheme }) {
 
             <Link
               to="/systemdesign"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-700 dark:text-slate-300 text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to SD Home</span>
@@ -89,7 +89,7 @@ export function RateLimiting({ theme, toggleTheme }) {
 
             <Link
               to="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
               <span>Dashboard</span>

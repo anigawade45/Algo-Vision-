@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Server,
@@ -63,7 +63,7 @@ export default function SystemDesignBasics({ theme, toggleTheme }) {
               </Link>
               <span>/</span>
               <span className="text-purple-600 dark:text-purple-400 font-semibold truncate max-w-[150px] sm:max-w-none">
-                Basics & Client-Server
+                Basics &amp; Client-Server
               </span>
             </nav>
           </div>
@@ -75,7 +75,7 @@ export default function SystemDesignBasics({ theme, toggleTheme }) {
                 className="p-2 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 dark:bg-[#070A12] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
               </button>
             )}
 
@@ -89,7 +89,7 @@ export default function SystemDesignBasics({ theme, toggleTheme }) {
 
             <Link
               to="/dashboard"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition-colors"
             >
               <LayoutDashboard className="w-3.5 h-3.5" />
               <span>Dashboard</span>

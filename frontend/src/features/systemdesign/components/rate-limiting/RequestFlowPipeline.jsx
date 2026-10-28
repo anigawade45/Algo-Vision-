@@ -4,11 +4,8 @@ import {
   Send,
   Zap,
   RotateCcw,
-  CheckCircle2,
-  XCircle,
   Globe,
   Sparkles,
-  ArrowRight,
   Server,
   Layers
 } from 'lucide-react';
@@ -104,9 +101,9 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
   const currentClientData = clientQuotas[selectedClient];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -136,7 +133,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Client & Endpoint Selection Bar */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
           {/* Client Identity */}
           <div className="md:col-span-5 space-y-1.5">
@@ -148,7 +145,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
                   onClick={() => setSelectedClient(key)}
                   className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
                     selectedClient === key
-                      ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 text-purple-900 dark:text-purple-100 font-bold shadow-xs'
+                      ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 text-purple-900 dark:text-purple-100 font-bold shadow-sm'
                       : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
                   }`}
                 >
@@ -180,7 +177,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
             <button
               onClick={handleSendPipelineRequest}
               disabled={pipelineState.status === 'in_flight'}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all disabled:opacity-50 cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
               {pipelineState.status === 'in_flight' ? 'Evaluating Pipeline...' : 'Dispatch Request'}
@@ -192,7 +189,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
       {/* 3. Visual Pipeline Flow: Client ➔ Gateway ➔ Redis ➔ Backend */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Stage 1: Client Browser */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2 text-xs">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2 text-xs">
           <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <Globe className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             1. Client Application
@@ -206,7 +203,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Stage 2: Gateway Rate Limiter Middleware */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border-2 border-purple-400/60 shadow-xs space-y-2 text-xs">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border-2 border-purple-400/60 shadow-sm space-y-2 text-xs">
           <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <Zap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             2. API Gateway Limiter
@@ -220,7 +217,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Stage 3: Redis Distributed Counter */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2 text-xs">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2 text-xs">
           <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <Server className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             3. Redis Memory Store
@@ -234,7 +231,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Stage 4: Backend Microservice */}
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2 text-xs">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2 text-xs">
           <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
             4. Backend Service
@@ -250,7 +247,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
 
       {/* 4. HTTP Headers Inspector Card */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -278,7 +275,7 @@ export function RequestFlowPipeline({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Live Pipeline Request Log */}
-        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-3">
+        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
             <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Activity className="w-4 h-4 text-purple-600 dark:text-purple-400" />

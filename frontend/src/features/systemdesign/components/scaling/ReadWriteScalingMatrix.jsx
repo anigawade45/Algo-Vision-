@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   Sparkles,
   HelpCircle,
-  ArrowRight,
   Database
 } from 'lucide-react';
 
@@ -133,9 +132,9 @@ export function ReadWriteScalingMatrix({ onCompleteStep, isCompleted }) {
   const currentScenario = scenarios.find((s) => s.id === activeScenario) || scenarios[0];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -169,7 +168,7 @@ export function ReadWriteScalingMatrix({ onCompleteStep, isCompleted }) {
               onClick={() => setSelectedTechnique(tech.id)}
               className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
                 isSelected
-                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 shadow-xs ring-1 ring-purple-500/20'
+                  ? 'bg-purple-50 dark:bg-purple-950/60 border-purple-500 shadow-sm ring-1 ring-purple-500/20'
                   : 'bg-white dark:bg-[#111827] border-slate-200 dark:border-[#1E2638] hover:bg-slate-50 dark:hover:bg-[#131B2E]'
               }`}
             >
@@ -193,7 +192,7 @@ export function ReadWriteScalingMatrix({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 3. Detailed Technique Deep-Dive Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-6">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400">
@@ -267,7 +266,7 @@ export function ReadWriteScalingMatrix({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 4. Real-World Architecture Scenarios */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 shadow-xs space-y-5">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 shadow-sm space-y-5">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
           <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -284,7 +283,7 @@ export function ReadWriteScalingMatrix({ onCompleteStep, isCompleted }) {
               onClick={() => setActiveScenario(sc.id)}
               className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
                 activeScenario === sc.id
-                  ? 'bg-purple-600 text-white border-purple-600 shadow-xs'
+                  ? 'bg-purple-600 text-white border-purple-600 shadow-sm'
                   : 'bg-slate-50 dark:bg-[#0B101D] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
               }`}
             >

@@ -13,7 +13,6 @@ import {
   XCircle,
   Clock,
   HardDrive,
-  ArrowRight,
   Database
 } from 'lucide-react';
 import { INITIAL_INDEXING_RECORDS } from '../../data/dbScalingData';
@@ -154,9 +153,9 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
   const writeCostMultiplier = (1 + activeIndexCount * 1.2).toFixed(1);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -177,7 +176,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
           </div>
 
           {/* Quick Stats Pill */}
-          <div className="flex items-center gap-3 bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 self-start md:self-auto shrink-0 shadow-xs">
+          <div className="flex items-center gap-3 bg-slate-50 dark:bg-[#0B101D] border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 self-start md:self-auto shrink-0 shadow-sm">
             <HardDrive className="w-8 h-8 text-purple-600 dark:text-purple-400 shrink-0" />
             <div className="text-xs">
               <div className="text-slate-500 dark:text-slate-400">Active Indexes</div>
@@ -191,7 +190,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
       </div>
 
       {/* 2. Index Configuration & Query Controls */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-5">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-5">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -288,7 +287,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
             <button
               onClick={handleRunSearch}
               disabled={searchStatus === 'scanning'}
-              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-xs disabled:opacity-50 cursor-pointer"
+              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
             >
               <Search className="w-3.5 h-3.5" />
               {searchStatus === 'scanning' ? 'Executing Query...' : 'Execute SELECT Query'}
@@ -384,7 +383,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
       {/* 3. Main Simulation View: 2 Columns (Table Data + Query Execution / B-Tree Inspector) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Table View with Disk Pages */}
-        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs space-y-4">
+        <div className="lg:col-span-7 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Layers className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -480,7 +479,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
           {/* Query Stats Card */}
           {lastQueryStats ? (
             <div
-              className={`rounded-3xl border p-5 shadow-xs animate-in fade-in ${
+              className={`rounded-3xl border p-5 shadow-sm animate-in fade-in ${
                 lastQueryStats.indexed
                   ? 'bg-emerald-50/50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-800'
                   : 'bg-amber-50/50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800'
@@ -551,7 +550,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
               </p>
             </div>
           ) : (
-            <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-xs text-center space-y-2">
+            <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 shadow-sm text-center space-y-2">
               <Sparkles className="w-8 h-8 text-purple-500 mx-auto opacity-80" />
               <h4 className="text-xs font-bold text-slate-900 dark:text-white">Run a Query to Compare</h4>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -561,7 +560,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
           )}
 
           {/* Active B-Tree Index Explorer */}
-          <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-5 shadow-xs space-y-3">
+          <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-5 shadow-sm space-y-3">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
               <div className="flex items-center gap-2">
                 <Cpu className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -618,7 +617,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
 
       {/* 4. Architectural Takeaways */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
             When to Index
@@ -628,7 +627,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-amber-600 dark:text-amber-400">
             <XCircle className="w-4 h-4" />
             The Write Overhead Penalty
@@ -638,7 +637,7 @@ export function DbIndexingSimulator({ onCompleteStep, isCompleted }) {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-purple-600 dark:text-purple-400">
             <Layers className="w-4 h-4" />
             Index Selectivity

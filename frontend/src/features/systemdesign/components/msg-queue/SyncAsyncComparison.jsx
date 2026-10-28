@@ -11,9 +11,7 @@ import {
   Mail,
   CreditCard,
   Package,
-  Layers,
-  ArrowRight,
-  ShieldCheck
+  Layers
 } from 'lucide-react';
 
 export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
@@ -205,9 +203,9 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="w-full max-w-full min-w-0 space-y-8 animate-in fade-in duration-300">
       {/* 1. Section Header */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 font-bold">
@@ -254,7 +252,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
       {/* 2. Side-by-Side Simulation Comparison */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Synchronous Blocking Pipeline */}
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border-2 border-rose-200 dark:border-rose-950/60 p-6 shadow-xs flex flex-col justify-between space-y-6">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border-2 border-rose-200 dark:border-rose-950/60 p-6 shadow-sm flex flex-col justify-between space-y-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
@@ -338,7 +336,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
           <button
             onClick={handleRunSync}
             disabled={syncState.status === 'running'}
-            className="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+            className="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50 cursor-pointer"
           >
             <Play className="w-4 h-4" />
             <span>{syncState.status === 'running' ? 'Executing Synchronous Chain...' : 'Simulate Synchronous Checkout'}</span>
@@ -346,7 +344,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
         </div>
 
         {/* Right: Asynchronous Message Queue Pipeline */}
-        <div className="rounded-3xl bg-white dark:bg-[#111827] border-2 border-purple-200 dark:border-purple-950/60 p-6 shadow-xs flex flex-col justify-between space-y-6">
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border-2 border-purple-200 dark:border-purple-950/60 p-6 shadow-sm flex flex-col justify-between space-y-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2">
@@ -423,7 +421,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
           <button
             onClick={handleRunAsync}
             disabled={asyncState.status === 'running'}
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all disabled:opacity-50 cursor-pointer"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs py-3 rounded-2xl flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50 cursor-pointer"
           >
             <Zap className="w-4 h-4" />
             <span>{asyncState.status === 'running' ? 'Executing Asynchronous Queue...' : 'Simulate Async Queue Checkout'}</span>
@@ -433,7 +431,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
 
       {/* 3. Architectural Key Takeaways */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <CheckCircle2 className="w-4 h-4" /> Temporal Decoupling
           </div>
@@ -442,7 +440,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-purple-600 dark:text-purple-400">
             <Zap className="w-4 h-4" /> Traffic Spike Smoothing
           </div>
@@ -451,7 +449,7 @@ export function SyncAsyncComparison({ onCompleteStep, isCompleted }) {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-xs space-y-2">
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] shadow-sm space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold text-rose-600 dark:text-rose-400">
             <AlertTriangle className="w-4 h-4" /> Failure Isolation
           </div>

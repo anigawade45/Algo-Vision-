@@ -1,12 +1,11 @@
 import { useState, useMemo } from 'react';
-import { 
-  Gauge, 
-  Zap, 
-  AlertTriangle, 
-  CheckCircle2, 
-  ArrowRight, 
-  Sparkles, 
-  Sliders, 
+import {
+  Gauge,
+  Zap,
+  AlertTriangle,
+  CheckCircle2,
+  Sparkles,
+  Sliders,
   Info
 } from 'lucide-react';
 
@@ -106,7 +105,7 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Header Card */}
-      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-xs">
+      <div className="rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
@@ -114,7 +113,7 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
-                Quality Attributes & Scalability Simulator
+                Quality Attributes &amp; Scalability Simulator
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                 Stress test traffic loads against compute capacity, caching layers, and database replicas in real-time.
@@ -165,11 +164,11 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
       {/* Main Grid: Control Sliders (Left) & Real-Time Telemetry Dashboard (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Interactive Tuning Sliders */}
-        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-xs">
+        <div className="lg:col-span-6 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
             <Sliders className="w-5 h-5 text-purple-500" />
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              System Capacity & Traffic Controls
+              System Capacity &amp; Traffic Controls
             </h3>
           </div>
 
@@ -262,11 +261,10 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
               </div>
               <button
                 onClick={() => setCachingEnabled(!cachingEnabled)}
-                className={`px-3 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-                  cachingEnabled
-                    ? 'bg-emerald-600 text-white shadow-xs'
+                className={`px-3 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${cachingEnabled
+                    ? 'bg-emerald-600 text-white shadow-sm'
                     : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                }`}
+                  }`}
               >
                 {cachingEnabled ? 'ENABLED' : 'DISABLED'}
               </button>
@@ -298,7 +296,7 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
         {/* Right Column: Real-Time Telemetry Dashboard */}
         <div className="lg:col-span-6 space-y-4">
           {/* Health Status Alert Banner */}
-          <div className={`p-5 rounded-3xl border flex items-center justify-between shadow-xs ${metrics.healthColor}`}>
+          <div className={`p-5 rounded-3xl border flex items-center justify-between shadow-sm ${metrics.healthColor}`}>
             <div className="flex items-center gap-3">
               {metrics.healthStatus === 'healthy' ? (
                 <CheckCircle2 className="w-6 h-6 shrink-0" />
@@ -311,8 +309,8 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
                   {metrics.healthStatus === 'healthy'
                     ? 'Capacity adequately provisions incoming traffic with minimal queueing.'
                     : metrics.healthStatus === 'warning'
-                    ? 'Server/DB CPU utilization is high. Latency is beginning to climb.'
-                    : 'System is dropping requests! Connection queues saturated.'}
+                      ? 'Server/DB CPU utilization is high. Latency is beginning to climb.'
+                      : 'System is dropping requests! Connection queues saturated.'}
                 </div>
               </div>
             </div>
@@ -321,12 +319,11 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
           {/* 4 Core Telemetry Cards */}
           <div className="grid grid-cols-2 gap-4">
             {/* Metric 1: Average Latency */}
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-xs">
+            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-sm">
               <span className="text-[11px] font-mono text-slate-400 uppercase">Avg Response Time</span>
               <div className="flex items-baseline gap-1">
-                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${
-                  metrics.calculatedLatency < 80 ? 'text-emerald-500' : metrics.calculatedLatency < 250 ? 'text-amber-500' : 'text-rose-500'
-                }`}>
+                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${metrics.calculatedLatency < 80 ? 'text-emerald-500' : metrics.calculatedLatency < 250 ? 'text-amber-500' : 'text-rose-500'
+                  }`}>
                   {metrics.calculatedLatency}
                 </span>
                 <span className="text-xs font-mono text-slate-500">ms</span>
@@ -337,12 +334,11 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
             </div>
 
             {/* Metric 2: Availability % */}
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-xs">
+            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-sm">
               <span className="text-[11px] font-mono text-slate-400 uppercase">System Availability</span>
               <div className="flex items-baseline gap-1">
-                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${
-                  Number(metrics.availability) > 99 ? 'text-emerald-500' : 'text-rose-500'
-                }`}>
+                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${Number(metrics.availability) > 99 ? 'text-emerald-500' : 'text-rose-500'
+                  }`}>
                   {metrics.availability}%
                 </span>
               </div>
@@ -352,12 +348,11 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
             </div>
 
             {/* Metric 3: Server CPU Load */}
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-xs">
+            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-sm">
               <span className="text-[11px] font-mono text-slate-400 uppercase">App Server Load</span>
               <div className="flex items-baseline gap-1">
-                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${
-                  metrics.serverUtilization <= 80 ? 'text-indigo-500' : 'text-rose-500'
-                }`}>
+                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${metrics.serverUtilization <= 80 ? 'text-indigo-500' : 'text-rose-500'
+                  }`}>
                   {metrics.serverUtilization}%
                 </span>
               </div>
@@ -370,12 +365,11 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
             </div>
 
             {/* Metric 4: Effective DB Load */}
-            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-xs">
+            <div className="p-5 rounded-3xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-sm">
               <span className="text-[11px] font-mono text-slate-400 uppercase">Database Disk Load</span>
               <div className="flex items-baseline gap-1">
-                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${
-                  metrics.dbUtilization <= 80 ? 'text-amber-500' : 'text-rose-500'
-                }`}>
+                <span className={`text-2xl sm:text-3xl font-extrabold font-mono ${metrics.dbUtilization <= 80 ? 'text-amber-500' : 'text-rose-500'
+                  }`}>
                   {metrics.dbUtilization}%
                 </span>
               </div>
@@ -389,7 +383,7 @@ export function QualityAttributesSection({ onCompleteStep, isCompleted }) {
           </div>
 
           {/* Architectural Tuning Recommendations */}
-          <div className="p-5 rounded-3xl bg-linear-to-br from-white via-purple-50/20 to-indigo-50/20 dark:from-[#111827] dark:via-[#111827] dark:to-purple-950/20 border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-xs">
+          <div className="p-5 rounded-3xl bg-gradient-to-br from-white via-purple-50/20 to-indigo-50/20 dark:from-[#111827] dark:via-[#111827] dark:to-purple-950/20 border border-slate-200 dark:border-[#1E2638] space-y-2 shadow-sm">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-purple-600 dark:text-purple-400 uppercase">
               <Sparkles className="w-4 h-4" />
               <span>Architectural Diagnostic:</span>
