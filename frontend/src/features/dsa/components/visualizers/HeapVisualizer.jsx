@@ -8,38 +8,57 @@ import { PointerLabel } from './primitives/PointerLabel';
  * Used for Heap benchmark problems like Kth Largest Element in an Array (Min-Heap Strategy).
  * Visualizes hierarchical Min-Heap tree, underlying array buffer, input stream, and popped root history.
  */
-export function HeapVisualizer({ problem, step }) {
-  if (!step || !step.state) {
-    return (
-      <div className="p-8 text-center text-slate-400 font-mono text-sm">
-        Heap data unavailable for this step.
-      </div>
-    );
-  }
+export function HeapVisualizer({ problem, step, state: passedState, highlights: passedHighlights }) {
+  const state = passedState || step?.state || problem?.initialState?.primitives || problem?.initialState || {};
+  const highlights = passedHighlights || step?.highlights || {};
+  const description = step?.description;
 
-  const { state = {}, highlights = {}, description } = step;
-  const nums = Array.isArray(state.nums) ? state.nums : (problem?.input?.nums ?? []);
-  const k = state.k ?? problem?.input?.k ?? 2;
-  const currentIndex = state.currentIndex ?? highlights.index ?? null;
-  const currentVal = state.currentVal ?? null;
-  const minHeap = Array.isArray(state.minHeap) ? state.minHeap : (highlights.heap || []);
-  const poppedVal = state.poppedVal ?? highlights.popped ?? null;
-  const resultVal = state.result ?? null;
+  const rawNums = state.nums?.values || state.nums || problem?.input?.nums || problem?.input?.array || problem?.inputData?.array || [3, 2, 1, 5, 6, 4];
+  const nums = Array.isArray(rawNums) ? rawNums : [];
+  const k = state.k?.value ?? state.k ?? problem?.input?.k ?? problem?.inputData?.k ?? 2;
+  const currentIndex = state.currentIndex ?? state.index ?? highlights.index ?? highlights.activeIndex ?? null;
+  const currentVal = state.currentVal ?? (currentIndex !== null && nums[currentIndex] !== undefined ? nums[currentIndex] : null);
+  const rawHeap = state.minHeap?.values || state.minHeap || state.heap || highlights.heap || [];
+  const minHeap = Array.isArray(rawHeap) ? rawHeap : [];
+  const poppedVal = state.poppedVal ?? state.poppedRoot ?? highlights.popped ?? null;
+
+  const isCompleted =
+    step?.operation === 'complete' ||
+    step?.operation === 'FINAL_RESULT' ||
+    step?.operation === 'RETURN' ||
+    Boolean(state?.isComplete) ||
+    (state?.result !== null && state?.result !== undefined && currentIndex === null && minHeap.length > 0 && (step?.stepNumber ?? 0) > 1);
+
+  const resultVal = isCompleted ? (state.result ?? (minHeap.length > 0 ? minHeap[0] : null)) : null;
   const topVal = highlights.top ?? (minHeap.length > 0 ? minHeap[0] : null);
 
-  // Derive 0-indexed heap tree node coordinates for up to 7 elements
+  const getOrdinal = (n) => {
+    const s = ['th', 'st', 'nd', 'rd'];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+
+  // Derive 0-indexed heap tree node coordinates for up to 15 elements
   // Heap layout mapping by index:
   // Root = 0
   // Left = 1, Right = 2
-  // Leaves = 3, 4, 5, 6
+  // Leaves = 3, 4, 5, 6...
   const heapNodeCoords = [
-    { x: 50, y: 15 }, // Index 0 (Root)
-    { x: 28, y: 50 }, // Index 1
-    { x: 72, y: 50 }, // Index 2
-    { x: 16, y: 82 }, // Index 3
-    { x: 40, y: 82 }, // Index 4
-    { x: 60, y: 82 }, // Index 5
-    { x: 84, y: 82 }, // Index 6
+    { x: 50, y: 14 }, // Index 0 (Root)
+    { x: 26, y: 44 }, // Index 1
+    { x: 74, y: 44 }, // Index 2
+    { x: 14, y: 72 }, // Index 3
+    { x: 38, y: 72 }, // Index 4
+    { x: 62, y: 72 }, // Index 5
+    { x: 86, y: 72 }, // Index 6
+    { x: 8, y: 92 },  // Index 7
+    { x: 20, y: 92 }, // Index 8
+    { x: 32, y: 92 }, // Index 9
+    { x: 44, y: 92 }, // Index 10
+    { x: 56, y: 92 }, // Index 11
+    { x: 68, y: 92 }, // Index 12
+    { x: 80, y: 92 }, // Index 13
+    { x: 92, y: 92 }, // Index 14
   ];
 
   // Helper to compute parent-child edges for current heap size
@@ -104,7 +123,7 @@ export function HeapVisualizer({ problem, step }) {
             {resultVal !== null ? resultVal : '—'}
           </div>
           <span className="text-[10px] font-mono text-slate-400">
-            {resultVal !== null ? `${k}nd Largest Found!` : 'In progress'}
+            {resultVal !== null ? `${getOrdinal(k)} Largest Found!` : isCompleted ? 'Completed' : 'In progress'}
           </span>
         </div>
       </div>

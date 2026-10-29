@@ -154,6 +154,7 @@ export default function ProblemWorkspace({
   const initializeWorkspaceFlow = useCallback(async (isMountedRef = { current: true }) => {
     setIsLoadingProblem(true);
     setProblemError(null);
+    setActiveProblem(null);
 
     // 1. Fetch Real Problem Data
     try {
@@ -249,6 +250,7 @@ export default function ProblemWorkspace({
     }
   };
   const handleProblemChange = (newId) => {
+    setActiveProblem(null);
     setSelectedProblemId(newId);
     setCurrentStageId('problem');
     if (id) {
@@ -420,7 +422,29 @@ export default function ProblemWorkspace({
 
           {/* Active Problem Summary Card & Selector inside Sidebar */}
           {isSidebarExpanded && (
-            <div className="p-4 border-b border-slate-100 dark:border-[#162032] space-y-2.5">
+            <div className="p-4 border-b border-slate-100 dark:border-[#162032] space-y-3">
+              <div className="space-y-1">
+                <label
+                  htmlFor="desktop-problem-selector"
+                  className="block text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400"
+                >
+                  ACTIVE PROBLEM
+                </label>
+                <select
+                  id="desktop-problem-selector"
+                  aria-label="Select DSA Problem"
+                  value={targetProblemId}
+                  onChange={(e) => handleProblemChange(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-xl px-2.5 py-2 text-slate-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 dark:hover:border-blue-600 transition-colors"
+                >
+                  {problemOptions.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
                   <span>Progress</span>

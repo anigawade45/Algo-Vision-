@@ -2460,40 +2460,129 @@ const resolveProblemAndCheckAccess = async (problemIdOrSlug, userOrId) => {
       };
     } else if (
       normalizedSlug === 'binary-tree-inorder-traversal' ||
+      normalizedSlug === 'binary-tree-inorder' ||
       normalizedSlug === 'inorder-traversal' ||
       normalizedSlug === '94'
     ) {
       problem = {
-        _id: 'builtin-binary-tree-inorder-traversal',
-        problemId: 'binary-tree-inorder-traversal',
+        _id: 'builtin-binary-tree-inorder',
+        problemId: 'binary-tree-inorder',
         title: 'Binary Tree Inorder Traversal',
-        category: 'Tree',
+        category: 'Trees',
         isPublished: true,
         defaultApproachId: 'inorderDfs',
         testCases: [
           {
             id: 1,
-            inputRaw: 'root = [1,null,2,3]',
-            outputRaw: '[1,3,2]',
+            inputRaw: 'root = [1, null, 2, 3]',
+            outputRaw: '[1, 3, 2]',
             inputStructured: { root: [1, null, 2, 3] },
+            outputStructured: [1, 3, 2],
           },
           {
             id: 2,
-            inputRaw: 'root = [1,2,3,4,5,null,8,null,null,6,7,9]',
-            outputRaw: '[4,2,6,5,7,1,3,9,8]',
-            inputStructured: { root: [1, 2, 3, 4, 5, null, 8, null, null, 6, 7, 9] },
+            inputRaw: 'root = [1, 2, 3]',
+            outputRaw: '[2, 1, 3]',
+            inputStructured: { root: [1, 2, 3] },
+            outputStructured: [2, 1, 3],
+          },
+        ],
+      };
+    } else if (
+      normalizedSlug === 'kth-largest-element' ||
+      normalizedSlug === 'kth-largest' ||
+      normalizedSlug === 'kth-largest-element-in-an-array' ||
+      normalizedSlug === '215'
+    ) {
+      problem = {
+        _id: 'builtin-kth-largest-element',
+        problemId: 'kth-largest-element',
+        title: 'Kth Largest Element in an Array',
+        category: 'Heap',
+        isPublished: true,
+        defaultApproachId: 'minHeap',
+        testCases: [
+          {
+            id: 1,
+            inputRaw: 'nums = [3, 2, 1, 5, 6, 4], k = 2',
+            outputRaw: '5',
+            inputStructured: { nums: [3, 2, 1, 5, 6, 4], k: 2 },
+            outputStructured: 5,
           },
           {
-            id: 3,
-            inputRaw: 'root = [1]',
-            outputRaw: '[1]',
-            inputStructured: { root: [1] },
+            id: 2,
+            inputRaw: 'nums = [3, 2, 3, 1, 2, 4, 5, 5, 6], k = 4',
+            outputRaw: '4',
+            inputStructured: { nums: [3, 2, 3, 1, 2, 4, 5, 5, 6], k: 4 },
+            outputStructured: 4,
+          },
+        ],
+      };
+    } else if (
+      normalizedSlug === 'sliding-window-maximum' ||
+      normalizedSlug === 'sliding-window-max' ||
+      normalizedSlug === '239'
+    ) {
+      problem = {
+        _id: 'builtin-sliding-window-maximum',
+        problemId: 'sliding-window-maximum',
+        title: 'Sliding Window Maximum',
+        category: 'Array',
+        isPublished: true,
+        defaultApproachId: 'monotonicDeque',
+        testCases: [
+          {
+            id: 1,
+            inputRaw: 'nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3',
+            outputRaw: '[3, 3, 5, 5, 6, 7]',
+            inputStructured: { nums: [1, 3, -1, -3, 5, 3, 6, 7], k: 3 },
+            outputStructured: [3, 3, 5, 5, 6, 7],
           },
           {
-            id: 4,
-            inputRaw: 'root = []',
-            outputRaw: '[]',
-            inputStructured: { root: [] },
+            id: 2,
+            inputRaw: 'nums = [9, 11, 8, 5, 7, 10], k = 3',
+            outputRaw: '[11, 11, 8, 10]',
+            inputStructured: { nums: [9, 11, 8, 5, 7, 10], k: 3 },
+            outputStructured: [11, 11, 8, 10],
+          },
+        ],
+      };
+    } else if (
+      normalizedSlug === 'product-of-array-except-self' ||
+      normalizedSlug === 'product-except-self' ||
+      normalizedSlug === '238'
+    ) {
+      problem = {
+        _id: 'builtin-product-except-self',
+        problemId: 'product-except-self',
+        title: 'Product of Array Except Self',
+        category: 'Array / Prefix Sum',
+        isPublished: true,
+        defaultApproachId: 'prefixSuffix',
+        testCases: [
+          {
+            id: 1,
+            inputRaw: 'nums = [1, 2, 3, 4]',
+            outputRaw: '[24, 12, 8, 6]',
+            inputStructured: { nums: [1, 2, 3, 4] },
+            outputStructured: [24, 12, 8, 6],
+            interaction: {
+              type: 'prefix_suffix',
+              array: [1, 2, 3, 4],
+              expectedResult: [24, 12, 8, 6],
+            },
+          },
+          {
+            id: 2,
+            inputRaw: 'nums = [-1, 1, 0, -3, 3]',
+            outputRaw: '[0, 0, 9, 0, 0]',
+            inputStructured: { nums: [-1, 1, 0, -3, 3] },
+            outputStructured: [0, 0, 9, 0, 0],
+            interaction: {
+              type: 'prefix_suffix',
+              array: [-1, 1, 0, -3, 3],
+              expectedResult: [0, 0, 9, 0, 0],
+            },
           },
         ],
       };
@@ -2521,6 +2610,48 @@ const resolveProblemAndCheckAccess = async (problemIdOrSlug, userOrId) => {
             inputRaw: 'root = [2,null,3,null,4,null,5,null,6]',
             outputRaw: '5',
             inputStructured: { root: [2, null, 3, null, 4, null, 5, null, 6] },
+          },
+        ],
+      };
+    } else if (
+      normalizedSlug === 'word-search' ||
+      normalizedSlug === '79'
+    ) {
+      problem = {
+        _id: 'builtin-word-search',
+        problemId: 'word-search',
+        title: 'Word Search',
+        category: 'Backtracking',
+        isPublished: true,
+        defaultApproachId: 'backtrackingDfs',
+        testCases: [
+          {
+            id: 1,
+            inputRaw: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"',
+            outputRaw: 'true',
+            inputStructured: {
+              grid: [
+                ['A', 'B', 'C', 'E'],
+                ['S', 'F', 'C', 'S'],
+                ['A', 'D', 'E', 'E'],
+              ],
+              word: 'ABCCED',
+            },
+            outputStructured: true,
+          },
+          {
+            id: 2,
+            inputRaw: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"',
+            outputRaw: 'true',
+            inputStructured: {
+              grid: [
+                ['A', 'B', 'C', 'E'],
+                ['S', 'F', 'C', 'S'],
+                ['A', 'D', 'E', 'E'],
+              ],
+              word: 'SEE',
+            },
+            outputStructured: true,
           },
         ],
       };
@@ -2646,6 +2777,7 @@ const resolveProblemAndCheckAccess = async (problemIdOrSlug, userOrId) => {
 
   if (
     normProblemSlug === 'binary-tree-inorder-traversal' ||
+    normProblemSlug === 'binary-tree-inorder' ||
     normProblemSlug === 'inorder-traversal' ||
     normProblemSlug === '94'
   ) {
@@ -2653,27 +2785,68 @@ const resolveProblemAndCheckAccess = async (problemIdOrSlug, userOrId) => {
       problem.testCases = [
         {
           id: 1,
-          inputRaw: 'root = [1,null,2,3]',
-          outputRaw: '[1,3,2]',
+          inputRaw: 'root = [1, null, 2, 3]',
+          outputRaw: '[1, 3, 2]',
           inputStructured: { root: [1, null, 2, 3] },
+          outputStructured: [1, 3, 2],
         },
         {
           id: 2,
-          inputRaw: 'root = [1,2,3,4,5,null,8,null,null,6,7,9]',
-          outputRaw: '[4,2,6,5,7,1,3,9,8]',
-          inputStructured: { root: [1, 2, 3, 4, 5, null, 8, null, null, 6, 7, 9] },
+          inputRaw: 'root = [1, 2, 3]',
+          outputRaw: '[2, 1, 3]',
+          inputStructured: { root: [1, 2, 3] },
+          outputStructured: [2, 1, 3],
+        },
+      ];
+    }
+  }
+
+  if (
+    normProblemSlug === 'kth-largest-element' ||
+    normProblemSlug === 'kth-largest' ||
+    normProblemSlug === 'kth-largest-element-in-an-array' ||
+    normProblemSlug === '215'
+  ) {
+    if (!Array.isArray(problem.testCases) || problem.testCases.length <= 1) {
+      problem.testCases = [
+        {
+          id: 1,
+          inputRaw: 'nums = [3, 2, 1, 5, 6, 4], k = 2',
+          outputRaw: '5',
+          inputStructured: { nums: [3, 2, 1, 5, 6, 4], k: 2 },
+          outputStructured: 5,
         },
         {
-          id: 3,
-          inputRaw: 'root = [1]',
-          outputRaw: '[1]',
-          inputStructured: { root: [1] },
+          id: 2,
+          inputRaw: 'nums = [3, 2, 3, 1, 2, 4, 5, 5, 6], k = 4',
+          outputRaw: '4',
+          inputStructured: { nums: [3, 2, 3, 1, 2, 4, 5, 5, 6], k: 4 },
+          outputStructured: 4,
+        },
+      ];
+    }
+  }
+
+  if (
+    normProblemSlug === 'sliding-window-maximum' ||
+    normProblemSlug === 'sliding-window-max' ||
+    normProblemSlug === '239'
+  ) {
+    if (!Array.isArray(problem.testCases) || problem.testCases.length <= 1) {
+      problem.testCases = [
+        {
+          id: 1,
+          inputRaw: 'nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3',
+          outputRaw: '[3, 3, 5, 5, 6, 7]',
+          inputStructured: { nums: [1, 3, -1, -3, 5, 3, 6, 7], k: 3 },
+          outputStructured: [3, 3, 5, 5, 6, 7],
         },
         {
-          id: 4,
-          inputRaw: 'root = []',
-          outputRaw: '[]',
-          inputStructured: { root: [] },
+          id: 2,
+          inputRaw: 'nums = [9, 11, 8, 5, 7, 10], k = 3',
+          outputRaw: '[11, 11, 8, 10]',
+          inputStructured: { nums: [9, 11, 8, 5, 7, 10], k: 3 },
+          outputStructured: [11, 11, 8, 10],
         },
       ];
     }
@@ -5867,9 +6040,1572 @@ const traceBinaryTreeInorderAlgorithm = (rawRoot, options = {}) => {
 };
 
 /**
+ * Genuine Algorithmic Execution Tracer for Kth Largest Element in an Array (LeetCode 215)
+ * Min-Heap of size K in O(n log k) time and O(k) extra space.
+ */
+const traceKthLargestAlgorithm = (rawNums, rawK, options = {}) => {
+  const problemId = options.problemId || 'kth-largest-element';
+  const approachId = options.approachId || 'minHeap';
+  const approachName = options.approachName || 'Min-Heap of Size K';
+  const testCaseId = options.testCaseId || 1;
+  const traceId = `exec-${problemId}-tc${testCaseId}-${Date.now()}`;
+
+  const nums = Array.isArray(rawNums)
+    ? rawNums.map((v) => (typeof v === 'number' ? v : Number(v) || 0))
+    : [3, 2, 1, 5, 6, 4];
+  const k = typeof rawK === 'number' && rawK > 0 ? rawK : Number(rawK) || 2;
+
+  const initialPrimitives = {
+    nums: {
+      id: 'nums',
+      type: 'array',
+      label: 'Input Array (nums)',
+      values: [...nums],
+      activeIndex: null,
+      matchedIndices: [],
+      changedIndices: [],
+      pointerLabels: {},
+    },
+    minHeap: {
+      id: 'minHeap',
+      type: 'heap',
+      label: `Min-Heap (Size <= ${k})`,
+      values: [],
+      heapType: 'min',
+    },
+    k: {
+      id: 'k',
+      type: 'variable',
+      name: 'k',
+      value: k,
+      typeLabel: 'number',
+    },
+    currentVal: {
+      id: 'currentVal',
+      type: 'variable',
+      name: 'currentVal',
+      value: null,
+      typeLabel: 'number',
+    },
+    poppedVal: {
+      id: 'poppedVal',
+      type: 'variable',
+      name: 'poppedVal',
+      value: null,
+      typeLabel: 'number',
+    },
+    result: {
+      id: 'result',
+      type: 'variable',
+      name: 'result',
+      value: null,
+      typeLabel: 'number',
+    },
+  };
+
+  const initialState = {
+    schemaVersion: EVENT_SCHEMA_VERSION,
+    problemId,
+    title: options.title || 'Kth Largest Element in an Array',
+    primitives: initialPrimitives,
+    flatState: {
+      nums: [...nums],
+      k,
+      currentIndex: null,
+      currentVal: null,
+      minHeap: [],
+      poppedVal: null,
+      result: null,
+    },
+    nums: [...nums],
+    k,
+    currentIndex: null,
+    currentVal: null,
+    minHeap: [],
+    poppedVal: null,
+    result: null,
+  };
+
+  const heap = [];
+  const steps = [];
+  let eventCounter = 1;
+  let currentStepNumber = 1;
+
+  // Step 1: Initialize
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    label: 'Step 1: Initialize Min-Heap',
+    operation: 'INITIALIZE',
+    description: `Initialize empty Min-Heap of capacity k = ${k}. We maintain the ${k} largest elements seen so far; the root will hold the ${k}th largest element.`,
+    changed: ['minHeap'],
+    state: {
+      nums: [...nums],
+      k,
+      currentIndex: null,
+      currentVal: null,
+      minHeap: [],
+      poppedVal: null,
+      result: null,
+    },
+    highlights: { index: null, heap: [] },
+    events: [],
+  });
+  currentStepNumber++;
+
+  for (let i = 0; i < nums.length; i++) {
+    const val = nums[i];
+
+    // Push into min-heap and sift up
+    heap.push(val);
+    let currIdx = heap.length - 1;
+
+    const insertEvents = [
+      {
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.ARRAY_ACCESS,
+        target: { primitiveId: 'nums' },
+        data: { index: i, value: val },
+        description: `Inspect nums[${i}] = ${val}`,
+        schemaVersion: EVENT_SCHEMA_VERSION,
+      },
+      {
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.HEAP_INSERT,
+        target: { primitiveId: 'minHeap' },
+        data: { value: val, resultingState: [...heap] },
+        description: `Insert ${val} into Min-Heap`,
+        schemaVersion: EVENT_SCHEMA_VERSION,
+      },
+    ];
+
+    while (currIdx > 0) {
+      const parentIdx = Math.floor((currIdx - 1) / 2);
+      if (heap[currIdx] < heap[parentIdx]) {
+        insertEvents.push({
+          id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+          step: currentStepNumber,
+          type: VISUALIZATION_EVENTS.HEAP_SWAP,
+          target: { primitiveId: 'minHeap' },
+          data: {
+            indices: [currIdx, parentIdx],
+            values: [heap[currIdx], heap[parentIdx]],
+            resultingState: [...heap],
+          },
+          description: `Sift-up: Swap child ${heap[currIdx]} with parent ${heap[parentIdx]}`,
+          schemaVersion: EVENT_SCHEMA_VERSION,
+        });
+        const temp = heap[currIdx];
+        heap[currIdx] = heap[parentIdx];
+        heap[parentIdx] = temp;
+        currIdx = parentIdx;
+      } else {
+        break;
+      }
+    }
+
+    let popped = null;
+    const isExceeded = heap.length > k;
+
+    if (isExceeded) {
+      popped = heap[0];
+      const last = heap.pop();
+      if (heap.length > 0) {
+        heap[0] = last;
+        insertEvents.push({
+          id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+          step: currentStepNumber,
+          type: VISUALIZATION_EVENTS.HEAP_REMOVE,
+          target: { primitiveId: 'minHeap' },
+          data: { value: popped, resultingState: [...heap] },
+          description: `Heap size exceeded k (${k}). Extract min root element ${popped}.`,
+          schemaVersion: EVENT_SCHEMA_VERSION,
+        });
+
+        // Sift down
+        let pIdx = 0;
+        while (true) {
+          const leftIdx = 2 * pIdx + 1;
+          const rightIdx = 2 * pIdx + 2;
+          let smallest = pIdx;
+
+          if (leftIdx < heap.length && heap[leftIdx] < heap[smallest]) smallest = leftIdx;
+          if (rightIdx < heap.length && heap[rightIdx] < heap[smallest]) smallest = rightIdx;
+
+          if (smallest !== pIdx) {
+            insertEvents.push({
+              id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+              step: currentStepNumber,
+              type: VISUALIZATION_EVENTS.HEAP_SWAP,
+              target: { primitiveId: 'minHeap' },
+              data: {
+                indices: [pIdx, smallest],
+                values: [heap[pIdx], heap[smallest]],
+                resultingState: [...heap],
+              },
+              description: `Sift-down: Swap parent ${heap[pIdx]} with child ${heap[smallest]}`,
+              schemaVersion: EVENT_SCHEMA_VERSION,
+            });
+            const swapTemp = heap[pIdx];
+            heap[pIdx] = heap[smallest];
+            heap[smallest] = swapTemp;
+            pIdx = smallest;
+          } else {
+            break;
+          }
+        }
+      }
+    }
+
+    const stepDesc = isExceeded
+      ? `Inspect nums[${i}] = ${val}. Insert ${val} into Min-Heap. Size exceeded k (${k}); evicted smallest element ${popped}. Top is now ${heap[0]}.`
+      : `Inspect nums[${i}] = ${val}. Insert ${val} into Min-Heap. Heap size is ${heap.length} <= ${k}. Top is ${heap[0]}.`;
+
+    steps.push({
+      id: `step-${currentStepNumber}`,
+      stepNumber: currentStepNumber,
+      label: `Step ${currentStepNumber}: Process nums[${i}] = ${val}`,
+      operation: isExceeded ? 'HEAP_EVICT' : 'HEAP_INSERT',
+      description: stepDesc,
+      changed: ['currentIndex', 'currentVal', 'minHeap', 'poppedVal'],
+      state: {
+        nums: [...nums],
+        k,
+        currentIndex: i,
+        currentVal: val,
+        minHeap: [...heap],
+        poppedVal: popped,
+        result: heap.length >= k ? heap[0] : null,
+      },
+      highlights: {
+        index: i,
+        heap: [...heap],
+        top: heap.length > 0 ? heap[0] : null,
+        popped,
+      },
+      events: insertEvents,
+    });
+    currentStepNumber++;
+  }
+
+  const finalKth = heap[0] !== undefined ? heap[0] : null;
+
+  const finalEvents = [
+    {
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.RETURN,
+      target: { primitiveId: 'result' },
+      data: { value: finalKth, result: finalKth },
+      description: `Min-Heap contains the ${k} largest elements. Root of Min-Heap (${finalKth}) is the ${k}th largest element.`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    },
+  ];
+
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    label: `Step ${currentStepNumber}: Complete — ${k}th Largest is ${finalKth}`,
+    operation: 'complete',
+    description: `All ${nums.length} elements processed. The Min-Heap of size ${k} contains [${heap.join(', ')}]. The root element (${finalKth}) is the ${k}th largest element in the array.`,
+    changed: ['result'],
+    state: {
+      nums: [...nums],
+      k,
+      currentIndex: null,
+      currentVal: null,
+      minHeap: [...heap],
+      poppedVal: null,
+      result: finalKth,
+    },
+    highlights: {
+      index: null,
+      heap: [...heap],
+      top: finalKth,
+    },
+    events: finalEvents,
+  });
+
+  const rawTrace = {
+    schemaVersion: EXECUTION_TRACE_SCHEMA_VERSION,
+    traceId,
+    problemId,
+    title: options.title || 'Kth Largest Element in an Array',
+    source: TRACE_SOURCES.EXECUTION,
+    metadata: {
+      language: 'javascript',
+      algorithm: approachName,
+      approachId,
+      sourceStage: 'Stage 09 Visualization (Genuine Algorithmic Tracer)',
+    },
+    initialState,
+    steps,
+    finalState: {
+      result: finalKth,
+    },
+    result: finalKth,
+  };
+
+  return normalizeExecutionTrace(rawTrace);
+};
+
+/**
+ * Genuine Algorithmic Execution Tracer for Sliding Window Maximum (LeetCode 239)
+ * Monotonic Decreasing Deque maintaining window maximum in O(N) time.
+ */
+const traceSlidingWindowMaximumAlgorithm = (rawNums, rawK, options = {}) => {
+  const problemId = options.problemId || 'sliding-window-maximum';
+  const approachId = options.approachId || 'monotonicDeque';
+  const approachName = options.approachName || 'Monotonic Deque (Sliding Window)';
+  const testCaseId = options.testCaseId || 1;
+  const traceId = `exec-${problemId}-tc${testCaseId}-${Date.now()}`;
+
+  const nums = Array.isArray(rawNums)
+    ? rawNums.map((v) => (typeof v === 'number' ? v : Number(v) || 0))
+    : [1, 3, -1, -3, 5, 3, 6, 7];
+  const k = typeof rawK === 'number' && rawK > 0 ? rawK : Number(rawK) || 3;
+
+  const initialPrimitives = {
+    nums: {
+      id: 'nums',
+      type: 'array',
+      label: 'Input Array (nums)',
+      values: [...nums],
+      activeIndex: null,
+      matchedIndices: [],
+      changedIndices: [],
+      pointerLabels: {},
+    },
+    deque: {
+      id: 'deque',
+      type: 'queue',
+      label: 'Monotonic Decreasing Deque',
+      values: [],
+    },
+    k: {
+      id: 'k',
+      type: 'variable',
+      name: 'k',
+      value: k,
+      typeLabel: 'number',
+    },
+    windowRange: {
+      id: 'windowRange',
+      type: 'variable',
+      name: 'windowRange',
+      value: null,
+      typeLabel: 'range',
+    },
+    result: {
+      id: 'result',
+      type: 'array',
+      label: 'Sliding Window Maximums',
+      values: [],
+    },
+  };
+
+  const initialState = {
+    schemaVersion: EVENT_SCHEMA_VERSION,
+    problemId,
+    title: options.title || 'Sliding Window Maximum',
+    primitives: initialPrimitives,
+    flatState: {
+      nums: [...nums],
+      k,
+      currentIndex: null,
+      currentVal: null,
+      left: null,
+      right: null,
+      windowRange: null,
+      deque: [],
+      dequeValues: [],
+      result: [],
+    },
+    nums: [...nums],
+    k,
+    currentIndex: null,
+    currentVal: null,
+    left: null,
+    right: null,
+    windowRange: null,
+    deque: [],
+    dequeValues: [],
+    result: [],
+  };
+
+  const deque = []; // stores indices
+  const result = [];
+  const steps = [];
+  let eventCounter = 1;
+  let currentStepNumber = 1;
+
+  // Step 1: Initialize
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    label: 'Step 1: Initialize Monotonic Deque',
+    operation: 'INITIALIZE',
+    description: `Initialize empty Monotonic Deque for sliding window of size k = ${k}. Deque will store indices in strictly decreasing order of their values so the front always holds the window maximum.`,
+    changed: ['deque', 'result'],
+    state: {
+      nums: [...nums],
+      k,
+      currentIndex: null,
+      currentVal: null,
+      left: null,
+      right: null,
+      windowRange: null,
+      deque: [],
+      dequeValues: [],
+      result: [],
+    },
+    highlights: { index: null, deque: [], windowRange: null },
+    events: [],
+  });
+  currentStepNumber++;
+
+  for (let i = 0; i < nums.length; i++) {
+    const val = nums[i];
+    const left = Math.max(0, i - k + 1);
+    const right = i;
+    const windowRange = [left, right];
+    const stepEvents = [];
+
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.ARRAY_ACCESS,
+      target: { primitiveId: 'nums' },
+      data: { index: i, value: val },
+      description: `Inspect nums[${i}] = ${val}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    let expiredIndex = null;
+    let expiredVal = null;
+
+    // 1. Remove elements outside current window from front
+    if (deque.length > 0 && deque[0] < i - k + 1) {
+      expiredIndex = deque.shift();
+      expiredVal = nums[expiredIndex];
+      stepEvents.push({
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.QUEUE_DEQUEUE,
+        target: { primitiveId: 'deque' },
+        data: { value: expiredVal, index: expiredIndex },
+        description: `Index ${expiredIndex} is outside window [${left}, ${right}]. Pop from front.`,
+        schemaVersion: EVENT_SCHEMA_VERSION,
+      });
+    }
+
+    // 2. Remove smaller elements from back to maintain monotonic decreasing order
+    const eliminated = [];
+    while (deque.length > 0 && nums[deque[deque.length - 1]] <= val) {
+      const poppedIdx = deque.pop();
+      eliminated.push({ index: poppedIdx, val: nums[poppedIdx] });
+      stepEvents.push({
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.QUEUE_DEQUEUE,
+        target: { primitiveId: 'deque' },
+        data: { value: nums[poppedIdx], index: poppedIdx },
+        description: `nums[${poppedIdx}] = ${nums[poppedIdx]} <= current ${val}. Eliminate from back.`,
+        schemaVersion: EVENT_SCHEMA_VERSION,
+      });
+    }
+
+    // 3. Push current index to back of deque
+    deque.push(i);
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.QUEUE_ENQUEUE,
+      target: { primitiveId: 'deque' },
+      data: { value: val, index: i },
+      description: `Push index ${i} (value ${val}) to back of deque`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    // 4. Record window maximum once window has reached size k
+    const isWindowFull = i >= k - 1;
+    let currentWindowMax = null;
+
+    if (isWindowFull) {
+      currentWindowMax = nums[deque[0]];
+      result.push(currentWindowMax);
+      stepEvents.push({
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.RESULT_COLLECT,
+        target: { primitiveId: 'result' },
+        data: { value: currentWindowMax, result: [...result] },
+        description: `Window [${left}, ${right}] full. Front index ${deque[0]} gives max = ${currentWindowMax}. Append to result.`,
+        schemaVersion: EVENT_SCHEMA_VERSION,
+      });
+    }
+
+    let description = `Process nums[${i}] = ${val}. Window: [${left}, ${right}].`;
+    if (expiredIndex !== null) {
+      description += ` Evicted index ${expiredIndex} (out of window).`;
+    }
+    if (eliminated.length > 0) {
+      description += ` Evicted ${eliminated.length} smaller element(s) from back.`;
+    }
+    if (isWindowFull) {
+      description += ` Window max is ${currentWindowMax} (front of deque).`;
+    } else {
+      description += ` Window warming up (${i + 1}/${k} elements).`;
+    }
+
+    const dequeObjects = deque.map((idx) => ({ index: idx, val: nums[idx] }));
+    const dequeValues = deque.map((idx) => nums[idx]);
+
+    steps.push({
+      id: `step-${currentStepNumber}`,
+      stepNumber: currentStepNumber,
+      label: `Step ${currentStepNumber}: Window at index ${i} (nums[${i}] = ${val})`,
+      operation: isWindowFull ? 'RECORD_MAX' : 'WARMUP_SLIDE',
+      description,
+      changed: ['currentIndex', 'currentVal', 'windowRange', 'deque', 'result'],
+      state: {
+        nums: [...nums],
+        k,
+        currentIndex: i,
+        currentVal: val,
+        left,
+        right,
+        windowRange,
+        deque: dequeObjects,
+        dequeIndices: [...deque],
+        dequeValues,
+        windowMax: currentWindowMax,
+        result: [...result],
+        poppedFront: expiredVal,
+        poppedBack: eliminated.length > 0 ? eliminated[eliminated.length - 1].val : null,
+      },
+      highlights: {
+        currentIndex: i,
+        windowRange,
+        dequeFront: deque.length > 0 ? deque[0] : null,
+        dequeBack: deque.length > 0 ? deque[deque.length - 1] : null,
+        maxVal: currentWindowMax,
+      },
+      events: stepEvents,
+    });
+    currentStepNumber++;
+  }
+
+  // Final Step: Complete
+  const finalEvents = [
+    {
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.RETURN,
+      target: { primitiveId: 'result' },
+      data: { value: [...result], result: [...result] },
+      description: `Sliding window complete. All maximums: [${result.join(', ')}]`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    },
+  ];
+
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    label: `Step ${currentStepNumber}: Complete — Maxima: [${result.join(', ')}]`,
+    operation: 'complete',
+    description: `All sliding windows of size k = ${k} evaluated. Resulting maxima array: [${result.join(', ')}].`,
+    changed: ['result'],
+    state: {
+      nums: [...nums],
+      k,
+      currentIndex: null,
+      currentVal: null,
+      left: nums.length - k,
+      right: nums.length - 1,
+      windowRange: [Math.max(0, nums.length - k), nums.length - 1],
+      deque: deque.map((idx) => ({ index: idx, val: nums[idx] })),
+      dequeIndices: [...deque],
+      dequeValues: deque.map((idx) => nums[idx]),
+      windowMax: result[result.length - 1],
+      result: [...result],
+      poppedFront: null,
+      poppedBack: null,
+    },
+    highlights: {
+      currentIndex: null,
+      windowRange: [Math.max(0, nums.length - k), nums.length - 1],
+      result: [...result],
+    },
+    events: finalEvents,
+  });
+
+  const rawTrace = {
+    schemaVersion: EXECUTION_TRACE_SCHEMA_VERSION,
+    traceId,
+    problemId,
+    title: options.title || 'Sliding Window Maximum',
+    source: TRACE_SOURCES.EXECUTION,
+    metadata: {
+      language: 'javascript',
+      algorithm: approachName,
+      approachId,
+      sourceStage: 'Stage 09 Visualization (Genuine Algorithmic Tracer)',
+    },
+    initialState,
+    steps,
+    finalState: {
+      result: [...result],
+    },
+    result: [...result],
+  };
+
+  return normalizeExecutionTrace(rawTrace);
+};
+
+/**
+ * Genuine Algorithmic Execution Tracer for Product of Array Except Self (LeetCode 238)
+ * Linear O(N) time with Two-Pass Prefix & Suffix Products (O(1) auxiliary space beyond result).
+ */
+const traceProductExceptSelfAlgorithm = (rawNums, options = {}) => {
+  const problemId = options.problemId || 'product-except-self';
+  const approachId = options.approachId || 'prefixSuffix';
+  const approachName = options.approachName || 'Two-Pass Prefix and Suffix Products';
+  const traceId = `trace-${problemId}-${options.testCaseId || 1}-${Date.now()}`;
+
+  const nums = Array.isArray(rawNums) ? rawNums.map(Number) : [1, 2, 3, 4];
+  const n = nums.length;
+
+  const initialPrimitives = {
+    nums: {
+      id: 'nums',
+      type: 'array',
+      label: 'Input Array (nums)',
+      sourceVar: 'nums',
+      defaultValues: [...nums],
+      showIndices: true,
+    },
+    output: {
+      id: 'output',
+      type: 'array',
+      label: 'Answer Array (output)',
+      sourceVar: 'output',
+      defaultValues: new Array(n).fill(1),
+      showIndices: true,
+    },
+    prefix: {
+      id: 'prefix',
+      type: 'array',
+      label: 'Prefix Products (Left)',
+      sourceVar: 'prefix',
+      defaultValues: new Array(n).fill(1),
+      showIndices: true,
+    },
+    suffix: {
+      id: 'suffix',
+      type: 'array',
+      label: 'Suffix Products (Right)',
+      sourceVar: 'suffix',
+      defaultValues: new Array(n).fill(1),
+      showIndices: true,
+    },
+    phase: {
+      id: 'phase',
+      type: 'variable',
+      label: 'Current Phase',
+      sourceVar: 'phase',
+      value: 'Initialization',
+      typeLabel: 'string',
+    },
+    runningProduct: {
+      id: 'runningProduct',
+      type: 'variable',
+      label: 'Running Product',
+      sourceVar: 'runningProduct',
+      value: 1,
+      typeLabel: 'number',
+    },
+    result: {
+      id: 'result',
+      type: 'array',
+      label: 'Final Product Array',
+      sourceVar: 'result',
+      defaultValues: [],
+      showIndices: true,
+    },
+  };
+
+  const output = new Array(n).fill(1);
+  const prefix = new Array(n).fill(1);
+  const suffix = new Array(n).fill(1);
+
+  const initialState = {
+    schemaVersion: EVENT_SCHEMA_VERSION,
+    problemId,
+    title: options.title || 'Product of Array Except Self',
+    primitives: initialPrimitives,
+    flatState: {
+      nums: [...nums],
+      output: [...output],
+      prefix: [...prefix],
+      suffix: [...suffix],
+      phase: 'INITIALIZATION',
+      currentIndex: null,
+      currentNum: null,
+      runningPrefix: 1,
+      runningSuffix: 1,
+      runningProduct: 1,
+      calculation: 'Initialize output array of size N filled with 1s',
+      result: [],
+    },
+    nums: [...nums],
+    output: [...output],
+    prefix: [...prefix],
+    suffix: [...suffix],
+    phase: 'INITIALIZATION',
+    currentIndex: null,
+    currentNum: null,
+    runningPrefix: 1,
+    runningSuffix: 1,
+    runningProduct: 1,
+    calculation: 'Initialize output array of size N filled with 1s',
+    result: [],
+    problemInput: { nums: [...nums] },
+  };
+
+  const steps = [];
+  let eventCounter = 1;
+  let currentStepNumber = 1;
+
+  // Step 1: Initialize
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    label: 'Step 1: Initialize Output Array & State',
+    operation: 'INITIALIZE',
+    description: `Initialize answer array of size ${n} with 1s. We use a 2-pass approach: Pass 1 computes prefix products (elements to left of each i); Pass 2 computes suffix products (elements to right of each i) and multiplies into output.`,
+    changed: ['output', 'phase', 'runningProduct'],
+    state: {
+      nums: [...nums],
+      output: [...output],
+      prefix: [...prefix],
+      suffix: [...suffix],
+      phase: 'INITIALIZATION',
+      currentIndex: null,
+      currentNum: null,
+      runningPrefix: 1,
+      runningSuffix: 1,
+      runningProduct: 1,
+      calculation: 'Output array initialized: [' + output.join(', ') + ']',
+      result: [],
+    },
+    highlights: { currentIndex: null, phase: 'INITIALIZATION' },
+    events: [],
+  });
+  currentStepNumber++;
+
+  // -------------------------------------------------------------
+  // PASS 1: Left-to-Right Prefix Products (i = 0 to n - 1)
+  // -------------------------------------------------------------
+  let runningPrefix = 1;
+  for (let i = 0; i < n; i++) {
+    const val = nums[i];
+    prefix[i] = runningPrefix;
+    output[i] = runningPrefix;
+
+    const stepEvents = [];
+
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.ARRAY_ACCESS,
+      target: { primitiveId: 'nums' },
+      data: { index: i, value: val },
+      description: `Access nums[${i}] = ${val}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.ARRAY_UPDATE,
+      target: { primitiveId: 'output' },
+      data: { index: i, value: runningPrefix, previousValue: 1 },
+      description: `Store prefix product ${runningPrefix} in output[${i}]`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    const nextPrefix = (runningPrefix * val) === 0 ? 0 : (runningPrefix * val);
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.VARIABLE_UPDATE,
+      target: { primitiveId: 'runningProduct' },
+      data: { value: nextPrefix, previousValue: runningPrefix },
+      description: `Update running prefix product: ${runningPrefix} * ${val} = ${nextPrefix}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    const leftElementsDesc = i === 0 ? 'No elements to the left' : `Elements to left: [${nums.slice(0, i).join(', ')}]`;
+    const calcDesc = `i = ${i} (${val}): ${leftElementsDesc} → Left product = ${runningPrefix}. output[${i}] = ${runningPrefix}. Next prefix = ${runningPrefix} × ${val} = ${nextPrefix}.`;
+
+    steps.push({
+      id: `step-${currentStepNumber}`,
+      stepNumber: currentStepNumber,
+      label: `Step ${currentStepNumber}: Pass 1 (Left Product) at i = ${i}`,
+      operation: 'PREFIX_UPDATE',
+      description: calcDesc,
+      changed: ['output', 'prefix', 'runningProduct'],
+      state: {
+        nums: [...nums],
+        output: [...output],
+        prefix: [...prefix],
+        suffix: [...suffix],
+        phase: 'PASS_1_PREFIX',
+        currentIndex: i,
+        currentNum: val,
+        runningPrefix,
+        runningSuffix: 1,
+        runningProduct: runningPrefix,
+        calculation: `output[${i}] = ${runningPrefix} (left product)`,
+        result: [...output],
+      },
+      highlights: {
+        currentIndex: i,
+        leftRange: i > 0 ? [0, i - 1] : null,
+        activeVal: val,
+        phase: 'PASS_1_PREFIX',
+      },
+      events: stepEvents,
+    });
+
+    runningPrefix = nextPrefix;
+    currentStepNumber++;
+  }
+
+  // -------------------------------------------------------------
+  // PASS 2: Right-to-Left Suffix Products (i = n - 1 down to 0)
+  // -------------------------------------------------------------
+  let runningSuffix = 1;
+  for (let i = n - 1; i >= 0; i--) {
+    const val = nums[i];
+    const prevOutput = output[i];
+    suffix[i] = runningSuffix;
+    const finalVal = (prevOutput * runningSuffix) === 0 ? 0 : prevOutput * runningSuffix;
+    output[i] = finalVal;
+
+    const stepEvents = [];
+
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.ARRAY_ACCESS,
+      target: { primitiveId: 'nums' },
+      data: { index: i, value: val },
+      description: `Access nums[${i}] = ${val}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.ARRAY_UPDATE,
+      target: { primitiveId: 'output' },
+      data: { index: i, value: finalVal, previousValue: prevOutput },
+      description: `Multiply left product (${prevOutput}) by right product (${runningSuffix}): output[${i}] = ${finalVal}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.RESULT_COLLECT,
+      target: { primitiveId: 'result' },
+      data: { index: i, value: finalVal },
+      description: `Confirmed final product for index ${i}: ${finalVal}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    const nextSuffix = (runningSuffix * val) === 0 ? 0 : runningSuffix * val;
+    stepEvents.push({
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.VARIABLE_UPDATE,
+      target: { primitiveId: 'runningProduct' },
+      data: { value: nextSuffix, previousValue: runningSuffix },
+      description: `Update running suffix product: ${runningSuffix} * ${val} = ${nextSuffix}`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    });
+
+    const rightElementsDesc = i === n - 1 ? 'No elements to the right' : `Elements to right: [${nums.slice(i + 1).join(', ')}]`;
+    const calcDesc = `i = ${i} (${val}): ${rightElementsDesc} → Right product = ${runningSuffix}. Combined: output[${i}] = ${prevOutput} (left) × ${runningSuffix} (right) = ${finalVal}. Next suffix = ${runningSuffix} × ${val} = ${nextSuffix}.`;
+
+    steps.push({
+      id: `step-${currentStepNumber}`,
+      stepNumber: currentStepNumber,
+      label: `Step ${currentStepNumber}: Pass 2 (Right Product) at i = ${i}`,
+      operation: 'SUFFIX_MULTIPLY',
+      description: calcDesc,
+      changed: ['output', 'suffix', 'runningProduct', 'result'],
+      state: {
+        nums: [...nums],
+        output: [...output],
+        prefix: [...prefix],
+        suffix: [...suffix],
+        phase: 'PASS_2_SUFFIX',
+        currentIndex: i,
+        currentNum: val,
+        runningPrefix: prefix[i],
+        runningSuffix,
+        runningProduct: runningSuffix,
+        calculation: `output[${i}] = ${prevOutput} × ${runningSuffix} = ${finalVal}`,
+        result: [...output],
+      },
+      highlights: {
+        currentIndex: i,
+        rightRange: i < n - 1 ? [i + 1, n - 1] : null,
+        activeVal: val,
+        phase: 'PASS_2_SUFFIX',
+      },
+      events: stepEvents,
+    });
+
+    runningSuffix = nextSuffix;
+    currentStepNumber++;
+  }
+
+  // Final Step: Complete
+  const finalEvents = [
+    {
+      id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+      step: currentStepNumber,
+      type: VISUALIZATION_EVENTS.RETURN,
+      target: { primitiveId: 'result' },
+      data: { value: [...output], result: [...output] },
+      description: `Execution complete. All products except self: [${output.join(', ')}]`,
+      schemaVersion: EVENT_SCHEMA_VERSION,
+    },
+  ];
+
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    label: `Step ${currentStepNumber}: Complete — Answer: [${output.join(', ')}]`,
+    operation: 'complete',
+    description: `Product of Array Except Self computed in O(N) time with O(1) extra space (excluding output array). Final answer: [${output.join(', ')}].`,
+    changed: ['result', 'phase'],
+    state: {
+      nums: [...nums],
+      output: [...output],
+      prefix: [...prefix],
+      suffix: [...suffix],
+      phase: 'COMPLETE',
+      currentIndex: null,
+      currentNum: null,
+      runningPrefix,
+      runningSuffix,
+      runningProduct: null,
+      calculation: `Done: [${output.join(', ')}]`,
+      result: [...output],
+    },
+    highlights: {
+      currentIndex: null,
+      phase: 'COMPLETE',
+      result: [...output],
+    },
+    events: finalEvents,
+  });
+
+  const rawTrace = {
+    schemaVersion: EXECUTION_TRACE_SCHEMA_VERSION,
+    traceId,
+    problemId,
+    title: options.title || 'Product of Array Except Self',
+    source: TRACE_SOURCES.EXECUTION,
+    metadata: {
+      language: 'javascript',
+      algorithm: approachName,
+      approachId,
+      sourceStage: 'Stage 09 Visualization (Genuine Algorithmic Tracer)',
+    },
+    initialState,
+    steps,
+    finalState: {
+      result: [...output],
+    },
+    result: [...output],
+  };
+
+  return normalizeExecutionTrace(rawTrace);
+};
+
+
+/**
  * Genuine Algorithmic Execution Tracer for Minimum Depth of Binary Tree (LeetCode 111)
  * DFS / Recursion tracking current depth, call stack, and shortest path to a leaf node.
  */
+
+/**
+ * Word Search (LeetCode 79)
+ * 2D Grid Backtracking DFS trace generator
+ */
+const extractBoardAndWord = (input) => {
+  if (!input) return { board: [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']], word: 'ABCCED' };
+  let board = input.board;
+  let word = input.word;
+  if (!board && input.input && typeof input.input === 'object') {
+    board = input.input.board;
+    word = input.input.word;
+  }
+  if (!board && Array.isArray(input)) {
+    board = input[0];
+    word = input[1];
+  }
+  if (typeof board === 'string') {
+    try { board = JSON.parse(board); } catch (e) {}
+  }
+  if (!Array.isArray(board) || board.length === 0 || !Array.isArray(board[0])) {
+    board = [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']];
+  }
+  if (typeof word !== 'string' || !word) {
+    word = 'ABCCED';
+  }
+  return { board, word };
+};
+
+const traceWordSearchAlgorithm = (rawBoard, rawWord, options = {}) => {
+  const problemId = options.problemId || 'word-search';
+  const approachId = options.approachId || 'backtrackingDfs';
+  const approachName = options.approachName || 'Backtracking DFS';
+  const traceId = `trace-${problemId}-${options.testCaseId || 1}-${Date.now()}`;
+
+  let board = rawBoard;
+  let word = rawWord;
+  if (board && typeof board === 'object' && !Array.isArray(board) && board.board) {
+    word = board.word;
+    board = board.board;
+  }
+  const extracted = extractBoardAndWord({ board, word });
+  board = extracted.board.map(row => [...row]);
+  word = extracted.word;
+
+  const rows = board.length;
+  const cols = board[0]?.length || 0;
+
+  const initialPrimitives = {
+    board: {
+      id: 'board',
+      type: 'grid',
+      label: '2D Board Grid',
+      rows,
+      cols,
+      values: board.map(row => [...row])
+    },
+    word: {
+      id: 'word',
+      type: 'variable',
+      label: 'Target Word',
+      value: word,
+      typeLabel: 'string'
+    },
+    callStack: {
+      id: 'callStack',
+      type: 'stack',
+      label: 'Backtracking Call Stack',
+      items: []
+    },
+    matchedPath: {
+      id: 'matchedPath',
+      type: 'array',
+      label: 'Matched Cell Coordinates',
+      values: []
+    }
+  };
+
+  const initialState = {
+    schemaVersion: EVENT_SCHEMA_VERSION,
+    problemId,
+    title: options.title || 'Word Search',
+    primitives: initialPrimitives,
+    flatState: {
+      board: board.map(row => [...row]),
+      word,
+      callStack: [],
+      matchedPath: [],
+      headCell: null,
+      found: false,
+      result: null
+    },
+    board: board.map(row => [...row]),
+    word,
+    callStack: [],
+    matchedPath: [],
+    headCell: null,
+    found: false,
+    result: null,
+    problemInput: { board: board.map(row => [...row]), word }
+  };
+
+  const steps = [];
+  let eventCounter = 1;
+  let currentStepNumber = 1;
+
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    stepIndex: currentStepNumber - 1,
+    label: `Step ${currentStepNumber}: Initialize Board & Target Word`,
+    operation: 'INITIALIZE',
+    description: `Initialize 2D grid (${rows}x${cols}) and prepare search for target word "${word}".`,
+    phase: 'INITIALIZATION',
+    activeLine: 1,
+    explanation: `Initialize 2D grid (${rows}x${cols}) and search for target word "${word}".`,
+    status: 'exploring',
+    pathSequence: [],
+    callStack: [],
+    matchedLength: 0,
+    headCell: null,
+    visitedCells: [],
+    changed: ['board', 'word'],
+    state: {
+      board: board.map(row => [...row]),
+      word,
+      pathSequence: [],
+      callStack: [],
+      matchedLength: 0,
+      headCell: null,
+      visitedCells: []
+    },
+    primitives: {
+      board: {
+        id: 'board',
+        type: 'grid',
+        label: '2D Board Grid',
+        rows,
+        cols,
+        values: board.map(row => [...row]),
+        highlights: {}
+      },
+      word: {
+        id: 'word',
+        type: 'variable',
+        label: 'Target Word',
+        value: word,
+        matchedLength: 0
+      },
+      callStack: {
+        id: 'callStack',
+        type: 'stack',
+        label: 'Backtracking Call Stack',
+        values: []
+      },
+      matchedPath: {
+        id: 'matchedPath',
+        type: 'array',
+        label: 'Matched Cell Coordinates',
+        values: []
+      }
+    },
+    highlights: {},
+    events: [
+      {
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.VARIABLE_SET,
+        target: { primitiveId: 'word' },
+        data: { value: word },
+        description: `Search initialized for word "${word}" in ${rows}x${cols} board`,
+        schemaVersion: EVENT_SCHEMA_VERSION
+      }
+    ]
+  });
+  currentStepNumber++;
+
+  const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+  const currentPath = [];
+  let found = false;
+
+  function dfs(r, c, k) {
+    if (found) return true;
+    if (k === word.length) {
+      found = true;
+      return true;
+    }
+
+    if (r < 0 || r >= rows || c < 0 || c >= cols) {
+      return false;
+    }
+
+    const cellVal = board[r][c];
+
+    if (visited[r][c] || cellVal !== word[k]) {
+      if (k === 0 && cellVal !== word[k]) {
+        // Skip silent mismatch on root searches to prevent millions of steps
+      } else {
+        const explanation = visited[r][c]
+          ? `Cell (${r}, ${c}) already visited on current path. Pruning branch.`
+          : `Cell (${r}, ${c}) contains '${cellVal}', does not match target character '${word[k]}'. Backtracking.`;
+
+        steps.push({
+          id: `step-${currentStepNumber}`,
+          stepNumber: currentStepNumber,
+          stepIndex: currentStepNumber - 1,
+          label: `Step ${currentStepNumber}: Mismatch at (${r}, ${c})`,
+          operation: 'BACKTRACK_MISMATCH',
+          description: explanation,
+          phase: 'MISMATCH',
+          activeLine: 7,
+          explanation,
+          status: 'mismatch',
+          pathSequence: currentPath.map(p => ({ ...p })),
+          callStack: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`),
+          matchedLength: k,
+          headCell: { row: r, col: c, char: cellVal },
+          visitedCells: currentPath.map(p => ({ row: p.row, col: p.col })),
+          changed: ['callStack'],
+          state: {
+            board: board.map(row => [...row]),
+            word,
+            pathSequence: currentPath.map(p => ({ ...p })),
+            callStack: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`),
+            matchedLength: k,
+            headCell: { row: r, col: c, char: cellVal }
+          },
+          primitives: {
+            board: {
+              id: 'board',
+              type: 'grid',
+              label: '2D Board Grid',
+              rows,
+              cols,
+              values: board.map(row => [...row]),
+              highlights: { [`${r}-${c}`]: 'mismatch' }
+            },
+            word: {
+              id: 'word',
+              type: 'variable',
+              label: 'Target Word',
+              value: word,
+              matchedLength: k
+            },
+            callStack: {
+              id: 'callStack',
+              type: 'stack',
+              label: 'Backtracking Call Stack',
+              values: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`)
+            },
+            matchedPath: {
+              id: 'matchedPath',
+              type: 'array',
+              label: 'Matched Cell Coordinates',
+              values: currentPath.map(p => `(${p.row},${p.col})`)
+            }
+          },
+          highlights: { [`${r}-${c}`]: 'mismatch' },
+          events: [
+            {
+              id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+              step: currentStepNumber,
+              type: VISUALIZATION_EVENTS.VARIABLE_SET,
+              target: { primitiveId: 'word' },
+              data: { value: cellVal, action: 'mismatch', row: r, col: c },
+              description: explanation,
+              schemaVersion: EVENT_SCHEMA_VERSION
+            }
+          ]
+        });
+        currentStepNumber++;
+      }
+      return false;
+    }
+
+    visited[r][c] = true;
+    currentPath.push({ row: r, col: c, char: cellVal, charIdx: k });
+
+    const isLastChar = (k === word.length - 1);
+    const explanation = isLastChar
+      ? `Matched last character '${cellVal}' at (${r}, ${c})! Complete word "${word}" found!`
+      : `Matched '${cellVal}' at cell (${r}, ${c}) with word[${k}]. Exploring adjacent cells (up, down, left, right).`;
+
+    steps.push({
+      id: `step-${currentStepNumber}`,
+      stepNumber: currentStepNumber,
+      stepIndex: currentStepNumber - 1,
+      label: `Step ${currentStepNumber}: Matched '${cellVal}' at (${r}, ${c})`,
+      operation: isLastChar ? 'FOUND' : 'DFS_VISIT',
+      description: explanation,
+      phase: isLastChar ? 'FOUND' : 'MATCH',
+      activeLine: 12,
+      explanation,
+      status: isLastChar ? 'found' : 'matched',
+      pathSequence: currentPath.map(p => ({ ...p })),
+      callStack: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`),
+      matchedLength: k + 1,
+      headCell: { row: r, col: c, char: cellVal },
+      visitedCells: currentPath.map(p => ({ row: p.row, col: p.col })),
+      changed: ['board', 'callStack', 'matchedPath'],
+      state: {
+        board: board.map(row => [...row]),
+        word,
+        pathSequence: currentPath.map(p => ({ ...p })),
+        callStack: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`),
+        matchedLength: k + 1,
+        headCell: { row: r, col: c, char: cellVal }
+      },
+      primitives: {
+        board: {
+          id: 'board',
+          type: 'grid',
+          label: '2D Board Grid',
+          rows,
+          cols,
+          values: board.map(row => [...row]),
+          highlights: currentPath.reduce((acc, p) => { acc[`${p.row}-${p.col}`] = 'matched'; return acc; }, {})
+        },
+        word: {
+          id: 'word',
+          type: 'variable',
+          label: 'Target Word',
+          value: word,
+          matchedLength: k + 1
+        },
+        callStack: {
+          id: 'callStack',
+          type: 'stack',
+          label: 'Backtracking Call Stack',
+          values: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`)
+        },
+        matchedPath: {
+          id: 'matchedPath',
+          type: 'array',
+          label: 'Matched Cell Coordinates',
+          values: currentPath.map(p => `(${p.row},${p.col})`)
+        }
+      },
+      highlights: currentPath.reduce((acc, p) => { acc[`${p.row}-${p.col}`] = 'matched'; return acc; }, {}),
+      events: [
+        {
+          id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+          step: currentStepNumber,
+          type: VISUALIZATION_EVENTS.STACK_PUSH,
+          target: { primitiveId: 'callStack' },
+          data: { value: `dfs(${r}, ${c}, idx=${k})`, row: r, col: c, char: cellVal, charIdx: k },
+          description: `Push dfs(${r}, ${c}, idx=${k}) onto call stack`,
+          schemaVersion: EVENT_SCHEMA_VERSION
+        }
+      ]
+    });
+    currentStepNumber++;
+
+    if (isLastChar) {
+      found = true;
+      return true;
+    }
+
+    const directions = [
+      [0, 1, 'right'],
+      [1, 0, 'down'],
+      [0, -1, 'left'],
+      [-1, 0, 'up']
+    ];
+
+    for (const [dr, dc] of directions) {
+      if (dfs(r + dr, c + dc, k + 1)) {
+        return true;
+      }
+    }
+
+    visited[r][c] = false;
+    currentPath.pop();
+
+    const backtrackExpl = `No valid path forward from (${r}, ${c}). Backtracking and unmarking cell.`;
+
+    steps.push({
+      id: `step-${currentStepNumber}`,
+      stepNumber: currentStepNumber,
+      stepIndex: currentStepNumber - 1,
+      label: `Step ${currentStepNumber}: Backtrack from (${r}, ${c})`,
+      operation: 'STACK_POP',
+      description: backtrackExpl,
+      phase: 'BACKTRACK',
+      activeLine: 18,
+      explanation: backtrackExpl,
+      status: 'backtracking',
+      pathSequence: currentPath.map(p => ({ ...p })),
+      callStack: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`),
+      matchedLength: currentPath.length,
+      headCell: currentPath.length > 0 ? currentPath[currentPath.length - 1] : null,
+      visitedCells: currentPath.map(p => ({ row: p.row, col: p.col })),
+      changed: ['board', 'callStack', 'matchedPath'],
+      state: {
+        board: board.map(row => [...row]),
+        word,
+        pathSequence: currentPath.map(p => ({ ...p })),
+        callStack: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`),
+        matchedLength: currentPath.length,
+        headCell: currentPath.length > 0 ? currentPath[currentPath.length - 1] : null
+      },
+      primitives: {
+        board: {
+          id: 'board',
+          type: 'grid',
+          label: '2D Board Grid',
+          rows,
+          cols,
+          values: board.map(row => [...row]),
+          highlights: currentPath.reduce((acc, p) => { acc[`${p.row}-${p.col}`] = 'matched'; return acc; }, {})
+        },
+        word: {
+          id: 'word',
+          type: 'variable',
+          label: 'Target Word',
+          value: word,
+          matchedLength: currentPath.length
+        },
+        callStack: {
+          id: 'callStack',
+          type: 'stack',
+          label: 'Backtracking Call Stack',
+          values: currentPath.map(p => `dfs(${p.row}, ${p.col}, idx=${p.charIdx})`)
+        },
+        matchedPath: {
+          id: 'matchedPath',
+          type: 'array',
+          label: 'Matched Cell Coordinates',
+          values: currentPath.map(p => `(${p.row},${p.col})`)
+        }
+      },
+      highlights: currentPath.reduce((acc, p) => { acc[`${p.row}-${p.col}`] = 'matched'; return acc; }, {}),
+      events: [
+        {
+          id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+          step: currentStepNumber,
+          type: VISUALIZATION_EVENTS.STACK_POP,
+          target: { primitiveId: 'callStack' },
+          data: { value: `dfs(${r}, ${c})`, poppedValue: `dfs(${r}, ${c})`, row: r, col: c },
+          description: `Pop dfs(${r}, ${c}) from call stack (backtracking)`,
+          schemaVersion: EVENT_SCHEMA_VERSION
+        }
+      ]
+    });
+    currentStepNumber++;
+
+    return false;
+  }
+
+  outer: for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (board[r][c] === word[0]) {
+        if (dfs(r, c, 0)) {
+          break outer;
+        }
+      }
+    }
+  }
+
+  const finalExpl = found
+    ? `Target word "${word}" successfully discovered in the grid! Returning true.`
+    : `Target word "${word}" could not be formed from adjacent cells in grid. Returning false.`;
+
+  steps.push({
+    id: `step-${currentStepNumber}`,
+    stepNumber: currentStepNumber,
+    stepIndex: currentStepNumber - 1,
+    label: `Step ${currentStepNumber}: Search Complete`,
+    operation: 'COMPLETE',
+    description: finalExpl,
+    phase: 'COMPLETION',
+    activeLine: 24,
+    explanation: finalExpl,
+    status: found ? 'found' : 'not-found',
+    pathSequence: currentPath.map(p => ({ ...p })),
+    callStack: [],
+    matchedLength: found ? word.length : 0,
+    headCell: currentPath.length > 0 ? currentPath[currentPath.length - 1] : null,
+    visitedCells: currentPath.map(p => ({ row: p.row, col: p.col })),
+    changed: ['result'],
+    state: {
+      board: board.map(row => [...row]),
+      word,
+      pathSequence: currentPath.map(p => ({ ...p })),
+      callStack: [],
+      matchedLength: found ? word.length : 0,
+      headCell: currentPath.length > 0 ? currentPath[currentPath.length - 1] : null,
+      result: found
+    },
+    primitives: {
+      board: {
+        id: 'board',
+        type: 'grid',
+        label: '2D Board Grid',
+        rows,
+        cols,
+        values: board.map(row => [...row]),
+        highlights: currentPath.reduce((acc, p) => { acc[`${p.row}-${p.col}`] = 'matched'; return acc; }, {})
+      },
+      word: {
+        id: 'word',
+        type: 'variable',
+        label: 'Target Word',
+        value: word,
+        matchedLength: found ? word.length : 0
+      },
+      callStack: {
+        id: 'callStack',
+        type: 'stack',
+        label: 'Backtracking Call Stack',
+        values: []
+      },
+      matchedPath: {
+        id: 'matchedPath',
+        type: 'array',
+        label: 'Matched Cell Coordinates',
+        values: currentPath.map(p => `(${p.row},${p.col})`)
+      }
+    },
+    highlights: currentPath.reduce((acc, p) => { acc[`${p.row}-${p.col}`] = 'matched'; return acc; }, {}),
+    events: [
+      {
+        id: `evt-${String(eventCounter++).padStart(2, '0')}`,
+        step: currentStepNumber,
+        type: VISUALIZATION_EVENTS.VARIABLE_SET,
+        target: { primitiveId: 'word' },
+        data: { value: found },
+        description: finalExpl,
+        schemaVersion: EVENT_SCHEMA_VERSION
+      }
+    ]
+  });
+
+  const rawTrace = {
+    traceId,
+    problemId,
+    title: options.title || 'Word Search',
+    schemaVersion: EXECUTION_TRACE_SCHEMA_VERSION,
+    metadata: {
+      algorithm: 'Word Search DFS Backtracking',
+      approachId,
+      approachName,
+      language: 'pseudocode'
+    },
+    initialState,
+    steps,
+    totalSteps: steps.length,
+    finalState: {
+      result: found,
+      board: board.map(row => [...row]),
+      matchedLength: found ? word.length : 0,
+      pathSequence: currentPath.map(p => ({ ...p }))
+    },
+    result: found
+  };
+
+  return normalizeExecutionTrace(rawTrace);
+};
+
+
 const traceMinimumDepthAlgorithm = (rawRoot, options = {}) => {
   const problemId = options.problemId || 'minimum-depth-of-binary-tree';
   const approachId = options.approachId || 'dfs';
@@ -6777,6 +8513,11 @@ module.exports = {
   traceValidParenthesesAlgorithm,
   traceReverseLinkedListAlgorithm,
   traceBinaryTreeInorderAlgorithm,
+  traceKthLargestAlgorithm,
+  traceSlidingWindowMaximumAlgorithm,
+  traceProductExceptSelfAlgorithm,
+  traceWordSearchAlgorithm,
+  extractBoardAndWord,
   traceMinimumDepthAlgorithm,
   traceMaximumDepthAlgorithm,
   extractNumsAndK,

@@ -15,12 +15,17 @@ export const VISUALIZATION_TYPES = {
   GRID: 'grid',
   HEAP: 'heap',
   BUCKET_SORT: 'bucket-sort',
+  SLIDING_WINDOW_MAX: 'sliding-window-max',
+  PREFIX_SUFFIX: 'prefix-suffix',
+  WORD_SEARCH: 'word-search',
   EVENT_SCENE: 'event-scene',
 };
 
 export const VISUALIZATION_TYPE_LABELS = {
   [VISUALIZATION_TYPES.ARRAY_HASHMAP]: 'Array + HashMap',
   [VISUALIZATION_TYPES.SLIDING_WINDOW]: 'Sliding Window',
+  [VISUALIZATION_TYPES.SLIDING_WINDOW_MAX]: 'Sliding Window + Monotonic Deque',
+  [VISUALIZATION_TYPES.PREFIX_SUFFIX]: 'Prefix & Suffix Products',
   [VISUALIZATION_TYPES.MATRIX_HASHSET]: 'Matrix + HashSet',
   [VISUALIZATION_TYPES.STACK]: 'Stack',
   [VISUALIZATION_TYPES.QUEUE]: 'Queue',
@@ -30,6 +35,7 @@ export const VISUALIZATION_TYPE_LABELS = {
   [VISUALIZATION_TYPES.GRID]: 'Grid (DFS/BFS)',
   [VISUALIZATION_TYPES.HEAP]: 'Heap / Priority Queue',
   [VISUALIZATION_TYPES.BUCKET_SORT]: 'Bucket Sort (Frequency Ranking)',
+  [VISUALIZATION_TYPES.WORD_SEARCH]: 'Word Search (2D Backtracking DFS)',
   [VISUALIZATION_TYPES.EVENT_SCENE]: 'Event-Driven Scene (Phase 11 Demo)',
 };
 
@@ -38,6 +44,9 @@ export const VISUALIZATION_TYPE_LABELS = {
  */
 export const PROBLEM_SLUG_ARCHETYPE_MAP = {
   'two-sum': VISUALIZATION_TYPES.ARRAY_HASHMAP,
+  'sliding-window-maximum': VISUALIZATION_TYPES.SLIDING_WINDOW_MAX,
+  'sliding-window-max': VISUALIZATION_TYPES.SLIDING_WINDOW_MAX,
+  '239': VISUALIZATION_TYPES.SLIDING_WINDOW_MAX,
   'longest-substring-without-repeating-characters': VISUALIZATION_TYPES.SLIDING_WINDOW,
   'longest-substring-no-repeat': VISUALIZATION_TYPES.SLIDING_WINDOW,
   'longest-substring': VISUALIZATION_TYPES.SLIDING_WINDOW,
@@ -53,6 +62,7 @@ export const PROBLEM_SLUG_ARCHETYPE_MAP = {
   'reverse-linked-list': VISUALIZATION_TYPES.LINKED_LIST,
   'reverse-list': VISUALIZATION_TYPES.LINKED_LIST,
   '206': VISUALIZATION_TYPES.LINKED_LIST,
+  'binary-tree-inorder': VISUALIZATION_TYPES.BINARY_TREE,
   'binary-tree-inorder-traversal': VISUALIZATION_TYPES.BINARY_TREE,
   'inorder-traversal': VISUALIZATION_TYPES.BINARY_TREE,
   '94': VISUALIZATION_TYPES.BINARY_TREE,
@@ -67,9 +77,15 @@ export const PROBLEM_SLUG_ARCHETYPE_MAP = {
   '128': VISUALIZATION_TYPES.ARRAY_HASHMAP,
   'number-of-islands': VISUALIZATION_TYPES.GRID,
   'kth-largest-element': VISUALIZATION_TYPES.HEAP,
+  'kth-largest': VISUALIZATION_TYPES.HEAP,
   'kth-largest-element-in-an-array': VISUALIZATION_TYPES.HEAP,
+  'product-except-self': VISUALIZATION_TYPES.PREFIX_SUFFIX,
+  'product-of-array-except-self': VISUALIZATION_TYPES.PREFIX_SUFFIX,
+  '238': VISUALIZATION_TYPES.PREFIX_SUFFIX,
   'furthest-building-1642': VISUALIZATION_TYPES.EVENT_SCENE,
   '1642': VISUALIZATION_TYPES.EVENT_SCENE,
+  'word-search': VISUALIZATION_TYPES.WORD_SEARCH,
+  '79': VISUALIZATION_TYPES.WORD_SEARCH,
 };
 
 /**

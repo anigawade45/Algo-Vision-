@@ -46,6 +46,10 @@ const SUPPORTED_LAYOUTS = Object.freeze([
   'composite-scene',
   'linked-list',
   'pointer-chain',
+  'heap',
+  'sliding-window-max',
+  'prefix-suffix',
+  'word-search',
   'generic-d3',
 ]);
 
@@ -419,9 +423,204 @@ const DEFAULT_PLANS = {
     ],
     explanation: 'Find the maximum depth (longest path from root down to the farthest leaf node) using depth-first search recursion.',
   },
+
+  'kth-largest-element': {
+    schemaVersion: 1,
+    problemId: 'kth-largest-element',
+    algorithmFamily: 'heap',
+    layout: 'heap',
+    structures: [
+      {
+        id: 'nums',
+        type: 'array',
+        source: 'input.nums',
+        label: 'Input Array (nums)',
+        options: { showIndices: true },
+      },
+      {
+        id: 'minHeap',
+        type: 'heap',
+        source: 'state.minHeap',
+        label: 'Min-Heap of Size K',
+        options: {},
+      },
+      {
+        id: 'k',
+        type: 'variable',
+        source: 'state.k',
+        label: 'Rank (k)',
+        options: {},
+      },
+      {
+        id: 'currentVal',
+        type: 'variable',
+        source: 'state.currentVal',
+        label: 'Active Element',
+        options: {},
+      },
+      {
+        id: 'result',
+        type: 'result',
+        source: 'state.result',
+        label: 'Kth Largest Value',
+        options: {},
+      },
+    ],
+    stateBindings: [
+      { visualProperty: 'nums', source: 'input.nums' },
+      { visualProperty: 'k', source: 'state.k' },
+      { visualProperty: 'currentIndex', source: 'state.currentIndex' },
+      { visualProperty: 'currentVal', source: 'state.currentVal' },
+      { visualProperty: 'minHeap', source: 'state.minHeap' },
+      { visualProperty: 'poppedVal', source: 'state.poppedVal' },
+      { visualProperty: 'result', source: 'state.result' },
+    ],
+    explanation: 'Maintain a Min-Heap of capacity k. Insert each element, and if heap size exceeds k, evict the minimum. The root holds the kth largest element.',
+  },
+
+
+  'word-search': {
+    schemaVersion: 1,
+    problemId: 'word-search',
+    algorithmFamily: 'backtracking',
+    layout: 'word-search',
+    structures: [
+      {
+        id: 'board',
+        type: 'matrix',
+        source: 'state.board',
+        label: 'Character Board Grid',
+        options: {},
+      },
+      {
+        id: 'word',
+        type: 'string',
+        source: 'state.word',
+        label: 'Target Word',
+        options: {},
+      },
+      {
+        id: 'path',
+        type: 'array',
+        source: 'state.path',
+        label: 'Current Exploration Path',
+        options: {},
+      },
+      {
+        id: 'result',
+        type: 'result',
+        source: 'state.result',
+        label: 'Word Exists',
+        options: {},
+      },
+    ],
+    stateBindings: [
+      { visualProperty: 'board', source: 'state.board' },
+      { visualProperty: 'word', source: 'state.word' },
+      { visualProperty: 'currentCell', source: 'state.currentCell' },
+      { visualProperty: 'path', source: 'state.path' },
+      { visualProperty: 'wordIndex', source: 'state.wordIndex' },
+      { visualProperty: 'result', source: 'state.result' },
+    ],
+    explanation: 'Explore 2D character grid using backtracking depth-first search (DFS) along horizontally and vertically adjacent cells to locate target word.',
+  },
+
+  'sliding-window-maximum': {
+    schemaVersion: 1,
+    problemId: 'sliding-window-maximum',
+    algorithmFamily: 'queue',
+    layout: 'sliding-window-max',
+    structures: [
+      {
+        id: 'nums',
+        type: 'array',
+        source: 'state.nums',
+        label: 'Input Array & Sliding Window',
+        options: {},
+      },
+      {
+        id: 'deque',
+        type: 'queue',
+        source: 'state.deque',
+        label: 'Monotonic Decreasing Deque',
+        options: {},
+      },
+      {
+        id: 'result',
+        type: 'result',
+        source: 'state.result',
+        label: 'Sliding Window Maxima',
+        options: {},
+      },
+    ],
+    stateBindings: [
+      { visualProperty: 'nums', source: 'input.nums' },
+      { visualProperty: 'k', source: 'state.k' },
+      { visualProperty: 'currentIndex', source: 'state.currentIndex' },
+      { visualProperty: 'currentVal', source: 'state.currentVal' },
+      { visualProperty: 'windowRange', source: 'state.windowRange' },
+      { visualProperty: 'deque', source: 'state.deque' },
+      { visualProperty: 'result', source: 'state.result' },
+    ],
+    explanation: 'Maintain a Monotonic Decreasing Deque of indices. The front always holds the index of the maximum element in the current window of size k.',
+  },
+
+  'product-of-array-except-self': {
+    schemaVersion: 1,
+    problemId: 'product-of-array-except-self',
+    algorithmFamily: 'prefix-suffix',
+    layout: 'prefix-suffix',
+    structures: [
+      {
+        id: 'nums',
+        type: 'array',
+        source: 'state.nums',
+        label: 'Original Array (nums)',
+        options: { showIndices: true },
+      },
+      {
+        id: 'output',
+        type: 'result',
+        source: 'state.output',
+        label: 'Answer Array (Product Except Self)',
+        options: { showIndices: true },
+      },
+      {
+        id: 'prefix',
+        type: 'array',
+        source: 'state.prefix',
+        label: 'Prefix Products (Left)',
+        options: { showIndices: true },
+      },
+      {
+        id: 'suffix',
+        type: 'array',
+        source: 'state.suffix',
+        label: 'Suffix Products (Right)',
+        options: { showIndices: true },
+      },
+    ],
+    stateBindings: [
+      { visualProperty: 'nums', source: 'state.nums' },
+      { visualProperty: 'output', source: 'state.output' },
+      { visualProperty: 'prefix', source: 'state.prefix' },
+      { visualProperty: 'suffix', source: 'state.suffix' },
+      { visualProperty: 'currentIndex', source: 'state.currentIndex' },
+      { visualProperty: 'phase', source: 'state.phase' },
+      { visualProperty: 'runningPrefix', source: 'state.runningPrefix' },
+      { visualProperty: 'runningSuffix', source: 'state.runningSuffix' },
+      { visualProperty: 'result', source: 'state.result' },
+    ],
+    explanation: 'Compute prefix products (left of each element) in Pass 1, then multiply by suffix products (right of each element) in Pass 2 in O(N) time without division.',
+  },
 };
 
 // Aliases for benchmark problems
+DEFAULT_PLANS['product-except-self'] = DEFAULT_PLANS['product-of-array-except-self'];
+DEFAULT_PLANS['238'] = DEFAULT_PLANS['product-of-array-except-self'];
+DEFAULT_PLANS['sliding-window-max'] = DEFAULT_PLANS['sliding-window-maximum'];
+DEFAULT_PLANS['79'] = DEFAULT_PLANS['word-search'];
+DEFAULT_PLANS['239'] = DEFAULT_PLANS['sliding-window-maximum'];
 DEFAULT_PLANS['top-k-frequent'] = DEFAULT_PLANS['top-k-frequent-elements'];
 DEFAULT_PLANS['347'] = DEFAULT_PLANS['top-k-frequent-elements'];
 DEFAULT_PLANS['longest-substring-no-repeat'] = DEFAULT_PLANS['longest-substring-without-repeating-characters'];
@@ -433,12 +632,18 @@ DEFAULT_PLANS['longest-consecutive'] = DEFAULT_PLANS['longest-consecutive-sequen
 DEFAULT_PLANS['20'] = DEFAULT_PLANS['valid-parentheses'];
 DEFAULT_PLANS['reverse-list'] = DEFAULT_PLANS['reverse-linked-list'];
 DEFAULT_PLANS['206'] = DEFAULT_PLANS['reverse-linked-list'];
+DEFAULT_PLANS['binary-tree-inorder'] = DEFAULT_PLANS['binary-tree-inorder-traversal'];
 DEFAULT_PLANS['inorder-traversal'] = DEFAULT_PLANS['binary-tree-inorder-traversal'];
 DEFAULT_PLANS['94'] = DEFAULT_PLANS['binary-tree-inorder-traversal'];
+DEFAULT_PLANS['kth-largest'] = DEFAULT_PLANS['kth-largest-element'];
+DEFAULT_PLANS['kth-largest-element-in-an-array'] = DEFAULT_PLANS['kth-largest-element'];
+DEFAULT_PLANS['215'] = DEFAULT_PLANS['kth-largest-element'];
 DEFAULT_PLANS['min-depth'] = DEFAULT_PLANS['minimum-depth-of-binary-tree'];
 DEFAULT_PLANS['111'] = DEFAULT_PLANS['minimum-depth-of-binary-tree'];
 DEFAULT_PLANS['max-depth'] = DEFAULT_PLANS['maximum-depth-of-binary-tree'];
 DEFAULT_PLANS['104'] = DEFAULT_PLANS['maximum-depth-of-binary-tree'];
+DEFAULT_PLANS['sliding-window-max'] = DEFAULT_PLANS['sliding-window-maximum'];
+DEFAULT_PLANS['239'] = DEFAULT_PLANS['sliding-window-maximum'];
 
 /**
  * Calculates maximum nesting depth of an object.

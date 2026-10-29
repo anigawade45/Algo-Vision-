@@ -83,14 +83,19 @@ export function VisualizationStage({
     return testCases.length > 0 && testCases[0].id !== undefined ? testCases[0].id : 1;
   });
 
-  // Keep selectedTestCaseId synced when targetProblemId or problem changes
+  const prevProblemIdRef = useRef(targetProblemId);
+
+  // Keep selectedTestCaseId synced when targetProblemId changes
   useEffect(() => {
-    const firstId = testCases.length > 0 && testCases[0].id !== undefined ? testCases[0].id : 1;
-    setSelectedTestCaseId(firstId);
-    setLiveTrace(null);
-    setCurrentStepIndex(0);
-    setIsPlaying(false);
-    setIsDryRunRequired(false);
+    if (prevProblemIdRef.current !== targetProblemId) {
+      prevProblemIdRef.current = targetProblemId;
+      const firstId = testCases.length > 0 && testCases[0].id !== undefined ? testCases[0].id : 1;
+      setSelectedTestCaseId(firstId);
+      setLiveTrace(null);
+      setCurrentStepIndex(0);
+      setIsPlaying(false);
+      setIsDryRunRequired(false);
+    }
   }, [targetProblemId, testCases]);
 
   // Resolve currently active test case object
@@ -316,9 +321,9 @@ export function VisualizationStage({
         approachName: selectedApproachName || 'Optimal Approach',
         approachId: selectedApproachId || 'default',
         visualizationType: resolvedVizType,
-        executionTrace: null,
+        executionTrace: liveTrace,
         initialState: directInputState,
-        isDirectTestCase: true,
+        isDirectTestCase: !liveTrace,
         category: problem?.category || 'Algorithm',
         difficulty: problem?.difficulty || 'Medium',
         input:
@@ -331,7 +336,7 @@ export function VisualizationStage({
           problem?.outputData,
         visualizationPlan,
         visualizationData: {
-          steps: [],
+          steps: liveTrace?.steps || [],
         },
       };
     }
@@ -356,13 +361,37 @@ export function VisualizationStage({
     visualizationPlan,
   ]);
 
-  // Resolve active trace from live or demo mode
+  // Resolve active trace from live mode, or fallback immediately to mock visualization steps
   const activeTrace = useMemo(() => {
-    if (sourceMode === 'live') {
-      return liveTrace || null;
+    if (sourceMode === 'live' && liveTrace && Array.isArray(liveTrace.steps) && liveTrace.steps.length > 0) {
+      return liveTrace;
     }
-    return selectedDemoProblem?.executionTrace || null;
-  }, [sourceMode, liveTrace, selectedDemoProblem]);
+
+    // High-fidelity fallback: if live trace is still loading or unavailable, retrieve mock execution trace
+    const mockProb =
+      getMockVisualizationByProblemId(targetProblemId) ||
+      selectedDemoProblem ||
+      mockVisualizations[targetProblemId];
+
+    if (mockProb?.executionTrace && Array.isArray(mockProb.executionTrace.steps) && mockProb.executionTrace.steps.length > 0) {
+      return mockProb.executionTrace;
+    }
+
+    if (mockProb?.visualizationData?.steps && Array.isArray(mockProb.visualizationData.steps) && mockProb.visualizationData.steps.length > 0) {
+      return {
+        problemId: mockProb.problemId || targetProblemId,
+        initialState: mockProb.visualizationData.initialState || mockProb.initialState || {},
+        steps: mockProb.visualizationData.steps,
+        finalState: mockProb.visualizationData.finalState || {},
+        result: mockProb.expectedOutput,
+        totalSteps: mockProb.visualizationData.steps.length,
+        minStep: 1,
+        maxStep: mockProb.visualizationData.steps.length,
+      };
+    }
+
+    return liveTrace || null;
+  }, [sourceMode, liveTrace, targetProblemId, selectedDemoProblem]);
 
   const hasReplay = Boolean(activeTrace && Array.isArray(activeTrace.steps) && activeTrace.steps.length > 0);
   const totalExecutionSteps = hasReplay ? activeTrace.steps.length : 0;
@@ -410,18 +439,6 @@ export function VisualizationStage({
 
   // Compute Authoritative Playback State Machine
   const playbackStatus = useMemo(() => {
-    if (sourceMode === 'live') {
-      if (isTraceLoading) {
-        return PLAYBACK_STATUS.INITIAL_INPUT;
-      }
-      if (traceError) {
-        return PLAYBACK_STATUS.TRACE_ERROR;
-      }
-      if (isDryRunRequired || (!liveTrace && !activeProblem?.executionTrace)) {
-        return PLAYBACK_STATUS.TRACE_UNAVAILABLE;
-      }
-    }
-
     if (hasReplay) {
       if (isPlaying) {
         return PLAYBACK_STATUS.PLAYING;
@@ -435,14 +452,24 @@ export function VisualizationStage({
       return PLAYBACK_STATUS.READY;
     }
 
+    if (sourceMode === 'live') {
+      if (isTraceLoading) {
+        return PLAYBACK_STATUS.INITIAL_INPUT;
+      }
+      if (traceError) {
+        return PLAYBACK_STATUS.TRACE_ERROR;
+      }
+      if (isDryRunRequired) {
+        return PLAYBACK_STATUS.TRACE_UNAVAILABLE;
+      }
+    }
+
     return PLAYBACK_STATUS.INITIAL_INPUT;
   }, [
     sourceMode,
     isTraceLoading,
     traceError,
     isDryRunRequired,
-    liveTrace,
-    activeProblem?.executionTrace,
     hasReplay,
     isPlaying,
     currentStepIndex,
@@ -711,7 +738,7 @@ export function VisualizationStage({
           />
 
           {/* Direct Input State Informational Notice with AI Generation Action */}
-          {sourceMode === 'live' && !liveTrace && (
+          {sourceMode === 'live' && !liveTrace && !hasReplay && (
             <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-50/70 to-indigo-50/70 dark:from-blue-950/20 dark:to-indigo-950/20 border border-blue-200/60 dark:border-blue-900/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono shadow-xs">
               <div className="flex items-center gap-2.5">
                 <Sparkles className="w-4 h-4 text-purple-600 dark:text-purple-400 shrink-0" />

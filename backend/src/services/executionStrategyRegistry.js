@@ -6,6 +6,11 @@ const {
   traceValidParenthesesAlgorithm,
   traceReverseLinkedListAlgorithm,
   traceBinaryTreeInorderAlgorithm,
+  traceKthLargestAlgorithm,
+  traceSlidingWindowMaximumAlgorithm,
+  traceProductExceptSelfAlgorithm,
+  traceWordSearchAlgorithm,
+  extractBoardAndWord,
   traceMinimumDepthAlgorithm,
   traceMaximumDepthAlgorithm,
   extractNumsAndTarget,
@@ -118,6 +123,7 @@ const CANONICAL_PROBLEM_ALIASES = Object.freeze({
 
   // 94. Binary Tree Inorder Traversal
   '94': 'binary-tree-inorder-traversal',
+  'binary-tree-inorder': 'binary-tree-inorder-traversal',
   'binary-tree-inorder-traversal': 'binary-tree-inorder-traversal',
   'inorder-traversal': 'binary-tree-inorder-traversal',
   'inordertraversal': 'binary-tree-inorder-traversal',
@@ -146,6 +152,26 @@ const CANONICAL_PROBLEM_ALIASES = Object.freeze({
   'reverse-list': 'reverse-linked-list',
   'reverselist': 'reverse-linked-list',
   'reverselinkedlist': 'reverse-linked-list',
+
+  // 215. Kth Largest Element in an Array
+  '215': 'kth-largest-element',
+  'kth-largest-element': 'kth-largest-element',
+  'kth-largest': 'kth-largest-element',
+  'kth-largest-element-in-an-array': 'kth-largest-element',
+  'kthlargest': 'kth-largest-element',
+
+  // 238. Product of Array Except Self
+  '238': 'product-of-array-except-self',
+  'product-of-array-except-self': 'product-of-array-except-self',
+  'product-except-self': 'product-of-array-except-self',
+  'productexceptself': 'product-of-array-except-self',
+
+  // 239. Sliding Window Maximum
+  '239': 'sliding-window-maximum',
+  'sliding-window-maximum': 'sliding-window-maximum',
+  'sliding-window-max': 'sliding-window-maximum',
+  'slidingwindowmaximum': 'sliding-window-maximum',
+  'slidingwindowmax': 'sliding-window-maximum',
 
   // 347. Top K Frequent Elements
   '347': 'top-k-frequent-elements',
@@ -542,6 +568,29 @@ registerStrategy(
   }
 );
 
+
+// Word Search (2D Backtracking DFS)
+registerStrategy(
+  ['word-search', '79'],
+  (input, options = {}) => {
+    const { board, word } = extractBoardAndWord(input.testCase, input.problem);
+    const trace = traceWordSearchAlgorithm(board, word, {
+      problemId: 'word-search',
+      approachId: options.approachId || 'backtrackingDfs',
+      approachName: options.approachName || '2D Grid Backtracking DFS',
+      testCaseId: options.testCaseId || 1,
+      title: input.problem?.title || 'Word Search',
+    });
+    return trace;
+  },
+  {
+    canonicalId: 'word-search',
+    algorithmFamily: 'backtracking',
+    approachId: 'backtrackingDfs',
+    approachName: '2D Grid Backtracking DFS',
+  }
+);
+
 // 5. Valid Parentheses (Stack)
 registerStrategy(
   ['valid-parentheses', '20'],
@@ -600,7 +649,7 @@ registerStrategy(
 
 // 7. Binary Tree Inorder Traversal (Call Stack DFS)
 registerStrategy(
-  ['binary-tree-inorder-traversal', 'inorder-traversal', '94'],
+  ['binary-tree-inorder-traversal', 'binary-tree-inorder', 'inorder-traversal', '94'],
   (input, options = {}, limits = DEFAULT_LIMITS) => {
     const root = extractTreeInput(input.testCase, input.problem);
 
@@ -623,6 +672,152 @@ registerStrategy(
     algorithmFamily: 'binary-tree',
     approachId: 'inorderDfs',
     approachName: 'Inorder Traversal (Call Stack)',
+  }
+);
+
+// 7b. Kth Largest Element in an Array (Min-Heap of Size K)
+registerStrategy(
+  ['kth-largest-element', 'kth-largest', 'kth-largest-element-in-an-array', '215'],
+  (input, options = {}, limits = DEFAULT_LIMITS) => {
+    let nums = null;
+    let k = 2;
+    const tc = input.testCase || {};
+    const struct = tc.inputStructured || {};
+
+    if (Array.isArray(struct.nums)) nums = struct.nums;
+    else if (Array.isArray(struct.array)) nums = struct.array;
+    else if (Array.isArray(struct.value?.array)) nums = struct.value.array;
+    else if (Array.isArray(input.problem?.inputData?.array)) nums = input.problem.inputData.array;
+    else if (Array.isArray(input.problem?.inputData?.nums)) nums = input.problem.inputData.nums;
+
+    if (struct.k !== undefined && Number(struct.k) > 0) k = Number(struct.k);
+    else if (struct.value?.k !== undefined && Number(struct.value.k) > 0) k = Number(struct.value.k);
+    else if (input.problem?.inputData?.k !== undefined && Number(input.problem.inputData.k) > 0) k = Number(input.problem.inputData.k);
+
+    if (!nums) {
+      try {
+        const extracted = extractNumsAndK(input.testCase, input.problem);
+        nums = extracted?.nums || [3, 2, 1, 5, 6, 4];
+        k = extracted?.k || 2;
+      } catch {
+        nums = [3, 2, 1, 5, 6, 4];
+        k = 2;
+      }
+    }
+
+    if (Array.isArray(nums) && nums.length > limits.maxInputLength) {
+      throw new Error(`Input array length (${nums.length}) exceeds safety limit of ${limits.maxInputLength}`);
+    }
+
+    const trace = traceKthLargestAlgorithm(nums, k, {
+      problemId: 'kth-largest-element',
+      approachId: options.approachId || 'minHeap',
+      approachName: options.approachName || 'Min-Heap of Size K',
+      testCaseId: options.testCaseId || 1,
+      title: input.problem?.title || 'Kth Largest Element in an Array',
+    });
+
+    return trace;
+  },
+  {
+    canonicalId: 'kth-largest-element',
+    algorithmFamily: 'heap',
+    approachId: 'minHeap',
+    approachName: 'Min-Heap of Size K',
+  }
+);
+
+// 7c. Sliding Window Maximum (Monotonic Deque)
+registerStrategy(
+  ['sliding-window-maximum', 'sliding-window-max', '239'],
+  (input, options = {}, limits = DEFAULT_LIMITS) => {
+    let nums = null;
+    let k = 3;
+    const tc = input.testCase || {};
+    const struct = tc.inputStructured || {};
+
+    if (Array.isArray(struct.nums)) nums = struct.nums;
+    else if (Array.isArray(struct.array)) nums = struct.array;
+    else if (Array.isArray(struct.value?.array)) nums = struct.value.array;
+    else if (Array.isArray(input.problem?.inputData?.array)) nums = input.problem.inputData.array;
+    else if (Array.isArray(input.problem?.input?.nums)) nums = input.problem.input.nums;
+
+    if (struct.k !== undefined) k = Number(struct.k) || 3;
+    else if (input.problem?.inputData?.k !== undefined) k = Number(input.problem.inputData.k) || 3;
+    else if (input.problem?.input?.k !== undefined) k = Number(input.problem.input.k) || 3;
+
+    if (!Array.isArray(nums)) {
+      nums = [1, 3, -1, -3, 5, 3, 6, 7];
+    }
+
+    if (nums.length > limits.maxInputLength) {
+      throw new Error(`Array length (${nums.length}) exceeds safety limit of ${limits.maxInputLength}`);
+    }
+
+    const trace = traceSlidingWindowMaximumAlgorithm(nums, k, {
+      problemId: 'sliding-window-maximum',
+      approachId: options.approachId || 'monotonicDeque',
+      approachName: options.approachName || 'Monotonic Deque (Sliding Window)',
+      testCaseId: options.testCaseId || 1,
+      title: input.problem?.title || 'Sliding Window Maximum',
+    });
+
+    return trace;
+  },
+  {
+    canonicalId: 'sliding-window-maximum',
+    algorithmFamily: 'queue',
+    approachId: 'monotonicDeque',
+    approachName: 'Monotonic Deque (Sliding Window)',
+  }
+);
+
+// 7d. Product of Array Except Self (Two-Pass Prefix and Suffix)
+registerStrategy(
+  ['product-of-array-except-self', 'product-except-self', '238'],
+  (input, options = {}, limits = DEFAULT_LIMITS) => {
+    let nums = null;
+    const tc = input.testCase || {};
+    const struct = tc.inputStructured || {};
+
+    if (Array.isArray(struct.nums)) nums = struct.nums;
+    else if (Array.isArray(struct.value)) nums = struct.value;
+    else if (Array.isArray(struct.array)) nums = struct.array;
+    else if (Array.isArray(input.problem?.inputData?.value)) nums = input.problem.inputData.value;
+    else if (Array.isArray(input.problem?.inputData?.array)) nums = input.problem.inputData.array;
+    else if (Array.isArray(input.problem?.inputData?.nums)) nums = input.problem.inputData.nums;
+
+    if (!Array.isArray(nums)) {
+      try {
+        nums = extractNumsArray(input.testCase, input.problem);
+      } catch {
+        nums = [1, 2, 3, 4];
+      }
+    }
+
+    if (!Array.isArray(nums) || nums.length === 0) {
+      nums = [1, 2, 3, 4];
+    }
+
+    if (nums.length > limits.maxInputLength) {
+      throw new Error(`Array length (${nums.length}) exceeds safety limit of ${limits.maxInputLength}`);
+    }
+
+    const trace = traceProductExceptSelfAlgorithm(nums, {
+      problemId: 'product-except-self',
+      approachId: options.approachId || 'prefixSuffix',
+      approachName: options.approachName || 'Two-Pass Prefix and Suffix Products',
+      testCaseId: options.testCaseId || 1,
+      title: input.problem?.title || 'Product of Array Except Self',
+    });
+
+    return trace;
+  },
+  {
+    canonicalId: 'product-of-array-except-self',
+    algorithmFamily: 'prefix-suffix',
+    approachId: 'prefixSuffix',
+    approachName: 'Two-Pass Prefix and Suffix Products',
   }
 );
 

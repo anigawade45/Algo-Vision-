@@ -48,7 +48,7 @@ const CN_TOPICS = [
     description:
       'Calculate subnet masks, usable host ranges, broadcast addresses, 32-bit binary ANDing, and VLSM allocation.',
     path: '/cn/ip-subnetting',
-    badge: 'Live Calculator',
+    badge: 'Calculator & Code Lab',
     badgeColor:
       'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800',
   },

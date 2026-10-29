@@ -462,6 +462,16 @@ export default function App() {
             />
 
             <Route
+              path="/cn/subnetting"
+              element={<Navigate to="/cn/ip-subnetting" replace />}
+            />
+
+            <Route
+              path="/cn/subnet"
+              element={<Navigate to="/cn/ip-subnetting" replace />}
+            />
+
+            <Route
               path="/cn/routing-protocols"
               element={
                 <ProtectedRoute>
