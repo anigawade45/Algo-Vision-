@@ -2,6 +2,9 @@ export { VisualizerResolver } from './VisualizerResolver';
 export { GenericD3Visualization } from './GenericD3Visualization';
 export { ArrayVisualizer } from './ArrayVisualizer';
 export { SlidingWindowVisualizer } from './SlidingWindowVisualizer';
+export { SlidingWindowMaxVisualizer } from './SlidingWindowMaxVisualizer';
+export { ProductExceptSelfVisualizer } from './ProductExceptSelfVisualizer';
+export { WordSearchVisualizer } from './WordSearchVisualizer';
 export { HashMapVisualizer } from './HashMapVisualizer';
 export { HashSetVisualizer } from './HashSetVisualizer';
 export { ArrayHashMapVisualizer } from './ArrayHashMapVisualizer';
@@ -12,6 +15,7 @@ export { MatrixVisualizer } from './MatrixVisualizer';
 export { LinkedListVisualizer } from './LinkedListVisualizer';
 export { BinaryTreeVisualizer } from './BinaryTreeVisualizer';
 export { HeapVisualizer } from './HeapVisualizer';
+export { BucketSortVisualizer } from './BucketSortVisualizer';
 export { GridVisualizer } from './GridVisualizer';
 export { FallbackVisualizer } from './FallbackVisualizer';
 export { ArrayCell } from './primitives/ArrayCell';
@@ -39,9 +43,3 @@ export {
   primitiveRegistry,
   getPrimitiveComponent,
 } from './primitives';
-
-
-
-
-
-

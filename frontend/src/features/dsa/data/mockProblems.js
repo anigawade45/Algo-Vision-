@@ -1362,6 +1362,24 @@ const INITIAL_MOCK_PROBLEMS = [
         outputStructured: { type: 'boolean', value: true },
         reasoning: ['Path (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2) -> (2,1) matches "ABCCED".'],
       },
+      {
+        id: 2,
+        inputRaw: 'board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"',
+        outputRaw: 'true',
+        inputStructured: {
+          type: 'matrix',
+          value: {
+            grid: [
+              ['A', 'B', 'C', 'E'],
+              ['S', 'F', 'C', 'S'],
+              ['A', 'D', 'E', 'E'],
+            ],
+            word: 'SEE',
+          },
+        },
+        outputStructured: { type: 'boolean', value: true },
+        reasoning: ['Path (1,3) -> (2,3) -> (2,2) matches "SEE".'],
+      },
     ],
     observations: [
       { stepNo: '01', title: '2D GRID BACKTRACKING DFS', detail: 'Mark cell visited in-place with "#" during recursion and restore afterwards.' },
@@ -1460,8 +1478,24 @@ export function validateMockProblem(problem) {
  * Get problem by ID or fallback to Two Sum
  */
 export function getProblemById(id) {
-  const found = MOCK_PROBLEMS.find((p) => p.id === id);
+  if (!id) return MOCK_PROBLEMS[0];
+  const norm = String(id).trim().toLowerCase();
+  const found = MOCK_PROBLEMS.find((p) => {
+    const pId = String(p.id || '').toLowerCase();
+    const pProblemId = String(p.problemId || '').toLowerCase();
+    return pId === norm || pProblemId === norm;
+  });
   if (found) return found;
+
+  // Canonical alias resolution
+  if (norm === 'binary-tree-inorder-traversal' || norm === 'inorder-traversal' || norm === '94') {
+    const treeProb = MOCK_PROBLEMS.find((p) => p.id === 'binary-tree-inorder');
+    if (treeProb) return treeProb;
+  }
+  if (norm === 'kth-largest' || norm === 'kth-largest-element-in-an-array' || norm === '215') {
+    const kthProb = MOCK_PROBLEMS.find((p) => p.id === 'kth-largest-element');
+    if (kthProb) return kthProb;
+  }
 
   return MOCK_PROBLEMS[0];
 }

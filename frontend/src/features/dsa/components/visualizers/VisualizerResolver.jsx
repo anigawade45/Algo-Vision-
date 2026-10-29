@@ -2,6 +2,9 @@ import React from 'react';
 import { VISUALIZATION_TYPES, resolveVisualizationType } from '../../data/visualizationTypes';
 import { ArrayHashMapVisualizer } from './ArrayHashMapVisualizer';
 import { SlidingWindowVisualizer } from './SlidingWindowVisualizer';
+import { SlidingWindowMaxVisualizer } from './SlidingWindowMaxVisualizer';
+import { ProductExceptSelfVisualizer } from './ProductExceptSelfVisualizer';
+import { WordSearchVisualizer } from './WordSearchVisualizer';
 import { MatrixHashSetVisualizer } from './MatrixHashSetVisualizer';
 import { StackVisualizer } from './StackVisualizer';
 import { QueueVisualizer } from './QueueVisualizer';
@@ -17,6 +20,17 @@ import { GenericD3Visualization } from './GenericD3Visualization';
 
 export function VisualizerResolver({ problem, plan, step, stepIndex, state, highlights }) {
   if (!problem) return null;
+
+  const probId = String(problem?.id || problem?.problemId || '').toLowerCase();
+  if (probId === 'sliding-window-maximum' || probId === 'sliding-window-max' || probId === '239') {
+    return <SlidingWindowMaxVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+  }
+  if (probId === 'product-except-self' || probId === 'product-of-array-except-self' || probId === '238') {
+    return <ProductExceptSelfVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+  }
+  if (probId === 'word-search' || probId === '79') {
+    return <WordSearchVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+  }
 
   const activePlan = plan || problem?.visualizationPlan || null;
   const useD3 = Boolean(problem?.renderMode === 'd3' || problem?.useD3 || activePlan?.layout === 'generic-d3');
@@ -37,6 +51,15 @@ export function VisualizerResolver({ problem, plan, step, stepIndex, state, high
   // 1. Resolve directly from active plan layout if present
   if (activePlan?.layout) {
     const layout = activePlan.layout.toLowerCase();
+    if (layout === 'sliding-window-max' || layout === 'sliding-window-maximum') {
+      return <SlidingWindowMaxVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+    }
+    if (layout === 'prefix-suffix' || layout === 'prefix-product') {
+      return <ProductExceptSelfVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+    }
+    if (layout === 'word-search' || layout === 'grid-backtracking') {
+      return <WordSearchVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+    }
     if (layout === 'tree-traversal' || layout === 'binary-tree' || layout === 'tree') {
       return <BinaryTreeVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
     }
@@ -80,6 +103,15 @@ export function VisualizerResolver({ problem, plan, step, stepIndex, state, high
 
     case VISUALIZATION_TYPES.SLIDING_WINDOW:
       return <SlidingWindowVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+
+    case VISUALIZATION_TYPES.SLIDING_WINDOW_MAX:
+      return <SlidingWindowMaxVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+
+    case VISUALIZATION_TYPES.PREFIX_SUFFIX:
+      return <ProductExceptSelfVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
+
+    case VISUALIZATION_TYPES.WORD_SEARCH:
+      return <WordSearchVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
 
     case VISUALIZATION_TYPES.MATRIX_HASHSET:
       return <MatrixHashSetVisualizer problem={problem} step={step} state={state} highlights={highlights} />;
@@ -129,8 +161,3 @@ export function VisualizerResolver({ problem, plan, step, stepIndex, state, high
       return <FallbackVisualizer problem={problem} step={step} state={state} />;
   }
 }
-
-
-
-
-

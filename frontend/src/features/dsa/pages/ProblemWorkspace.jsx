@@ -137,6 +137,7 @@ export default function ProblemWorkspace({
   // Load Real Problem & Workspace State from Backend
   useEffect(() => {
     let isMounted = true;
+    setActiveProblem(null);
 
     const initializeWorkspaceFlow = async () => {
       // 1. Fetch Real Problem Data
@@ -144,9 +145,14 @@ export default function ProblemWorkspace({
         const pRes = await getProblemById(targetProblemId);
         if (pRes?.success && pRes?.data?.problem && isMounted) {
           setActiveProblem(pRes.data.problem);
+        } else if (isMounted) {
+          setActiveProblem(null);
         }
       } catch (err) {
-        console.log('Failed loading problem from backend:', err.message);
+        if (isMounted) {
+          setActiveProblem(null);
+        }
+        console.log('Using local fallback problem specification:', err.message);
       }
 
       // 2. Fetch Workspace State
@@ -203,6 +209,7 @@ export default function ProblemWorkspace({
     }
   };
   const handleProblemChange = (newId) => {
+    setActiveProblem(null);
     setSelectedProblemId(newId);
     if (id) {
       navigate(`/dsa/workspace/${newId}`);
@@ -329,7 +336,29 @@ export default function ProblemWorkspace({
 
           {/* Active Problem Summary Card & Selector inside Sidebar */}
           {isSidebarExpanded && (
-            <div className="p-4 border-b border-slate-100 dark:border-[#162032] space-y-2.5">
+            <div className="p-4 border-b border-slate-100 dark:border-[#162032] space-y-3">
+              <div className="space-y-1">
+                <label
+                  htmlFor="desktop-problem-selector"
+                  className="block text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400"
+                >
+                  ACTIVE PROBLEM
+                </label>
+                <select
+                  id="desktop-problem-selector"
+                  aria-label="Select DSA Problem"
+                  value={targetProblemId}
+                  onChange={(e) => handleProblemChange(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-xl px-2.5 py-2 text-slate-900 dark:text-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 dark:hover:border-blue-600 transition-colors"
+                >
+                  {MOCK_PROBLEMS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
                   <span>Progress</span>
@@ -453,7 +482,7 @@ export default function ProblemWorkspace({
               <select
                 id="mobile-problem-selector"
                 aria-label="Select test problem"
-                value={selectedProblemId}
+                value={targetProblemId}
                 onChange={(e) => handleProblemChange(e.target.value)}
                 className="bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-lg px-2 py-1 text-slate-900 dark:text-white cursor-pointer max-w-[160px] truncate focus:outline-none focus:ring-1 focus:ring-blue-500"
               >

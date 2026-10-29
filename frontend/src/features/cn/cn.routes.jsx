@@ -26,6 +26,8 @@ export const cnRoutes = (
     <Route path="/cn/tcp-handshake" element={<Navigate to="/cn/transport" replace />} />
     <Route path="/cn/osi-layers" element={<OsiLayers />} />
     <Route path="/cn/ip-subnetting" element={<IpSubnetting />} />
+    <Route path="/cn/subnetting" element={<Navigate to="/cn/ip-subnetting" replace />} />
+    <Route path="/cn/subnet" element={<Navigate to="/cn/ip-subnetting" replace />} />
     <Route path="/cn/routing-protocols" element={<RoutingProtocols />} />
     <Route path="/cn/protocols" element={<NetworkProtocols />} />
     <Route path="/cn/network-protocols" element={<Navigate to="/cn/protocols" replace />} />
