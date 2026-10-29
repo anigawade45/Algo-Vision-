@@ -44,14 +44,29 @@ export default function MyProblems({ theme, toggleTheme }) {
     fetchMyProblems();
   }, []);
 
+  const formatDate = (dateValue) => {
+    if (!dateValue) return 'Date unavailable';
+    const date = new Date(dateValue);
+    if (Number.isNaN(date.getTime())) {
+      return 'Date unavailable';
+    }
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
   const getDifficultyColor = (difficulty) => {
     switch (difficulty?.toLowerCase()) {
       case 'easy':
         return 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/60';
       case 'hard':
         return 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/60';
-      default:
+      case 'medium':
         return 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-900/60';
+      default:
+        return 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700';
     }
   };
 
@@ -110,11 +125,24 @@ export default function MyProblems({ theme, toggleTheme }) {
 
         {/* Error State */}
         {error && !loading && (
-          <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-sm flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
-            <div>
-              <p className="font-semibold">{error}</p>
+          <div
+            role="alert"
+            className="p-4 sm:p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs"
+          >
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold">{error}</p>
+                <p className="text-xs text-rose-600/80 dark:text-rose-400/80 mt-0.5">Please check your network or backend connection.</p>
+              </div>
             </div>
+            <button
+              type="button"
+              onClick={fetchMyProblems}
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs transition-colors cursor-pointer shrink-0 shadow-sm"
+            >
+              Retry
+            </button>
           </div>
         )}
 
@@ -149,31 +177,31 @@ export default function MyProblems({ theme, toggleTheme }) {
         {/* Problems List / Cards Grid */}
         {!loading && !error && problems.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {problems.map((problem) => {
-              const problemId = problem.problemId || problem.id || problem._id;
-              const dateStr = problem.createdAt
-                ? new Date(problem.createdAt).toLocaleDateString(undefined, {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })
-                : 'Recently';
+            {problems.map((problem, index) => {
+              const problemSlug = problem.slug || problem.problemId || problem.id || problem._id;
+              const cardKey = problem._id || problemSlug || `problem-${index}`;
+              const testCaseCount = Array.isArray(problem.testCases)
+                ? problem.testCases.length
+                : typeof problem.testCaseCount === 'number'
+                  ? problem.testCaseCount
+                  : 0;
 
               return (
                 <motion.div
-                  key={problemId}
+                  key={cardKey}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                  onClick={() => navigate(`/dsa/workspace/${problemSlug}`)}
+                  className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] hover:border-blue-500/40 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer"
                 >
                   <div className="space-y-3">
                     {/* Header Badges */}
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2.5 py-0.5 rounded-full border border-blue-200 dark:border-blue-900/50">
-                        {problem.category || 'General'}
+                        {problem.category || 'Uncategorized'}
                       </span>
                       <span className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full border ${getDifficultyColor(problem.difficulty)}`}>
-                        {problem.difficulty || 'Medium'}
+                        {problem.difficulty || 'Not Specified'}
                       </span>
                     </div>
 
@@ -191,11 +219,11 @@ export default function MyProblems({ theme, toggleTheme }) {
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
                       <div className="flex items-center gap-1.5">
                         <Layers className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{problem.testCases?.length || 1} Test Cases</span>
+                        <span>{testCaseCount} Test Case{testCaseCount === 1 ? '' : 's'}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{dateStr}</span>
+                        <span>{formatDate(problem.createdAt)}</span>
                       </div>
                     </div>
                   </div>
@@ -204,7 +232,10 @@ export default function MyProblems({ theme, toggleTheme }) {
                   <div className="pt-4 mt-4 border-t border-slate-100 dark:border-[#162032]">
                     <button
                       type="button"
-                      onClick={() => navigate(`/dsa/workspace/${problemId}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/dsa/workspace/${problemSlug}`);
+                      }}
                       className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-slate-50 hover:bg-blue-50 dark:bg-[#070A12] dark:hover:bg-blue-950/40 border border-slate-200 dark:border-[#1E2638] text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 text-xs font-semibold transition-all cursor-pointer"
                     >
                       <FileCode2 className="w-3.5 h-3.5" />

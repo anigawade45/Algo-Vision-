@@ -15,10 +15,11 @@ class AppError extends Error {
 
 const resolveProblemAndCheckAccess = async (problemIdOrSlug, userId) => {
   if (!problemIdOrSlug) throw new AppError('Problem identifier is required', 400);
-  const normalizedSlug = String(problemIdOrSlug).trim().toLowerCase();
+  const idStr = String(problemIdOrSlug).trim();
+  const normalizedSlug = idStr.toLowerCase();
   let problem = await Problem.findOne({ problemId: normalizedSlug });
-  if (!problem && problemIdOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
-    problem = await Problem.findById(problemIdOrSlug);
+  if (!problem && /^[0-9a-fA-F]{24}$/.test(idStr)) {
+    problem = await Problem.findById(idStr);
   }
   if (!problem) throw new AppError(`Problem not found for identifier "${problemIdOrSlug}"`, 404);
   

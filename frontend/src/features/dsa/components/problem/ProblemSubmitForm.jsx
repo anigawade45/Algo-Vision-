@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Sparkles,
@@ -11,9 +11,17 @@ import {
   Loader2,
   Plus,
   Trash2,
-  Layers,
 } from 'lucide-react';
 import { createProblem } from '@/api/dsa.api';
+
+let testCaseSeq = 0;
+const createTestCaseId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  testCaseSeq += 1;
+  return `tc_${Date.now()}_${testCaseSeq}`;
+};
 
 const TWO_SUM_EXAMPLE = {
   title: 'Two Sum',
@@ -37,7 +45,7 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
 
   // Support up to 8 Input and Output pairs
   const [testCases, setTestCases] = useState([
-    { id: Date.now(), input: '', output: '' },
+    { id: createTestCaseId(), input: '', output: '' },
   ]);
 
   const [touched, setTouched] = useState({
@@ -51,6 +59,7 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
   const [errors, setErrors] = useState({});
   const [tcErrors, setTcErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
   const [apiError, setApiError] = useState(null);
 
   // Validate individual base field
@@ -180,26 +189,34 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
       [id]: { ...(prev[id] || {}), [field]: true },
     }));
 
+    const index = testCases.findIndex((tc) => tc.id === id) + 1;
     const tc = testCases.find((item) => item.id === id);
-    if (tc) {
-      const val = tc[field] || '';
-      if (!val.trim()) {
-        const index = testCases.findIndex((item) => item.id === id) + 1;
-        setTcErrors((prev) => ({
-          ...prev,
-          [id]: {
-            ...(prev[id] || {}),
-            [field]: `${field === 'input' ? 'Input' : 'Output'} ${index} is required.`,
-          },
-        }));
+    const isEmpty = !(tc?.[field] || '').trim();
+
+    setTcErrors((prev) => {
+      const next = { ...prev };
+      const pair = { ...(next[id] || {}) };
+
+      if (isEmpty) {
+        pair[field] = `${field === 'input' ? 'Input' : 'Output'} ${index} is required.`;
+      } else {
+        delete pair[field];
       }
-    }
+
+      if (Object.keys(pair).length > 0) {
+        next[id] = pair;
+      } else {
+        delete next[id];
+      }
+
+      return next;
+    });
   };
 
   // Add new Input & Output pair (max 8)
   const handleAddTestCase = () => {
     if (testCases.length >= 8) return;
-    setTestCases((prev) => [...prev, { id: Date.now(), input: '', output: '' }]);
+    setTestCases((prev) => [...prev, { id: createTestCaseId(), input: '', output: '' }]);
   };
 
   // Remove Input & Output pair
@@ -207,6 +224,11 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
     if (testCases.length <= 1) return;
     setTestCases((prev) => prev.filter((tc) => tc.id !== id));
     setTcErrors((prev) => {
+      const copy = { ...prev };
+      delete copy[id];
+      return copy;
+    });
+    setTcTouched((prev) => {
       const copy = { ...prev };
       delete copy[id];
       return copy;
@@ -221,10 +243,9 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
       approach: TWO_SUM_EXAMPLE.approach,
     });
     setTestCases(
-      TWO_SUM_EXAMPLE.testCases.map((tc, i) => ({
-        id: Date.now() + i,
-        input: tc.input,
-        output: tc.output,
+      TWO_SUM_EXAMPLE.testCases.map((tc) => ({
+        ...tc,
+        id: createTestCaseId(),
       }))
     );
     setErrors({});
@@ -240,6 +261,7 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmittingRef.current) return;
 
     setTouched({
       title: true,
@@ -263,35 +285,56 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
       return;
     }
 
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
     setApiError(null);
 
     // Form payload with testCases array and formatted single fields
     const submissionPayload = {
-      title: formData.title,
-      description: formData.description,
-      constraints: formData.constraints,
-      approach: formData.approach,
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      constraints: formData.constraints.trim(),
+      approach: formData.approach.trim(),
       testCases: testCases.map((tc, idx) => ({
         id: idx + 1,
-        inputRaw: tc.input,
-        outputRaw: tc.output,
-        input: tc.input,
-        output: tc.output,
+        inputRaw: tc.input.trim(),
+        outputRaw: tc.output.trim(),
+        input: tc.input.trim(),
+        output: tc.output.trim(),
       })),
     };
 
     try {
       const res = await createProblem(submissionPayload);
-      setIsSubmitting(false);
-      const createdProblem = res.data || res.problem || res;
-      if (onAnalyzeSuccess) {
-        onAnalyzeSuccess(createdProblem);
+
+      const canonicalProblem =
+        res?.data?.problem ??
+        res?.problem ??
+        res?.data ??
+        res;
+
+      const slug =
+        canonicalProblem?.slug ||
+        canonicalProblem?.problemId ||
+        canonicalProblem?.id;
+
+      if (!canonicalProblem || typeof slug !== 'string' || !slug.trim()) {
+        throw new Error('The server returned an invalid canonical problem slug.');
       }
+
+      if (typeof onAnalyzeSuccess !== 'function') {
+        throw new Error('Workspace navigation is not configured.');
+      }
+
+      onAnalyzeSuccess(canonicalProblem);
     } catch (err) {
       console.error('Problem submission failed:', err);
+      setApiError(
+        err.message || 'Failed to submit problem. Please try again.'
+      );
+    } finally {
+      isSubmittingRef.current = false;
       setIsSubmitting(false);
-      setApiError(err.message || 'Failed to submit problem to backend. Please try again.');
     }
   };
 
@@ -299,9 +342,9 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
     <div className="w-full max-w-3xl mx-auto font-sans">
       {/* Main Container Card */}
       <div className="bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl p-6 sm:p-10 shadow-sm dark:shadow-2xl relative overflow-hidden transition-all">
-        
+
         {/* Ambient Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-36 bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-36 bg-linear-to-b from-blue-500/10 via-indigo-500/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
         {/* Page Header */}
         <div className="relative z-10 text-center mb-8 space-y-2.5">
@@ -335,7 +378,7 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
 
         {/* Single-Column Form */}
         <form onSubmit={handleSubmit} noValidate className="relative z-10 space-y-8">
-          
+
           {/* SECTION 1: Problem Details */}
           <div className="space-y-5">
             <div className="flex items-center gap-2 border-b border-slate-100 dark:border-[#182030] pb-2">
@@ -354,16 +397,16 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
                 id="title"
                 name="title"
                 type="text"
+                maxLength={200}
                 value={formData.title}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder="e.g. Two Sum"
                 data-invalid={Boolean(errors.title && touched.title)}
-                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 transition-all ${
-                  errors.title && touched.title
-                    ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
-                    : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
-                }`}
+                className={`w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 transition-all ${errors.title && touched.title
+                  ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
+                  : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
+                  }`}
               />
               <div className="flex items-center justify-between">
                 <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -397,11 +440,10 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
                 onBlur={handleBlur}
                 placeholder="Paste or write the complete problem statement here..."
                 data-invalid={Boolean(errors.description && touched.description)}
-                className={`w-full p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 resize-y min-h-[190px] whitespace-pre-wrap transition-all ${
-                  errors.description && touched.description
-                    ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
-                    : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
-                }`}
+                className={`w-full p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 resize-y min-h-47.5 whitespace-pre-wrap transition-all ${errors.description && touched.description
+                  ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
+                  : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
+                  }`}
               />
               <div className="flex items-center justify-between">
                 <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -477,16 +519,16 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
                       <textarea
                         id={`input-${tc.id}`}
                         rows={2}
+                        maxLength={20000}
                         value={tc.input}
                         onChange={(e) => handleTestCaseChange(tc.id, 'input', e.target.value)}
                         onBlur={() => handleTestCaseBlur(tc.id, 'input')}
                         placeholder={`Enter input format or sample input for Pair #${index + 1}...`}
                         data-invalid={Boolean(pairErr.input && pairTouched.input)}
-                        className={`w-full p-3 rounded-xl bg-white dark:bg-[#0B101D] border text-slate-900 dark:text-white placeholder-slate-400 text-sm font-mono focus:outline-none focus:ring-2 resize-y min-h-[75px] transition-all ${
-                          pairErr.input && pairTouched.input
-                            ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
-                            : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
-                        }`}
+                        className={`w-full p-3 rounded-xl bg-white dark:bg-[#0B101D] border text-slate-900 dark:text-white placeholder-slate-400 text-sm font-mono focus:outline-none focus:ring-2 resize-y min-h-18.75 transition-all ${pairErr.input && pairTouched.input
+                          ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
+                          : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
+                          }`}
                       />
                       {pairErr.input && pairTouched.input && (
                         <p className="text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
@@ -504,16 +546,16 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
                       <textarea
                         id={`output-${tc.id}`}
                         rows={2}
+                        maxLength={20000}
                         value={tc.output}
                         onChange={(e) => handleTestCaseChange(tc.id, 'output', e.target.value)}
                         onBlur={() => handleTestCaseBlur(tc.id, 'output')}
                         placeholder={`Enter expected output or output format for Pair #${index + 1}...`}
                         data-invalid={Boolean(pairErr.output && pairTouched.output)}
-                        className={`w-full p-3 rounded-xl bg-white dark:bg-[#0B101D] border text-slate-900 dark:text-white placeholder-slate-400 text-sm font-mono focus:outline-none focus:ring-2 resize-y min-h-[75px] transition-all ${
-                          pairErr.output && pairTouched.output
-                            ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
-                            : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
-                        }`}
+                        className={`w-full p-3 rounded-xl bg-white dark:bg-[#0B101D] border text-slate-900 dark:text-white placeholder-slate-400 text-sm font-mono focus:outline-none focus:ring-2 resize-y min-h-18.75 transition-all ${pairErr.output && pairTouched.output
+                          ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
+                          : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
+                          }`}
                       />
                       {pairErr.output && pairTouched.output && (
                         <p className="text-xs font-medium text-red-500 dark:text-red-400 flex items-center gap-1">
@@ -555,16 +597,16 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
                 id="constraints"
                 name="constraints"
                 rows={4}
+                maxLength={2000}
                 value={formData.constraints}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 placeholder={`e.g.\n2 ≤ nums.length ≤ 10⁴\n-10⁹ ≤ nums[i] ≤ 10⁹`}
                 data-invalid={Boolean(errors.constraints && touched.constraints)}
-                className={`w-full p-3 rounded-xl bg-slate-50 dark:bg-[#05070E] border text-slate-900 dark:text-white placeholder-slate-400 text-sm font-mono focus:outline-none focus:ring-2 resize-y min-h-[110px] whitespace-pre-wrap transition-all ${
-                  errors.constraints && touched.constraints
-                    ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
-                    : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
-                }`}
+                className={`w-full p-3 rounded-xl bg-slate-50 dark:bg-[#05070E] border text-slate-900 dark:text-white placeholder-slate-400 text-sm font-mono focus:outline-none focus:ring-2 resize-y min-h-27.5 whitespace-pre-wrap transition-all ${errors.constraints && touched.constraints
+                  ? 'border-red-400 dark:border-red-600 focus:ring-red-500/30'
+                  : 'border-slate-200 dark:border-[#1E2638] focus:border-blue-500 focus:ring-blue-500/20'
+                  }`}
               />
               <div className="flex items-center justify-between">
                 <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -600,10 +642,11 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
                 id="approach"
                 name="approach"
                 rows={4}
+                maxLength={2000}
                 value={formData.approach}
                 onChange={handleChange}
                 placeholder="Have an idea? Describe your approach here. It's okay if you're not sure."
-                className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200 dark:border-[#1E2638] text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y min-h-[110px] whitespace-pre-wrap transition-all"
+                className="w-full p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200 dark:border-[#1E2638] text-slate-900 dark:text-white placeholder-slate-400 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y min-h-27.5 whitespace-pre-wrap transition-all"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Share your initial thinking. AlgoVision can analyze and improve it later.
@@ -613,16 +656,30 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
 
           {/* SECTION 4: Actions Bar */}
           <div className="pt-4 border-t border-slate-100 dark:border-[#182030] flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
-            {/* Try Example Action */}
-            <button
-              type="button"
-              onClick={handleTryExample}
-              disabled={isSubmitting}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 hover:bg-slate-100 dark:bg-[#070A12] dark:hover:bg-[#111827] text-slate-700 dark:text-slate-300 text-xs font-mono font-medium transition-colors disabled:opacity-50"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-blue-500" />
-              <span>Try Example Problem</span>
-            </button>
+            {/* Left Actions: Cancel & Try Example */}
+            <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+              {onCancel && (
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  disabled={isSubmitting}
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 hover:bg-slate-100 dark:bg-[#070A12] dark:hover:bg-[#111827] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 text-xs font-mono font-medium transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+              )}
+
+              {/* Try Example Action */}
+              <button
+                type="button"
+                onClick={handleTryExample}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#1E2638] bg-slate-50 hover:bg-slate-100 dark:bg-[#070A12] dark:hover:bg-[#111827] text-slate-700 dark:text-slate-300 text-xs font-mono font-medium transition-colors disabled:opacity-50"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-blue-500" />
+                <span>Try Example Problem</span>
+              </button>
+            </div>
 
             {/* Primary Submit Button */}
             <button
@@ -633,7 +690,7 @@ export default function ProblemSubmitForm({ onAnalyzeSuccess, onCancel }) {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span>Analyzing Problem...</span>
+                  <span>Submitting Problem...</span>
                 </>
               ) : (
                 <>

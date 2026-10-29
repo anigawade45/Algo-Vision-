@@ -13,6 +13,7 @@ export function CodeStage({
   problem,
   selectedApproachId,
   selectedApproachName,
+  isCompleted: isCompletedProp = false,
   onCompleteStage,
   onNextStage,
   onOpenSpec
@@ -23,7 +24,11 @@ export function CodeStage({
   const [isGenerating, setIsGenerating] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [executionResult, setExecutionResult] = useState(null);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(Boolean(isCompletedProp));
+
+  useEffect(() => {
+    setIsCompleted(Boolean(isCompletedProp));
+  }, [isCompletedProp]);
   
   const [approachId, setApproachId] = useState(selectedApproachId || '');
   const [approachName, setApproachName] = useState(selectedApproachName || '');
@@ -51,13 +56,15 @@ export function CodeStage({
     fetchCodeData();
   }, [problem._id, selectedApproachId]);
 
-  useEffect(() => {
-    if (isCompleted && onCompleteStage) {
+  // When language changes, preserve current edit and load the new one
+  const handleCheckpoint = () => {
+    const nextState = !isCompleted;
+    setIsCompleted(nextState);
+    if (nextState && onCompleteStage) {
       onCompleteStage('code');
     }
-  }, [isCompleted, onCompleteStage]);
+  };
 
-  // When language changes, preserve current edit and load the new one
   const handleLangChange = (e) => {
     const newLang = LANGUAGES.find(l => l.id === e.target.value);
     setSelectedLang(newLang);
@@ -345,7 +352,7 @@ export function CodeStage({
         <button
           type="button"
           aria-pressed={isCompleted}
-          onClick={() => setIsCompleted(!isCompleted)}
+          onClick={handleCheckpoint}
           className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
             isCompleted
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
@@ -365,8 +372,14 @@ export function CodeStage({
         {onNextStage && (
           <button
             type="button"
+            disabled={!isCompleted}
+            title={!isCompleted ? "Click 'I Understand This Code' above to unlock Stage 08: Dry Run" : "Proceed to Stage 08: Dry Run"}
             onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              isCompleted
+                ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-xs'
+                : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
+            }`}
           >
             <span>Next: Stage 08 Dry Run →</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />

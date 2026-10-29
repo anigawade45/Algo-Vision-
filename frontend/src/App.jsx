@@ -79,7 +79,7 @@ function ProblemSubmitRoute({ theme, toggleTheme, setActiveProblem }) {
       onNavigateToHome={() => navigate('/dsa')}
       onNavigateToWorkspace={(problem) => {
         if (problem) setActiveProblem(problem);
-        const problemId = problem?.id || 'two-sum';
+        const problemId = problem?.slug || problem?.problemId || problem?.id || 'two-sum';
         navigate(`/dsa/workspace/${problemId}`);
       }}
     />

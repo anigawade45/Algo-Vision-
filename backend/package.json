@@ -7,7 +7,11 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed:problems": "node src/seeders/problem.seeder.js"
+    "seed:problems": "node src/seeders/problem.seeder.js",
+    "migrate:canonical": "node src/scripts/migrateCanonicalProblems.js",
+    "migrate:canonical:dry": "node src/scripts/migrateCanonicalProblems.js --dry-run",
+    "backfill:fingerprints": "node src/scripts/backfillProblemFingerprints.js",
+    "backfill:fingerprints:apply": "node src/scripts/backfillProblemFingerprints.js --apply"
   },
   "dependencies": {
     "@google/genai": "^2.26.0",

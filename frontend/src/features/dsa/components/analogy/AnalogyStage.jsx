@@ -21,11 +21,15 @@ import {
  * Connects the DSA problem to a familiar real-world story idea using Gemini AI.
  * Story structure: intro ({ title, subtitle }) & scenario ({ title, story }).
  */
-export function AnalogyStage({ problemData, onCompleteStage, onNextStage, onOpenSpec }) {
+export function AnalogyStage({ problemData, isCompleted: isCompletedProp = false, onCompleteStage, onNextStage, onOpenSpec }) {
   const [analogyData, setAnalogyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(Boolean(isCompletedProp));
+
+  useEffect(() => {
+    setIsCompleted(Boolean(isCompletedProp));
+  }, [isCompletedProp]);
   const [isRegenerating, setIsRegenerating] = useState(false);
 
   const activeRequestKeyRef = useRef(null);
@@ -281,8 +285,14 @@ export function AnalogyStage({ problemData, onCompleteStage, onNextStage, onOpen
         {onNextStage && (
           <button
             type="button"
+            disabled={!isCompleted}
+            title={!isCompleted ? "Click 'I Understand This Analogy' above to unlock Stage 04: Pattern" : "Proceed to Stage 04: Pattern"}
             onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              isCompleted
+                ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-xs'
+                : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
+            }`}
           >
             <span>Next: Stage 04 Pattern →</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />

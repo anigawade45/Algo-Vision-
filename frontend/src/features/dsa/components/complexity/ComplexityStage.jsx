@@ -20,6 +20,7 @@ export function ComplexityStage({
   problem,
   selectedApproachId,
   selectedApproachName,
+  isCompleted: isCompletedProp = false,
   onCompleteStage,
   onNextStage
 }) {
@@ -34,7 +35,11 @@ export function ComplexityStage({
   const [timeStepIndex, setTimeStepIndex] = useState(0);
   const [spaceStepIndex, setSpaceStepIndex] = useState(0);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(Boolean(isCompletedProp));
+
+  useEffect(() => {
+    setIsCompleted(Boolean(isCompletedProp));
+  }, [isCompletedProp]);
 
   useEffect(() => {
     if (selectedApproachId) {
@@ -48,6 +53,14 @@ export function ComplexityStage({
   useEffect(() => {
     fetchComplexityData();
   }, [problem._id, selectedApproachId]);
+
+  const handleCheckpoint = () => {
+    const nextState = !isCompleted;
+    setIsCompleted(nextState);
+    if (nextState && onCompleteStage) {
+      onCompleteStage('complexity');
+    }
+  };
 
   const fetchComplexityData = async () => {
     setIsLoading(true);
@@ -114,12 +127,6 @@ export function ComplexityStage({
       }
     }
   }, [timeStepIndex, spaceStepIndex, timeSteps.length, spaceSteps.length]);
-
-  useEffect(() => {
-    if (isCompleted && onCompleteStage) {
-      onCompleteStage('complexity');
-    }
-  }, [isCompleted, onCompleteStage]);
 
   const handleNextTimeStep = () => {
     if (timeStepIndex < timeSteps.length - 1) {
@@ -397,7 +404,7 @@ export function ComplexityStage({
         <button
           type="button"
           aria-pressed={isCompleted}
-          onClick={() => setIsCompleted(!isCompleted)}
+          onClick={handleCheckpoint}
           className={`inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all duration-150 cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
             isCompleted
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
@@ -417,10 +424,16 @@ export function ComplexityStage({
         {onNextStage && (
           <button
             type="button"
+            disabled={!isCompleted}
+            title={!isCompleted ? "Click 'I Understand This Complexity' above to unlock Stage 11: Practice" : "Proceed to Stage 11: Practice"}
             onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              isCompleted
+                ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-xs'
+                : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
+            }`}
           >
-            <span>Next: Stage 10 Practice →</span>
+            <span>Next: Stage 11 Practice →</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
           </button>
         )}

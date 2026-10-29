@@ -2237,8 +2237,8 @@ const resolveProblemAndCheckAccess = async (problemIdOrSlug, userOrId) => {
   let problem = null;
   if (isMongooseConnected) {
     problem = await Problem.findOne({ problemId: normalizedSlug });
-    if (!problem && problemIdOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
-      problem = await Problem.findById(problemIdOrSlug);
+    if (!problem && /^[0-9a-fA-F]{24}$/.test(normalizedSlug)) {
+      problem = await Problem.findById(normalizedSlug);
     }
   }
 

@@ -29,10 +29,16 @@ export function DryRunCheckpoint({ understood, onCheckpoint, onNextStage }) {
       {onNextStage && (
         <button
           type="button"
+          disabled={!isCompleted}
+          title={!isCompleted ? "Click 'I Understand This Dry Run' above to unlock Stage 09: Visualize" : "Proceed to Stage 09: Visualize"}
           onClick={onNextStage}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+            isCompleted
+              ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-xs'
+              : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
+          }`}
         >
-          <span>Next: Stage 09 Complexity →</span>
+          <span>Next: Stage 09 Visualize →</span>
           <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />
         </button>
       )}

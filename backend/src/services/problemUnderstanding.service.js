@@ -18,12 +18,13 @@ const resolveProblemAndCheckAccess = async (problemIdOrSlug, userId) => {
     throw new AppError('Problem identifier is required', 400);
   }
 
-  const normalizedSlug = String(problemIdOrSlug).trim().toLowerCase();
+  const idStr = String(problemIdOrSlug).trim();
+  const normalizedSlug = idStr.toLowerCase();
 
   let problem = await Problem.findOne({ problemId: normalizedSlug });
 
-  if (!problem && problemIdOrSlug.match(/^[0-9a-fA-F]{24}$/)) {
-    problem = await Problem.findById(problemIdOrSlug);
+  if (!problem && /^[0-9a-fA-F]{24}$/.test(idStr)) {
+    problem = await Problem.findById(idStr);
   }
 
   if (!problem) {
@@ -187,6 +188,9 @@ const getUnderstanding = async (problemIdOrSlug, userId) => {
   };
 };
 
+// In-memory inflight lock for concurrent stage generations per user & problem
+const inflightGenerations = new Map();
+
 /**
  * Generate (or return existing non-stale) Stage 02 ProblemUnderstanding via Gemini AI
  */
@@ -211,49 +215,26 @@ const generateUnderstanding = async (problemIdOrSlug, userId) => {
     };
   }
 
-  // Generate content using Gemini Service with exact problem context
-  const { rawText, model, promptVersion } = await geminiService.generateStage02Content(problem);
-  const normalizedData = validateAndNormalizeUnderstandingData(rawText, problem);
+  const lockKey = `${userId}:${problem._id}`;
+  if (inflightGenerations.has(lockKey)) {
+    return inflightGenerations.get(lockKey);
+  }
 
-  const sourceProblemVersion = {
-    problemObjectId: String(problem._id),
-    problemId: problem.problemId,
-    title: problem.title,
-    updatedAt: problem.updatedAt || new Date(),
-  };
-
-  let savedDoc = null;
-  if (existing) {
-    savedDoc = await ProblemUnderstanding.findOneAndUpdate(
-      { problemId: problem._id, userId },
-      {
-        ...normalizedData,
-        sourceProblemVersion,
-        sourceProblemHash: currentHash,
-        generatedBy: 'gemini',
-        model,
-        promptVersion,
-        generationStatus: 'generated',
-        generatedAt: new Date(),
-      },
-      { new: true, runValidators: true }
-    );
-  } else {
+  const generationPromise = (async () => {
     try {
-      savedDoc = await ProblemUnderstanding.create({
-        problemId: problem._id,
-        userId,
-        ...normalizedData,
-        sourceProblemVersion,
-        sourceProblemHash: currentHash,
-        generatedBy: 'gemini',
-        model,
-        promptVersion,
-        generationStatus: 'generated',
-        generatedAt: new Date(),
-      });
-    } catch (err) {
-      if (err.code === 11000) {
+      // Generate content using Gemini Service with exact problem context
+      const { rawText, model, promptVersion } = await geminiService.generateStage02Content(problem);
+      const normalizedData = validateAndNormalizeUnderstandingData(rawText, problem);
+
+      const sourceProblemVersion = {
+        problemObjectId: String(problem._id),
+        problemId: problem.problemId,
+        title: problem.title,
+        updatedAt: problem.updatedAt || new Date(),
+      };
+
+      let savedDoc = null;
+      if (existing) {
         savedDoc = await ProblemUnderstanding.findOneAndUpdate(
           { problemId: problem._id, userId },
           {
@@ -266,18 +247,55 @@ const generateUnderstanding = async (problemIdOrSlug, userId) => {
             generationStatus: 'generated',
             generatedAt: new Date(),
           },
-          { new: true }
+          { new: true, runValidators: true }
         );
       } else {
-        throw err;
+        try {
+          savedDoc = await ProblemUnderstanding.create({
+            problemId: problem._id,
+            userId,
+            ...normalizedData,
+            sourceProblemVersion,
+            sourceProblemHash: currentHash,
+            generatedBy: 'gemini',
+            model,
+            promptVersion,
+            generationStatus: 'generated',
+            generatedAt: new Date(),
+          });
+        } catch (err) {
+          if (err.code === 11000) {
+            savedDoc = await ProblemUnderstanding.findOneAndUpdate(
+              { problemId: problem._id, userId },
+              {
+                ...normalizedData,
+                sourceProblemVersion,
+                sourceProblemHash: currentHash,
+                generatedBy: 'gemini',
+                model,
+                promptVersion,
+                generationStatus: 'generated',
+                generatedAt: new Date(),
+              },
+              { new: true }
+            );
+          } else {
+            throw err;
+          }
+        }
       }
-    }
-  }
 
-  return {
-    problem,
-    understanding: savedDoc,
-  };
+      return {
+        problem,
+        understanding: savedDoc,
+      };
+    } finally {
+      inflightGenerations.delete(lockKey);
+    }
+  })();
+
+  inflightGenerations.set(lockKey, generationPromise);
+  return generationPromise;
 };
 
 /**
@@ -291,35 +309,49 @@ const regenerateUnderstanding = async (problemIdOrSlug, userId) => {
   const problem = await resolveProblemAndCheckAccess(problemIdOrSlug, userId);
   const currentHash = computeProblemHash(problem);
 
-  const { rawText, model, promptVersion } = await geminiService.generateStage02Content(problem);
-  const normalizedData = validateAndNormalizeUnderstandingData(rawText, problem);
+  const lockKey = `${userId}:${problem._id}:regen`;
+  if (inflightGenerations.has(lockKey)) {
+    return inflightGenerations.get(lockKey);
+  }
 
-  const sourceProblemVersion = {
-    problemObjectId: String(problem._id),
-    problemId: problem.problemId,
-    title: problem.title,
-    updatedAt: problem.updatedAt || new Date(),
-  };
+  const regenPromise = (async () => {
+    try {
+      const { rawText, model, promptVersion } = await geminiService.generateStage02Content(problem);
+      const normalizedData = validateAndNormalizeUnderstandingData(rawText, problem);
 
-  const updatedDoc = await ProblemUnderstanding.findOneAndUpdate(
-    { problemId: problem._id, userId },
-    {
-      ...normalizedData,
-      sourceProblemVersion,
-      sourceProblemHash: currentHash,
-      generatedBy: 'gemini',
-      model,
-      promptVersion,
-      generationStatus: 'generated',
-      generatedAt: new Date(),
-    },
-    { new: true, upsert: true, runValidators: true }
-  );
+      const sourceProblemVersion = {
+        problemObjectId: String(problem._id),
+        problemId: problem.problemId,
+        title: problem.title,
+        updatedAt: problem.updatedAt || new Date(),
+      };
 
-  return {
-    problem,
-    understanding: updatedDoc,
-  };
+      const updatedDoc = await ProblemUnderstanding.findOneAndUpdate(
+        { problemId: problem._id, userId },
+        {
+          ...normalizedData,
+          sourceProblemVersion,
+          sourceProblemHash: currentHash,
+          generatedBy: 'gemini',
+          model,
+          promptVersion,
+          generationStatus: 'generated',
+          generatedAt: new Date(),
+        },
+        { new: true, upsert: true, runValidators: true }
+      );
+
+      return {
+        problem,
+        understanding: updatedDoc,
+      };
+    } finally {
+      inflightGenerations.delete(lockKey);
+    }
+  })();
+
+  inflightGenerations.set(lockKey, regenPromise);
+  return regenPromise;
 };
 
 module.exports = {

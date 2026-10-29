@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  Bell,
   User,
   ChevronRight,
   Terminal,
@@ -18,13 +17,121 @@ import {
 } from 'lucide-react';
 import { getMyProblems, getProblems } from '@/api/dsa.api';
 
-export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateToHome, onNavigateToSubmit }) {
+/**
+ * Extracts the canonical problem identifier (preferring slug)
+ */
+const getProblemId = (problem) =>
+  problem?.slug ||
+  problem?.problemId ||
+  problem?.id ||
+  problem?._id;
+
+/**
+ * Shared Search Results Dropdown Component for Desktop & Mobile
+ */
+function SearchDropdown({
+  isSearching,
+  searchQuery,
+  searchResults,
+  hasError,
+  onRetry,
+  onSelectProblem,
+  getDifficultyPill,
+}) {
+  if (isSearching) {
+    return (
+      <div className="p-4 text-center text-xs font-mono text-slate-400 flex items-center justify-center gap-2">
+        <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+        <span>Searching problems...</span>
+      </div>
+    );
+  }
+
+  if (hasError && searchResults.length === 0) {
+    return (
+      <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400 font-mono space-y-2">
+        <p>Could not load problem catalog.</p>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 text-[11px] font-semibold border border-blue-200 dark:border-blue-900/60 hover:bg-blue-100 dark:hover:bg-blue-900 cursor-pointer"
+          >
+            Retry
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  if (searchResults.length === 0) {
+    return (
+      <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400 font-mono">
+        No matching problems found for "{searchQuery}"
+      </div>
+    );
+  }
+
+  return (
+    <div id="dsa-search-results" role="listbox" className="space-y-1">
+      {searchResults.map((p) => {
+        const pId = getProblemId(p);
+        return (
+          <button
+            key={pId}
+            type="button"
+            role="option"
+            aria-selected="false"
+            onClick={() => onSelectProblem(p)}
+            className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#111827] flex items-center justify-between gap-3 transition-colors group cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <FileCode2 className="w-4 h-4 text-blue-500 shrink-0" />
+              <div className="truncate">
+                <p className="text-xs font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
+                  {p.title}
+                </p>
+                <p className="text-[10px] font-mono text-slate-400 truncate">
+                  {p.category || 'General'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              {p.isUserProblem && (
+                <span className="text-[9px] font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900/50">
+                  My Upload
+                </span>
+              )}
+              <span
+                className={`text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded border ${getDifficultyPill(
+                  p.difficulty
+                )}`}
+              >
+                {p.difficulty || 'Medium'}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export function DsaNavbar({
+  theme,
+  toggleTheme,
+  onNavigateToLanding,
+  onNavigateToHome,
+  onNavigateToSubmit,
+}) {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [allSearchableProblems, setAllSearchableProblems] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchRef = useRef(null);
 
@@ -32,14 +139,24 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
   const loadSearchableProblems = async () => {
     try {
       setIsSearching(true);
+      setLoadError(false);
       const [myRes, catRes] = await Promise.allSettled([getMyProblems(), getProblems()]);
-      
+
+      const bothFailed = myRes.status === 'rejected' && catRes.status === 'rejected';
+      if (bothFailed) {
+        setLoadError(true);
+      }
+
       let combined = [];
       const seenIds = new Set();
 
-      if (myRes.status === 'fulfilled' && myRes.value?.success && Array.isArray(myRes.value?.data?.problems)) {
+      if (
+        myRes.status === 'fulfilled' &&
+        myRes.value?.success &&
+        Array.isArray(myRes.value?.data?.problems)
+      ) {
         myRes.value.data.problems.forEach((p) => {
-          const pId = p.problemId || p.id || p._id;
+          const pId = getProblemId(p);
           if (pId && !seenIds.has(pId)) {
             seenIds.add(pId);
             combined.push({ ...p, isUserProblem: true });
@@ -47,9 +164,13 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
         });
       }
 
-      if (catRes.status === 'fulfilled' && catRes.value?.success && Array.isArray(catRes.value?.data?.problems)) {
+      if (
+        catRes.status === 'fulfilled' &&
+        catRes.value?.success &&
+        Array.isArray(catRes.value?.data?.problems)
+      ) {
         catRes.value.data.problems.forEach((p) => {
-          const pId = p.problemId || p.id || p._id;
+          const pId = getProblemId(p);
           if (pId && !seenIds.has(pId)) {
             seenIds.add(pId);
             combined.push(p);
@@ -59,7 +180,8 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
 
       setAllSearchableProblems(combined);
     } catch (err) {
-      console.log('Error loading search problems:', err);
+      console.error('Error loading search problems:', err);
+      setLoadError(true);
     } finally {
       setIsSearching(false);
     }
@@ -81,7 +203,9 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
       const titleMatch = (p.title || '').toLowerCase().includes(q);
       const catMatch = (p.category || '').toLowerCase().includes(q);
       const descMatch = (p.description || '').toLowerCase().includes(q);
-      const tagsMatch = Array.isArray(p.tags) && p.tags.some((t) => t.toLowerCase().includes(q));
+      const tagsMatch =
+        Array.isArray(p.tags) &&
+        p.tags.some((t) => typeof t === 'string' && t.toLowerCase().includes(q));
       return titleMatch || catMatch || descMatch || tagsMatch;
     });
 
@@ -100,12 +224,17 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
   }, []);
 
   const handleSelectProblem = (problem) => {
-    const pId = problem.problemId || problem.id || problem._id;
-    if (pId) {
-      navigate(`/dsa/workspace/${pId}`);
-      setSearchQuery('');
-      setIsSearchOpen(false);
+    const problemId = getProblemId(problem);
+    if (!problemId) {
+      console.error('Cannot navigate: problem identifier is missing.', problem);
+      return;
     }
+
+    navigate(`/dsa/workspace/${encodeURIComponent(problemId)}`);
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsSearchOpen(false);
+    setMobileMenuOpen(false);
   };
 
   const getDifficultyPill = (difficulty) => {
@@ -122,7 +251,6 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
   return (
     <header className="border-b border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] sticky top-0 z-30 transition-colors font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16 gap-4">
-        
         {/* Left: Brand & Breadcrumbs */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
@@ -165,12 +293,13 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
           </nav>
         </div>
 
-        {/* Center: DSA Problem Search Bar */}
+        {/* Center: Desktop DSA Problem Search Bar */}
         <div ref={searchRef} className="relative flex-1 max-w-md mx-2 hidden sm:block">
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
-              type="text"
+              type="search"
+              aria-label="Search DSA problems"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -188,6 +317,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
                   setSearchResults([]);
                 }}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                aria-label="Clear search query"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -197,51 +327,15 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
           {/* Floating Search Results Dropdown */}
           {isSearchOpen && searchQuery.trim() && (
             <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] rounded-2xl shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto p-1 space-y-1">
-              {isSearching ? (
-                <div className="p-4 text-center text-xs font-mono text-slate-400 flex items-center justify-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-                  <span>Searching problems...</span>
-                </div>
-              ) : searchResults.length > 0 ? (
-                searchResults.map((p) => {
-                  const pId = p.problemId || p.id || p._id;
-                  return (
-                    <button
-                      key={pId}
-                      type="button"
-                      onClick={() => handleSelectProblem(p)}
-                      className="w-full text-left p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-[#111827] flex items-center justify-between gap-3 transition-colors group cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <FileCode2 className="w-4 h-4 text-blue-500 shrink-0" />
-                        <div className="truncate">
-                          <p className="text-xs font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
-                            {p.title}
-                          </p>
-                          <p className="text-[10px] font-mono text-slate-400 truncate">
-                            {p.category || 'General'}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {p.isUserProblem && (
-                          <span className="text-[9px] font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded border border-blue-200 dark:border-blue-900/50">
-                            My Upload
-                          </span>
-                        )}
-                        <span className={`text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded border ${getDifficultyPill(p.difficulty)}`}>
-                          {p.difficulty || 'Medium'}
-                        </span>
-                      </div>
-                    </button>
-                  );
-                })
-              ) : (
-                <div className="p-4 text-center text-xs text-slate-500 dark:text-slate-400 font-mono">
-                  No matching problems found for "{searchQuery}"
-                </div>
-              )}
+              <SearchDropdown
+                isSearching={isSearching}
+                searchQuery={searchQuery}
+                searchResults={searchResults}
+                hasError={loadError}
+                onRetry={loadSearchableProblems}
+                onSelectProblem={handleSelectProblem}
+                getDifficultyPill={getDifficultyPill}
+              />
             </div>
           )}
         </div>
@@ -315,7 +409,7 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
 
           <button
             type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setMobileMenuOpen((open) => !open)}
             className="p-2.5 rounded-lg bg-slate-100 dark:bg-[#161F33] text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#1E2638] min-w-11 min-h-11 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 cursor-pointer"
             aria-expanded={mobileMenuOpen}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -323,23 +417,52 @@ export function DsaNavbar({ theme, toggleTheme, onNavigateToLanding, onNavigateT
             {mobileMenuOpen ? <X className="w-5 h-5 text-blue-500" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-
       </div>
 
       {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div className="sm:hidden border-t border-slate-200 dark:border-[#1E2638] bg-white dark:bg-[#0B101D] px-4 py-4 space-y-4 shadow-lg animate-in fade-in slide-in-from-top-2 duration-200">
-          
-          {/* Mobile Search Input */}
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search DSA problems..."
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1E2638] text-xs font-medium text-slate-900 dark:text-white"
-            />
+          {/* Mobile Search Input & Dropdown */}
+          <div className="relative space-y-2">
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="search"
+                aria-label="Search DSA problems"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search DSA problems by title, tag, or category..."
+                className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-100 dark:bg-[#070A12] border border-slate-200 dark:border-[#1E2638] text-xs font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSearchResults([]);
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  aria-label="Clear search query"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+
+            {/* Mobile Search Results */}
+            {searchQuery.trim() && (
+              <div className="bg-slate-50 dark:bg-[#070A12] border border-slate-200 dark:border-[#1E2638] rounded-xl p-1 max-h-60 overflow-y-auto">
+                <SearchDropdown
+                  isSearching={isSearching}
+                  searchQuery={searchQuery}
+                  searchResults={searchResults}
+                  hasError={loadError}
+                  onRetry={loadSearchableProblems}
+                  onSelectProblem={handleSelectProblem}
+                  getDifficultyPill={getDifficultyPill}
+                />
+              </div>
+            )}
           </div>
 
           <Link

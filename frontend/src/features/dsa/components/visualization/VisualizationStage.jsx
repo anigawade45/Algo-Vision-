@@ -31,6 +31,7 @@ export function VisualizationStage({
   problem,
   selectedApproachId,
   selectedApproachName,
+  isCompleted: isCompletedProp = false,
   onCompleteStage,
   onNextStage,
   onNavigateToStage,
@@ -126,7 +127,11 @@ export function VisualizationStage({
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(Boolean(isCompletedProp));
+
+  useEffect(() => {
+    setIsCompleted(Boolean(isCompletedProp));
+  }, [isCompletedProp]);
   const [isGeneratingAiTrace, setIsGeneratingAiTrace] = useState(false);
 
   // Monotonically increasing request ID to prevent race conditions
@@ -785,8 +790,14 @@ export function VisualizationStage({
           {onNextStage && (
             <button
               type="button"
+              disabled={!isCompleted}
+              title={!isCompleted ? "Step through execution or click Play to complete Stage 09 before proceeding to Complexity" : "Proceed to Stage 10: Complexity"}
               onClick={onNextStage}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-mono text-xs font-bold cursor-pointer shadow-sm transition-all flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`px-4 py-2 rounded-xl font-mono text-xs font-bold shadow-sm transition-all flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                isCompleted
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer'
+                  : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
+              }`}
             >
               <span>Next Stage: Complexity</span>
               <ChevronRight className="w-4 h-4" />

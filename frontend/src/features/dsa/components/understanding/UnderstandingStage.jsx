@@ -24,20 +24,25 @@ import {
  * Visual layout is driven strictly by Problem.inputData and Problem.outputData (MongoDB authoritative).
  * Educational explanations are loaded/generated from ProblemUnderstanding (Gemini AI) with stale hash protection.
  */
-export function UnderstandingStage({ problemData, onCompleteStage, onNextStage, onOpenSpec }) {
+export function UnderstandingStage({ problemData, isCompleted = false, onCompleteStage, onNextStage, onOpenSpec }) {
   const [understanding, setUnderstanding] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [understood, setUnderstood] = useState(false);
+  const [understood, setUnderstood] = useState(Boolean(isCompleted));
   const [isRegenerating, setIsRegenerating] = useState(false);
+
+  // Sync completion state when prop changes
+  useEffect(() => {
+    setUnderstood(Boolean(isCompleted));
+  }, [isCompleted]);
 
   const activeRequestKeyRef = useRef(null);
 
   const problem = problemData || null;
   const problemKey = problem?.problemId || problem?.id || problem?._id;
 
-  const categoryName = problem?.category || 'Array';
-  const difficultyLevel = problem?.difficulty || 'Easy';
+  const categoryName = problem?.category || 'General';
+  const difficultyLevel = problem?.difficulty || 'Medium';
 
   // Load existing or trigger new AI Understanding generation with request guard and stale handling
   const fetchOrGenerateUnderstanding = useCallback(async (forceRegenerate = false) => {
@@ -251,7 +256,7 @@ export function UnderstandingStage({ problemData, onCompleteStage, onNextStage, 
             <span>WHAT ARE WE TRYING TO FIND?</span>
           </div>
           <h2 id="finding-heading" className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white leading-relaxed max-w-3xl">
-            {understanding?.objectiveExplanation || (problem.objective && problem.objective !== problem.title ? problem.objective : null) || problem.description || 'Find two numbers in the array whose sum equals the target.'}
+            {understanding?.objectiveExplanation || (problem.objective && problem.objective !== problem.title ? problem.objective : null) || problem.description || 'Determine the objective and required output specified by the problem.'}
           </h2>
         </section>
 
@@ -276,7 +281,7 @@ export function UnderstandingStage({ problemData, onCompleteStage, onNextStage, 
           </div>
 
           <h2 id="returning-heading" className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white leading-relaxed max-w-3xl">
-            {understanding?.outputExplanation || problem.outputData?.description || problem.outputData?.expectedRepresentation || 'The positions (indices) of the two numbers that satisfy the target condition.'}
+            {understanding?.outputExplanation || problem.outputData?.description || problem.outputData?.expectedRepresentation || 'The required output format matching the problem specification.'}
           </h2>
 
           {understanding?.inputToOutputFlow && (
@@ -384,8 +389,14 @@ export function UnderstandingStage({ problemData, onCompleteStage, onNextStage, 
         {onNextStage && (
           <button
             type="button"
+            disabled={!understood}
+            title={!understood ? "Click 'I Understand' above to complete this stage and unlock Stage 03: Analogy" : "Proceed to Stage 03: Analogy"}
             onClick={onNextStage}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              understood
+                ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer shadow-xs'
+                : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60'
+            }`}
           >
             <span>Next: Stage 03 Analogy →</span>
             <ArrowRight className="w-4 h-4 shrink-0" aria-hidden="true" />

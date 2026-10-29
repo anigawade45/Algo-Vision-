@@ -41,7 +41,7 @@ const problemSchema = new mongoose.Schema(
     problemId: {
       type: String,
       required: [true, 'Problem ID / Slug is required'],
-      unique: true, // creates the index; do not also set index: true
+      unique: true,
       trim: true,
       lowercase: true,
       maxlength: [100, 'Problem ID cannot exceed 100 characters'],
@@ -123,6 +123,14 @@ const problemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
+    contributors: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+      default: [],
+    },
+    fingerprint: {
+      type: String,
+      trim: true,
+    },
     isPublished: {
       type: Boolean,
       default: true,
@@ -133,12 +141,18 @@ const problemSchema = new mongoose.Schema(
   }
 );
 
-// ---------- Indexes (match real query patterns; avoid redundant single-field ones) ----------
+// ---------- Indexes ----------
+
+// Duplicate detection fingerprint (canonical deduplication)
+problemSchema.index({ fingerprint: 1 }, { unique: true, sparse: true });
 
 // Public listing with filters: GET /problems?category=&difficulty=
 problemSchema.index({ isPublished: 1, category: 1, difficulty: 1, createdAt: -1 });
-// Owner/admin listing
+
+// Owner/contributor listing
 problemSchema.index({ createdBy: 1, createdAt: -1 });
+problemSchema.index({ contributors: 1 });
+
 // Search
 problemSchema.index(
   { title: 'text', tags: 'text' },
@@ -147,8 +161,6 @@ problemSchema.index(
 
 // ---------- Hooks ----------
 
-// Keeps testCaseCount in sync on create/save.
-// NOTE: findOneAndUpdate/updateOne bypass this; use doc.save() or set the count yourself.
 problemSchema.pre('validate', function () {
   this.testCaseCount = this.testCases ? this.testCases.length : 0;
 });

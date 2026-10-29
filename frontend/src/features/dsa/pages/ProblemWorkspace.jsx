@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
   Brain,
@@ -19,6 +19,7 @@ import {
   ChevronLeft,
   Clock,
   Check,
+  Lock,
   PanelLeftClose,
   PanelLeftOpen,
 } from 'lucide-react';
@@ -89,9 +90,23 @@ export default function ProblemWorkspace({
 }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [currentStageId, setCurrentStageId] = useState('problem');
+  const [searchParams] = useSearchParams();
+  const stageQuery = searchParams.get('stage');
+
+  // By default, opening any problem lands on Stage 01: 'problem' ("Your Problem").
+  // If a valid stage is explicitly requested via URL query param (?stage=...), respect it.
+  const getInitialStage = () => {
+    if (stageQuery && WORKSPACE_STAGES.some((s) => s.id === stageQuery)) {
+      return stageQuery;
+    }
+    return 'problem';
+  };
+
+  const [currentStageId, setCurrentStageId] = useState(getInitialStage);
   const [completedStages, setCompletedStages] = useState({});
   const [activeProblem, setActiveProblem] = useState(problemData || null);
+  const [isLoadingProblem, setIsLoadingProblem] = useState(true);
+  const [problemError, setProblemError] = useState(null);
   const [showSpecDrawer, setShowSpecDrawer] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const [dbProblems, setDbProblems] = useState([]);
@@ -106,11 +121,12 @@ export default function ProblemWorkspace({
     if (approachName) setSelectedApproachName(approachName);
   };
 
-  // Reset selected approach when active problem changes
+  // Reset selected approach and ensure Stage 01 ("Your Problem") is active when problem changes
   useEffect(() => {
     setSelectedApproachId(null);
     setSelectedApproachName(null);
-  }, [targetProblemId]);
+    setCurrentStageId(getInitialStage());
+  }, [targetProblemId, stageQuery]);
 
   const loadBackendProblems = async () => {
     try {
@@ -135,56 +151,86 @@ export default function ProblemWorkspace({
   }, [id]);
 
   // Load Real Problem & Workspace State from Backend
-  useEffect(() => {
-    let isMounted = true;
+  const initializeWorkspaceFlow = useCallback(async (isMountedRef = { current: true }) => {
+    setIsLoadingProblem(true);
+    setProblemError(null);
 
-    const initializeWorkspaceFlow = async () => {
-      // 1. Fetch Real Problem Data
-      try {
-        const pRes = await getProblemById(targetProblemId);
-        if (pRes?.success && pRes?.data?.problem && isMounted) {
-          setActiveProblem(pRes.data.problem);
-        }
-      } catch (err) {
-        console.log('Failed loading problem from backend:', err.message);
+    // 1. Fetch Real Problem Data
+    try {
+      const pRes = await getProblemById(targetProblemId);
+      if (!isMountedRef.current) return;
+      if (pRes?.success && pRes?.data?.problem) {
+        setActiveProblem(pRes.data.problem);
+        setProblemError(null);
+      } else {
+        setActiveProblem(null);
+        setProblemError(pRes?.message || 'Problem specification not found.');
+      }
+    } catch (err) {
+      if (!isMountedRef.current) return;
+      console.log('Failed loading problem from backend:', err.message);
+      setActiveProblem(null);
+      setProblemError(err.message || 'Failed loading problem from backend.');
+    } finally {
+      if (isMountedRef.current) {
+        setIsLoadingProblem(false);
+      }
+    }
+
+    // 2. Fetch Workspace State
+    try {
+      let wsRes = await getProblemWorkspace(targetProblemId);
+      if (!isMountedRef.current) return;
+      let ws = wsRes?.data?.workspace;
+
+      // Initialize workspace if null
+      if (!ws) {
+        const createWsRes = await createProblemWorkspace(targetProblemId);
+        if (!isMountedRef.current) return;
+        ws = createWsRes?.data?.workspace;
       }
 
-      // 2. Fetch Workspace State
-      try {
-        let wsRes = await getProblemWorkspace(targetProblemId);
-        let ws = wsRes?.data?.workspace;
-
-        // Initialize workspace if null
-        if (!ws) {
-          const createWsRes = await createProblemWorkspace(targetProblemId);
-          ws = createWsRes?.data?.workspace;
-        }
-
-        if (ws && isMounted) {
-          if (ws.currentStage && STAGE_ID_MAP[ws.currentStage]) {
-            setCurrentStageId(STAGE_ID_MAP[ws.currentStage]);
-          }
-
-          if (Array.isArray(ws.completedStages)) {
-            const compObj = {};
-            ws.completedStages.forEach((stNum) => {
+      if (ws && isMountedRef.current) {
+        // Preserve completed stages so progress checkmarks are visible in the sidebar
+        if (Array.isArray(ws.completedStages)) {
+          const compObj = {};
+          const sorted = [...new Set(ws.completedStages.map(Number))]
+            .filter((n) => Number.isInteger(n) && n >= 1 && n <= 11)
+            .sort((a, b) => a - b);
+          let expected = 1;
+          for (const stNum of sorted) {
+            if (stNum === expected) {
+  
+  
               const stId = STAGE_ID_MAP[stNum];
               if (stId) compObj[stId] = true;
-            });
-            setCompletedStages(compObj);
+              expected++;
+            } else if (stNum > expected) {
+              break;
+            }
           }
+
+
+
+
+          setCompletedStages(compObj);
         }
-      } catch (wsErr) {
+      }
+    } catch (wsErr) {
+      if (isMountedRef.current) {
         console.log('Workspace state persistence note:', wsErr.message);
       }
-    };
+    }
+  }, [targetProblemId]);
 
-    initializeWorkspaceFlow();
+  useEffect(() => {
+    const isMountedRef = { current: true };
+    initializeWorkspaceFlow(isMountedRef);
 
     return () => {
-      isMounted = false;
+      isMountedRef.current = false;
     };
-  }, [id, selectedProblemId]);
+  }, [targetProblemId, initializeWorkspaceFlow]);
 
   // Helper to persist workspace state to backend
   const persistWorkspaceState = async (nextStageId, updatedCompletedMap) => {
@@ -204,6 +250,7 @@ export default function ProblemWorkspace({
   };
   const handleProblemChange = (newId) => {
     setSelectedProblemId(newId);
+    setCurrentStageId('problem');
     if (id) {
       navigate(`/dsa/workspace/${newId}`);
     }
@@ -220,30 +267,74 @@ export default function ProblemWorkspace({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSpecDrawer]);
 
-  const problem = activeProblem || (problemData && problemData.title ? problemData : getMockProblemById(targetProblemId));
+  const problem = activeProblem || (problemData && problemData.title ? problemData : (targetProblemId === 'two-sum' ? getMockProblemById('two-sum') : null));
+
+  const problemOptions = dbProblems.length > 0
+    ? dbProblems.map((p) => ({
+        id: p.slug || p.problemId || p._id,
+        title: p.title,
+      }))
+    : MOCK_PROBLEMS;
 
   const activeStage = WORKSPACE_STAGES.find((s) => s.id === currentStageId) || WORKSPACE_STAGES[0];
   const activeStageIdx = WORKSPACE_STAGES.findIndex((s) => s.id === currentStageId);
-  const completedCount = Object.keys(completedStages).length;
+  // Strict Sequential Progression:
+  // Determine highest unlocked stage index based on contiguous completed stages starting from Stage 01.
+  let maxUnlockedIndex = 0;
+  while (
+    maxUnlockedIndex < WORKSPACE_STAGES.length - 1 &&
+    completedStages[WORKSPACE_STAGES[maxUnlockedIndex].id]
+  ) {
+    maxUnlockedIndex++;
+  }
+
+  const isStageUnlocked = (stageIdx) => stageIdx <= maxUnlockedIndex;
+  // A stage only renders a green checkmark if all preceding stages are complete AND it is marked complete
+  const isStageCompleted = (stageId, stageIdx) => stageIdx < maxUnlockedIndex && Boolean(completedStages[stageId]);
+  const consecutiveCompletedCount = WORKSPACE_STAGES.filter((st, idx) => isStageCompleted(st.id, idx)).length;
+  const isCurrentStageCompleted = currentStageId === 'problem' || Boolean(completedStages[currentStageId]);
+  const isNextDisabled = activeStageIdx === WORKSPACE_STAGES.length - 1 || !isCurrentStageCompleted;
+
+  // Active stage safety check: If user's selected stage is currently locked, redirect to highest unlocked stage
+  useEffect(() => {
+    if (activeStageIdx > maxUnlockedIndex) {
+      const fallbackStage = WORKSPACE_STAGES[maxUnlockedIndex] || WORKSPACE_STAGES[0];
+      setCurrentStageId(fallbackStage.id);
+    }
+  }, [maxUnlockedIndex, activeStageIdx]);
 
   const handleStageSelect = (stageId) => {
+    const targetIdx = WORKSPACE_STAGES.findIndex((s) => s.id === stageId);
+    if (targetIdx === -1 || !isStageUnlocked(targetIdx)) {
+      return;
+    }
     setCurrentStageId(stageId);
     persistWorkspaceState(stageId, completedStages);
   };
 
-  const handleStageComplete = (stageId) => {
-    const updated = { ...completedStages, [stageId]: true };
-    setCompletedStages(updated);
-    persistWorkspaceState(currentStageId, updated);
-  };
+  const handleStageComplete = useCallback((stageId) => {
+    setCompletedStages((prev) => {
+      if (prev[stageId]) return prev;
+      const updated = { ...prev, [stageId]: true };
+      persistWorkspaceState(currentStageId, updated);
+      return updated;
+    });
+  }, [currentStageId]);
 
   const handleNextStage = () => {
     if (activeStageIdx < WORKSPACE_STAGES.length - 1) {
+      let updatedCompleted = completedStages;
+      if (currentStageId === 'problem' && !completedStages['problem']) {
+        updatedCompleted = { ...completedStages, problem: true };
+        setCompletedStages(updatedCompleted);
+      } else if (!completedStages[currentStageId]) {
+        return;
+      }
       const nextStageId = WORKSPACE_STAGES[activeStageIdx + 1].id;
-      const updated = { ...completedStages, [currentStageId]: true };
-      setCompletedStages(updated);
+
+
       setCurrentStageId(nextStageId);
-      persistWorkspaceState(nextStageId, updated);
+      persistWorkspaceState(nextStageId, updatedCompleted);
     }
   };
 
@@ -333,12 +424,12 @@ export default function ProblemWorkspace({
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-[10px] font-mono text-slate-400">
                   <span>Progress</span>
-                  <span className="font-bold text-blue-600 dark:text-blue-400">{completedCount} / 11</span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">{consecutiveCompletedCount} / 11</span>
                 </div>
                 <div className="w-full h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
                   <div
                     className="h-full bg-blue-600 rounded-full transition-all duration-300"
-                    style={{ width: `${(completedCount / 11) * 100}%` }}
+                    style={{ width: `${(consecutiveCompletedCount / 11) * 100}%` }}
                   />
                 </div>
               </div>
@@ -354,43 +445,57 @@ export default function ProblemWorkspace({
             )}
 
             <nav className="space-y-1" aria-label="DSA Pipeline Stages">
-              {WORKSPACE_STAGES.map((st) => {
+              {WORKSPACE_STAGES.map((st, idx) => {
+                const isUnlocked = isStageUnlocked(idx);
+                const isLocked = !isUnlocked;
                 const isSelected = st.id === currentStageId;
-                const isCompleted = completedStages[st.id];
+                const isCompleted = isStageCompleted(st.id, idx);
                 const IconComp = st.icon;
 
                 return (
                   <button
                     key={st.id}
                     type="button"
+                    disabled={isLocked}
                     onClick={() => handleStageSelect(st.id)}
-                    title={st.name}
+                    title={
+                      isLocked
+                        ? `Stage ${st.stepNo} (${st.name}) is locked. Complete Stage ${WORKSPACE_STAGES[idx - 1]?.stepNo} (${WORKSPACE_STAGES[idx - 1]?.name}) first.`
+                        : st.name
+                    }
                     aria-current={isSelected ? 'step' : undefined}
-                    className={`w-full text-xs font-mono transition-all cursor-pointer flex items-center border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${isSidebarExpanded
-                      ? 'p-2.5 rounded-xl justify-between'
-                      : 'p-2.5 rounded-xl justify-center'
-                      } ${isSelected
-                        ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
+                    aria-disabled={isLocked}
+                    className={`w-full text-xs font-mono transition-all flex items-center border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+                      isSidebarExpanded
+                        ? 'p-2.5 rounded-xl justify-between'
+                        : 'p-2.5 rounded-xl justify-center'
+                    } ${
+                      isLocked
+                        ? 'opacity-40 cursor-not-allowed bg-transparent text-slate-400 dark:text-slate-600 border-transparent hover:bg-transparent'
+                        : isSelected
+                        ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs cursor-pointer'
                         : isCompleted
-                          ? 'bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40 hover:bg-emerald-100/50'
-                          : 'bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-[#161F33]'
-                      }`}
+                        ? 'bg-emerald-50/80 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/40 hover:bg-emerald-100/50 cursor-pointer'
+                        : 'bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-[#161F33] cursor-pointer'
+                    }`}
                   >
                     {isSidebarExpanded ? (
                       <>
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span className={`text-[10px] font-bold ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
+                          <span className={`text-[10px] font-bold ${isSelected ? 'text-white/80' : isLocked ? 'text-slate-400 dark:text-slate-600' : 'text-slate-400'}`}>
                             {st.stepNo}
                           </span>
-                          <IconComp className={`w-4 h-4 shrink-0 ${isSelected ? 'text-white' : 'text-slate-400'}`} aria-hidden="true" />
+                          <IconComp className={`w-4 h-4 shrink-0 ${isSelected ? 'text-white' : isLocked ? 'text-slate-400 dark:text-slate-600' : 'text-slate-400'}`} aria-hidden="true" />
                           <span className="truncate">{st.name}</span>
                         </div>
 
-                        {isCompleted && !isSelected && (
+                        {isLocked ? (
+                          <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600 shrink-0" aria-hidden="true" />
+                        ) : isCompleted && !isSelected ? (
                           <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
-                        )}
+                        ) : null}
 
-                        {!st.isBuilt && !isSelected && (
+                        {!st.isBuilt && !isSelected && !isLocked && (
                           <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800/80 text-slate-400 font-mono">
                             Soon
                           </span>
@@ -398,10 +503,12 @@ export default function ProblemWorkspace({
                       </>
                     ) : (
                       <div className="relative flex items-center justify-center">
-                        <IconComp className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-slate-400'}`} aria-hidden="true" />
-                        {isCompleted && !isSelected && (
+                        <IconComp className={`w-4 h-4 ${isSelected ? 'text-white' : isLocked ? 'text-slate-400 dark:text-slate-600' : 'text-slate-400'}`} aria-hidden="true" />
+                        {isLocked ? (
+                          <Lock className="w-2.5 h-2.5 text-slate-400 dark:text-slate-600 absolute -bottom-1 -right-1" aria-hidden="true" />
+                        ) : isCompleted && !isSelected ? (
                           <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500" />
-                        )}
+                        ) : null}
                       </div>
                     )}
                   </button>
@@ -446,18 +553,18 @@ export default function ProblemWorkspace({
               <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 <span>PIPELINE STAGES</span>
                 <span className="px-1.5 py-0.5 rounded bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 font-bold">
-                  {completedCount} / 11
+                  {consecutiveCompletedCount} / 11
                 </span>
               </div>
 
               <select
                 id="mobile-problem-selector"
                 aria-label="Select test problem"
-                value={selectedProblemId}
+                value={targetProblemId}
                 onChange={(e) => handleProblemChange(e.target.value)}
-                className="bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-lg px-2 py-1 text-slate-900 dark:text-white cursor-pointer max-w-[160px] truncate focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="bg-slate-50 dark:bg-[#070A13] border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold rounded-lg px-2 py-1 text-slate-900 dark:text-white cursor-pointer max-w-40 truncate focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
-                {MOCK_PROBLEMS.map((p) => (
+                {problemOptions.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.title}
                   </option>
@@ -467,9 +574,11 @@ export default function ProblemWorkspace({
 
             {/* Horizontal Scrollable Stages Bar */}
             <nav className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 touch-pan-x text-xs font-mono" aria-label="Mobile Pipeline Navigation">
-              {WORKSPACE_STAGES.map((st) => {
+              {WORKSPACE_STAGES.map((st, idx) => {
+                const isUnlocked = isStageUnlocked(idx);
+                const isLocked = !isUnlocked;
                 const isSelected = st.id === currentStageId;
-                const isCompleted = completedStages[st.id];
+                const isCompleted = isStageCompleted(st.id, idx);
                 const IconComp = st.icon;
 
                 return (
@@ -477,23 +586,35 @@ export default function ProblemWorkspace({
                     key={st.id}
                     id={`stage-nav-btn-${st.id}`}
                     type="button"
+                    disabled={isLocked}
                     onClick={() => handleStageSelect(st.id)}
                     aria-current={isSelected ? 'step' : undefined}
-                    className={`shrink-0 px-3 py-2 rounded-xl border flex items-center gap-2 transition-all cursor-pointer min-h-[38px] ${isSelected
-                      ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
-                      : isCompleted
-                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 font-medium'
-                        : 'bg-slate-50 dark:bg-[#070A13] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#1E2638] font-medium'
-                      }`}
+                    aria-disabled={isLocked}
+                    title={
+                      isLocked
+                        ? `Stage ${st.stepNo} (${st.name}) is locked. Complete Stage ${WORKSPACE_STAGES[idx - 1]?.stepNo} (${WORKSPACE_STAGES[idx - 1]?.name}) first.`
+                        : st.name
+                    }
+                    className={`shrink-0 px-3 py-2 rounded-xl border flex items-center gap-2 transition-all min-h-[38px] ${
+                      isLocked
+                        ? 'opacity-40 cursor-not-allowed bg-transparent border-dashed border-slate-200 dark:border-slate-800 text-slate-400'
+                        : isSelected
+                        ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs cursor-pointer'
+                        : isCompleted
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 font-medium cursor-pointer'
+                        : 'bg-slate-50 dark:bg-[#070A13] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-[#1E2638] font-medium cursor-pointer'
+                    }`}
                   >
-                    <span className={`text-[10px] font-bold ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
+                    <span className={`text-[10px] font-bold ${isSelected ? 'text-white/80' : isLocked ? 'text-slate-400 dark:text-slate-600' : 'text-slate-400'}`}>
                       {st.stepNo}
                     </span>
-                    <IconComp className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-white' : 'text-slate-400'}`} aria-hidden="true" />
+                    <IconComp className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-white' : isLocked ? 'text-slate-400 dark:text-slate-600' : 'text-slate-400'}`} aria-hidden="true" />
                     <span className="whitespace-nowrap">{st.name}</span>
-                    {isCompleted && !isSelected && (
+                    {isLocked ? (
+                      <Lock className="w-3.5 h-3.5 text-slate-400 shrink-0" aria-hidden="true" />
+                    ) : isCompleted && !isSelected ? (
                       <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
-                    )}
+                    ) : null}
                   </button>
                 );
               })}
@@ -505,16 +626,20 @@ export default function ProblemWorkspace({
             {currentStageId === 'problem' && (
               <ProblemStage
                 problemData={problem}
-                onNextStage={() => setCurrentStageId('understand')}
+                isLoading={isLoadingProblem}
+                errorMessage={problemError}
+                onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
+                onRetry={initializeWorkspaceFlow}
               />
             )}
 
             {currentStageId === 'understand' && (
               <UnderstandingStage
                 problemData={problem}
+                isCompleted={Boolean(completedStages['understand'])}
                 onCompleteStage={handleStageComplete}
-                onNextStage={() => setCurrentStageId('analogy')}
+                onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
               />
             )}
@@ -522,8 +647,9 @@ export default function ProblemWorkspace({
             {currentStageId === 'analogy' && (
               <AnalogyStage
                 problemData={problem}
+                isCompleted={Boolean(completedStages['analogy'])}
                 onCompleteStage={handleStageComplete}
-                onNextStage={() => setCurrentStageId('pattern')}
+                onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
               />
             )}
@@ -532,6 +658,7 @@ export default function ProblemWorkspace({
               <PatternStage
                 problem={problem}
                 selectedApproachId={selectedApproachId}
+                isCompleted={Boolean(completedStages['pattern'])}
                 onSelectApproach={handleApproachSelect}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
@@ -544,6 +671,7 @@ export default function ProblemWorkspace({
                 problem={problem}
                 problemData={problem}
                 selectedApproachId={selectedApproachId}
+                isCompleted={Boolean(completedStages['algorithm'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -555,6 +683,7 @@ export default function ProblemWorkspace({
                 problem={problem}
                 selectedApproachId={selectedApproachId}
                 selectedApproachName={selectedApproachName}
+                isCompleted={Boolean(completedStages['pseudocode'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -566,6 +695,7 @@ export default function ProblemWorkspace({
                 problem={problem}
                 selectedApproachId={selectedApproachId}
                 selectedApproachName={selectedApproachName}
+                isCompleted={Boolean(completedStages['code'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -577,6 +707,7 @@ export default function ProblemWorkspace({
                 problem={problem}
                 selectedApproachId={selectedApproachId}
                 selectedApproachName={selectedApproachName}
+                isCompleted={Boolean(completedStages['dryrun'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -588,6 +719,7 @@ export default function ProblemWorkspace({
                 problem={problem}
                 selectedApproachId={selectedApproachId}
                 selectedApproachName={selectedApproachName}
+                isCompleted={Boolean(completedStages['visualize'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onNavigateToStage={(stId) => handleStageSelect(stId)}
@@ -600,6 +732,7 @@ export default function ProblemWorkspace({
                 problem={problem}
                 selectedApproachId={selectedApproachId}
                 selectedApproachName={selectedApproachName}
+                isCompleted={Boolean(completedStages['complexity'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -610,6 +743,7 @@ export default function ProblemWorkspace({
               <PracticeStage
                 problem={problem}
                 selectedApproachId={selectedApproachId}
+                isCompleted={Boolean(completedStages['practice'])}
                 onCompleteStage={handleStageComplete}
                 onNextStage={handleNextStage}
                 onOpenSpec={() => setShowSpecDrawer(true)}
@@ -665,11 +799,22 @@ export default function ProblemWorkspace({
             <button
               type="button"
               onClick={handleNextStage}
-              disabled={activeStageIdx === WORKSPACE_STAGES.length - 1}
+              disabled={isNextDisabled}
+              title={
+                !isCurrentStageCompleted
+                  ? `Complete Stage ${activeStage.stepNo} (${activeStage.name}) to unlock the next stage`
+                  : activeStageIdx === WORKSPACE_STAGES.length - 1
+                  ? 'You have reached the final stage'
+                  : 'Advance to next stage'
+              }
               className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               <span>Next Stage</span>
-              <ChevronRight className="w-4 h-4" aria-hidden="true" />
+              {!isCurrentStageCompleted ? (
+                <Lock className="w-3.5 h-3.5 text-white/80" aria-hidden="true" />
+              ) : (
+                <ChevronRight className="w-4 h-4" aria-hidden="true" />
+              )}
             </button>
           </div>
 

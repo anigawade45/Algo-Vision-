@@ -19,6 +19,7 @@ export function DryRunStage({
   problemData,
   selectedApproachId,
   selectedApproachName,
+  isCompleted: isCompletedProp = false,
   onCompleteStage,
   onNextStage,
   onOpenSpec,
@@ -35,7 +36,11 @@ export function DryRunStage({
   const [error, setError] = useState(null);
   const [isStale, setIsStale] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
-  const [understood, setUnderstood] = useState(false);
+  const [understood, setUnderstood] = useState(Boolean(isCompletedProp));
+
+  useEffect(() => {
+    setUnderstood(Boolean(isCompletedProp));
+  }, [isCompletedProp]);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const availableTestCases = useMemo(() => activeProblem?.testCases || [], [activeProblem]);

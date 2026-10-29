@@ -1,5 +1,5 @@
 import React from 'react';
-import { Target, FileText, Sliders, ArrowRight, Lightbulb, CheckCircle2 } from 'lucide-react';
+import { FileText, Sliders, ArrowRight, Lightbulb, AlertCircle, RefreshCw } from 'lucide-react';
 
 const FALLBACK_TWO_SUM = {
   title: 'Two Sum',
@@ -13,24 +13,115 @@ const FALLBACK_TWO_SUM = {
   approach: 'Hash Map single-pass complement lookup.',
 };
 
-export function ProblemStage({ problemData, onNextStage, onOpenSpec }) {
-  const isFallback = !problemData || !problemData.title;
+/**
+ * Safely format test case inputs or outputs across string, raw, or structured object formats.
+ */
+const formatTestValue = (raw, value, structured, fallback) => {
+  if (raw != null && raw !== '') return raw;
+  if (value != null && value !== '') return value;
+
+  if (structured != null) {
+    return typeof structured === 'object'
+      ? JSON.stringify(structured)
+      : String(structured);
+  }
+
+  return fallback;
+};
+
+export function ProblemStage({
+  problemData,
+  isLoading = false,
+  errorMessage = null,
+  onNextStage,
+  onOpenSpec,
+  onRetry,
+  isDemo = false,
+}) {
+  // 1. Loading Skeleton State
+  if (isLoading) {
+    return (
+      <div className="space-y-7 font-sans w-full pb-12 animate-pulse" aria-busy="true" aria-label="Loading problem specification">
+        {/* Header Skeleton */}
+        <div className="border-b border-slate-200/80 dark:border-slate-800/80 pb-6 sm:pb-7 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="h-4 w-28 bg-slate-200 dark:bg-slate-800 rounded-md" />
+            <div className="h-4 w-16 bg-slate-200 dark:bg-slate-800 rounded-md" />
+          </div>
+          <div className="h-8 w-72 bg-slate-200 dark:bg-slate-800 rounded-lg mt-2" />
+          <div className="h-4 w-96 max-w-full bg-slate-200 dark:bg-slate-800 rounded-md" />
+        </div>
+
+        {/* Problem Statement Skeleton */}
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] space-y-3">
+          <div className="h-5 w-44 bg-slate-200 dark:bg-slate-800 rounded-md" />
+          <div className="space-y-2 p-4 rounded-xl bg-slate-50 dark:bg-[#05070E]">
+            <div className="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded-md" />
+            <div className="h-4 w-4/5 bg-slate-200 dark:bg-slate-800 rounded-md" />
+            <div className="h-4 w-2/3 bg-slate-200 dark:bg-slate-800 rounded-md" />
+          </div>
+        </div>
+
+        {/* Test Cases Skeleton */}
+        <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] space-y-4">
+          <div className="h-5 w-52 bg-slate-200 dark:bg-slate-800 rounded-md" />
+          <div className="grid grid-cols-1 gap-3">
+            <div className="h-24 bg-slate-50 dark:bg-[#05070E] rounded-xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Resolve Canonical Problem Data (Explicit Demo Mode Only fallback)
+  const isFallback = isDemo && (!problemData || !problemData.title);
   const problem = isFallback ? FALLBACK_TWO_SUM : problemData;
 
+  // 3. Problem Missing / Error State (Never silently fall back to Two Sum)
+  if (!problem || !problem.title) {
+    return (
+      <div className="p-8 sm:p-10 rounded-2xl bg-white dark:bg-[#0B101D] border border-rose-200 dark:border-rose-950/60 space-y-5 text-center max-w-xl mx-auto my-12 shadow-sm">
+        <div className="w-12 h-12 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 mx-auto flex items-center justify-center">
+          <AlertCircle className="w-6 h-6" />
+        </div>
+        <div className="space-y-1.5">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+            Problem Specification Unavailable
+          </h3>
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            {errorMessage || 'The requested canonical problem specification could not be loaded.'}
+          </p>
+        </div>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-mono font-bold transition-all cursor-pointer"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Retry Loading</span>
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  // 4. Safe test cases resolution
   const testCases = problem.testCases && problem.testCases.length > 0
     ? problem.testCases
     : [
       {
         id: 1,
-        inputRaw: problem.input || 'Sample Input',
-        outputRaw: problem.output || 'Sample Output',
+        inputRaw: problem.input || '',
+        outputRaw: problem.output || '',
       },
     ];
 
+  // 5. Clean whitespace-trimmed constraints list
   const constraintsList = Array.isArray(problem.constraints)
     ? problem.constraints
     : typeof problem.constraints === 'string'
-      ? problem.constraints.split('\n').filter(Boolean)
+      ? problem.constraints.split('\n').map((item) => item.trim()).filter(Boolean)
       : [];
 
   return (
@@ -97,8 +188,18 @@ export function ProblemStage({ problemData, onNextStage, onOpenSpec }) {
 
         <div className="grid grid-cols-1 gap-3">
           {testCases.map((tc, idx) => {
-            const inputVal = tc.inputRaw || tc.input || (typeof tc.inputStructured === 'object' ? JSON.stringify(tc.inputStructured) : String(tc.inputStructured));
-            const outputVal = tc.outputRaw || tc.output || (typeof tc.outputStructured === 'object' ? JSON.stringify(tc.outputStructured) : String(tc.outputStructured));
+            const inputVal = formatTestValue(
+              tc.inputRaw,
+              tc.input,
+              tc.inputStructured,
+              'No input provided'
+            );
+            const outputVal = formatTestValue(
+              tc.outputRaw,
+              tc.output,
+              tc.outputStructured,
+              'No output provided'
+            );
 
             return (
               <div key={tc.id || idx} className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#05070E] border border-slate-200/60 dark:border-[#162032] space-y-2 text-xs font-mono">
@@ -121,7 +222,7 @@ export function ProblemStage({ problemData, onNextStage, onOpenSpec }) {
         </div>
       </div>
 
-      {/* Constraints & Approach */}
+      {/* Constraints & Strategy */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-6 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#0B101D] border border-slate-200 dark:border-[#1E2638] space-y-3 shadow-xs">
           <h3 className="text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-[#162032] pb-2">

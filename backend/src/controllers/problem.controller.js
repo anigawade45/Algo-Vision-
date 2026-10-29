@@ -78,11 +78,20 @@ const createProblem = async (req, res, next) => {
     const payload = { ...req.body };
     delete payload.createdBy;
 
-    const problem = await problemService.createProblem({
+    const result = await problemService.createProblem({
       ...payload,
       createdBy: req.user._id,
     });
-    return successResponse(res, 201, 'Problem created successfully', { problem });
+
+    const statusCode = result.isExisting ? 200 : 201;
+    const message = result.isExisting
+      ? 'Existing canonical problem found and reused'
+      : 'Problem created successfully';
+
+    return successResponse(res, statusCode, message, {
+      problem: result.problem,
+      isExisting: Boolean(result.isExisting),
+    });
   } catch (error) {
     next(error);
   }
